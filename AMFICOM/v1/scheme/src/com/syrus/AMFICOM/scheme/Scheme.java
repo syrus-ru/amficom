@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.131 2006/03/15 20:28:23 bass Exp $
+ * $Id: Scheme.java,v 1.132 2006/06/02 17:23:20 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -53,7 +53,7 @@ import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.LocalXmlIdentifierPool;
-import com.syrus.AMFICOM.general.ReverseDependencyContainer;
+import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypicalCondition;
@@ -88,13 +88,13 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * #03 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.131 $, $Date: 2006/03/15 20:28:23 $
+ * @version $Revision: 1.132 $, $Date: 2006/06/02 17:23:20 $
  * @module scheme
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
 public final class Scheme extends AbstractCloneableDomainMember
 		implements Describable, SchemeCellContainer,
-		ReverseDependencyContainer, XmlTransferableObject<XmlScheme>,
+		XmlTransferableObject<XmlScheme>,
 		IdlTransferableObjectExt<IdlScheme> {
 	private static final long serialVersionUID = 3257289136389173298L;
 
@@ -533,25 +533,26 @@ public final class Scheme extends AbstractCloneableDomainMember
 	}
 
 	/**
-	 * @see com.syrus.AMFICOM.general.ReverseDependencyContainer#getReverseDependencies(boolean)
+	 * @see com.syrus.AMFICOM.general.StorableObject#getReverseDependencies(boolean)
 	 */
-	public Set<Identifiable> getReverseDependencies(final boolean usePool) throws ApplicationException {
+	@Override
+	protected Set<Identifiable> getReverseDependencies(final boolean usePool) throws ApplicationException {
 		final Set<Identifiable> reverseDependencies = new HashSet<Identifiable>();
-		reverseDependencies.add(super.id);
-		for (final ReverseDependencyContainer reverseDependencyContainer : this.getSchemeCableLinks0(usePool)) {
-			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies(usePool));
+		reverseDependencies.addAll(super.getReverseDependencies(usePool));
+		for (final StorableObject storableObject : this.getSchemeCableLinks0(usePool)) {
+			reverseDependencies.addAll(getReverseDependencies(storableObject, usePool));
 		}
-		for (final ReverseDependencyContainer reverseDependencyContainer : this.getSchemeElements0(usePool)) {
-			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies(usePool));
+		for (final StorableObject storableObject : this.getSchemeElements0(usePool)) {
+			reverseDependencies.addAll(getReverseDependencies(storableObject, usePool));
 		}
-		for (final ReverseDependencyContainer reverseDependencyContainer : this.getSchemeLinks0(usePool)) {
-			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies(usePool));
+		for (final StorableObject storableObject : this.getSchemeLinks0(usePool)) {
+			reverseDependencies.addAll(getReverseDependencies(storableObject, usePool));
 		}
-		for (final ReverseDependencyContainer reverseDependencyContainer : this.getSchemeOptimizeInfos0(usePool)) {
-			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies(usePool));
+		for (final StorableObject storableObject : this.getSchemeOptimizeInfos0(usePool)) {
+			reverseDependencies.addAll(getReverseDependencies(storableObject, usePool));
 		}
-		for (final ReverseDependencyContainer reverseDependencyContainer : this.getSchemeMonitoringSolutions0(usePool)) {
-			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies(usePool));
+		for (final StorableObject storableObject : this.getSchemeMonitoringSolutions0(usePool)) {
+			reverseDependencies.addAll(getReverseDependencies(storableObject, usePool));
 		}
 		reverseDependencies.remove(null);
 		reverseDependencies.remove(VOID_IDENTIFIER);

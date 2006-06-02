@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractLink.java,v 1.21 2006/03/15 15:35:12 arseniy Exp $
+ * $Id: AbstractLink.java,v 1.22 2006/06/02 17:23:22 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,20 +24,19 @@ import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.ReverseDependencyContainer;
+import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypedObject;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.21 $, $Date: 2006/03/15 15:35:12 $
+ * @author $Author: bass $
+ * @version $Revision: 1.22 $, $Date: 2006/06/02 17:23:22 $
  * @module config
  */
 public abstract class AbstractLink
 		extends DomainMember
-		implements Characterizable, TypedObject<AbstractLinkType>,
-		ReverseDependencyContainer {
+		implements Characterizable, TypedObject<AbstractLinkType> {
 	AbstractLinkType type;
 	String name;
 	String description;
@@ -154,14 +153,15 @@ public abstract class AbstractLink
 	/**
 	 * @param usePool
 	 * @throws ApplicationException
-	 * @see com.syrus.AMFICOM.general.ReverseDependencyContainer#getReverseDependencies(boolean)
+	 * @see StorableObject#getReverseDependencies(boolean)
 	 */
-	public final Set<Identifiable> getReverseDependencies(final boolean usePool)
+	@Override
+	protected final Set<Identifiable> getReverseDependencies(final boolean usePool)
 	throws ApplicationException {
 		final Set<Identifiable> reverseDependencies = new HashSet<Identifiable>();
-		reverseDependencies.add(this.id);
-		for (final ReverseDependencyContainer reverseDependencyContainer : this.getCharacteristics0(usePool)) {
-			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies(usePool));
+		reverseDependencies.addAll(super.getReverseDependencies(usePool));
+		for (final StorableObject storableObject : this.getCharacteristics0(usePool)) {
+			reverseDependencies.addAll(getReverseDependencies(storableObject, usePool));
 		}
 		reverseDependencies.remove(null);
 		reverseDependencies.remove(VOID_IDENTIFIER);

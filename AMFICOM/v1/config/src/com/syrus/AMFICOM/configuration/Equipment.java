@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.161 2006/04/19 13:22:15 bass Exp $
+ * $Id: Equipment.java,v 1.162 2006/06/02 17:23:22 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -48,7 +48,7 @@ import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.LocalXmlIdentifierPool;
-import com.syrus.AMFICOM.general.ReverseDependencyContainer;
+import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.XmlComplementorRegistry;
@@ -62,13 +62,13 @@ import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
- * @version $Revision: 1.161 $, $Date: 2006/04/19 13:22:15 $
+ * @version $Revision: 1.162 $, $Date: 2006/06/02 17:23:22 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
  */
 public final class Equipment extends DomainMember
-		implements MonitoredDomainMember, Characterizable, XmlTransferableObject<XmlEquipment>, ReverseDependencyContainer,
+		implements MonitoredDomainMember, Characterizable, XmlTransferableObject<XmlEquipment>,
 		IdlTransferableObjectExt<IdlEquipment> {
 	private static final long serialVersionUID = 2432748205979033898L;
 
@@ -671,14 +671,15 @@ public final class Equipment extends DomainMember
 	/**
 	 * @param usePool
 	 * @throws ApplicationException
-	 * @see com.syrus.AMFICOM.general.ReverseDependencyContainer#getReverseDependencies(boolean)
+	 * @see StorableObject#getReverseDependencies(boolean)
 	 */
-	public Set<Identifiable> getReverseDependencies(final boolean usePool)
+	@Override
+	protected Set<Identifiable> getReverseDependencies(final boolean usePool)
 	throws ApplicationException {
 		final Set<Identifiable> reverseDependencies = new HashSet<Identifiable>();
-		reverseDependencies.add(this.id);
-		for (final ReverseDependencyContainer reverseDependencyContainer : this.getCharacteristics0(usePool)) {
-			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies(usePool));
+		reverseDependencies.addAll(super.getReverseDependencies(usePool));
+		for (final StorableObject storableObject : this.getCharacteristics0(usePool)) {
+			reverseDependencies.addAll(getReverseDependencies(storableObject, usePool));
 		}
 		reverseDependencies.remove(null);
 		reverseDependencies.remove(VOID_IDENTIFIER);

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfoRtu.java,v 1.44 2006/03/15 20:28:23 bass Exp $
+ * $Id: SchemeOptimizeInfoRtu.java,v 1.45 2006/06/02 17:23:20 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,6 @@ import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Level.WARNING;
 
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -34,7 +33,6 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.Namable;
-import com.syrus.AMFICOM.general.ReverseDependencyContainer;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
@@ -52,12 +50,12 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  *
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.44 $, $Date: 2006/03/15 20:28:23 $
+ * @version $Revision: 1.45 $, $Date: 2006/06/02 17:23:20 $
  * @module scheme
  */
 public final class SchemeOptimizeInfoRtu
 		extends StorableObject
-		implements Namable, ReverseDependencyContainer,
+		implements Namable,
 		XmlTransferableObject<XmlSchemeOptimizeInfoRtu>,
 		IdlTransferableObjectExt<IdlSchemeOptimizeInfoRtu> {
 	private static final long serialVersionUID = 6687067380421014690L;
@@ -163,13 +161,6 @@ public final class SchemeOptimizeInfoRtu
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
 		dependencies.add(this.parentSchemeOptimizeInfoId);
 		return dependencies;
-	}
-
-	/**
-	 * @see com.syrus.AMFICOM.general.ReverseDependencyContainer#getReverseDependencies(boolean)
-	 */
-	public Set<Identifiable> getReverseDependencies(final boolean usePool) {
-		return Collections.<Identifiable>singleton(super.id);
 	}
 
 	/**

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfo.java,v 1.89 2006/03/15 20:28:23 bass Exp $
+ * $Id: SchemeOptimizeInfo.java,v 1.90 2006/06/02 17:23:20 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,7 +39,6 @@ import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.ReverseDependencyContainer;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
@@ -56,11 +55,11 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * #05 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.89 $, $Date: 2006/03/15 20:28:23 $
+ * @version $Revision: 1.90 $, $Date: 2006/06/02 17:23:20 $
  * @module scheme
  */
 public final class SchemeOptimizeInfo extends StorableObject
-		implements Describable, ReverseDependencyContainer,
+		implements Describable,
 		XmlTransferableObject<XmlSchemeOptimizeInfo>,
 		IdlTransferableObjectExt<IdlSchemeOptimizeInfo> {
 	private static final long serialVersionUID = 3761127137155232822L;
@@ -277,19 +276,20 @@ public final class SchemeOptimizeInfo extends StorableObject
 	}
 
 	/**
-	 * @see com.syrus.AMFICOM.general.ReverseDependencyContainer#getReverseDependencies(boolean)
+	 * @see com.syrus.AMFICOM.general.StorableObject#getReverseDependencies(boolean)
 	 */
-	public Set<Identifiable> getReverseDependencies(final boolean usePool) throws ApplicationException {
+	@Override
+	protected Set<Identifiable> getReverseDependencies(final boolean usePool) throws ApplicationException {
 		final Set<Identifiable> reverseDependencies = new HashSet<Identifiable>();
-		reverseDependencies.add(super.id);
-		for (final ReverseDependencyContainer reverseDependencyContainer : this.getSchemeOptimizeInfoSwitches0(usePool)) {
-			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies(usePool));
+		reverseDependencies.addAll(super.getReverseDependencies(usePool));
+		for (final StorableObject storableObject : this.getSchemeOptimizeInfoSwitches0(usePool)) {
+			reverseDependencies.addAll(getReverseDependencies(storableObject, usePool));
 		}
-		for (final ReverseDependencyContainer reverseDependencyContainer : this.getSchemeOptimizeInfoRtus0(usePool)) {
-			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies(usePool));
+		for (final StorableObject storableObject : this.getSchemeOptimizeInfoRtus0(usePool)) {
+			reverseDependencies.addAll(getReverseDependencies(storableObject, usePool));
 		}
-		for (final ReverseDependencyContainer reverseDependencyContainer : this.getSchemeMonitoringSolutions0(usePool)) {
-			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies(usePool));
+		for (final StorableObject storableObject : this.getSchemeMonitoringSolutions0(usePool)) {
+			reverseDependencies.addAll(getReverseDependencies(storableObject, usePool));
 		}
 		reverseDependencies.remove(null);
 		reverseDependencies.remove(VOID_IDENTIFIER);

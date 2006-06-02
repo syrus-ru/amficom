@@ -1,5 +1,5 @@
 /*-
- * $Id: Characteristic.java,v 1.94 2006/04/19 13:22:17 bass Exp $
+ * $Id: Characteristic.java,v 1.95 2006/06/02 17:23:02 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,6 @@ import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.EXPO
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.POST_IMPORT;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.PRE_IMPORT;
 
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -37,14 +36,13 @@ import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
- * @version $Revision: 1.94 $, $Date: 2006/04/19 13:22:17 $
+ * @version $Revision: 1.95 $, $Date: 2006/06/02 17:23:02 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
 public final class Characteristic extends AbstractCloneableStorableObject
 		implements TypedObject<CharacteristicType>,
-		ReverseDependencyContainer,
 		XmlTransferableObject<XmlCharacteristic>,
 		IdlTransferableObjectExt<IdlCharacteristic> {
 	private static final long serialVersionUID = -2746555753961778403L;
@@ -632,10 +630,6 @@ public final class Characteristic extends AbstractCloneableStorableObject
 		dependencies.add(this.parentCharacterizableId);
 		dependencies.add(this.type);
 		return dependencies;
-	}
-
-	public Set<Identifiable> getReverseDependencies(final boolean usePool) {
-		return Collections.<Identifiable> singleton(super.id);
 	}
 
 	/**

@@ -1,5 +1,5 @@
 /*-
- * $Id: PathElement.java,v 1.105 2006/03/15 20:28:23 bass Exp $
+ * $Id: PathElement.java,v 1.106 2006/06/02 17:23:20 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,7 +34,6 @@ import static com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.IdlDataPackag
 import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Level.WARNING;
 
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -50,7 +49,6 @@ import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.ReverseDependencyContainer;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
@@ -74,14 +72,14 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * {@link PathElement#getAbstractSchemeElement() getAbstractSchemeElement()}<code>.</code>{@link AbstractSchemeElement#getName() getName()}.
  *
  * @author $Author: bass $
- * @version $Revision: 1.105 $, $Date: 2006/03/15 20:28:23 $
+ * @version $Revision: 1.106 $, $Date: 2006/06/02 17:23:20 $
  * @module scheme
  * @todo If Scheme(Cable|)Port ever happens to belong to more than one
  *       SchemeElement
  */
 public final class PathElement extends StorableObject
 		implements Describable, Comparable<PathElement>,
-		PathMember<SchemePath, PathElement>, ReverseDependencyContainer,
+		PathMember<SchemePath, PathElement>,
 		XmlTransferableObject<XmlPathElement>,
 		IdlTransferableObjectExt<IdlPathElement> {
 	private static final long serialVersionUID = 3905799768986038576L;
@@ -550,13 +548,6 @@ public final class PathElement extends StorableObject
 		dependencies.add(this.schemeCableThreadId);
 		dependencies.add(this.schemeLinkId);
 		return dependencies;
-	}
-
-	/**
-	 * @see com.syrus.AMFICOM.general.ReverseDependencyContainer#getReverseDependencies(boolean)
-	 */
-	public Set<Identifiable> getReverseDependencies(final boolean usePool) {
-		return Collections.<Identifiable>singleton(super.id);
 	}
 
 	/**

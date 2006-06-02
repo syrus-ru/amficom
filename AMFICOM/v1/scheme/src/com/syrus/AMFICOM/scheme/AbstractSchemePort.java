@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemePort.java,v 1.96 2006/03/15 20:22:53 bass Exp $
+ * $Id: AbstractSchemePort.java,v 1.97 2006/06/02 17:23:20 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -42,7 +42,7 @@ import com.syrus.AMFICOM.general.Describable;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
-import com.syrus.AMFICOM.general.ReverseDependencyContainer;
+import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
@@ -58,13 +58,12 @@ import com.syrus.util.transport.xml.XmlConversionException;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.96 $, $Date: 2006/03/15 20:22:53 $
+ * @version $Revision: 1.97 $, $Date: 2006/06/02 17:23:20 $
  * @module scheme
  */
 public abstract class AbstractSchemePort
 		extends AbstractCloneableStorableObject
-		implements Describable, Characterizable,
-		ReverseDependencyContainer {
+		implements Describable, Characterizable {
 	private static final long serialVersionUID = 6943625949984422779L;
 
 	private String name;
@@ -186,13 +185,14 @@ public abstract class AbstractSchemePort
 	}
 
 	/**
-	 * @see com.syrus.AMFICOM.general.ReverseDependencyContainer#getReverseDependencies(boolean)
+	 * @see com.syrus.AMFICOM.general.StorableObject#getReverseDependencies(boolean)
 	 */
-	public final Set<Identifiable> getReverseDependencies(final boolean usePool) throws ApplicationException {
+	@Override
+	protected final Set<Identifiable> getReverseDependencies(final boolean usePool) throws ApplicationException {
 		final Set<Identifiable> reverseDependencies = new HashSet<Identifiable>();
-		reverseDependencies.add(super.id);
-		for (final ReverseDependencyContainer reverseDependencyContainer : this.getCharacteristics0(usePool)) {
-			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies(usePool));
+		reverseDependencies.addAll(super.getReverseDependencies(usePool));
+		for (final StorableObject storableObject : this.getCharacteristics0(usePool)) {
+			reverseDependencies.addAll(getReverseDependencies(storableObject, usePool));
 		}
 		reverseDependencies.remove(null);
 		reverseDependencies.remove(VOID_IDENTIFIER);

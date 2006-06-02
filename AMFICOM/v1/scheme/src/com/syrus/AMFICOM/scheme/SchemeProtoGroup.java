@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoGroup.java,v 1.99 2006/04/19 11:16:13 bass Exp $
+ * $Id: SchemeProtoGroup.java,v 1.100 2006/06/02 17:23:20 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,7 +44,6 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.LocalXmlIdentifierPool;
-import com.syrus.AMFICOM.general.ReverseDependencyContainer;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
@@ -68,12 +67,11 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * #01 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.99 $, $Date: 2006/04/19 11:16:13 $
+ * @version $Revision: 1.100 $, $Date: 2006/06/02 17:23:20 $
  * @module scheme
  */
 public final class SchemeProtoGroup extends StorableObject
 		implements Describable, SchemeSymbolContainer,
-		ReverseDependencyContainer,
 		XmlTransferableObject<XmlSchemeProtoGroup>,
 		IdlTransferableObjectExt<IdlSchemeProtoGroup> {
 	private static final long serialVersionUID = 3256721788422862901L;
@@ -272,13 +270,14 @@ public final class SchemeProtoGroup extends StorableObject
 	 * child {@code SchemeProtoGroup}s along with their dependencies are not
 	 * included since they are saved and deleted separately.
 	 *
-	 * @see com.syrus.AMFICOM.general.ReverseDependencyContainer#getReverseDependencies(boolean)
+	 * @see com.syrus.AMFICOM.general.StorableObject#getReverseDependencies(boolean)
 	 */
-	public Set<Identifiable> getReverseDependencies(final boolean usePool) throws ApplicationException {
+	@Override
+	protected Set<Identifiable> getReverseDependencies(final boolean usePool) throws ApplicationException {
 		final Set<Identifiable> reverseDependencies = new HashSet<Identifiable>();
-		reverseDependencies.add(super.id);
-		for (final ReverseDependencyContainer reverseDependencyContainer : this.getSchemeProtoElements0(usePool)) {
-			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies(usePool));
+		reverseDependencies.addAll(super.getReverseDependencies(usePool));
+		for (final StorableObject storableObject : this.getSchemeProtoElements0(usePool)) {
+			reverseDependencies.addAll(getReverseDependencies(storableObject, usePool));
 		}
 		reverseDependencies.remove(null);
 		reverseDependencies.remove(VOID_IDENTIFIER);

@@ -1,5 +1,5 @@
 /*
- * $Id: ReportTemplate.java,v 1.36 2006/04/26 13:01:21 stas Exp $
+ * $Id: ReportTemplate.java,v 1.37 2006/06/02 17:23:20 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,7 +39,6 @@ import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.Namable;
-import com.syrus.AMFICOM.general.ReverseDependencyContainer;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
@@ -61,12 +60,12 @@ import com.syrus.util.transport.idl.IdlTransferableObjectExt;
  * <p>Тип шаблона характеризует из какого модуля по нему можно построить
  * отчёт </p>
  * 
- * @author $Author: stas $
- * @version $Revision: 1.36 $, $Date: 2006/04/26 13:01:21 $
+ * @author $Author: bass $
+ * @version $Revision: 1.37 $, $Date: 2006/06/02 17:23:20 $
  * @module report
  */
 public final class ReportTemplate extends StorableObject
-		implements Namable, Describable, ReverseDependencyContainer,
+		implements Namable, Describable,
 		Cloneable, IdlTransferableObjectExt<IdlReportTemplate> {
 	private static final long serialVersionUID = 6270406142449624592L;
 
@@ -488,7 +487,8 @@ public final class ReportTemplate extends StorableObject
 		return this.sheetSize;
 	}
 
-	public Set<Identifiable> getReverseDependencies(final boolean usePool) throws ApplicationException {
+	@Override
+	protected Set<Identifiable> getReverseDependencies(final boolean usePool) throws ApplicationException {
 		final Set<Identifiable> reverseDependencies = new HashSet<Identifiable>();
 		reverseDependencies.addAll(getAttachedTextStorableElements(usePool));
 		reverseDependencies.addAll(getDataStorableElements(usePool));

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePath.java,v 1.127 2006/04/04 09:33:26 arseniy Exp $
+ * $Id: SchemePath.java,v 1.128 2006/06/02 17:23:20 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -51,7 +51,6 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
-import com.syrus.AMFICOM.general.ReverseDependencyContainer;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -73,13 +72,13 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
 /**
  * #16 in hierarchy.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.127 $, $Date: 2006/04/04 09:33:26 $
+ * @author $Author: bass $
+ * @version $Revision: 1.128 $, $Date: 2006/06/02 17:23:20 $
  * @module scheme
  */
 public final class SchemePath extends StorableObject
 		implements Describable, Characterizable,
-		PathOwner<PathElement>, ReverseDependencyContainer,
+		PathOwner<PathElement>,
 		XmlTransferableObject<XmlSchemePath>,
 		IdlTransferableObjectExt<IdlSchemePath> {
 	private static final long serialVersionUID = 3257567312831132469L;
@@ -211,16 +210,17 @@ public final class SchemePath extends StorableObject
 	}
 
 	/**
-	 * @see com.syrus.AMFICOM.general.ReverseDependencyContainer#getReverseDependencies(boolean)
+	 * @see com.syrus.AMFICOM.general.StorableObject#getReverseDependencies(boolean)
 	 */
-	public Set<Identifiable> getReverseDependencies(final boolean usePool) throws ApplicationException {
+	@Override
+	protected Set<Identifiable> getReverseDependencies(final boolean usePool) throws ApplicationException {
 		final Set<Identifiable> reverseDependencies = new HashSet<Identifiable>();
-		reverseDependencies.add(super.id);
-		for (final ReverseDependencyContainer reverseDependencyContainer : this.getCharacteristics0(usePool)) {
-			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies(usePool));
+		reverseDependencies.addAll(super.getReverseDependencies(usePool));
+		for (final StorableObject storableObject : this.getCharacteristics0(usePool)) {
+			reverseDependencies.addAll(getReverseDependencies(storableObject, usePool));
 		}
-		for (final ReverseDependencyContainer reverseDependencyContainer : this.getPathMembers0()) {
-			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies(usePool));
+		for (final StorableObject storableObject : this.getPathMembers0()) {
+			reverseDependencies.addAll(getReverseDependencies(storableObject, usePool));
 		}
 		reverseDependencies.remove(null);
 		reverseDependencies.remove(VOID_IDENTIFIER);

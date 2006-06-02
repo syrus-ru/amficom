@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObject.java,v 1.153 2006/05/18 17:59:39 bass Exp $
+ * $Id: StorableObject.java,v 1.154 2006/06/02 17:23:02 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,7 +47,7 @@ import com.syrus.util.LRUMap.Retainable;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.153 $, $Date: 2006/05/18 17:59:39 $
+ * @version $Revision: 1.154 $, $Date: 2006/06/02 17:23:02 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -663,6 +663,98 @@ public abstract class StorableObject implements Identifiable, Retainable, Serial
 		return this.isChanged();
 	}
 
+	/**
+	 * The default implementation that simply returns a singleton set
+	 * only consisting of objects identifier. Descendants cat override this
+	 * behaviour.
+	 * 
+	 * @param usePool
+	 * @throws ApplicationException
+	 */
+	@SuppressWarnings("unused")
+	protected Set<Identifiable> getReverseDependencies(final boolean usePool)
+	throws ApplicationException {
+		return Collections.<Identifiable> singleton(this.id);
+	}
+
+	/**
+	 * @param that
+	 * @param usePool
+	 * @throws ApplicationException
+	 */
+	protected static Set<Identifiable> getReverseDependencies(
+			final StorableObject that,
+			final boolean usePool)
+	throws ApplicationException {
+		return that.getReverseDependencies(usePool);
+	}
+
+	/**
+	 * Deletes and flushes this object recursively with its reverse
+	 * dependencies.
+	 *
+	 * @param disposerId identifier of the user who performs the operation
+	 *        (usually, can be obtained via {@code LoginManager.getUserId()}).
+	 * @throws ApplicationException
+	 */
+	public void dispose(final Identifier disposerId)
+	throws ApplicationException {
+		/*-
+		 * "usePool" is essentially true here since we don't want to
+		 * find orphan objects server-side (newly created children of
+		 * deleted objects) and mess with SQLException while trying to
+		 * store them to the database.
+		 *
+		 * "force" doesn't make much influence here, but I feel more
+		 * safe when it's true.
+		 */
+		final Set<Identifiable> reverseDependencies = this.getReverseDependencies(true);
+		StorableObjectPool.delete(reverseDependencies);
+		StorableObjectPool.flush(reverseDependencies, disposerId, true);
+	}
+
+	/**
+	 * Saves changes made to this object by flushing it recursively with
+	 * reverse dependencies.
+	 *
+	 * @param userId identifier of the user who performs the operation
+	 *        (usually, can be obtained via {@code LoginManager.getUserId()}).
+	 * @throws ApplicationException
+	 */
+	public void saveChanges(final Identifier userId)
+	throws ApplicationException {
+		/**
+		 * @bug redesign of hierarchy handling required: see description below.
+		 */
+		/*-
+		 * "usePool" is false here only for compatibility reasons.
+		 * Both false and true are unsafe, but false is faster and less
+		 * safe.
+		 *
+		 * "force" is false because I want a VersionCollisionException
+		 * when I'm committing outdated data, but this is anyway unreliable
+		 * since there're cases in which object hierarchies get changed
+		 * concurrently, data saved is inconsistent, and still no VCE is
+		 * thrown.
+		 */
+		final Set<Identifiable> reverseDependencies = this.getReverseDependencies(false);
+		StorableObjectPool.flush(reverseDependencies, userId, false);
+	}
+
+	/**
+	 * Discards changes made to this object and/or its reverse dependencies.
+	 *
+	 * @throws ApplicationException
+	 */
+	public void discardChanges() throws ApplicationException {
+		/*-
+		 * "usePool" is essentially false here: I can't have changes
+		 * made by me outside of my own client-side pool.
+		 */
+		final Set<Identifiable> reverseDependencies = this.getReverseDependencies(false);
+		StorableObjectPool.cleanChangedStorableObjects(reverseDependencies);
+	}
+
 	/*-********************************************************************
 	 * Caching sub-framework.                                             *
 	 **********************************************************************/
@@ -713,7 +805,7 @@ public abstract class StorableObject implements Identifiable, Retainable, Serial
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.153 $, $Date: 2006/05/18 17:59:39 $
+	 * @version $Revision: 1.154 $, $Date: 2006/06/02 17:23:02 $
 	 * @module general
 	 */
 	@Crutch134(notes = "This class should be made final.")
@@ -822,7 +914,7 @@ public abstract class StorableObject implements Identifiable, Retainable, Serial
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.153 $, $Date: 2006/05/18 17:59:39 $
+	 * @version $Revision: 1.154 $, $Date: 2006/06/02 17:23:02 $
 	 * @module general
 	 */
 	@Retention(SOURCE)

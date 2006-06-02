@@ -1,5 +1,5 @@
 /*-
- * $Id: CableChannelingItem.java,v 1.93 2006/03/15 20:28:23 bass Exp $
+ * $Id: CableChannelingItem.java,v 1.94 2006/06/02 17:23:20 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,7 +31,6 @@ import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.PRE_
 import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Level.WARNING;
 
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -47,7 +46,6 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.LocalXmlIdentifierPool;
-import com.syrus.AMFICOM.general.ReverseDependencyContainer;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
@@ -69,14 +67,13 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * #15 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.93 $, $Date: 2006/03/15 20:28:23 $
+ * @version $Revision: 1.94 $, $Date: 2006/06/02 17:23:20 $
  * @module scheme
  */
 public final class CableChannelingItem
 		extends StorableObject
 		implements Comparable<CableChannelingItem>,
 		PathMember<SchemeCableLink, CableChannelingItem>,
-		ReverseDependencyContainer,
 		XmlTransferableObject<XmlCableChannelingItem>,
 		IdlTransferableObjectExt<IdlCableChannelingItem> {
 	private static final long serialVersionUID = 3256437027796038705L;
@@ -331,13 +328,6 @@ public final class CableChannelingItem
 		dependencies.add(this.endSiteNodeId);
 		dependencies.add(this.parentSchemeCableLinkId);
 		return dependencies;
-	}
-
-	/**
-	 * @see com.syrus.AMFICOM.general.ReverseDependencyContainer#getReverseDependencies(boolean)
-	 */
-	public Set<Identifiable> getReverseDependencies(final boolean usePool) {
-		return Collections.<Identifiable>singleton(super.id);
 	}
 
 	Identifier getEndSiteNodeId() {
