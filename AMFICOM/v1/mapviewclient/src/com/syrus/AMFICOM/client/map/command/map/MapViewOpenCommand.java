@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapViewOpenCommand.java,v 1.38 2006/06/02 17:38:05 bass Exp $$
+ * $$Id: MapViewOpenCommand.java,v 1.39 2006/06/02 17:40:48 bass Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -42,7 +42,7 @@ import com.syrus.util.Log;
 /**
  * открыть вид
  *  
- * @version $Revision: 1.38 $, $Date: 2006/06/02 17:38:05 $
+ * @version $Revision: 1.39 $, $Date: 2006/06/02 17:40:48 $
  * @author $Author: bass $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -154,6 +154,7 @@ public class MapViewOpenCommand extends AbstractCommand {
 			Set<Identifier> ids = objectsToLoad.get(entityCode);
 			if (ids == null) {
 				ids = new HashSet<Identifier>();
+				objectsToLoad.put(entityCode, ids);
 			}
 			ids.add(id);
 		}
