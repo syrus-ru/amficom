@@ -1,5 +1,5 @@
 /*
- * $Id: LoginServerImplementation.java,v 1.44 2006/03/13 07:23:02 arseniy Exp $
+ * $Id: LoginServerImplementation.java,v 1.45 2006/06/02 13:48:21 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,6 +12,15 @@ import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NOT_LOGGED_IN;
 import static com.syrus.AMFICOM.general.ObjectEntities.DOMAIN_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SYSTEMUSER_CODE;
+import static com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.IdlCompletionStatus.COMPLETED_NO;
+import static com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.IdlCompletionStatus.COMPLETED_YES;
+import static com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.IdlErrorCode.ERROR_ACCESS_VALIDATION;
+import static com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.IdlErrorCode.ERROR_ILLEGAL_PASSWORD;
+import static com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.IdlErrorCode.ERROR_LOGIN_NOT_FOUND;
+import static com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.IdlErrorCode.ERROR_NOT_LOGGED_IN;
+import static com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.IdlErrorCode.ERROR_NO_DOMAINS_AVAILABLE;
+import static com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.IdlErrorCode.ERROR_RETRIEVE;
+import static com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.IdlErrorCode.ERROR_UPDATE;
 import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort.OPERATION_EQUALS;
 
 import java.util.Set;
@@ -34,8 +43,6 @@ import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.CommonUser;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlIdentifierHolder;
-import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.IdlCompletionStatus;
-import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.IdlErrorCode;
 import com.syrus.AMFICOM.leserver.corba.LoginServerPOA;
 import com.syrus.AMFICOM.security.SessionKey;
 import com.syrus.AMFICOM.security.ShadowDatabase;
@@ -44,7 +51,7 @@ import com.syrus.AMFICOM.security.corba.IdlSessionKeyHolder;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.44 $, $Date: 2006/03/13 07:23:02 $
+ * @version $Revision: 1.45 $, $Date: 2006/06/02 13:48:21 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module leserver
@@ -70,8 +77,8 @@ final class LoginServerImplementation extends LoginServerPOA {
 			final Set<Domain> domains = StorableObjectPool.getStorableObjectsByCondition(ec, true, true);
 
 			if (domains.isEmpty()) {
-				throw new AMFICOMRemoteException(IdlErrorCode.ERROR_NO_DOMAINS_AVAILABLE,
-						IdlCompletionStatus.COMPLETED_YES,
+				throw new AMFICOMRemoteException(ERROR_NO_DOMAINS_AVAILABLE,
+						COMPLETED_YES,
 						"No domains found");
 			}
 
@@ -84,7 +91,7 @@ final class LoginServerImplementation extends LoginServerPOA {
 			}
 			return idlDomains;
 		} catch (ApplicationException ae) {
-			throw new AMFICOMRemoteException(IdlErrorCode.ERROR_RETRIEVE, IdlCompletionStatus.COMPLETED_NO, ae.getMessage());
+			throw new AMFICOMRemoteException(ERROR_RETRIEVE, COMPLETED_NO, ae.getMessage());
 		}
 	}
 
@@ -100,11 +107,11 @@ final class LoginServerImplementation extends LoginServerPOA {
 			systemUsers = StorableObjectPool.getStorableObjectsByCondition(this.tc, true, true);
 		} catch (ApplicationException ae) {
 			Log.errorMessage(ae);
-			throw new AMFICOMRemoteException(IdlErrorCode.ERROR_RETRIEVE, IdlCompletionStatus.COMPLETED_NO, ae.getMessage());
+			throw new AMFICOMRemoteException(ERROR_RETRIEVE, COMPLETED_NO, ae.getMessage());
 		}
 		if (systemUsers.isEmpty()) {
-			throw new AMFICOMRemoteException(IdlErrorCode.ERROR_LOGIN_NOT_FOUND,
-					IdlCompletionStatus.COMPLETED_YES,
+			throw new AMFICOMRemoteException(ERROR_LOGIN_NOT_FOUND,
+					COMPLETED_YES,
 					"Illegal login -- '" + login + "'");
 		}
 
@@ -115,22 +122,22 @@ final class LoginServerImplementation extends LoginServerPOA {
 			localPassword = this.shadowDatabase.retrieve(userId);
 		} catch (RetrieveObjectException roe) {
 			Log.errorMessage(roe);
-			throw new AMFICOMRemoteException(IdlErrorCode.ERROR_RETRIEVE, IdlCompletionStatus.COMPLETED_NO, roe.getMessage());
+			throw new AMFICOMRemoteException(ERROR_RETRIEVE, COMPLETED_NO, roe.getMessage());
 		} catch (ObjectNotFoundException onfe) {
-			throw new AMFICOMRemoteException(IdlErrorCode.ERROR_LOGIN_NOT_FOUND, IdlCompletionStatus.COMPLETED_YES, onfe.getMessage());
+			throw new AMFICOMRemoteException(ERROR_LOGIN_NOT_FOUND, COMPLETED_YES, onfe.getMessage());
 		}
 
 		if (!Encryptor.crypt(password).equals(localPassword)) {
-			throw new AMFICOMRemoteException(IdlErrorCode.ERROR_ILLEGAL_PASSWORD, IdlCompletionStatus.COMPLETED_YES, "Illegal password");
+			throw new AMFICOMRemoteException(ERROR_ILLEGAL_PASSWORD, COMPLETED_YES, "Illegal password");
 		}
 
 		final Identifier domainId = Identifier.valueOf(idlDomainId);
 		if (!this.validateDomainAccess(userId, domainId)) {
-			throw new AMFICOMRemoteException(IdlErrorCode.ERROR_ACCESS_VALIDATION, IdlCompletionStatus.COMPLETED_YES, "Access to domain denied");
+			throw new AMFICOMRemoteException(ERROR_ACCESS_VALIDATION, COMPLETED_YES, "Access to domain denied");
 		}
 
 		final String userIOR = LEServerSessionEnvironment.getInstance().getLEServerServantManager().getCORBAServer().objectToString(commonUser);
-		idlSessionKeyHolder.value = LoginProcessor.addUserLogin(userId, domainId, userIOR).getIdlTransferable();
+		idlSessionKeyHolder.value = LoginProcessor.getInstance().addUserLogin(userId, domainId, userIOR).getIdlTransferable();
 		userIdTH.value = userId.getIdlTransferable();
 		return;
 	}
@@ -149,22 +156,22 @@ final class LoginServerImplementation extends LoginServerPOA {
 
 	public void logout(final IdlSessionKey sessionKeyT) throws AMFICOMRemoteException {
 		final SessionKey sessionKey = new SessionKey(sessionKeyT);
-		if (!LoginProcessor.removeUserLogin(sessionKey)) {
-			throw new AMFICOMRemoteException(IdlErrorCode.ERROR_NOT_LOGGED_IN,
-					IdlCompletionStatus.COMPLETED_YES,
+		if (!LoginProcessor.getInstance().removeUserLogin(sessionKey)) {
+			throw new AMFICOMRemoteException(ERROR_NOT_LOGGED_IN,
+					COMPLETED_YES,
 					NOT_LOGGED_IN);
 		}
 	}
 
-	public void validateLogin(final IdlSessionKey idlSessionKey, final LongHolder loginValidationTimeoutHolder) throws AMFICOMRemoteException {
-		final long loginValidationTimeout = LoginProcessor.getLoginValidationTimeout(new SessionKey(idlSessionKey));
-		if (loginValidationTimeout < 0) {
-			throw new AMFICOMRemoteException(IdlErrorCode.ERROR_NOT_LOGGED_IN,
-					IdlCompletionStatus.COMPLETED_YES,
+	public void validateLogin(final IdlSessionKey idlSessionKey, final LongHolder loginValidationPeriodHolder) throws AMFICOMRemoteException {
+		final long loginValidationPeriod = LoginProcessor.getInstance().getLoginValidationPeriod(new SessionKey(idlSessionKey));
+		if (loginValidationPeriod < 0) {
+			throw new AMFICOMRemoteException(ERROR_NOT_LOGGED_IN,
+					COMPLETED_YES,
 					NOT_LOGGED_IN);
 		}
 
-		loginValidationTimeoutHolder.value = loginValidationTimeout;
+		loginValidationPeriodHolder.value = loginValidationPeriod;
 	}
 
 	public void setPassword(final IdlSessionKey sessionKeyT, final IdlIdentifier userIdT, final String password)
@@ -176,7 +183,7 @@ final class LoginServerImplementation extends LoginServerPOA {
 		}
 		catch (ApplicationException ae) {
 			Log.errorMessage(ae);
-			throw new AMFICOMRemoteException(IdlErrorCode.ERROR_RETRIEVE, IdlCompletionStatus.COMPLETED_NO, ae.getMessage());
+			throw new AMFICOMRemoteException(ERROR_RETRIEVE, COMPLETED_NO, ae.getMessage());
 		}
 
 		try {
@@ -184,7 +191,7 @@ final class LoginServerImplementation extends LoginServerPOA {
 		}
 		catch (UpdateObjectException uoe) {
 			Log.errorMessage(uoe);
-			throw new AMFICOMRemoteException(IdlErrorCode.ERROR_UPDATE, IdlCompletionStatus.COMPLETED_NO, uoe.getMessage());
+			throw new AMFICOMRemoteException(ERROR_UPDATE, COMPLETED_NO, uoe.getMessage());
 		}
 	}
 
