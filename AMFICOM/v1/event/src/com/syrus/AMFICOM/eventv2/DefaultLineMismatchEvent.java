@@ -1,5 +1,5 @@
 /*-
- * $Id: DefaultLineMismatchEvent.java,v 1.11 2006/06/01 15:51:11 bass Exp $
+ * $Id: DefaultLineMismatchEvent.java,v 1.12 2006/06/02 08:56:32 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,6 +14,7 @@ import static com.syrus.AMFICOM.general.StorableObjectVersion.ILLEGAL_VERSION;
 import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 
 import java.util.Date;
+import java.util.Set;
 
 import com.syrus.AMFICOM.eventv2.corba.IdlLineMismatchEvent;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -28,7 +29,7 @@ import com.syrus.util.transport.idl.IdlConversionException;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.11 $, $Date: 2006/06/01 15:51:11 $
+ * @version $Revision: 1.12 $, $Date: 2006/06/02 08:56:32 $
  * @module event
  */
 public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
@@ -361,6 +362,17 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 	 * @see LineMismatchEvent#getParentLineMismatchEvent()
 	 */
 	public LineMismatchEvent getParentLineMismatchEvent() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see LineMismatchEvent#getChildLineMismatchEvents(boolean)
+	 */
+	public Set<LineMismatchEvent> getChildLineMismatchEvents(final boolean usePool)
+	throws ApplicationException {
+		/**
+		 * @todo query if there's a parent prior to collecting children.  
+		 */
 		throw new UnsupportedOperationException();
 	}
 }

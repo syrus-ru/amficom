@@ -1,5 +1,5 @@
 /*-
- * $Id: LineMismatchEvent.java,v 1.22 2006/06/01 15:51:11 bass Exp $
+ * $Id: LineMismatchEvent.java,v 1.23 2006/06/02 08:56:32 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,12 +17,14 @@ import java.lang.annotation.Target;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.EnumSet;
+import java.util.Set;
 
 import org.omg.CORBA.BAD_PARAM;
 import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.eventv2.corba.IdlLineMismatchEvent;
 import com.syrus.AMFICOM.eventv2.corba.IdlLineMismatchEventPackage.IdlAlarmStatus;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.util.Log;
@@ -34,7 +36,7 @@ import com.syrus.util.transport.idl.IdlTransferableObjectExt;
  * 
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.22 $, $Date: 2006/06/01 15:51:11 $
+ * @version $Revision: 1.23 $, $Date: 2006/06/02 08:56:32 $
  * @module event
  */
 public interface LineMismatchEvent
@@ -195,21 +197,77 @@ public interface LineMismatchEvent
 	 * @see #getAlarmStatus()
 	 * @see #setParentLineMismatchEvent(LineMismatchEvent)
 	 * @see #getParentLineMismatchEvent()
+	 * @see #getChildLineMismatchEvents(boolean)
 	 */
 	void setAlarmStatus(final AlarmStatus alarmStatus);
 
 	/**
+	 * @see #setAlarmStatus(LineMismatchEvent.AlarmStatus)
+	 * @see #setParentLineMismatchEvent(LineMismatchEvent)
+	 * @see #getParentLineMismatchEvent()
+	 * @see #getChildLineMismatchEvents(boolean)
 	 */
 	AlarmStatus getAlarmStatus();
 
 	/**
 	 * @param parentLineMismatchEvent
+	 * @see #setAlarmStatus(LineMismatchEvent.AlarmStatus)
+	 * @see #getAlarmStatus()
+	 * @see #getParentLineMismatchEvent()
+	 * @see #getChildLineMismatchEvents(boolean)
 	 */
 	void setParentLineMismatchEvent(final LineMismatchEvent parentLineMismatchEvent);
 
 	/**
+	 * @see #setAlarmStatus(LineMismatchEvent.AlarmStatus)
+	 * @see #getAlarmStatus()
+	 * @see #setParentLineMismatchEvent(LineMismatchEvent)
+	 * @see #getChildLineMismatchEvents(boolean)
 	 */
 	LineMismatchEvent getParentLineMismatchEvent();
+
+	/**
+	 * <p>If this event is a group leader, returns all events in the group
+	 * (excluding this one), otherwise returns an {@link
+	 * java.util.Collections#emptySet() empty set}. If there&apos;re any
+	 * child events, they will be returned as an {@link
+	 * java.util.Collections#unmodifiableSet(Set) unmodifiable set}.</p>
+	 *
+	 * <p>If {@code usePool} is {@code true}, {@link
+	 * com.syrus.AMFICOM.general.ObjectLoader#loadStorableObjectsButIdsByCondition(Set,
+	 * com.syrus.AMFICOM.general.StorableObjectCondition) object loader}
+	 * will be bothered
+	 * no matter was local object cache already built or not, and the cache
+	 * will be forced to rebuild itself; otherwise loader will be addressed
+	 * only if there&apos;s still no cache built, and if there <em>is</em>
+	 * one, its contents will be returned.</p>
+	 *
+	 * <p>If the underlying invocation of {@link
+	 * com.syrus.AMFICOM.general.ObjectLoader#loadStorableObjectsButIdsByCondition(Set,
+	 * com.syrus.AMFICOM.general.StorableObjectCondition)} throws an {@link
+	 * ApplicationException}, the exception is rethrown by this method.</p>
+	 *
+	 * @param usePool whether object loader should be bothered on every
+	 *        invocation or only on the first one.
+	 * @return all events in this event&apos;s group (excluding the event
+	 *         itself) if it&apos;s a group leader, or an {@link
+	 *         java.util.Collections#emptySet() empty set} otherwise.
+	 * @throws ApplicationException if object loader throws an {@code
+	 *         ApplicationException} (note that object loader gets bothered
+	 *         only if local cache needs to be rebuilt, i.&nbsp;e. either
+	 *         every invocation with {@code usePool == true} or the very
+	 *         first invocation with {@code usePool == false}).
+	 * @see java.util.Collections#emptySet()
+	 * @see java.util.Collections#unmodifiableSet(Set)
+	 * @see com.syrus.AMFICOM.general.ObjectLoader#loadStorableObjectsButIdsByCondition(Set, com.syrus.AMFICOM.general.StorableObjectCondition)
+	 * @see #setAlarmStatus(LineMismatchEvent.AlarmStatus)
+	 * @see #getAlarmStatus()
+	 * @see #setParentLineMismatchEvent(LineMismatchEvent)
+	 * @see #getParentLineMismatchEvent()
+	 * @see #getChildLineMismatchEvents(boolean)
+	 */
+	Set<LineMismatchEvent> getChildLineMismatchEvents(final boolean usePool)
+	throws ApplicationException;
 
 	/**
 	 * Those alarm statii that aren&apos;t present in the
@@ -218,7 +276,7 @@ public interface LineMismatchEvent
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.22 $, $Date: 2006/06/01 15:51:11 $
+	 * @version $Revision: 1.23 $, $Date: 2006/06/02 08:56:32 $
 	 * @module event
 	 */
 	enum AlarmStatus {
@@ -539,7 +597,7 @@ public interface LineMismatchEvent
 		 *
 		 * @author Andrew ``Bass'' Shcheglov
 		 * @author $Author: bass $
-		 * @version $Revision: 1.22 $, $Date: 2006/06/01 15:51:11 $
+		 * @version $Revision: 1.23 $, $Date: 2006/06/02 08:56:32 $
 		 * @see AllowedSuccessors
 		 * @module event
 		 */
@@ -552,7 +610,7 @@ public interface LineMismatchEvent
 		/**
 		 * @author Andrew ``Bass'' Shcheglov
 		 * @author $Author: bass $
-		 * @version $Revision: 1.22 $, $Date: 2006/06/01 15:51:11 $
+		 * @version $Revision: 1.23 $, $Date: 2006/06/02 08:56:32 $
 		 * @see AllowedPredecessors
 		 * @module event
 		 */
@@ -567,7 +625,7 @@ public interface LineMismatchEvent
 		 *
 		 * @author Andrew ``Bass'' Shcheglov
 		 * @author $Author: bass $
-		 * @version $Revision: 1.22 $, $Date: 2006/06/01 15:51:11 $
+		 * @version $Revision: 1.23 $, $Date: 2006/06/02 08:56:32 $
 		 * @module event
 		 */
 		public static final class Proxy
