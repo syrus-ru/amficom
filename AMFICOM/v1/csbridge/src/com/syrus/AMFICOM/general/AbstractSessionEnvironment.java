@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSessionEnvironment.java,v 1.4 2006/06/02 15:25:15 arseniy Exp $
+ * $Id: AbstractSessionEnvironment.java,v 1.5 2006/06/02 18:11:41 bass Exp $
  *
  * Copyright © 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,10 +23,10 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.4 $, $Date: 2006/06/02 15:25:15 $
+ * @version $Revision: 1.5 $, $Date: 2006/06/02 18:11:41 $
  * @author Tashoyan Arseniy Feliksovich
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
+ * @author $Author: bass $
  * @module csbridge
  */
 public abstract class AbstractSessionEnvironment<T extends BaseConnectionManager> {
@@ -271,7 +271,7 @@ public abstract class AbstractSessionEnvironment<T extends BaseConnectionManager
 	/**
 	 * Закрыть пользовательскую сессию.
 	 * 
-	 * @see {@link #logout(boolean)}.
+	 * @see #logout(boolean, boolean)
 	 * @throws CommunicationException
 	 * @throws LoginException
 	 *         Предпринята попытка закрыть уже закрытую сессию. В этом случае
