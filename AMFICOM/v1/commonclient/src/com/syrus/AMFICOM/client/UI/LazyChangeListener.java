@@ -1,5 +1,5 @@
 /*-
-* $Id: LazyChangeListener.java,v 1.3 2006/04/28 07:36:45 saa Exp $
+* $Id: LazyChangeListener.java,v 1.4 2006/06/02 10:47:04 arseniy Exp $
 *
 * Copyright ї 2006 Syrus Systems.
 * Dept. of Science & Technology.
@@ -24,8 +24,8 @@ import javax.swing.event.ChangeListener;
  * @deprecated Нет описания.
  *   Первичная реализация (rev. 1.2) содержала грубую ошибку синхронизации.
  * 
- * @version $Revision: 1.3 $, $Date: 2006/04/28 07:36:45 $
- * @author $Author: saa $
+ * @version $Revision: 1.4 $, $Date: 2006/06/02 10:47:04 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module commonclient
  */
@@ -53,9 +53,9 @@ public class LazyChangeListener implements ChangeListener {
 	private void createThread() {
 		new Timer(this.timeout, new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (changeEvent != null && (System.currentTimeMillis() - previousEventTime) > timeout) {
-					changeListener.stateChanged(changeEvent);
-					changeEvent = null;
+				if (LazyChangeListener.this.changeEvent != null && (System.currentTimeMillis() - LazyChangeListener.this.previousEventTime) > LazyChangeListener.this.timeout) {
+					LazyChangeListener.this.changeListener.stateChanged(LazyChangeListener.this.changeEvent);
+					LazyChangeListener.this.changeEvent = null;
 				}
 			}}).start();
 	}
