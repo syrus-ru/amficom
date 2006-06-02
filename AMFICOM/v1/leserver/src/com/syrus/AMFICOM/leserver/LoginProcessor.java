@@ -1,5 +1,5 @@
 /*-
- * $Id: LoginProcessor.java,v 1.42 2006/06/02 13:46:01 arseniy Exp $
+ * $Id: LoginProcessor.java,v 1.43 2006/06/02 15:25:25 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -54,7 +54,7 @@ import com.syrus.util.Log;
  * пользовательских сессий ({@link #addListener(LoginProcessorListener)} и
  * {@link #removeListener(LoginProcessorListener)}).
  * 
- * @version $Revision: 1.42 $, $Date: 2006/06/02 13:46:01 $
+ * @version $Revision: 1.43 $, $Date: 2006/06/02 15:25:25 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module leserver
@@ -293,14 +293,14 @@ final class LoginProcessor extends Thread {
 	 * Удалить пользовательскую сессию.
 	 * <p>
 	 * Ищет пользовательскую сессию в карте {@link #userLoginMap} для данного
-	 * ключа сессии <code>sessionKey</code>; удаляет её из карты и из БД.
-	 * Кроме того, уведомляет об этом событии слушателей из списка
+	 * ключа сессии {@code sessionKey}; удаляет её из карты и из БД. Кроме
+	 * того, уведомляет об этом событии слушателей из списка
 	 * {@link #loginProcessorListeners}.
 	 * 
 	 * @param sessionKey
 	 *        Ключ сессии, которую надо удалить.
-	 * @return <code>true</code>, если сессия с таким ключом найдена, в
-	 *         противном случае - <code>false</code>.
+	 * @return {@code true}, если сессия с таким ключом найдена, в противном
+	 *         случае - {@code false}.
 	 */
 	boolean removeUserLogin(final SessionKey sessionKey) {
 		final UserLogin userLogin = this.userLoginMap.remove(sessionKey);
@@ -325,7 +325,7 @@ final class LoginProcessor extends Thread {
 	 * @param sessionKey
 	 *        Ключ сессии.
 	 * @return {@link #loginValidationPeriod}, если сессия с таким ключом
-	 *         найдена, иначе - <code>-1</code>.
+	 *         найдена, иначе - {@code -1}.
 	 */
 	long getLoginValidationPeriod(final SessionKey sessionKey) {
 		final UserLogin userLogin = this.userLoginMap.get(sessionKey);
@@ -345,14 +345,14 @@ final class LoginProcessor extends Thread {
 
 	/**
 	 * Найти все пользовательские сессии, открытые пользователем с
-	 * идентификатором <code>userId</code>.
+	 * идентификатором {@code userId}.
 	 * <p>
 	 * Возвращаемый набор создаётся заново внутри метода, поэтому не отражает
 	 * все последующие изменения числа сессий данного пользователя.
 	 * 
 	 * @param userId
 	 *        Идентификатор пользователя.
-	 * @return Набор сессий пользователя с идентификатором <code>userId</code>.
+	 * @return Набор сессий пользователя с идентификатором {@code userId}.
 	 */
 	Set<UserLogin> getUserLogins(final Identifier userId) {
 		final Set<UserLogin> userLogins = new HashSet<UserLogin>();
@@ -467,7 +467,7 @@ final class LoginProcessor extends Thread {
 	 * @param loginProcessorListener
 	 *        Слушатель, которого надо добавить.
 	 * @throws NullPointerException
-	 *         Если слушатель - <code>null</code>.
+	 *         Если слушатель - {@code null}.
 	 */
 	void addListener(final LoginProcessorListener loginProcessorListener) {
 		if (loginProcessorListener == null) {
@@ -486,7 +486,7 @@ final class LoginProcessor extends Thread {
 	 * @param loginProcessorListener
 	 *        Слушатель, которого надо удалить.
 	 * @throws NullPointerException
-	 *         Если слушатель - <code>null</code>.
+	 *         Если слушатель - {@code null}.
 	 */
 	void removeListener(final LoginProcessorListener loginProcessorListener) {
 		if (loginProcessorListener == null) {
@@ -500,7 +500,7 @@ final class LoginProcessor extends Thread {
 
 	/**
 	 * Уведомить всех слушателей из списка {@link #loginProcessorListeners}, о
-	 * появлении новой пользовательской сессии <code>userLogin</code>.
+	 * появлении новой пользовательской сессии {@code userLogin}.
 	 * 
 	 * @param userLogin
 	 *        Новая пользовательская сессия.
@@ -520,7 +520,7 @@ final class LoginProcessor extends Thread {
 
 	/**
 	 * Уведомить всех слушателей из списка {@link #loginProcessorListeners}, о
-	 * закрытии пользовательской сессии <code>userLogin</code>.
+	 * закрытии пользовательской сессии {@code userLogin}.
 	 * 
 	 * @param userLogin
 	 *        Закрытая пользовательская сессия.
