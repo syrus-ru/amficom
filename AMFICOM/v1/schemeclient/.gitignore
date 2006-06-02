@@ -36,3 +36,4 @@ export
 Application.properties
 logs
 *.local
+.refactorings

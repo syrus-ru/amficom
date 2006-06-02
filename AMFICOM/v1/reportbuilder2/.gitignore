@@ -5,3 +5,4 @@ classes
 .classpath
 .project
 .settings
+.refactorings
