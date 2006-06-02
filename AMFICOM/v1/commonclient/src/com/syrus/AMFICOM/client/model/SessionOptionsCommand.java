@@ -6,8 +6,8 @@ import com.syrus.util.Shitlet;
 /**
  * TODO
  * 
- * @version $Revision: 1.3 $, $Date: 2005/09/08 14:25:57 $
- * @author $Author: bob $
+ * @version $Revision: 1.4 $, $Date: 2006/06/02 10:45:50 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module commonclient
  */
@@ -34,7 +34,7 @@ public class SessionOptionsCommand extends AbstractCommand {
 
 	@Override
 	public Object clone() throws CloneNotSupportedException {
-		return (SessionOptionsCommand) super.clone();
+		return super.clone();
 	}
 
 	@Override

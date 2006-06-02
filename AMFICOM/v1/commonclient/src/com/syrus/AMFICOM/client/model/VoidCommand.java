@@ -1,5 +1,5 @@
 /**
- * $Id: VoidCommand.java,v 1.4 2005/11/22 15:04:49 bass Exp $
+ * $Id: VoidCommand.java,v 1.5 2006/06/02 10:45:50 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -20,9 +20,9 @@ import com.syrus.util.Log;
  * 
  * 
  * 
- * @version $Revision: 1.4 $, $Date: 2005/11/22 15:04:49 $
+ * @version $Revision: 1.5 $, $Date: 2006/06/02 10:45:50 $
  * @module commonclient
- * @author $Author: bass $
+ * @author $Author: arseniy $
  */
 public final class VoidCommand extends AbstractCommand {
 
@@ -38,7 +38,7 @@ public final class VoidCommand extends AbstractCommand {
 
 	@Override
 	public Object clone() throws CloneNotSupportedException {
-		return (VoidCommand)super.clone();
+		return super.clone();
 	}
 
 	public VoidCommand(Object source) {
