@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapViewOpenCommand.java,v 1.39 2006/06/02 17:40:48 bass Exp $$
+ * $$Id: MapViewOpenCommand.java,v 1.40 2006/06/02 17:54:41 bass Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,6 +9,7 @@
 package com.syrus.AMFICOM.client.map.command.map;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -42,7 +43,7 @@ import com.syrus.util.Log;
 /**
  * открыть вид
  *  
- * @version $Revision: 1.39 $, $Date: 2006/06/02 17:40:48 $
+ * @version $Revision: 1.40 $, $Date: 2006/06/02 17:54:41 $
  * @author $Author: bass $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -144,12 +145,37 @@ public class MapViewOpenCommand extends AbstractCommand {
 	}
 
 	// TODO think of moving this method to 'Scheme'
-	public static void openScheme(final Scheme scheme)
+	public static void openScheme(@SuppressWarnings("unused") final Scheme scheme)
 	throws ApplicationException {
+		if (true) {
+			throw new UnsupportedOperationException();
+		}
+
+		/*
+		 * The code below is doubly useless.
+		 * 
+		 * 1. Its author (venerable Andrey Kroupennikov) meant it to
+		 * "preload" a scheme - lock, stock and barrel. All the job
+		 * would have been nicely done just by invocation of
+		 * #getReverseDependencies(true); the hierarchy would have been
+		 * traversed completely but maybe the farthest leaves. There's
+		 * no use to additionally sort the objects and invoke
+		 * StorableObjectPool#getStorableObjects(...).
+		 *
+		 * 2. The code isn't used anywhere. There're two blocks that
+		 * reference it, but these blocks are turned off
+		 * by "if (false) {...}" clause.
+		 *
+		 * Finally, #getReverseDependencies(boolean) is no longer
+		 * visible: it has protected access in class StorableObject.
+		 */
+
 		final Map<Short, Set<Identifier>> objectsToLoad = new HashMap<Short, Set<Identifier>>();
 
-		for (final Identifiable identifiable : scheme.getReverseDependencies(true)) {
-			final Identifier id = identifiable.getId();
+//		final Set<Identifiable> reverseDependencies = scheme.getReverseDependencies(true);
+		final Set<Identifiable> reverseDependencies = Collections.emptySet();
+		for (final Identifiable reverseDependency : reverseDependencies) {
+			final Identifier id = reverseDependency.getId();
 			final Short entityCode = Short.valueOf(id.getMajor());
 			Set<Identifier> ids = objectsToLoad.get(entityCode);
 			if (ids == null) {
