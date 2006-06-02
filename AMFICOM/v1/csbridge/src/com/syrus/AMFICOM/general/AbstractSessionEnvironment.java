@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSessionEnvironment.java,v 1.3 2006/06/02 14:26:20 arseniy Exp $
+ * $Id: AbstractSessionEnvironment.java,v 1.4 2006/06/02 15:25:15 arseniy Exp $
  *
  * Copyright © 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,7 +23,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.3 $, $Date: 2006/06/02 14:26:20 $
+ * @version $Revision: 1.4 $, $Date: 2006/06/02 15:25:15 $
  * @author Tashoyan Arseniy Feliksovich
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: arseniy $
@@ -81,7 +81,7 @@ public abstract class AbstractSessionEnvironment<T extends BaseConnectionManager
 
 	/**
 	 * Время установления текущей пользовательской сессии. При открытии сессии
-	 * выставляется в текущее время; при закрытии - в <code>null</code>.
+	 * выставляется в текущее время; при закрытии - в {@code null}.
 	 * Одновременно является признаком того, что сессия установлена (или
 	 * закрыта).
 	 * 
@@ -112,13 +112,13 @@ public abstract class AbstractSessionEnvironment<T extends BaseConnectionManager
 	/**
 	 * Создаёт новое окружение пользовательской сессии. Для инициализации пула
 	 * идентификаторов {@link IdentifierPool} используется действие
-	 * <code>identifierPoolCORBAActionProcessor</code>.
+	 * {@code identifierPoolCORBAActionProcessor}.
 	 * <p>
 	 * Производятся следующие действия:
 	 * <ul>
 	 * <li> поле {@link #connectionManager} выставляется в
-	 * <code>connectionManager</code>;
-	 * <li> поле {@link #sessionEstablishDate} выставляется в <code>null</code>;
+	 * {@code connectionManager};
+	 * <li> поле {@link #sessionEstablishDate} выставляется в {@code null};
 	 * <li> создаётся контекст объектных пулов {@link #poolContext};
 	 * <li> создаётся и запускается поток, подтверждающий сессию,
 	 * {@link #loginValidator};
@@ -191,8 +191,7 @@ public abstract class AbstractSessionEnvironment<T extends BaseConnectionManager
 	/**
 	 * Проверить, установлена ли сессия, т. е., вошёл ли пользователь в систему.
 	 * 
-	 * @return Если сессия установлена - <code>true</code>, иначе -
-	 *         <code>false</code>.
+	 * @return Если сессия установлена - {@code true}, иначе - {@code false}.
 	 */
 	public final synchronized boolean isSessionEstablished() {
 		return this.sessionEstablishDate != null;
@@ -218,9 +217,9 @@ public abstract class AbstractSessionEnvironment<T extends BaseConnectionManager
 	 * @throws LoginException
 	 *         По одной из следующих причин:
 	 *         <ul>
-	 *         <li> неправильное имя учётной записи <code>login</code>;
-	 *         <li> неправильный пароль <code>pasdword</code>;
-	 *         <li> нет прав на вход в домен <code>domainId</code>;
+	 *         <li> неправильное имя учётной записи {@code login};
+	 *         <li> неправильный пароль {@code pasdword};
+	 *         <li> нет прав на вход в домен {@code domainId};
 	 *         <li> ошибка на сервере.
 	 *         </ul>
 	 */
@@ -287,7 +286,7 @@ public abstract class AbstractSessionEnvironment<T extends BaseConnectionManager
 	 * Провести "локальное закрытие сессии", при котором не производится никаких
 	 * удалённых вызовов на сервер. Если сессия уже закрыта, то не делать
 	 * ничего. Обёртка для вызова метода {@link #logout(boolean, boolean)} с
-	 * <code>errorIfSessionNotEstablished == performRemoteLogout == false</code>.
+	 * {@code errorIfSessionNotEstablished == performRemoteLogout == false}.
 	 * Нужен для случая, когда сервер в одностороннем порядке закрыл сессию
 	 * пользователя.
 	 */
@@ -311,23 +310,23 @@ public abstract class AbstractSessionEnvironment<T extends BaseConnectionManager
 	 * Внутренний метод, реализующий процедуру закрытия пользовательской сессии.
 	 * 
 	 * @param errorIfSessionNotEstablished
-	 *        Если <code>true</code>, то в случае, когда пользовательская
-	 *        сессия и так закрыта, возникнет исключение {@link LoginException}.
-	 *        Если <code>false</code>, то метод просто вернётся.
+	 *        Если {@code true}, то в случае, когда пользовательская сессия и
+	 *        так закрыта, возникнет исключение {@link LoginException}. Если
+	 *        {@code false}, то метод просто вернётся.
 	 * @param performRemoteLogout
-	 *        Если <code>true</code>, то выполняется "локальное закрытие
-	 *        сессии", при котором не производится никаких удалённых вызовов на
-	 *        сервер, а всё пользовательское окружение переводится в состояние,
+	 *        Если {@code true}, то выполняется полноценная процедура закрытия
+	 *        сессии, с запросом о выходе на сервер.
+	 *        <p>
+	 *        Если {@code false}, то выполняется "локальное закрытие сессии",
+	 *        при котором не производится никаких удалённых вызовов на сервер, а
+	 *        всё пользовательское окружение переводится в состояние,
 	 *        соответствующее закрытой сессии. Такое поведение нужно для случая,
 	 *        когда сервер по собственному почину закрыл сессию пользователя. В
 	 *        этом случае {@link CommunicationException} не может быть
 	 *        возбуждено.
-	 *        <p>
-	 *        Если <code>false</code>, то выполняется полноценная процедура
-	 *        закрытия сессии, с запросом о выходе на сервер.
 	 * @throws CommunicationException
 	 *         Возможно только в случае, когда
-	 *         <code>performRemoteLogout == true</code>. Означает, что вызов
+	 *         {@code performRemoteLogout == true}. Означает, что вызов
 	 *         {@link LoginManager#logout()} не удался. В этом случае
 	 *         пользовательское окружение всё равно переходит в состояние
 	 *         закрытой сессии.
