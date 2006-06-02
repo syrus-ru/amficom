@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<session version="1.0">
+<refactoring comment="Extract local variable 'wrapper' from expression '(StorableObjectWrapper)method.invoke(null,new Object[0])'&#10;- Variable name: 'wrapper'&#10;- Destination method: 'com.syrus.AMFICOM.general.StorableObjectWrapper.getWrapper()'&#10;- Variable expression: '(StorableObjectWrapper)method.invoke(null,new Object[0])'&#10;- Replace occurrences of expression with variable&#10;- Declare variable 'final'" description="Extract local variable 'wrapper'" final="true" id="org.eclipse.jdt.ui.extract.temp" input="/src&lt;com.syrus.AMFICOM.general{StorableObjectWrapper.java" name="wrapper" replace="true" selection="2834 58" stamp="1149271579720" version="1.0"/>
+</session>
