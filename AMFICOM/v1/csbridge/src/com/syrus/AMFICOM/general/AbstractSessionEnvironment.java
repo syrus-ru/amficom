@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSessionEnvironment.java,v 1.2 2006/05/30 12:32:10 bass Exp $
+ * $Id: AbstractSessionEnvironment.java,v 1.3 2006/06/02 14:26:20 arseniy Exp $
  *
  * Copyright © 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,6 +10,7 @@ package com.syrus.AMFICOM.general;
 
 import static com.syrus.AMFICOM.general.ErrorMessages.ALREADY_LOGGED_IN;
 import static com.syrus.AMFICOM.general.ErrorMessages.NOT_LOGGED_IN;
+import static com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.IdlErrorCode._ERROR_NOT_LOGGED_IN;
 import static java.util.logging.Level.SEVERE;
 
 import java.util.Date;
@@ -18,67 +19,81 @@ import org.omg.CORBA.LongHolder;
 
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.CommonUser;
-import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.IdlErrorCode;
 import com.syrus.util.Log;
 
+
 /**
- * @version $Revision: 1.2 $, $Date: 2006/05/30 12:32:10 $
+ * @version $Revision: 1.3 $, $Date: 2006/06/02 14:26:20 $
  * @author Tashoyan Arseniy Feliksovich
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
+ * @author $Author: arseniy $
  * @module csbridge
  */
 public abstract class AbstractSessionEnvironment<T extends BaseConnectionManager> {
 	/**
-	 * Amount of login attempts to take before reporting an error. 
+	 * Наибольшее количество попыток входа в систему.
 	 */
 	private static final int MAX_LOGIN_ATTEMPTS = 5;
 
 	/**
-	 * Sleep timeout between subsequent login attempts, in milliseconds.
+	 * Промежуток времени между двумя последовательными попытками входа в
+	 * систему. В миллисекундах.
 	 */
 	private static final long SLEEP_BETWEEN_LOGIN_ATTEMPTS = 2 * 1000;
-
-	/**
-	 * Sleep timeout between subsequent login validation attempts in case
-	 * server gave us no clue ({@code CommunicationException}), in
-	 * milliseconds. 
-	 */
-	private static final long SLEEP_BETWEEN_LOGIN_VALIDATIONS = 5 * 60 * 1000;
 
 	/**
 	 * Время, отводимое на попытки войти в систему. Должно быть в миллисекундах.
 	 */
 	private static final long LOGIN_TIMEOUT = MAX_LOGIN_ATTEMPTS * SLEEP_BETWEEN_LOGIN_ATTEMPTS;
 
+	/**
+	 * Промежуток времени между последовательными попытками отправить
+	 * подтверждающий запрос не сервер. Нужен только для случая, когда связь с
+	 * сервером временно недоступна; если связь есть, то сервер сам говорит,
+	 * через какое время нужно слать запрос (см.
+	 * {@link com.syrus.AMFICOM.leserver.corba.LoginServerOperations#validateLogin(com.syrus.AMFICOM.security.corba.IdlSessionKey, LongHolder)}).
+	 */
+	private static final long LOGIN_VALIDATION_PERIOD_COMM_ERROR = 5 * 60 * 1000;
 
 	/**
-	 * Immutable: initialized <em>once</em> at object creation stage.
+	 * Управляющий соединениями с серверами.
+	 * <p>
+	 * Создаётся один раз при создании обекта и в дальнейшем не меняется.
 	 */
 	private final T connectionManager;
 
 	/**
-	 * Immutable: initialized <em>once</em> at object creation stage.
+	 * Контекст объектных пулов.
+	 * <p>
+	 * Создаётся один раз при создании обекта и в дальнейшем не меняется.
 	 */
 	private final PoolContext poolContext;
 
 	/**
-	 * Immutable: initialized <em>once</em> at object creation stage.
-	 *
-	 * @see #newLoginValidator()
+	 * Периодически отсылает на сервер запросы, подтверждающие активность
+	 * текущей пользовательской сессии.
+	 * <p>
+	 * Создаётся один раз при создании обекта и в дальнейшем не меняется.
+	 * 
+	 * @see LoginValidator
 	 */
-	final Thread loginValidator;
+	final LoginValidator loginValidator;
 
 	/**
-	 * Mutable: set to the current date upon login, and to {@code null} upon
-	 * logout.
+	 * Время установления текущей пользовательской сессии. При открытии сессии
+	 * выставляется в текущее время; при закрытии - в <code>null</code>.
+	 * Одновременно является признаком того, что сессия установлена (или
+	 * закрыта).
+	 * 
+	 * @see #isSessionEstablished()
 	 */
 	private Date sessionEstablishDate;
 
 	/**
-	 * Creates a new session environment with the default CORBA action
-	 * processor.
-	 *
+	 * Создаёт новое окружение пользовательской сессии. Для инициализации пула
+	 * идентификаторов {@link IdentifierPool} используется действие по
+	 * умолчанию.
+	 * 
 	 * @param connectionManager
 	 * @param poolContext
 	 * @param commonUser
@@ -95,28 +110,32 @@ public abstract class AbstractSessionEnvironment<T extends BaseConnectionManager
 	}
 
 	/**
-	 * Creates a new session environment with custom CORBA action
-	 * processor. In addition, adds two {@link CORBAServer <em>CORBA&nbsp;server</em>}
-	 * {@link CORBAServer#addShutdownHook(Thread) shutdown hooks}:<ol>
-	 *
-	 * <li>LoginValidatorShutdown: once <em>CORBA&nbsp;server</em> (actually,
-	 * a client-side servant) shuts down, client stops any previous attempt
-	 * to exhibit activity needed to remain logged in (see {@link
-	 * #newLoginValidator()} for more information);</li>
-	 *
-	 * <li>LogoutShutdown: once <em>CORBA&nbsp;server</em> shuts down, client
-	 * tries to {@link #logout() log himself out} if he&apos;s still {@link
-	 * #login(String, String, Identifier) logged in}, or does nothing if
-	 * he&apos;s not.</li>
-	 *
-	 * </ol>
-	 *
+	 * Создаёт новое окружение пользовательской сессии. Для инициализации пула
+	 * идентификаторов {@link IdentifierPool} используется действие
+	 * <code>identifierPoolCORBAActionProcessor</code>.
+	 * <p>
+	 * Производятся следующие действия:
+	 * <ul>
+	 * <li> поле {@link #connectionManager} выставляется в
+	 * <code>connectionManager</code>;
+	 * <li> поле {@link #sessionEstablishDate} выставляется в <code>null</code>;
+	 * <li> создаётся контекст объектных пулов {@link #poolContext};
+	 * <li> создаётся и запускается поток, подтверждающий сессию,
+	 * {@link #loginValidator};
+	 * <li> инициализируется {@link LoginManager};
+	 * <li> инициализируется {@link IdentifierPool};
+	 * <li> добавляется "зацеп на выключение" ("shutdown hook"), позволяющий при
+	 * разрыве соединения с сервером остановить {@link #loginValidator};
+	 * <li> добавляется "зацеп на выключение", позволяющий при разрыве
+	 * соединения с сервером закрыть текущую сессию.
+	 * </ul>
+	 * 
 	 * @param connectionManager
 	 * @param poolContext
 	 * @param commonUser
 	 * @param loginRestorer
 	 * @param identifierPoolCORBAActionProcessor
-	 * @see #newLoginValidator()
+	 * @see IdentifierPool#init(IGSConnectionManager, CORBAActionProcessor)
 	 * @see #login(String, String, Identifier)
 	 * @see #logout()
 	 * @see CORBAServer#addShutdownHook(Thread)
@@ -129,8 +148,11 @@ public abstract class AbstractSessionEnvironment<T extends BaseConnectionManager
 		this.connectionManager = connectionManager;
 		this.sessionEstablishDate = null;
 
-		(this.poolContext = poolContext).init();
-		(this.loginValidator = this.newLoginValidator()).start();
+		this.poolContext = poolContext;
+		this.poolContext.init();
+
+		this.loginValidator = new LoginValidator();
+		this.loginValidator.start();
 
 		LoginManager.init(new CORBALoginPerformer(this.connectionManager, commonUser), loginRestorer);
 		IdentifierPool.init(this.connectionManager, identifierPoolCORBAActionProcessor);
@@ -146,7 +168,7 @@ public abstract class AbstractSessionEnvironment<T extends BaseConnectionManager
 			@Override
 			public void run() {
 				try {
-					AbstractSessionEnvironment.this.safeLogout(true);
+					AbstractSessionEnvironment.this.logout(false, true);
 				} catch (final Throwable t) {
 					Log.errorMessage(t);
 				}
@@ -158,25 +180,49 @@ public abstract class AbstractSessionEnvironment<T extends BaseConnectionManager
 		return this.connectionManager;
 	}
 
-//	public final PoolContext getPoolContext() {
-//		return this.poolContext;
-//	}
+	// public final PoolContext getPoolContext() {
+	// return this.poolContext;
+	// }
 
 	public final synchronized Date getSessionEstablishDate() {
-		return this.isSessionEstablished()
-				? (Date) this.sessionEstablishDate.clone()
-				: null;
+		return this.isSessionEstablished() ? (Date) this.sessionEstablishDate.clone() : null;
 	}
 
+	/**
+	 * Проверить, установлена ли сессия, т. е., вошёл ли пользователь в систему.
+	 * 
+	 * @return Если сессия установлена - <code>true</code>, иначе -
+	 *         <code>false</code>.
+	 */
 	public final synchronized boolean isSessionEstablished() {
 		return this.sessionEstablishDate != null;
 	}
 
 	/**
+	 * Войти в систему и, тем самым, установить пользовательскую сессию.
+	 * 
 	 * @param login
+	 *        Имя учётной записи пользователя.
 	 * @param password
+	 *        Пароль пользователя.
+	 * @param domainId
+	 *        Идентификатор домена, в который желает зайти пользователь.
 	 * @throws CommunicationException
+	 *         По одной из следующих причин:
+	 *         <ul>
+	 *         <li> невозможно разрешить сервер в контексте именований CORBA в
+	 *         течение заданного времени ({@link #LOGIN_TIMEOUT});
+	 *         <li> невозможно десериализовать закэшированный на локальном диске
+	 *         пул из-за ошибки при синхронизации локальных объектов с сервером.
+	 *         </ul>
 	 * @throws LoginException
+	 *         По одной из следующих причин:
+	 *         <ul>
+	 *         <li> неправильное имя учётной записи <code>login</code>;
+	 *         <li> неправильный пароль <code>pasdword</code>;
+	 *         <li> нет прав на вход в домен <code>domainId</code>;
+	 *         <li> ошибка на сервере.
+	 *         </ul>
 	 */
 	public final synchronized void login(final String login, final String password, final Identifier domainId)
 			throws CommunicationException,
@@ -224,13 +270,30 @@ public abstract class AbstractSessionEnvironment<T extends BaseConnectionManager
 	}
 
 	/**
-	 * Performs local cleanup without sending anything to the server, and
-	 * pretends logout completed successfully. Useful if the server
-	 * unilaterally ends the session.
+	 * Закрыть пользовательскую сессию.
+	 * 
+	 * @see {@link #logout(boolean)}.
+	 * @throws CommunicationException
+	 * @throws LoginException
+	 *         Предпринята попытка закрыть уже закрытую сессию. В этом случае
+	 *         пользовательское окружение остаётся в прежнем состоянии закрытой
+	 *         сессии.
+	 */
+	public final synchronized void logout() throws CommunicationException, LoginException {
+		this.logout(true, true);
+	}
+
+	/**
+	 * Провести "локальное закрытие сессии", при котором не производится никаких
+	 * удалённых вызовов на сервер. Если сессия уже закрыта, то не делать
+	 * ничего. Обёртка для вызова метода {@link #logout(boolean, boolean)} с
+	 * <code>errorIfSessionNotEstablished == performRemoteLogout == false</code>.
+	 * Нужен для случая, когда сервер в одностороннем порядке закрыл сессию
+	 * пользователя.
 	 */
 	final void localLogout() {
 		try {
-			this.safeLogout(false);
+			this.logout(false, false);
 		} catch (final CommunicationException ce) {
 			/*
 			 * Never.
@@ -245,109 +308,107 @@ public abstract class AbstractSessionEnvironment<T extends BaseConnectionManager
 	}
 
 	/**
-	 * @param useLoginManager
+	 * Внутренний метод, реализующий процедуру закрытия пользовательской сессии.
+	 * 
+	 * @param errorIfSessionNotEstablished
+	 *        Если <code>true</code>, то в случае, когда пользовательская
+	 *        сессия и так закрыта, возникнет исключение {@link LoginException}.
+	 *        Если <code>false</code>, то метод просто вернётся.
+	 * @param performRemoteLogout
+	 *        Если <code>true</code>, то выполняется "локальное закрытие
+	 *        сессии", при котором не производится никаких удалённых вызовов на
+	 *        сервер, а всё пользовательское окружение переводится в состояние,
+	 *        соответствующее закрытой сессии. Такое поведение нужно для случая,
+	 *        когда сервер по собственному почину закрыл сессию пользователя. В
+	 *        этом случае {@link CommunicationException} не может быть
+	 *        возбуждено.
+	 *        <p>
+	 *        Если <code>false</code>, то выполняется полноценная процедура
+	 *        закрытия сессии, с запросом о выходе на сервер.
 	 * @throws CommunicationException
+	 *         Возможно только в случае, когда
+	 *         <code>performRemoteLogout == true</code>. Означает, что вызов
+	 *         {@link LoginManager#logout()} не удался. В этом случае
+	 *         пользовательское окружение всё равно переходит в состояние
+	 *         закрытой сессии.
 	 * @throws LoginException
+	 *         Предпринята попытка закрыть и без того закрытую сессию. В этом
+	 *         случае пользовательское окружение остаётся в прежнем состоянии
+	 *         закрытой сессии.
 	 */
-	final synchronized void safeLogout(final boolean useLoginManager)
-	throws CommunicationException, LoginException {
+	void logout(final boolean errorIfSessionNotEstablished, final boolean performRemoteLogout)
+			throws CommunicationException,
+				LoginException {
 		if (!this.isSessionEstablished()) {
+			if (errorIfSessionNotEstablished) {
+				throw new LoginException(NOT_LOGGED_IN);
+			}
 			return;
 		}
 
-		this.logout(useLoginManager);
-	}
-
-	/**
-	 * @throws CommunicationException
-	 * @throws LoginException if one is not logged in and tries to log out (
-	 *         both local and remote checks). In this case, the
-	 *         <em>logged in</em> state remains unchanged (cleared).
-	 */
-	public final synchronized void logout() throws CommunicationException, LoginException {
-		if (!this.isSessionEstablished()) {
-			throw new LoginException(NOT_LOGGED_IN);
-		}
-		
-		this.logout(true);
-	}
-
-	/**
-	 * @param useLoginManager if {@code false}, then
-	 *        {@link LoginManager#logout()} is not invoked (useful when
-	 *        server already logged us out). In this case,
-	 *        {@link CommunicationException} is never thrown. 
-	 * @throws CommunicationException if {@code useLoginManager} is
-	 *         {@code true}, and {@link LoginManager#logout()} invocation
-	 *         throws a {@link CommunicationException}. In this case, the
-	 *         <em>logged in</em> state still gets cleared.
-	 * @throws LoginException if one is not logged in and tries to log out
-	 *         (remote check if {@code useLoginManager} is {@code true}).
-	 *         In this case, the <em>logged in</em> state remains unchanged
-	 *         (cleared).
-	 */
-	private void logout(final boolean useLoginManager)
-	throws CommunicationException, LoginException {
 		IdentifierPool.serialize();
 		StorableObjectPool.serialize(this.poolContext.getLRUMapSaver());
 		this.sessionEstablishDate = null;
-		
-		if (useLoginManager) {
+
+		if (performRemoteLogout) {
 			LoginManager.logout();
 		}
 	}
 
 	/**
-	 * <p>Invoked once, at object creation stage, to initialize the {@link
-	 * #loginValidator} field. Returns a newly-created thread with {@link
-	 * Thread#run() run()} method overridden. At the same object creation
-	 * stage, the thread is started.</p>
-	 *
-	 * <p>Once user {@link #login(String, String, Identifier) logs in},
-	 * <em>login&nbsp;validator</em> is asked to wake up. As long as user
-	 * is logged in, <em>login&nbsp;validator</em> is periodically bothering
-	 * the server, invoking {@link
-	 * com.syrus.AMFICOM.leserver.corba.LoginServerOperations#validateLogin(
-	 * com.syrus.AMFICOM.security.corba.IdlSessionKey, LongHolder)} and thus
-	 * preventing itself from being logged out by the server. Once user is
-	 * {@link #logout() logged out} (either with one or without any assistance
-	 * from the server), <em>login&nbsp;validator</em> is put asleep until
-	 * the next login.</p>
-	 *
-	 * @return a newly-created thread with {@link Thread#run() run()} method
-	 *         overridden.
+	 * Класс, выполняющий периодические обращения к серверу с целью сохранения
+	 * пользовательской сессии.
+	 * <p>
+	 * Этот поток пробуждается ({@link Object#notify()}) после того, как
+	 * пользователь
+	 * {@link AbstractSessionEnvironment#login(String, String, Identifier) вошёл в систему}.
+	 * В течение всего времени, пока пользовательская сессия открыта, он
+	 * периодически запрашивает сервер вызовом
+	 * {@link com.syrus.AMFICOM.leserver.corba.LoginServerOperations#validateLogin(com.syrus.AMFICOM.security.corba.IdlSessionKey, LongHolder)},
+	 * тем самым не позволяя серверу отключить сессию данного пользователя.
+	 * Когда пользователь закрывает сессию
+	 * {@link AbstractSessionEnvironment#logout()}, этот поток засыпает в
+	 * результате вызова {@link Object#wait()}.
 	 */
-	private Thread newLoginValidator() {
-		return new Thread("LoginValidator") {
-			@Override
-			public void run() {
-				while (!interrupted()) {
-					if (AbstractSessionEnvironment.this.isSessionEstablished()) {
-						try {
-							final LongHolder loginValidationTimeout = new LongHolder(-1);
-							synchronized (AbstractSessionEnvironment.this) {
-								if (AbstractSessionEnvironment.this.isSessionEstablished()) {
-									AbstractSessionEnvironment.this.getConnectionManager().getLoginServerReference().validateLogin(LoginManager.getSessionKey().getIdlTransferable(), loginValidationTimeout);
-								}
+	private class LoginValidator extends Thread {
+		public LoginValidator() {
+			super("LoginValidator");
+		}
+
+		@Override
+		public void run() {
+			while (!interrupted()) {
+				if (AbstractSessionEnvironment.this.isSessionEstablished()) {
+					/* Если сессия открыта - работать. */
+					try {
+						final LongHolder loginValidationTimeout = new LongHolder(-1);
+						synchronized (AbstractSessionEnvironment.this) {
+							if (AbstractSessionEnvironment.this.isSessionEstablished()) {
+								AbstractSessionEnvironment.this.getConnectionManager().getLoginServerReference().validateLogin(LoginManager.getSessionKey().getIdlTransferable(),
+										loginValidationTimeout);
 							}
-							if (loginValidationTimeout.value != -1) {
-								try {
-									/*
-									 * Sleep half as long
-									 * as we need in the ideal case.
-									 */
-									sleep(loginValidationTimeout.value / 2);
-								} catch (final InterruptedException ie) {
-									return;
-								}
+						}
+						if (loginValidationTimeout.value != -1) {
+							/*
+							 * Если на сервере существует открытая для нас
+							 * сессия, то выполняется этот случай.
+							 */
+							try {
+								sleep(loginValidationTimeout.value);
+							} catch (InterruptedException e) {
+								return;
 							}
-						} catch (final AMFICOMRemoteException are) {
-							switch (are.errorCode.value()) {
-							case IdlErrorCode._ERROR_NOT_LOGGED_IN:
+						} else {
+							/* Такого вообще не должно быть. */
+							assert false;
+						}
+					} catch (final AMFICOMRemoteException are) {
+						switch (are.errorCode.value()) {
+							case _ERROR_NOT_LOGGED_IN:
 								/*
-								 * Server already logged us out.
-								 * Perform local cleanup and wait
-								 * until logged in again.
+								 * Сервер отключил нашу сессию. Остаётся только
+								 * локально перейти в состояние "сессия не
+								 * открыта" и дожидаться пробуждения.
 								 */
 								AbstractSessionEnvironment.this.localLogout();
 								synchronized (this) {
@@ -360,30 +421,30 @@ public abstract class AbstractSessionEnvironment<T extends BaseConnectionManager
 								break;
 							default:
 								/*
-								 * Never.
+								 * Других кодов ошибки быть не должно.
 								 */
 								assert false;
 								break;
-							}
-						} catch (final CommunicationException ce) {
-							Log.debugMessage(ce, SEVERE);
-							try {
-								sleep(SLEEP_BETWEEN_LOGIN_VALIDATIONS);
-							} catch (final InterruptedException ie) {
-								return;
-							}
 						}
-					} else {
-						synchronized (this) {
-							try {
-								this.wait();
-							} catch (final InterruptedException ie) {
-								return;
-							}
+					} catch (final CommunicationException ce) {
+						Log.debugMessage(ce, SEVERE);
+						try {
+							sleep(LOGIN_VALIDATION_PERIOD_COMM_ERROR);
+						} catch (final InterruptedException ie) {
+							return;
+						}
+					}
+				} else {
+					/* Если сессия закрыта - спать. */
+					synchronized (this) {
+						try {
+							this.wait();
+						} catch (final InterruptedException ie) {
+							return;
 						}
 					}
 				}
 			}
-		};
+		}
 	}
 }
