@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementStatusChangedEventProcessor.java,v 1.4 2006/05/15 11:56:43 bass Exp $
+ * $Id: MeasurementStatusChangedEventProcessor.java,v 1.5 2006/06/02 13:46:45 arseniy Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,8 +18,8 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2006/05/15 11:56:43 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.5 $, $Date: 2006/06/02 13:46:45 $
  * @module leserver
  */
 final class MeasurementStatusChangedEventProcessor extends AbstractEventProcessor {
@@ -50,6 +50,6 @@ final class MeasurementStatusChangedEventProcessor extends AbstractEventProcesso
 				+ " | Event started being processed",
 				FINEST);
 
-		this.deliverToClients(measurementStatusChangedEvent, LoginProcessor.getUserLogins());
+		this.deliverToClients(measurementStatusChangedEvent, LoginProcessor.getInstance().getUserLogins());
 	}
 }

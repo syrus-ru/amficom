@@ -1,5 +1,5 @@
 /*-
- * $Id: PopupNotificationEventProcessor.java,v 1.12 2006/04/19 14:13:46 bass Exp $
+ * $Id: PopupNotificationEventProcessor.java,v 1.13 2006/06/02 13:46:45 arseniy Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,8 +17,8 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.12 $, $Date: 2006/04/19 14:13:46 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.13 $, $Date: 2006/06/02 13:46:45 $
  * @module leserver
  */
 final class PopupNotificationEventProcessor extends AbstractNotificationEventProcessor {
@@ -52,6 +52,6 @@ final class PopupNotificationEventProcessor extends AbstractNotificationEventPro
 				+ targetUserId,
 				FINEST);
 
-		this.deliverToClients(popupNotificationEvent, LoginProcessor.getUserLogins(targetUserId));
+		this.deliverToClients(popupNotificationEvent, LoginProcessor.getInstance().getUserLogins(targetUserId));
 	}
 }

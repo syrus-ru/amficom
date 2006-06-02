@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractEventProcessor.java,v 1.5 2006/05/15 11:57:32 bass Exp $
+ * $Id: AbstractEventProcessor.java,v 1.6 2006/06/02 13:46:45 arseniy Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,8 +39,8 @@ import com.syrus.util.transport.idl.IdlConversionException;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2006/05/15 11:57:32 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.6 $, $Date: 2006/06/02 13:46:45 $
  * @module leserver
  */
 abstract class AbstractEventProcessor implements EventProcessor, Runnable {
@@ -65,7 +65,7 @@ abstract class AbstractEventProcessor implements EventProcessor, Runnable {
 			Collections.synchronizedMap(new HashMap<SessionKey, ExecutorService>());
 
 	static {
-		LoginProcessor.addListener(new LoginProcessorAdapter() {
+		LoginProcessor.getInstance().addListener(new LoginProcessorAdapter() {
 			@Override
 			public void userLoggedOut(final UserLogin userLogin) {
 				final SessionKey sessionKey = userLogin.getSessionKey();
@@ -246,7 +246,7 @@ abstract class AbstractEventProcessor implements EventProcessor, Runnable {
 								FINEST);
 					} catch (final COMM_FAILURE cf) {
 						Log.debugMessage(cf.toString(), SEVERE);
-						LoginProcessor.removeUserLogin(sessionKey);
+						LoginProcessor.getInstance().removeUserLogin(sessionKey);
 					} catch (final SystemException se) {
 						/**
 						 * @todo Generaly, system
