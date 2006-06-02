@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapViewOpenCommand.java,v 1.37 2006/02/15 11:12:43 stas Exp $$
+ * $$Id: MapViewOpenCommand.java,v 1.38 2006/06/02 17:38:05 bass Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -42,8 +42,8 @@ import com.syrus.util.Log;
 /**
  * открыть вид
  *  
- * @version $Revision: 1.37 $, $Date: 2006/02/15 11:12:43 $
- * @author $Author: stas $
+ * @version $Revision: 1.38 $, $Date: 2006/06/02 17:38:05 $
+ * @author $Author: bass $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -118,15 +118,22 @@ public class MapViewOpenCommand extends AbstractCommand {
 			return;
 		}
 
-//		try {
-			this.mapView.getMap().open();
-//			for(Scheme scheme : this.mapView.getSchemes()) {
-//				MapViewOpenCommand.openScheme(scheme);
-//			}
-//		} catch(ApplicationException e) {
-//			Log.errorMessage(e);
-//			return;
-//		}
+		this.mapView.getMap().open();
+
+		/*
+		 * The following block is turned off. 
+		 */
+		if (false) {
+			try {
+				for (final Scheme scheme : this.mapView.getSchemes()) {
+					MapViewOpenCommand.openScheme(scheme);
+				}
+			} catch (final ApplicationException ae) {
+				Log.errorMessage(ae);
+				return;
+			}
+		}
+
 		setResult(Command.RESULT_OK);
 
 		this.aContext.getDispatcher().firePropertyChange(
@@ -137,23 +144,22 @@ public class MapViewOpenCommand extends AbstractCommand {
 	}
 
 	// TODO think of moving this method to 'Scheme'
-	public static void openScheme(Scheme scheme) throws ApplicationException {
-		Set<Identifiable> reverseDependencies = scheme.getReverseDependencies(true);
+	public static void openScheme(final Scheme scheme)
+	throws ApplicationException {
+		final Map<Short, Set<Identifier>> objectsToLoad = new HashMap<Short, Set<Identifier>>();
 
-		Map<Short, Set<Identifier>> objectsToLoad = new HashMap<Short, Set<Identifier>>();
-
-		for(Identifiable identifiable : reverseDependencies) {
-			Short major = Short.valueOf(identifiable.getId().getMajor());
-			Set<Identifier> identifierSet = objectsToLoad.get(major);
-			if(identifierSet == null) {
-				identifierSet = new HashSet<Identifier>();
+		for (final Identifiable identifiable : scheme.getReverseDependencies(true)) {
+			final Identifier id = identifiable.getId();
+			final Short entityCode = Short.valueOf(id.getMajor());
+			Set<Identifier> ids = objectsToLoad.get(entityCode);
+			if (ids == null) {
+				ids = new HashSet<Identifier>();
 			}
-			identifierSet.add(identifiable.getId());
+			ids.add(id);
 		}
 
-		for(Short major : objectsToLoad.keySet()) {
-			Set<Identifier> identifierSet = objectsToLoad.get(major);
-			StorableObjectPool.getStorableObjects(identifierSet, true);
+		for (final Set<Identifier> ids: objectsToLoad.values()) {
+			StorableObjectPool.getStorableObjects(ids, true);
 		}
 	}
 }
