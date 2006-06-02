@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectWrapper.java,v 1.24 2006/04/20 12:36:31 arseniy Exp $
+ * $Id: StorableObjectWrapper.java,v 1.25 2006/06/02 18:11:18 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,8 +27,8 @@ import com.syrus.util.Wrapper;
  * wrapper's constructor must be private and its instance must be obtained using
  * a static method <code>getInstance()</code>.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.24 $, $Date: 2006/04/20 12:36:31 $
+ * @author $Author: bass $
+ * @version $Revision: 1.25 $, $Date: 2006/06/02 18:11:18 $
  * @see <a href =
  *      "http://bass.science.syrus.ru/java/Bitter%20Java.pdf">&laquo;Bitter
  *      Java&raquo; by Bruce A. Tate </a>
@@ -45,7 +45,7 @@ public abstract class StorableObjectWrapper<T extends StorableObject> implements
 
 	/**
 	 * В пределах одной сущности существует только один объект с данным кодовым
-	 * именем. См. {@link TypicalCondition#isNeedMore(Set)} и
+	 * именем. См. {@link TypicalCondition#isNeedMore(java.util.Set)} и
 	 * {@link StorableObjectType#codename}.
 	 */
 	public static final String COLUMN_CODENAME = "codename";
@@ -63,27 +63,28 @@ public abstract class StorableObjectWrapper<T extends StorableObject> implements
 	public static final String VIEW_NAME = "view_name";
 
 	public static <T extends StorableObject> StorableObjectWrapper<T> getWrapper(final short entityCode) throws IllegalDataException {
-		StorableObjectWrapper<T> wrapper = null;
 		final String className = ObjectGroupEntities.getPackageName(entityCode) + "."
 				+ ObjectEntities.codeToString(entityCode) + "Wrapper";
 		try {
 			final Class<?> clazz = Class.forName(className);
-			final Method method = clazz.getMethod("getInstance", new Class[0]);
-			wrapper = (StorableObjectWrapper) method.invoke(null, new Object[0]);
+			final Method method = clazz.getMethod("getInstance");
+			@SuppressWarnings("unchecked")
+			final StorableObjectWrapper<T> wrapper = (StorableObjectWrapper) method.invoke(null);
+			return wrapper;
 
-		} catch (ClassNotFoundException e) {
+		} catch (final ClassNotFoundException e) {
 			throw new IllegalDataException("StorableObjectWrapper.getWrapper | Class " + className
 					+ " not found on the classpath - " + e.getMessage());
-		} catch (SecurityException e) {
+		} catch (final SecurityException e) {
 			throw new IllegalDataException("StorableObjectWrapper.getWrapper | Caught " + e.getMessage());
-		} catch (NoSuchMethodException e) {
+		} catch (final NoSuchMethodException e) {
 			throw new IllegalDataException("StorableObjectWrapper.getWrapper | Class " + className
 					+ " haven't getInstance static method - " + e.getMessage());
-		} catch (IllegalArgumentException e) {
+		} catch (final IllegalArgumentException e) {
 			throw new IllegalDataException("StorableObjectWrapper.getWrapper | Caught " + e.getMessage());
-		} catch (IllegalAccessException e) {
+		} catch (final IllegalAccessException e) {
 			throw new IllegalDataException("StorableObjectWrapper.getWrapper | Caught " + e.getMessage());
-		} catch (InvocationTargetException e) {
+		} catch (final InvocationTargetException e) {
 			final Throwable cause = e.getCause();
 			if (cause instanceof AssertionError) {
 				final String message = cause.getMessage();
@@ -92,11 +93,10 @@ public abstract class StorableObjectWrapper<T extends StorableObject> implements
 				} else {
 					assert false : message;
 				}
-			} else {
-				throw new IllegalDataException("StorableObjectWrapper.getWrapper | Caught " + e.getMessage());
+				return null;
 			}
+			throw new IllegalDataException("StorableObjectWrapper.getWrapper | Caught " + e.getMessage());
 		}
-		return wrapper;
 	}
 
 	public Object getValue(final T object, final String key) {
