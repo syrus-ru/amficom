@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.3 2006/04/24 09:09:50 arseniy Exp $
+# $Id: Makefile,v 1.4 2006/06/02 11:07:47 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -22,6 +22,7 @@ measurement \
 event \
 resource \
 report \
+map \
 scheme \
 mapview \
 filter \
