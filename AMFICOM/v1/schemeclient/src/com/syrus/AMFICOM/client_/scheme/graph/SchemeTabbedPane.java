@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeTabbedPane.java,v 1.45 2006/06/01 14:30:40 stas Exp $
+ * $Id: SchemeTabbedPane.java,v 1.46 2006/06/02 17:23:57 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,12 +41,12 @@ import javax.swing.event.ChangeListener;
 import com.jgraph.graph.DefaultGraphCell;
 import com.jgraph.graph.DefaultPort;
 import com.jgraph.graph.PortView;
+
 import com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent;
 import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
 import com.syrus.AMFICOM.client.UI.ProcessingDialogDummy;
 import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
-import com.syrus.AMFICOM.client_.scheme.ElementsPermissionManager;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.client_.scheme.SchemePermissionManager;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.GraphActions;
@@ -58,7 +58,6 @@ import com.syrus.AMFICOM.client_.scheme.ui.SchemePropertiesManager;
 import com.syrus.AMFICOM.client_.scheme.utils.ClientUtils;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -74,8 +73,8 @@ import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.45 $, $Date: 2006/06/01 14:30:40 $
+ * @author $Author: bass $
+ * @version $Revision: 1.46 $, $Date: 2006/06/02 17:23:57 $
  * @module schemeclient
  */
 
@@ -253,17 +252,17 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 					if (res.getCellContainerType() == SchemeResource.SCHEME) {
 						Scheme scheme = res.getScheme();
 						if (!scheme.getVersion().equals(StorableObjectVersion.INITIAL_VERSION)) {
-							StorableObjectPool.cleanChangedStorableObjects(scheme.getReverseDependencies(false));
+							scheme.discardChanges();
 						}
 					} else if (res.getCellContainerType() == SchemeResource.SCHEME_ELEMENT) {
 						SchemeElement schemeElement = res.getSchemeElement();
 						if (!schemeElement.getVersion().equals(StorableObjectVersion.INITIAL_VERSION)) {
-							StorableObjectPool.cleanChangedStorableObjects(schemeElement.getReverseDependencies(false));
+							schemeElement.discardChanges();
 						}
 					} else if (res.getCellContainerType() == SchemeResource.SCHEME_PROTO_ELEMENT) {
 						SchemeProtoElement schemeProtoElement = res.getSchemeProtoElement();
 						if (!schemeProtoElement.getVersion().equals(StorableObjectVersion.INITIAL_VERSION)) {
-							StorableObjectPool.cleanChangedStorableObjects(schemeProtoElement.getReverseDependencies(false));
+							schemeProtoElement.discardChanges();
 						}
 					}
 				}

@@ -170,16 +170,12 @@ public class SchemeSaveCommand extends AbstractCommand {
 				Log.debugMessage("Internal schemes search took : " + (System.currentTimeMillis() - t) + "ms", Level.FINEST);
 				
 				t = System.currentTimeMillis();
-				final Set<Identifiable> reverseDependencies = scheme.getReverseDependencies(false);
-				Log.debugMessage("Top scheme reversed dependencies search took : " + (System.currentTimeMillis() - t) + "ms", Level.FINEST);
+				scheme.saveChanges(userId);
+				Log.debugMessage("Top scheme reversed dependencies search and flush took : " + (System.currentTimeMillis() - t) + "ms", Level.FINEST);
 				
 				t = System.currentTimeMillis();
-				StorableObjectPool.flush(reverseDependencies, userId, false);
-				Log.debugMessage("Top scheme flush took : " + (System.currentTimeMillis() - t) + "ms", Level.FINEST);
-				
-				t = System.currentTimeMillis();
-				for (Scheme changed : internalSchemes) {
-					StorableObjectPool.flush(changed.getReverseDependencies(false), userId, false);
+				for (final Scheme changed : internalSchemes) {
+					changed.saveChanges(userId);
 				}
 				Log.debugMessage("Internal schemes took " + (System.currentTimeMillis() - t) + "ms", Level.FINEST);
 				Log.debugMessage("Total save took " + (System.currentTimeMillis() - startSaving) + "ms", Level.FINEST);

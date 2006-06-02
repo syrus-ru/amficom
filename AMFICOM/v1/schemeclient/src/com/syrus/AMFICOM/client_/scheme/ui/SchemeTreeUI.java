@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeTreeUI.java,v 1.39 2006/05/02 07:22:01 stas Exp $
+ * $Id: SchemeTreeUI.java,v 1.40 2006/06/02 17:23:57 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,7 +35,6 @@ import com.syrus.AMFICOM.configuration.LinkType;
 import com.syrus.AMFICOM.configuration.PortType;
 import com.syrus.AMFICOM.configuration.ProtoEquipment;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.LoginManager;
@@ -58,8 +57,8 @@ import com.syrus.AMFICOM.scheme.SchemeProtoGroup;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.39 $, $Date: 2006/05/02 07:22:01 $
+ * @author $Author: bass $
+ * @version $Revision: 1.40 $, $Date: 2006/06/02 17:23:57 $
  * @module schemeclient
  */
 
@@ -131,12 +130,8 @@ public class SchemeTreeUI extends IconedTreeUI {
 
 									SchemeTreeUI.this.aContext.getDispatcher().firePropertyChange(
 											new SchemeEvent(this, scheme.getId(), SchemeEvent.DELETE_OBJECT));
-									
-									Set<Identifiable> ids = scheme.getReverseDependencies(false);
-									StorableObjectPool.delete(ids);
-									
-									Identifier userId = LoginManager.getUserId();
-									StorableObjectPool.flush(ids, userId, false);
+
+									scheme.dispose(LoginManager.getUserId());
 								} else {
 									JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(),
 											LangModelScheme.getString("Message.error.delete.scheme"),
@@ -168,13 +163,11 @@ public class SchemeTreeUI extends IconedTreeUI {
 								}
 								
 								SchemePath path = (SchemePath)object;
-								Set<Identifiable> ids = path.getReverseDependencies(false);
 								
 								SchemeTreeUI.this.aContext.getDispatcher().firePropertyChange(
 										new SchemeEvent(this, path.getId(), SchemeEvent.DELETE_OBJECT));
 								
-								StorableObjectPool.delete(ids);
-								StorableObjectPool.flush(ids, LoginManager.getUserId(), false);
+								path.dispose(LoginManager.getUserId());
 							} catch (ApplicationException e1) {
 								Log.errorMessage(e1);
 							}
@@ -196,15 +189,13 @@ public class SchemeTreeUI extends IconedTreeUI {
 								if (res == JOptionPane.CANCEL_OPTION) {
 									return;
 								}
-								
+
 								SchemeProtoElement proto = (SchemeProtoElement)object;
-								Set<Identifiable> ids = proto.getReverseDependencies(false);
 
 								SchemeTreeUI.this.aContext.getDispatcher().firePropertyChange(
 										new SchemeEvent(this, proto.getId(), SchemeEvent.DELETE_OBJECT));
-								
-								StorableObjectPool.delete(ids);
-								StorableObjectPool.flush(ids, LoginManager.getUserId(), false);
+
+								proto.dispose(LoginManager.getUserId());
 							} catch (ApplicationException e1) {
 								Log.errorMessage(e1);
 							}
@@ -229,14 +220,11 @@ public class SchemeTreeUI extends IconedTreeUI {
 									if (res == JOptionPane.CANCEL_OPTION) {
 										return;
 									}
-									
-									Set<Identifiable> ids = group.getReverseDependencies(false);
-									
+
 									SchemeTreeUI.this.aContext.getDispatcher().firePropertyChange(
 											new SchemeEvent(this, group.getId(), SchemeEvent.DELETE_OBJECT));
-									
-									StorableObjectPool.delete(ids);
-									StorableObjectPool.flush(ids, LoginManager.getUserId(), false);
+
+									group.dispose(LoginManager.getUserId());
 								} else {
 									JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(),
 											LangModelScheme.getString("Message.error.delete.proto_group"),

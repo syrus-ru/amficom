@@ -16,10 +16,7 @@ import com.syrus.AMFICOM.client_.scheme.graph.actions.SchemeActions;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DefaultLink;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceGroup;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.Identifiable;
-import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
-import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.resource.LangModelScheme;
 import com.syrus.AMFICOM.resource.SchemeImageResource;
 import com.syrus.AMFICOM.scheme.SchemeLink;
@@ -147,11 +144,7 @@ public class ComponentSaveCommand extends AbstractCommand {
 			}
 			schemeIr.setData((List) graph.getArchiveableState());
 
-			Identifier userId = LoginManager.getUserId();
-			StorableObjectPool.flush(proto.getId(), userId, false);
-			for (Identifiable identifiable : proto.getReverseDependencies(false)) {
-				StorableObjectPool.flush(identifiable, userId, false);
-			}
+			proto.saveChanges(LoginManager.getUserId());
 			this.cellPane.setGraphChanged(false);
 			
 			JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(),

@@ -1,5 +1,5 @@
 /*
- * $Id: SaveTemplateCommand.java,v 1.2 2006/05/23 15:41:59 bass Exp $
+ * $Id: SaveTemplateCommand.java,v 1.3 2006/06/02 17:23:57 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -46,11 +46,7 @@ public class SaveTemplateCommand extends AbstractCommand {
 				TemplateOpenSaveDialog.saveTemplate(currentTemplate);
 			} else {
 				try {
-					StorableObjectPool.flush(currentTemplate,LoginManager.getUserId(),true);
-					StorableObjectPool.flush(
-							currentTemplate.getReverseDependencies(false),
-							LoginManager.getUserId(),
-							true);
+					currentTemplate.saveChanges(LoginManager.getUserId());
 					currentTemplate.setNew(false);
 				} catch (ApplicationException e1) {
 					Log.errorMessage("SaveTemplateCommand.execute | " + e1.getMessage());

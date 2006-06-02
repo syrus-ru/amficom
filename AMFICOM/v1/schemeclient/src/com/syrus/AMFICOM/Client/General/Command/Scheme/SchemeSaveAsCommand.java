@@ -21,7 +21,6 @@ import com.syrus.AMFICOM.client_.scheme.graph.actions.SchemeActions;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
-import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.resource.LangModelScheme;
 import com.syrus.AMFICOM.resource.SchemeImageResource;
 import com.syrus.AMFICOM.scheme.Scheme;
@@ -123,9 +122,9 @@ public class SchemeSaveAsCommand extends AbstractCommand {
 
 				Identifier userId = LoginManager.getUserId();
 				scheme.setParentSchemeElement(null, false);
-				StorableObjectPool.flush(scheme.getReverseDependencies(false), userId, false);
-				for (Scheme child : this.childSchemes) {
-					StorableObjectPool.flush(child.getReverseDependencies(false), userId, false);
+				scheme.saveChanges(userId);
+				for (final Scheme child : this.childSchemes) {
+					child.saveChanges(userId);
 				}
 				
 				this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, scheme.getId(), SchemeEvent.CREATE_OBJECT));

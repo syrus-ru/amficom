@@ -9,7 +9,6 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -26,21 +25,17 @@ import javax.swing.event.ListSelectionListener;
 import com.syrus.AMFICOM.client.UI.AComboBox;
 import com.syrus.AMFICOM.client.UI.WrapperedList;
 import com.syrus.AMFICOM.client.model.Environment;
-import com.syrus.AMFICOM.client.report.CreateModelException;
 import com.syrus.AMFICOM.client.report.ReportTemplateWrapper;
-import com.syrus.AMFICOM.client.reportbuilder.templaterenderer.ReportTemplateRenderer;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.EquivalentCondition;
-import com.syrus.AMFICOM.general.Identifiable;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
-import com.syrus.AMFICOM.report.AttachedTextStorableElement;
 import com.syrus.AMFICOM.report.ReportTemplate;
 import com.syrus.util.Log;
 /**
@@ -347,7 +342,7 @@ public class TemplateOpenSaveDialog extends JDialog {
 					try {
 						ReportTemplate oldTemplate = this.templateProcessed;
 						this.templateProcessed = this.templateProcessed.clone();
-						StorableObjectPool.cleanChangedStorableObjects(oldTemplate.getReverseDependencies(false));
+						oldTemplate.discardChanges();
 					} catch (CloneNotSupportedException e) {
 						Log.errorMessage(e);
 					}
@@ -358,11 +353,7 @@ public class TemplateOpenSaveDialog extends JDialog {
 						
 			this.templateProcessed.setName(this.selectedTemplateNameField.getText());
 			
-			StorableObjectPool.flush(this.templateProcessed,LoginManager.getUserId(),true);
-			StorableObjectPool.flush(
-					this.templateProcessed.getReverseDependencies(false),
-					LoginManager.getUserId(),
-					true);			
+			this.templateProcessed.saveChanges(LoginManager.getUserId());
 			this.templateProcessed.setNew(false);
 			this.setVisible(false);
 		}
@@ -381,15 +372,10 @@ public class TemplateOpenSaveDialog extends JDialog {
 				getModel().getElementAt(selectedIndices[i]));
 		}
 		
-		Set<Identifiable> dependencies = new HashSet<Identifiable>();
-		for (ReportTemplate reportTemplate : selectedTemplates) {
-			dependencies.addAll(reportTemplate.getReverseDependencies(true));
+		final Identifier userId = LoginManager.getUserId();
+		for (final ReportTemplate reportTemplate : selectedTemplates) {
+			reportTemplate.dispose(userId);
 		}
-		
-		StorableObjectPool.delete(selectedTemplates);
-		StorableObjectPool.delete(dependencies);		
-		StorableObjectPool.flush(selectedTemplates,LoginManager.getUserId(),true);
-		StorableObjectPool.flush(dependencies,LoginManager.getUserId(),true);			
 
 		this.setListData();
 	}

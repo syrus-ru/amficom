@@ -22,9 +22,9 @@ public class PathSaveCommand extends AbstractCommand {
 
 	@Override
 	public void execute() {
-		SchemePath path = SchemeResource.getSchemePath();
 		try {
-			StorableObjectPool.flush(path.getReverseDependencies(false), LoginManager.getUserId(), false);
+			final SchemePath path = SchemeResource.getSchemePath();
+			path.saveChanges(LoginManager.getUserId());
 			JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(),
 					LangModelScheme.getString("Message.information.path_saved"),  //$NON-NLS-1$
 					LangModelScheme.getString("Message.information"),  //$NON-NLS-1$
