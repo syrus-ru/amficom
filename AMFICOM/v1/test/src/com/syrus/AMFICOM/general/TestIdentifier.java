@@ -1,5 +1,5 @@
 /*
- * $Id: TestIdentifier.java,v 1.12 2005/12/12 07:47:39 arseniy Exp $
+ * $Id: TestIdentifier.java,v 1.12.4.1 2006/06/02 11:15:07 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,7 +16,7 @@ import junit.framework.TestCase;
 
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/12/12 07:47:39 $
+ * @version $Revision: 1.12.4.1 $, $Date: 2006/06/02 11:15:07 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -51,7 +51,7 @@ public class TestIdentifier extends TestCase {
 	}
 
 	public void _testIllegalMajor() {
-		Identifier id = new Identifier(StorableObjectPool.БАЙАН + "_1");
+		Identifier id = new Identifier(ObjectEntities.UPDIKE + "_1");
 		System.out.println("major: " + id.getMajor() + ", minor: " + id.getMinor()
 				+ ", code: " + id.getIdentifierCode() + ", string: " + id.getIdentifierString());
 	}
