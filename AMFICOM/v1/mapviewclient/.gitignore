@@ -20,3 +20,4 @@ Makefile.inc
 .mach
 *.pl
 *.txt
+.refactorings
