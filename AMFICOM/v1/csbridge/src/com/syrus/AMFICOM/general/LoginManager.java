@@ -1,5 +1,5 @@
 /*-
- * $Id: LoginManager.java,v 1.48 2006/03/30 08:12:57 arseniy Exp $
+ * $Id: LoginManager.java,v 1.49 2006/06/02 13:40:24 arseniy Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,16 +14,20 @@ import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.security.SessionKey;
 
 /**
- * @version $Revision: 1.48 $, $Date: 2006/03/30 08:12:57 $
+ * @version $Revision: 1.49 $, $Date: 2006/06/02 13:40:24 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
  */
 public final class LoginManager {
 	/**
-	 * Основные действия по установлению сессии.
-	 * Поведение реализовано в классах, расширяюющих интерфейс.
-	 * Существующие реализации: CORBALoginPerformer, DatabaseLoginPerformer, XMLLoginPerformer.
+	 * Основные действия по установлению сессии. Поведение реализовано в
+	 * классах, расширяюющих интерфейс. Существующие реализации:
+	 * <ul>
+	 * <li> CORBALoginPerformer;
+	 * <li> DatabaseLoginPerformer;
+	 * <li> XMLLoginPerformer.
+	 * </ul>
 	 */
 	private static LoginPerformer loginPerformer;
 
