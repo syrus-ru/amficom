@@ -1,5 +1,5 @@
 /*-
- * $Id: UserLogin.java,v 1.13 2006/04/26 12:41:00 bass Exp $
+ * $Id: UserLogin.java,v 1.14 2006/06/02 13:41:12 arseniy Exp $
  *
  * Copyright © 2004-2006 Syrus Systems.
  * Научно-технический центр.
@@ -8,6 +8,12 @@
 
 package com.syrus.AMFICOM.security;
 
+import static com.syrus.AMFICOM.general.ErrorMessages.ILLEGAL_ENTITY_CODE;
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_EMPTY_EXPECTED;
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
+import static com.syrus.AMFICOM.general.ObjectEntities.DOMAIN_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SYSTEMUSER_CODE;
+
 import java.util.Date;
 
 import com.syrus.AMFICOM.general.Identifier;
@@ -15,8 +21,8 @@ import com.syrus.AMFICOM.general.Identifier;
 /**
  * Immutable.
  *
- * @version $Revision: 1.13 $, $Date: 2006/04/26 12:41:00 $
- * @author $Author: bass $
+ * @version $Revision: 1.14 $, $Date: 2006/06/02 13:41:12 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module leserver
  */
@@ -49,6 +55,13 @@ public final class UserLogin implements SessionData {
 	public static UserLogin createInstance(final Identifier userId,
 			final Identifier domainId,
 			final String userIOR) {
+		assert userId != null : NON_NULL_EXPECTED;
+		assert domainId != null : NON_NULL_EXPECTED;
+		assert userIOR != null : NON_NULL_EXPECTED;
+		assert userId.getMajor() == SYSTEMUSER_CODE : ILLEGAL_ENTITY_CODE;
+		assert domainId.getMajor() == DOMAIN_CODE : ILLEGAL_ENTITY_CODE;
+		assert userIOR.length() != 0 : NON_EMPTY_EXPECTED;
+
 		final SessionKey sessionKey = SessionKeyGenerator.generateSessionKey(userId);
 		return new UserLogin(sessionKey, userId, domainId, userIOR, null, null);
 	}
