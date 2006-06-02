@@ -1,5 +1,5 @@
 /*-
- * $Id: LoginProcessor.java,v 1.43 2006/06/02 15:25:25 arseniy Exp $
+ * $Id: LoginProcessor.java,v 1.44 2006/06/02 18:13:42 bass Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,7 +33,7 @@ import com.syrus.util.Log;
 /**
  * Обработчик пользовательских сессий на стороне сервера.
  * <p>
- * Воплощение шаблона "Одиночка" ("Singletone"). Имеет не более одного объекта в
+ * Воплощение шаблона "Одиночка" ("Singleton"). Имеет не более одного объекта в
  * пределах приложения, который создаётся методом {@link #createInstance()} и
  * ссылку на который можно получить с помощью метода {@link #getInstance()}.
  * <p>
@@ -47,15 +47,15 @@ import com.syrus.util.Log;
  * <p>
  * В этом классе реализованы процедуры добавления и удаления пользовательских
  * сессий (соответственно, методы
- * {@link #addUserLogin(Identifier, Identifier, String) и {@link #removeUserLogin(SessionKey)}),
+ * {@link #addUserLogin(Identifier, Identifier, String)} и {@link #removeUserLogin(SessionKey)}),
  * получения сведений о сессиях (методы {@link #getUserLogins()},
  * {@link #getUserLogins(Identifier)}) и, наконец, некоторые вспомогательные
  * методы. Кроме того, возможно оповещение слушателей, следящих за изменениями
  * пользовательских сессий ({@link #addListener(LoginProcessorListener)} и
  * {@link #removeListener(LoginProcessorListener)}).
  * 
- * @version $Revision: 1.43 $, $Date: 2006/06/02 15:25:25 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.44 $, $Date: 2006/06/02 18:13:42 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module leserver
  */
@@ -139,7 +139,7 @@ final class LoginProcessor extends Thread {
 	 * Получить ссылку на объект-одиночку данного класса.
 	 * 
 	 * @return Ссылку на обработчик пользовательских сессий.
-	 * @throws {@link IllegalStateException}
+	 * @throws IllegalStateException
 	 *         Если объект ещё не был создан методом {@link #createInstance()}.
 	 */
 	public static synchronized LoginProcessor getInstance() {
