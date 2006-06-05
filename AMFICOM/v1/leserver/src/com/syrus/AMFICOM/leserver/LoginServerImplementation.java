@@ -1,5 +1,5 @@
 /*
- * $Id: LoginServerImplementation.java,v 1.45 2006/06/02 13:48:21 arseniy Exp $
+ * $Id: LoginServerImplementation.java,v 1.46 2006/06/05 13:45:13 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -51,13 +51,12 @@ import com.syrus.AMFICOM.security.corba.IdlSessionKeyHolder;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.45 $, $Date: 2006/06/02 13:48:21 $
+ * @version $Revision: 1.46 $, $Date: 2006/06/05 13:45:13 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module leserver
  */
 final class LoginServerImplementation extends LoginServerPOA {
-	private static final long serialVersionUID = -7190112124735462314L;
 
 	private TypicalCondition tc;
 	private ShadowDatabase shadowDatabase;
@@ -100,7 +99,7 @@ final class LoginServerImplementation extends LoginServerPOA {
 			final IdlIdentifier idlDomainId,
 			final CommonUser commonUser,
 			final IdlSessionKeyHolder idlSessionKeyHolder,
-			final IdlIdentifierHolder userIdTH) throws AMFICOMRemoteException {
+			final IdlIdentifierHolder idlUserIdHolder) throws AMFICOMRemoteException {
 		this.tc.setValue(login);
 		Set<SystemUser> systemUsers = null;
 		try {
@@ -117,7 +116,7 @@ final class LoginServerImplementation extends LoginServerPOA {
 
 		final SystemUser user = systemUsers.iterator().next();
 		final Identifier userId = user.getId();
-		String localPassword = null;
+		final String localPassword;
 		try {
 			localPassword = this.shadowDatabase.retrieve(userId);
 		} catch (RetrieveObjectException roe) {
@@ -138,7 +137,7 @@ final class LoginServerImplementation extends LoginServerPOA {
 
 		final String userIOR = LEServerSessionEnvironment.getInstance().getLEServerServantManager().getCORBAServer().objectToString(commonUser);
 		idlSessionKeyHolder.value = LoginProcessor.getInstance().addUserLogin(userId, domainId, userIOR).getIdlTransferable();
-		userIdTH.value = userId.getIdlTransferable();
+		idlUserIdHolder.value = userId.getIdlTransferable();
 		return;
 	}
 
@@ -154,8 +153,8 @@ final class LoginServerImplementation extends LoginServerPOA {
 		return true;
 	}
 
-	public void logout(final IdlSessionKey sessionKeyT) throws AMFICOMRemoteException {
-		final SessionKey sessionKey = new SessionKey(sessionKeyT);
+	public void logout(final IdlSessionKey idlSessionKey) throws AMFICOMRemoteException {
+		final SessionKey sessionKey = SessionKey.valueOf(idlSessionKey);
 		if (!LoginProcessor.getInstance().removeUserLogin(sessionKey)) {
 			throw new AMFICOMRemoteException(ERROR_NOT_LOGGED_IN,
 					COMPLETED_YES,
@@ -164,7 +163,7 @@ final class LoginServerImplementation extends LoginServerPOA {
 	}
 
 	public void validateLogin(final IdlSessionKey idlSessionKey, final LongHolder loginValidationPeriodHolder) throws AMFICOMRemoteException {
-		final long loginValidationPeriod = LoginProcessor.getInstance().getLoginValidationPeriod(new SessionKey(idlSessionKey));
+		final long loginValidationPeriod = LoginProcessor.getInstance().getLoginValidationPeriod(SessionKey.valueOf(idlSessionKey));
 		if (loginValidationPeriod < 0) {
 			throw new AMFICOMRemoteException(ERROR_NOT_LOGGED_IN,
 					COMPLETED_YES,
@@ -174,9 +173,9 @@ final class LoginServerImplementation extends LoginServerPOA {
 		loginValidationPeriodHolder.value = loginValidationPeriod;
 	}
 
-	public void setPassword(final IdlSessionKey sessionKeyT, final IdlIdentifier userIdT, final String password)
+	public void setPassword(final IdlSessionKey idlSessionKey, final IdlIdentifier idlUserId, final String password)
 			throws AMFICOMRemoteException {
-		final Identifier userId = Identifier.valueOf(userIdT);
+		final Identifier userId = Identifier.valueOf(idlUserId);
 		try {
 			final SystemUser systemUser = (SystemUser) StorableObjectPool.getStorableObject(userId, true);
 			Log.debugMessage("Setting password to user '" + systemUser.getLogin() + "'/'" + userId + "'", Log.DEBUGLEVEL08);
