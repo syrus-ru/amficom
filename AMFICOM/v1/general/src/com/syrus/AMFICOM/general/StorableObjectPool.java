@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.216 2006/04/20 12:34:42 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.217 2006/06/05 15:41:14 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,7 +41,7 @@ import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.216 $, $Date: 2006/04/20 12:34:42 $
+ * @version $Revision: 1.217 $, $Date: 2006/06/05 15:41:14 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -77,8 +77,8 @@ public final class StorableObjectPool {
 	private static final Map<Short, Set<Identifier>> DELETED_IDS_MAP = new HashMap<Short, Set<Identifier>>();
 
 	private static final Set<Identifier> LOCKED_IDS = new HashSet<Identifier>();
-	private static final long MAX_LOCK_TIMEOUT = 1 * 60 * 1000; // 1 minuta
-	private static final long LOCK_TIME_WAIT = 5 * 1000; // 5 sec
+	private static final long MAX_LOCK_TIMEOUT = 1 * 60 * 1000L; // 1 minuta
+	private static final long LOCK_TIME_WAIT = 5 * 1000L; // 5 sec
 
 	/**
 	 * Хранилище сохраняемых объектов. Очищается в начале каждого вызова
