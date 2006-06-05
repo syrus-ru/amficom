@@ -1,5 +1,5 @@
 /*-
- * $Id: LoginProcessor.java,v 1.44 2006/06/02 18:13:42 bass Exp $
+ * $Id: LoginProcessor.java,v 1.45 2006/06/05 14:01:48 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,7 +33,7 @@ import com.syrus.util.Log;
 /**
  * Обработчик пользовательских сессий на стороне сервера.
  * <p>
- * Воплощение шаблона "Одиночка" ("Singleton"). Имеет не более одного объекта в
+ * Воплощение шаблона "Одиночка". Имеет не более одного объекта в
  * пределах приложения, который создаётся методом {@link #createInstance()} и
  * ссылку на который можно получить с помощью метода {@link #getInstance()}.
  * <p>
@@ -54,8 +54,8 @@ import com.syrus.util.Log;
  * пользовательских сессий ({@link #addListener(LoginProcessorListener)} и
  * {@link #removeListener(LoginProcessorListener)}).
  * 
- * @version $Revision: 1.44 $, $Date: 2006/06/02 18:13:42 $
- * @author $Author: bass $
+ * @version $Revision: 1.45 $, $Date: 2006/06/05 14:01:48 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module leserver
  */
