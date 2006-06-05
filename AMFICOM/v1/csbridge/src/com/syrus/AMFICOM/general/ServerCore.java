@@ -1,5 +1,5 @@
 /*-
- * $Id: ServerCore.java,v 1.53 2006/04/26 09:21:32 arseniy Exp $
+ * $Id: ServerCore.java,v 1.54 2006/06/05 13:42:20 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,7 +41,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: arseniy $
- * @version $Revision: 1.53 $, $Date: 2006/04/26 09:21:32 $
+ * @version $Revision: 1.54 $, $Date: 2006/06/05 13:42:20 $
  * @module csbridge
  * @todo Refactor ApplicationException descendants to be capable of generating
  *       an AMFICOMRemoteException.
@@ -81,20 +81,20 @@ public abstract class ServerCore implements CommonServerOperations {
 
 	// ///////////////////////////// CommonServer ///////////////////////////////////////////////
 
-	public final IdlStorableObject[] transmitStorableObjects(final IdlIdentifier[] idsT, final IdlSessionKey sessionKeyT)
+	public final IdlStorableObject[] transmitStorableObjects(final IdlIdentifier[] idlIds, final IdlSessionKey idlSessionKey)
 			throws AMFICOMRemoteException {
 		try {
-			assert idsT != null && sessionKeyT != null : NON_NULL_EXPECTED;
-			final int length = idsT.length;
+			assert idlIds != null && idlSessionKey != null : NON_NULL_EXPECTED;
+			final int length = idlIds.length;
 			assert length != 0: NON_EMPTY_EXPECTED;
-			assert StorableObject.hasSingleTypeEntities(idsT) : OBJECTS_NOT_OF_THE_SAME_ENTITY;
+			assert StorableObject.hasSingleTypeEntities(idlIds) : OBJECTS_NOT_OF_THE_SAME_ENTITY;
 
-			this.validateLogin(new SessionKey(sessionKeyT));
+			this.validateLogin(SessionKey.valueOf(idlSessionKey));
 
-			final Set<Identifier> ids = Identifier.fromTransferables(idsT);
+			final Set<Identifier> ids = Identifier.fromTransferables(idlIds);
 
 			Log.debugMessage("Requested '"
-					+ ObjectEntities.codeToString(StorableObject.getEntityCodeOfIdentifiables(idsT)) + "'s for ids: "
+					+ ObjectEntities.codeToString(StorableObject.getEntityCodeOfIdentifiables(idlIds)) + "'s for ids: "
 					+ ids, FINEST);
 
 			final Set<StorableObject> storableObjects = StorableObjectPool.getStorableObjects(ids, true);
@@ -109,21 +109,21 @@ public abstract class ServerCore implements CommonServerOperations {
 		}
 	}
 
-	public final IdlStorableObject[] transmitStorableObjectsButIdsByCondition(final IdlIdentifier[] idsT,
-			final IdlStorableObjectCondition conditionT,
-			final IdlSessionKey sessionKeyT) throws AMFICOMRemoteException {
+	public final IdlStorableObject[] transmitStorableObjectsButIdsByCondition(final IdlIdentifier[] idlIds,
+			final IdlStorableObjectCondition idlStorableObjectCondition,
+			final IdlSessionKey idlSessionKey) throws AMFICOMRemoteException {
 		try {
-			assert idsT != null && sessionKeyT != null && conditionT != null : NON_NULL_EXPECTED;
+			assert idlIds != null && idlSessionKey != null && idlStorableObjectCondition != null : NON_NULL_EXPECTED;
 
-			final StorableObjectCondition condition = StorableObjectConditionBuilder.restoreCondition(conditionT);
+			final StorableObjectCondition condition = StorableObjectConditionBuilder.restoreCondition(idlStorableObjectCondition);
 			final short entityCode = condition.getEntityCode().shortValue();
 
-			assert idsT.length == 0 || entityCode == StorableObject.getEntityCodeOfIdentifiables(idsT) : ILLEGAL_ENTITY_CODE;
+			assert idlIds.length == 0 || entityCode == StorableObject.getEntityCodeOfIdentifiables(idlIds) : ILLEGAL_ENTITY_CODE;
 			assert ObjectEntities.isEntityCodeValid(entityCode) : ILLEGAL_ENTITY_CODE;
 
-			this.validateLogin(new SessionKey(sessionKeyT));
+			this.validateLogin(SessionKey.valueOf(idlSessionKey));
 
-			final Set<Identifier> ids = Identifier.fromTransferables(idsT);
+			final Set<Identifier> ids = Identifier.fromTransferables(idlIds);
 
 			Log.debugMessage("Requested '" + ObjectEntities.codeToString(entityCode) + "'s but ids: " + ids + " for condition: " + condition, FINEST);
 
@@ -146,21 +146,21 @@ public abstract class ServerCore implements CommonServerOperations {
 		}
 	}
 
-	public final IdlIdentifier[] transmitIdentifiersButIdsByCondition(final IdlIdentifier[] idsT,
-			final IdlStorableObjectCondition conditionT,
-			final IdlSessionKey sessionKeyT) throws AMFICOMRemoteException {
+	public final IdlIdentifier[] transmitIdentifiersButIdsByCondition(final IdlIdentifier[] idlIds,
+			final IdlStorableObjectCondition idlStorableObjectCondition,
+			final IdlSessionKey idlSessionKey) throws AMFICOMRemoteException {
 		try {
-			assert idsT != null && sessionKeyT != null && conditionT != null : NON_NULL_EXPECTED;
+			assert idlIds != null && idlSessionKey != null && idlStorableObjectCondition != null : NON_NULL_EXPECTED;
 
-			final StorableObjectCondition condition = StorableObjectConditionBuilder.restoreCondition(conditionT);
+			final StorableObjectCondition condition = StorableObjectConditionBuilder.restoreCondition(idlStorableObjectCondition);
 			final short entityCode = condition.getEntityCode().shortValue();
 
-			assert idsT.length == 0 || entityCode == StorableObject.getEntityCodeOfIdentifiables(idsT);
+			assert idlIds.length == 0 || entityCode == StorableObject.getEntityCodeOfIdentifiables(idlIds);
 			assert ObjectEntities.isEntityCodeValid(entityCode) : ILLEGAL_ENTITY_CODE;
 
-			this.validateLogin(new SessionKey(sessionKeyT));
+			this.validateLogin(SessionKey.valueOf(idlSessionKey));
 
-			final Set<Identifier> ids = Identifier.fromTransferables(idsT);
+			final Set<Identifier> ids = Identifier.fromTransferables(idlIds);
 
 			Log.debugMessage("Requested identifiers of '" + ObjectEntities.codeToString(entityCode) + "'s but ids: " + ids + " for condition: " + condition, FINEST);
 
@@ -180,16 +180,16 @@ public abstract class ServerCore implements CommonServerOperations {
 		}
 	}
 
-	public final IdVersion[] transmitRemoteVersions(final IdlIdentifier[] idsT, final IdlSessionKey sessionKeyT)
+	public final IdVersion[] transmitRemoteVersions(final IdlIdentifier[] idlIds, final IdlSessionKey idlSessionKey)
 			throws AMFICOMRemoteException {
 		try {
-			assert idsT != null && sessionKeyT != null : NON_NULL_EXPECTED;
-			final int length = idsT.length;
+			assert idlIds != null && idlSessionKey != null : NON_NULL_EXPECTED;
+			final int length = idlIds.length;
 			assert length != 0 : NON_EMPTY_EXPECTED;
 
-			this.validateLogin(new SessionKey(sessionKeyT));
+			this.validateLogin(SessionKey.valueOf(idlSessionKey));
 
-			final Set<Identifier> ids = Identifier.fromTransferables(idsT);
+			final Set<Identifier> ids = Identifier.fromTransferables(idlIds);
 			final short entityCode = StorableObject.getEntityCodeOfIdentifiables(ids);
 			assert ObjectEntities.isEntityCodeValid(entityCode) : ILLEGAL_ENTITY_CODE;
 			final StorableObjectDatabase<?> database = DatabaseContext.getDatabase(entityCode);
@@ -217,16 +217,16 @@ public abstract class ServerCore implements CommonServerOperations {
 		}
 	}
 
-	public final void receiveStorableObjects(final IdlStorableObject[] storableObjectsT, final IdlSessionKey sessionKeyT)
+	public final void receiveStorableObjects(final IdlStorableObject[] idlStorableObjects, final IdlSessionKey idlSessionKey)
 			throws AMFICOMRemoteException {
 		try {
-			assert storableObjectsT != null && sessionKeyT != null : NON_NULL_EXPECTED;
-			final int length = storableObjectsT.length;
+			assert idlStorableObjects != null && idlSessionKey != null : NON_NULL_EXPECTED;
+			final int length = idlStorableObjects.length;
 			assert length != 0 : NON_EMPTY_EXPECTED;
 
-			this.validateLogin(new SessionKey(sessionKeyT));
+			this.validateLogin(SessionKey.valueOf(idlSessionKey));
 
-			final Set<StorableObject> storableObjects = StorableObjectPool.fromTransferables(storableObjectsT, true);
+			final Set<StorableObject> storableObjects = StorableObjectPool.fromTransferables(idlStorableObjects, true);
 			final short entityCode = StorableObject.getEntityCodeOfIdentifiables(storableObjects);
 			assert ObjectEntities.isEntityCodeValid(entityCode) : ILLEGAL_ENTITY_CODE;
 
@@ -246,15 +246,15 @@ public abstract class ServerCore implements CommonServerOperations {
 		}
 	}
 
-	public final void delete(final IdlIdentifier[] idsT, final IdlSessionKey sessionKeyT) throws AMFICOMRemoteException {
+	public final void delete(final IdlIdentifier[] idlIds, final IdlSessionKey idlSessionKey) throws AMFICOMRemoteException {
 		try {
-			assert idsT != null && sessionKeyT != null : NON_NULL_EXPECTED;
-			final int length = idsT.length;
+			assert idlIds != null && idlSessionKey != null : NON_NULL_EXPECTED;
+			final int length = idlIds.length;
 			assert length != 0 : NON_EMPTY_EXPECTED;
 
-			this.validateLogin(new SessionKey(sessionKeyT));
+			this.validateLogin(SessionKey.valueOf(idlSessionKey));
 
-			final Set<Identifier> ids = Identifier.fromTransferables(idsT);
+			final Set<Identifier> ids = Identifier.fromTransferables(idlIds);
 			final short entityCode = StorableObject.getEntityCodeOfIdentifiables(ids);
 			assert ObjectEntities.isEntityCodeValid(entityCode) : ILLEGAL_ENTITY_CODE;
 

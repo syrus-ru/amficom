@@ -1,5 +1,5 @@
 /*
- * $Id: MCMImpl.java,v 1.12 2006/01/23 16:18:37 arseniy Exp $
+ * $Id: MCMImpl.java,v 1.13 2006/06/05 13:44:33 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2006/01/23 16:18:37 $
+ * @version $Revision: 1.13 $, $Date: 2006/06/05 13:44:33 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -40,15 +40,15 @@ final class MCMImpl extends ServerCore implements MCMOperations {
 	}
 
 
-	public void startTests(final IdlIdentifier[] testIdsT, final IdlSessionKey idlSessionKey) throws AMFICOMRemoteException {
-		assert testIdsT != null && idlSessionKey != null : ErrorMessages.NON_NULL_EXPECTED;
-		final int length = testIdsT.length;
+	public void startTests(final IdlIdentifier[] idlTestIds, final IdlSessionKey idlSessionKey) throws AMFICOMRemoteException {
+		assert idlTestIds != null && idlSessionKey != null : ErrorMessages.NON_NULL_EXPECTED;
+		final int length = idlTestIds.length;
 		assert length != 0 : ErrorMessages.NON_EMPTY_EXPECTED;
 
-		super.validateLogin(new SessionKey(idlSessionKey));
+		super.validateLogin(SessionKey.valueOf(idlSessionKey));
 
-		Log.debugMessage("Request to start " + testIdsT.length + " test(s)", Log.DEBUGLEVEL07);
-		final Set<Identifier> testIds = Identifier.fromTransferables(testIdsT);
+		Log.debugMessage("Request to start " + idlTestIds.length + " test(s)", Log.DEBUGLEVEL07);
+		final Set<Identifier> testIds = Identifier.fromTransferables(idlTestIds);
 		try {
 			final Set<Test> tests = StorableObjectPool.getStorableObjects(testIds, true);
 			MeasurementControlModule.addTests(new LinkedList<Test>(tests));
@@ -58,16 +58,16 @@ final class MCMImpl extends ServerCore implements MCMOperations {
 		}
 	}
 
-	public void stopTests(final IdlIdentifier[] testIdsT, final IdlSessionKey idlSessionKey) throws AMFICOMRemoteException {
-		assert testIdsT != null && idlSessionKey != null : ErrorMessages.NON_NULL_EXPECTED;
-		final int length = testIdsT.length;
+	public void stopTests(final IdlIdentifier[] idlTestIds, final IdlSessionKey idlSessionKey) throws AMFICOMRemoteException {
+		assert idlTestIds != null && idlSessionKey != null : ErrorMessages.NON_NULL_EXPECTED;
+		final int length = idlTestIds.length;
 		assert length != 0 : ErrorMessages.NON_EMPTY_EXPECTED;
 
 		try {
-			super.validateLogin(new SessionKey(idlSessionKey));
+			super.validateLogin(SessionKey.valueOf(idlSessionKey));
 
-			final Set<Identifier> ids = Identifier.fromTransferables(testIdsT);
-			Log.debugMessage("Request to stop " + testIdsT.length + " test(s): " + ids, Log.DEBUGLEVEL07);
+			final Set<Identifier> ids = Identifier.fromTransferables(idlTestIds);
+			Log.debugMessage("Request to stop " + idlTestIds.length + " test(s): " + ids, Log.DEBUGLEVEL07);
 			MeasurementControlModule.stopTests(ids);
 		} catch (AMFICOMRemoteException are) {
 			throw are;
