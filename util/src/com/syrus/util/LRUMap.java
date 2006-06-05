@@ -1,5 +1,5 @@
 /*-
- * $Id: LRUMap.java,v 1.53 2006/04/18 17:31:06 arseniy Exp $
+ * $Id: LRUMap.java,v 1.54 2006/06/05 15:24:21 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,7 +25,7 @@ import java.util.Set;
 
 
 /**
- * @version $Revision: 1.53 $, $Date: 2006/04/18 17:31:06 $
+ * @version $Revision: 1.54 $, $Date: 2006/06/05 15:24:21 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module util
@@ -36,7 +36,7 @@ public final class LRUMap<K, V extends LRUMap.Retainable> implements Map<K, V>, 
 	private static final String ERRMESSG_DIFF_SIZES = "Index and data have different sizes.";
 
 	public static final int CAPACITY = 10;
-	public static final long TIME_TO_LIVE = 10 * 60 * 1000 * 1000 * 1000;	//10 min
+	public static final long TIME_TO_LIVE = 10 * 60 * 1000L * 1000L * 1000L;	//10 min
 
 	private int capacity;
 	private long timeToLive;	//in ns
