@@ -1,5 +1,5 @@
 /*
- * $Id: Domain.java,v 1.77 2006/03/15 14:47:31 bass Exp $
+ * $Id: Domain.java,v 1.78 2006/06/05 13:40:59 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -46,15 +46,15 @@ import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.77 $, $Date: 2006/03/15 14:47:31 $
- * @author $Author: bass $
+ * @version $Revision: 1.78 $, $Date: 2006/06/05 13:40:59 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module administration
  */
 
 public final class Domain extends DomainMember
 		implements Characterizable, IdlTransferableObjectExt<IdlDomain> {
-	private static final long serialVersionUID = 6401785674412391641L;
+	private static final long serialVersionUID = -2435097877229940068L;
 
 	private String name;
 	private String description;

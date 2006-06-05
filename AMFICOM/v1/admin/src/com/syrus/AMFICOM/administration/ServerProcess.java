@@ -1,5 +1,5 @@
 /*
- * $Id: ServerProcess.java,v 1.36 2006/03/15 14:47:31 bass Exp $
+ * $Id: ServerProcess.java,v 1.37 2006/06/05 13:40:59 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,14 +31,14 @@ import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.36 $, $Date: 2006/03/15 14:47:31 $
- * @author $Author: bass $
+ * @version $Revision: 1.37 $, $Date: 2006/06/05 13:40:59 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module administration
  */
 public final class ServerProcess extends StorableObject
 		implements IdlTransferableObjectExt<IdlServerProcess> {
-	private static final long serialVersionUID = 2216890579914405388L;
+	private static final long serialVersionUID = 4590340555200008528L;
 
 	private String codename;
 	private Identifier serverId;

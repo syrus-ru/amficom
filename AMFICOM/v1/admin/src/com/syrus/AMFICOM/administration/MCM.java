@@ -1,5 +1,5 @@
 /*
- * $Id: MCM.java,v 1.65 2006/03/15 14:47:31 bass Exp $
+ * $Id: MCM.java,v 1.66 2006/06/05 13:40:59 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,8 +38,8 @@ import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.65 $, $Date: 2006/03/15 14:47:31 $
- * @author $Author: bass $
+ * @version $Revision: 1.66 $, $Date: 2006/06/05 13:40:59 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module administration
  */
@@ -47,7 +47,7 @@ import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 public final class MCM extends DomainMember
 		implements Characterizable, Namable,
 		IdlTransferableObjectExt<IdlMCM> {
-	private static final long serialVersionUID = 4622885259080741046L;
+	private static final long serialVersionUID = 8537789017196895900L;
 
 	private String name;
 	private String description;

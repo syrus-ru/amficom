@@ -1,5 +1,5 @@
 /*-
-* $Id: PermissionAttributes.java,v 1.48 2006/03/15 14:47:31 bass Exp $
+* $Id: PermissionAttributes.java,v 1.49 2006/06/05 13:40:59 arseniy Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -41,14 +41,14 @@ import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 
 /**
- * @version $Revision: 1.48 $, $Date: 2006/03/15 14:47:31 $
- * @author $Author: bass $
+ * @version $Revision: 1.49 $, $Date: 2006/06/05 13:40:59 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module administration
  */
 public final class PermissionAttributes extends StorableObject
 		implements IdlTransferableObjectExt<IdlPermissionAttributes> {
-	private static final long serialVersionUID = -8967626134139619548L;
+	private static final long serialVersionUID = 5718638990299899760L;
 
 	public static enum Module implements IdlTransferableObject<IdlModule> {
 		ADMINISTRATION(true),
