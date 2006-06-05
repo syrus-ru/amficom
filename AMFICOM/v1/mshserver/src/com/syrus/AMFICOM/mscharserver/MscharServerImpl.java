@@ -1,5 +1,5 @@
 /*-
- * $Id: MscharServerImpl.java,v 1.26 2006/01/23 16:18:37 arseniy Exp $
+ * $Id: MscharServerImpl.java,v 1.27 2006/06/05 13:44:18 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,12 +33,12 @@ import com.syrus.io.FileLoader;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2006/01/23 16:18:37 $
+ * @version $Revision: 1.27 $, $Date: 2006/06/05 13:44:18 $
  * @author $Author: arseniy $
  * @module mscharserver
  */
 final class MscharServerImpl extends IdentifierGeneratorServerCore implements MscharServerOperations {
-	private static final long serialVersionUID = 3762810480783274295L;
+	private static final long serialVersionUID = 1695929775535775822L;
 
 	MscharServerImpl(final MscharServerServantManager mscharServerServantManager) {
 		super(mscharServerServantManager, mscharServerServantManager.getCORBAServer().getOrb());
@@ -47,13 +47,15 @@ final class MscharServerImpl extends IdentifierGeneratorServerCore implements Ms
 	public IdlRenderedImage transmitTopologicalImage(final IdlTopologicalImageQuery topologicalImageQueryT,
 			final IdlSessionKey idlSessionKey) throws AMFICOMRemoteException {
 		try {
-			super.validateLogin(new SessionKey(idlSessionKey));
+			final SessionKey sessionKey = SessionKey.valueOf(idlSessionKey);
+
+			super.validateLogin(sessionKey);
 
 			Log.debugMessage("Trying to transmit " + '\'', Level.INFO);
 			final TopologicalImageQuery topologicalImageQuery = new TopologicalImageQuery(topologicalImageQueryT);
 			byte[] image;
 			try {
-				image = MapInfoPool.getImage(topologicalImageQuery, new SessionKey(idlSessionKey));
+				image = MapInfoPool.getImage(topologicalImageQuery, sessionKey);
 			} catch (IllegalDataException e) {
 				throw new AMFICOMRemoteException(IdlErrorCode.ERROR_ILLEGAL_DATA, IdlCompletionStatus.COMPLETED_NO, e.getMessage());
 			}
@@ -68,10 +70,12 @@ final class MscharServerImpl extends IdentifierGeneratorServerCore implements Ms
 
 	public void stopRenderTopologicalImage(final IdlSessionKey idlSessionKey) throws AMFICOMRemoteException {
 		try {
-			super.validateLogin(new SessionKey(idlSessionKey));
+			final SessionKey sessionKey = SessionKey.valueOf(idlSessionKey);
+
+			super.validateLogin(sessionKey);
 
 			Log.debugMessage("Trying to stop rendering image" + '\'', Level.INFO);
-			MapInfoPool.cancelRendering(new SessionKey(idlSessionKey));
+			MapInfoPool.cancelRendering(sessionKey);
 		} catch (IllegalDataException e) {
 			throw new AMFICOMRemoteException(IdlErrorCode.ERROR_ILLEGAL_DATA, IdlCompletionStatus.COMPLETED_NO, e.getMessage());
 		} catch (final Throwable t) {
@@ -81,10 +85,12 @@ final class MscharServerImpl extends IdentifierGeneratorServerCore implements Ms
 	
 	public IdlMapFeature[] findFeature(final String featureName, final IdlSessionKey idlSessionKey) throws AMFICOMRemoteException {
 		try {
-			super.validateLogin(new SessionKey(idlSessionKey));
+			final SessionKey sessionKey = SessionKey.valueOf(idlSessionKey);
+
+			super.validateLogin(sessionKey);
 
 			Log.debugMessage("Trying to find feature " + featureName, Level.INFO);
-			final List<MapFeature> mapFeatures = MapInfoPool.findFeature(featureName, new SessionKey(idlSessionKey));
+			final List<MapFeature> mapFeatures = MapInfoPool.findFeature(featureName, sessionKey);
 			final IdlMapFeature[] idlMapFeatures = new IdlMapFeature[mapFeatures.size()];
 			int i = 0;
 			for (final MapFeature mapFeature : mapFeatures) {
@@ -98,7 +104,7 @@ final class MscharServerImpl extends IdentifierGeneratorServerCore implements Ms
 
 	public IdlMapDescriptor[] getMapDescriptors(final IdlSessionKey idlSessionKey) throws AMFICOMRemoteException {
 		try {
-			super.validateLogin(new SessionKey(idlSessionKey));
+			super.validateLogin(SessionKey.valueOf(idlSessionKey));
 
 			final MapDescriptorParser parser = new MapDescriptorParser();
 			List<MapDescriptor> mapDescriptors = parser.getMapDescriptors();
@@ -122,7 +128,7 @@ final class MscharServerImpl extends IdentifierGeneratorServerCore implements Ms
 	public IdlLayerDescriptor[] getLayerDescriptors(final IdlMapDescriptor idlMapDescriptor, final IdlSessionKey idlSessionKey)
 			throws AMFICOMRemoteException {
 		try {
-			super.validateLogin(new SessionKey(idlSessionKey));
+			super.validateLogin(SessionKey.valueOf(idlSessionKey));
 
 			final MapDescriptor mapDescriptor = new MapDescriptor(idlMapDescriptor);
 			final LayerDescriptorParser parser = new LayerDescriptorParser();
@@ -147,7 +153,7 @@ final class MscharServerImpl extends IdentifierGeneratorServerCore implements Ms
 	public byte[] loadFile(final String fileName, final long offset, final IdlSessionKey idlSessionKey)
 			throws AMFICOMRemoteException {
 		try {
-			super.validateLogin(new SessionKey(idlSessionKey));
+			super.validateLogin(SessionKey.valueOf(idlSessionKey));
 
 			final byte[] partOfFile = FileLoader.fileToByte(fileName, offset);
 			return partOfFile;

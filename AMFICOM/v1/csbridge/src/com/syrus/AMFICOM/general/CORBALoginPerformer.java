@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBALoginPerformer.java,v 1.5 2006/03/14 10:47:56 bass Exp $
+ * $Id: CORBALoginPerformer.java,v 1.6 2006/06/05 13:41:53 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,8 +31,8 @@ import com.syrus.AMFICOM.security.corba.IdlSessionKeyHolder;
 import com.syrus.util.transport.idl.IdlConversionException;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2006/03/14 10:47:56 $
- * @author $Author: bass $
+ * @version $Revision: 1.6 $, $Date: 2006/06/05 13:41:53 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
  */
@@ -91,7 +91,7 @@ public final class CORBALoginPerformer implements LoginPerformer {
 					idlSessionKeyHolder,
 					userIdHolder);
 
-			this.sessionKey = new SessionKey(idlSessionKeyHolder.value);
+			this.sessionKey = SessionKey.valueOf(idlSessionKeyHolder.value);
 			this.userId = Identifier.valueOf(userIdHolder.value);
 			this.domainId = loginDomainId;
 		} catch (final AMFICOMRemoteException are) {
