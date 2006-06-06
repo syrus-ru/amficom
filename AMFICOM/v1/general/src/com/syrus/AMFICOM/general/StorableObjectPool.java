@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.218 2006/06/06 08:20:18 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.219 2006/06/06 11:24:32 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,7 +41,7 @@ import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.218 $, $Date: 2006/06/06 08:20:18 $
+ * @version $Revision: 1.219 $, $Date: 2006/06/06 11:24:32 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -1091,6 +1091,28 @@ public final class StorableObjectPool {
 		}
 	}
 
+	/**
+	 * Найти объект {@code StorableObject}, соответствующий аргументу
+	 * {@code identifiable}. Поиск производится только локально, без обращений
+	 * подгрузчику {@link #objectLoader}.
+	 * <p>
+	 * Если аргумент - объект класса {@link StorableObject}, то он же и
+	 * возвращается.
+	 * <p>
+	 * Если аргумент - объект класса {@link Identifier}, то ищется
+	 * соответствующая кишка {@link LRUMap} и возвращается объект, хранящийся в
+	 * этой кишке по ключу {@link identifiable}. Если объект в кишке на найден,
+	 * либо не найдена сама кишка, то возвращается {@code null}.
+	 * <p>
+	 * Если аргумент не является объектом ни одного из вышеперечисленных
+	 * классов, возбуждается исключение {@link IllegalDataException}.
+	 * 
+	 * @param identifiable
+	 * @return Соответствующий аргументу {@code identifiable} объект.
+	 * @throws IllegalDataException
+	 *         Если аргумент {@code identifiable} не является объектом классов
+	 *         {@link StorableObject} или {@link Identifier}.
+	 */
 	private static final StorableObject fromIdentifiable(final Identifiable identifiable) throws IllegalDataException {
 		assert identifiable != null : NON_NULL_EXPECTED;
 		if (identifiable.getId().isVoid()) {
