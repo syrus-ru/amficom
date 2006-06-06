@@ -1,5 +1,5 @@
 /*
- * $Id: SetTopLevelModeAction.java,v 1.8 2006/04/28 09:01:33 stas Exp $
+ * $Id: SetTopLevelModeAction.java,v 1.9 2006/06/06 12:51:28 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,6 @@ import javax.swing.JOptionPane;
 
 import com.syrus.AMFICOM.client.UI.AComboBox;
 import com.syrus.AMFICOM.client.model.AbstractMainFrame;
-import com.syrus.AMFICOM.client_.scheme.ElementsPermissionManager;
 import com.syrus.AMFICOM.client_.scheme.SchemePermissionManager;
 import com.syrus.AMFICOM.client_.scheme.graph.Constants;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeTabbedPane;
@@ -23,7 +22,7 @@ import com.syrus.AMFICOM.client_.scheme.graph.UgoTabbedPane;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.8 $, $Date: 2006/04/28 09:01:33 $
+ * @version $Revision: 1.9 $, $Date: 2006/06/06 12:51:28 $
  * @module schemeclient
  */
 
@@ -48,7 +47,7 @@ public class SetTopLevelModeAction extends AbstractAction {
 
 			boolean isTop = box.getSelectedItem().equals(topLevel);
 			
-			if (isTop && SchemePermissionManager.isSavingAllowed()
+			if (isTop && SchemePermissionManager.isPermitted(SchemePermissionManager.Operation.SAVE)
 					&& !((SchemeTabbedPane)this.pane).confirmUnsavedChanges(this.pane.getCurrentPanel())) {
 				return;
 			}

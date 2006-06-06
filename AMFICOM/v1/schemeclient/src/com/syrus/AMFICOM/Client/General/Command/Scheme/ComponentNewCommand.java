@@ -6,7 +6,7 @@ import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.ApplicationModel;
-import com.syrus.AMFICOM.client_.scheme.ElementsPermissionManager;
+import com.syrus.AMFICOM.client_.scheme.SchemePermissionManager;
 import com.syrus.AMFICOM.client_.scheme.graph.ElementsPanel;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
 import com.syrus.AMFICOM.client_.scheme.graph.UgoTabbedPane;
@@ -34,8 +34,8 @@ public class ComponentNewCommand extends AbstractCommand {
 		
 		aModel.getCommand(ApplicationModel.MENU_VIEW_ARRANGE).execute();
 		
-		boolean savingAllowed = ElementsPermissionManager.isSavingAllowed();
-		boolean editionAllowed = ElementsPermissionManager.isEditionAllowed();
+		boolean savingAllowed = SchemePermissionManager.isPermitted(SchemePermissionManager.Operation.SAVE);
+		boolean editionAllowed = SchemePermissionManager.isPermitted(SchemePermissionManager.Operation.EDIT);
 		
 		SchemeGraph cellGraph = this.cellPane.getGraph();
 		cellGraph.setGridVisibleAtActualSize(editionAllowed);
