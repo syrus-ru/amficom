@@ -1,5 +1,5 @@
 /*-
- * $$Id: CablePathAddEditor.java,v 1.38 2006/05/03 04:46:32 stas Exp $$
+ * $$Id: CablePathAddEditor.java,v 1.39 2006/06/06 12:59:52 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -55,6 +55,7 @@ import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.PhysicalLink;
@@ -67,12 +68,12 @@ import com.syrus.AMFICOM.scheme.CableChannelingItem;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.38 $, $Date: 2006/05/03 04:46:32 $
+ * @version $Revision: 1.39 $, $Date: 2006/06/06 12:59:52 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
-public final class CablePathAddEditor extends DefaultStorableObjectEditor {
+public final class CablePathAddEditor extends DefaultStorableObjectEditor<CablePath> {
 
 	GridBagLayout gridBagLayout1 = new GridBagLayout();
 	GridBagLayout gridBagLayout2 = new GridBagLayout();
@@ -621,8 +622,7 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor {
 		this.endNodeTextField.setEnabled(false);
 	}
 
-	public Object getObject()
-	{
+	public CablePath getObject() {
 		return this.cablePath;
 	}
 
@@ -631,8 +631,8 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor {
 		return MapPermissionManager.isEditionAllowed();
 	}
 
-	public void setObject(Object object) {
-		this.cablePath = (CablePath)object;
+	public void setObject(CablePath object) {
+		this.cablePath = object;
 
 		this.table.removeAll();
 		this.links = new LinkedList();

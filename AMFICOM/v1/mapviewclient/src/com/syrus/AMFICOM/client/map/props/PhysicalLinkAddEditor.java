@@ -1,5 +1,5 @@
 /*-
- * $$Id: PhysicalLinkAddEditor.java,v 1.46 2006/05/30 11:27:00 stas Exp $$
+ * $$Id: PhysicalLinkAddEditor.java,v 1.47 2006/06/06 12:59:52 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -71,12 +71,12 @@ import com.syrus.util.PropertyChangeException;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.46 $, $Date: 2006/05/30 11:27:00 $
+ * @version $Revision: 1.47 $, $Date: 2006/06/06 12:59:52 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
-public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
+public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor<PhysicalLink> {
 	private GridBagLayout gridBagLayout1 = new GridBagLayout();
 
 	private JPanel jPanel = new JPanel();
@@ -606,7 +606,7 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 		cableSelected(cable);
 	}
 
-	public Object getObject() {
+	public PhysicalLink getObject() {
 		return this.physicalLink;
 	}
 
@@ -615,7 +615,7 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 		return MapPermissionManager.isEditionAllowed();
 	}
 
-	public void setObject(Object object) {
+	public void setObject(PhysicalLink object) {
 		final boolean editable = isEditable();
 		this.commitButton.setEnabled(editable);
 		this.addBlockButton.setEnabled(editable);
@@ -627,7 +627,7 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 		
 		this.cableList.removeAll();
 		this.pipeBlockComboBox.removeAllItems();
-		this.physicalLink = (PhysicalLink )object;
+		this.physicalLink = object;
 		if(this.physicalLink == null) {
 			this.cableList.setEnabled(false);
 			this.pipeBlockComboBox.setEnabled(false);

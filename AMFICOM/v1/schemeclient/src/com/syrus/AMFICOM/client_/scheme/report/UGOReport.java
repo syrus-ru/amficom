@@ -1,5 +1,5 @@
 /*
- * $Id: UGOReport.java,v 1.5 2006/04/19 12:46:41 stas Exp $
+ * $Id: UGOReport.java,v 1.6 2006/06/06 12:58:03 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,19 +11,19 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
 import javax.swing.JComponent;
-import javax.swing.JScrollPane;
 
 import com.syrus.AMFICOM.client.UI.StorableObjectEditor;
 import com.syrus.AMFICOM.client.UI.VisualManager;
 import com.syrus.AMFICOM.client.report.ImageRenderingComponent;
 import com.syrus.AMFICOM.client_.scheme.graph.UgoTabbedPane;
+import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.report.AbstractDataStorableElement;
 
 public class UGOReport {
 	public static ImageRenderingComponent createReport(
 			AbstractDataStorableElement storableElement,
 			VisualManager visualManager,
-			Object dataObject) {
+			StorableObject dataObject) {
 		StorableObjectEditor editor = visualManager.getAdditionalPropertiesPanel();
 		editor.setObject(dataObject);
 		JComponent component = editor.getGUI();

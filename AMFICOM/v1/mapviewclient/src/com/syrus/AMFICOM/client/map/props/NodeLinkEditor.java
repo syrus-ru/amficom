@@ -1,5 +1,5 @@
 /*-
- * $$Id: NodeLinkEditor.java,v 1.16 2006/05/03 04:46:32 stas Exp $$
+ * $$Id: NodeLinkEditor.java,v 1.17 2006/06/06 12:59:52 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,12 +30,12 @@ import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2006/05/03 04:46:32 $
+ * @version $Revision: 1.17 $, $Date: 2006/06/06 12:59:52 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
-public class NodeLinkEditor extends DefaultStorableObjectEditor {
+public class NodeLinkEditor extends DefaultStorableObjectEditor<NodeLink> {
 	NodeLink nodeLink;
 
 	private JPanel jPanel = new JPanel();
@@ -201,7 +201,7 @@ public class NodeLinkEditor extends DefaultStorableObjectEditor {
 		this.linkComboBox.setEnabled(false);
 	}
 
-	public Object getObject() {
+	public NodeLink getObject() {
 		return this.nodeLink;
 	}
 
@@ -210,8 +210,8 @@ public class NodeLinkEditor extends DefaultStorableObjectEditor {
 		return MapPermissionManager.isEditionAllowed();
 	}
 
-	public void setObject(Object object) {
-		this.nodeLink = (NodeLink )object;
+	public void setObject(NodeLink object) {
+		this.nodeLink = object;
 
 		this.linkComboBox.removeAllItems();
 		this.startComboBox.removeAllItems();

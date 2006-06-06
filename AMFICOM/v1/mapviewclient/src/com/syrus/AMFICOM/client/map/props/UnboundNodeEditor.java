@@ -1,5 +1,5 @@
 /*-
- * $$Id: UnboundNodeEditor.java,v 1.22 2006/05/03 04:46:32 stas Exp $$
+ * $$Id: UnboundNodeEditor.java,v 1.23 2006/06/06 12:59:52 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,12 +34,12 @@ import com.syrus.AMFICOM.resource.DoublePoint;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2006/05/03 04:46:32 $
+ * @version $Revision: 1.23 $, $Date: 2006/06/06 12:59:52 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
-public class UnboundNodeEditor extends DefaultStorableObjectEditor {
+public class UnboundNodeEditor extends DefaultStorableObjectEditor<UnboundNode> {
 	private GridBagLayout gridBagLayout1 = new GridBagLayout();
 
 	private JPanel jPanel = new JPanel();
@@ -260,7 +260,7 @@ public class UnboundNodeEditor extends DefaultStorableObjectEditor {
 		super.addToUndoableListener(this.latTextField);
 	}
 
-	public Object getObject() {
+	public UnboundNode getObject() {
 		return this.unbound;
 	}
 
@@ -269,10 +269,10 @@ public class UnboundNodeEditor extends DefaultStorableObjectEditor {
 		return MapPermissionManager.isEditionAllowed();
 	}
 
-	public void setObject(Object object) {
+	public void setObject(UnboundNode object) {
 		this.commitButton.setEnabled(isEditable());
 		
-		this.unbound = (UnboundNode )object;
+		this.unbound = object;
 
 		this.typeComboBox.removeAllItems();
 		this.elementComboBox.removeAllItems();

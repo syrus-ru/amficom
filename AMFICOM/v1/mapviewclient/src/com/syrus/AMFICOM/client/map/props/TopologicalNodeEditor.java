@@ -1,5 +1,5 @@
 /*-
- * $$Id: TopologicalNodeEditor.java,v 1.20 2006/05/03 04:46:32 stas Exp $$
+ * $$Id: TopologicalNodeEditor.java,v 1.21 2006/06/06 12:59:52 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,12 +34,12 @@ import com.syrus.AMFICOM.resource.DoublePoint;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2006/05/03 04:46:32 $
+ * @version $Revision: 1.21 $, $Date: 2006/06/06 12:59:52 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
-public class TopologicalNodeEditor extends DefaultStorableObjectEditor {
+public class TopologicalNodeEditor extends DefaultStorableObjectEditor<TopologicalNode> {
 	private GridBagLayout gridBagLayout1 = new GridBagLayout();
 
 	private JPanel jPanel = new JPanel();
@@ -206,7 +206,7 @@ public class TopologicalNodeEditor extends DefaultStorableObjectEditor {
 		this.linkComboBox.setEnabled(false);
 	}
 
-	public Object getObject() {
+	public TopologicalNode getObject() {
 		return this.node;
 	}
 
@@ -215,10 +215,10 @@ public class TopologicalNodeEditor extends DefaultStorableObjectEditor {
 		return MapPermissionManager.isEditionAllowed();
 	}
 
-	public void setObject(Object objectResource) {
+	public void setObject(TopologicalNode objectResource) {
 		this.commitButton.setEnabled(isEditable());
 		
-		this.node = (TopologicalNode )objectResource;
+		this.node = objectResource;
 
 		this.linkComboBox.removeAllItems();
 

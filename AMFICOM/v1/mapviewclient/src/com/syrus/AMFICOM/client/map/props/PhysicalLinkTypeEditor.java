@@ -1,5 +1,5 @@
 /*-
- * $$Id: PhysicalLinkTypeEditor.java,v 1.15 2006/05/03 04:46:32 stas Exp $$
+ * $$Id: PhysicalLinkTypeEditor.java,v 1.16 2006/06/06 12:59:52 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -54,12 +54,12 @@ import com.syrus.AMFICOM.resource.IntDimension;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2006/05/03 04:46:32 $
+ * @version $Revision: 1.16 $, $Date: 2006/06/06 12:59:52 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
-public class PhysicalLinkTypeEditor extends DefaultStorableObjectEditor {
+public class PhysicalLinkTypeEditor<S> extends DefaultStorableObjectEditor<PhysicalLinkType> {
 	PhysicalLinkType type;
 
 	private JPanel jPanel = new JPanel();
@@ -420,7 +420,7 @@ public class PhysicalLinkTypeEditor extends DefaultStorableObjectEditor {
 		super.addToUndoableListener(this.nTextField);
 	}
 
-	public Object getObject() {
+	public PhysicalLinkType getObject() {
 		return this.type;
 	}
 
@@ -429,10 +429,10 @@ public class PhysicalLinkTypeEditor extends DefaultStorableObjectEditor {
 		return MapPermissionManager.isEditionAllowed();
 	}
 
-	public void setObject(Object object) {
+	public void setObject(PhysicalLinkType object) {
 		this.commitButton.setEnabled(isEditable());
 		
-		this.type = (PhysicalLinkType )object;
+		this.type = object;
 
 		this.libraryComboBox.removeAllItems();
 

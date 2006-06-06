@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapEditor.java,v 1.23 2006/05/03 04:46:32 stas Exp $$
+ * $$Id: MapEditor.java,v 1.24 2006/06/06 12:59:52 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,16 +36,15 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.Map;
-import com.syrus.AMFICOM.mapview.VoidElement;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2006/05/03 04:46:32 $
+ * @version $Revision: 1.24 $, $Date: 2006/06/06 12:59:52 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
-public class MapEditor extends DefaultStorableObjectEditor {
+public class MapEditor extends DefaultStorableObjectEditor<Map> {
 	Map map;
 
 	private GridBagLayout gridBagLayout1 = new GridBagLayout();
@@ -191,7 +190,7 @@ public class MapEditor extends DefaultStorableObjectEditor {
 		super.addToUndoableListener(this.descTextArea);
 	}
 
-	public Object getObject() {
+	public Map getObject() {
 		return this.map;
 	}
 
@@ -200,14 +199,14 @@ public class MapEditor extends DefaultStorableObjectEditor {
 		return MapPermissionManager.isEditionAllowed();
 	}
 
-	public void setObject(Object object) {
+	public void setObject(Map object) {
 		this.commitButton.setEnabled(isEditable());
 		
-		if(object instanceof Map)
-			this.map = (Map)object;
-		else
-			if(object instanceof VoidElement)
-				this.map = ((VoidElement )object).getMapView().getMap();
+//		if(object instanceof Map)
+			this.map = object;
+//		else
+//			if(object instanceof VoidElement)
+//				this.map = ((VoidElement )object).getMapView().getMap();
 		
 		this.domainComboBox.removeAllItems();
 

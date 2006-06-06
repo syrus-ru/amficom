@@ -1,5 +1,5 @@
 /*-
- * $$Id: TunnelLayout.java,v 1.30 2006/05/30 11:27:00 stas Exp $$
+ * $$Id: TunnelLayout.java,v 1.31 2006/06/06 12:59:52 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,6 +15,8 @@ import java.beans.PropertyChangeListener;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.jgraph.event.GraphSelectionEvent;
+import com.jgraph.event.GraphSelectionListener;
 import com.jgraph.graph.GraphConstants;
 import com.jgraph.pad.EllipseCell;
 import com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent;
@@ -27,12 +29,12 @@ import com.syrus.AMFICOM.map.PipeBlock;
 import com.syrus.AMFICOM.resource.IntPoint;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2006/05/30 11:27:00 $
+ * @version $Revision: 1.31 $, $Date: 2006/06/06 12:59:52 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
-public class TunnelLayout implements PropertyChangeListener {
+public class TunnelLayout implements GraphSelectionListener {
 	private ApplicationContext internalContext = new ApplicationContext();
 	private UgoTabbedPane ugoTabbedPane;
 	private static final int RADIUS = 15;
@@ -56,10 +58,7 @@ public class TunnelLayout implements PropertyChangeListener {
 		this.ugoTabbedPane.setEditable(false);
 		this.ugoTabbedPane.getGraph().setAntiAliased(true);
 		this.ugoTabbedPane.getGraph().setMakeNotifications(true);
-
-		this.internalContext.getDispatcher().addPropertyChangeListener(
-				ObjectSelectedEvent.TYPE,
-				this);
+		this.ugoTabbedPane.getGraph().addGraphSelectionListener(this);
 		
 		setEnabled(false);
 	}
@@ -78,41 +77,6 @@ public class TunnelLayout implements PropertyChangeListener {
 						this.cells[i][j],
 						Color.WHITE);
 			}
-		}
-	}
-
-	public void propertyChange(PropertyChangeEvent pce) {
-		if(pce.getPropertyName().equals(ObjectSelectedEvent.TYPE)) {
-			ObjectSelectedEvent ev = (ObjectSelectedEvent )pce;
-			if(ev.isSelected(ObjectSelectedEvent.OTHER_OBJECT)) {
-				Object obj = ev.getSelectedObject();
-
-				removeSelection();
-
-				if(obj instanceof EllipseCell) {
-					EllipseCell cell = (EllipseCell )obj;
-					GraphActions.setObjectBackColor(
-							this.ugoTabbedPane.getGraph(),
-							cell,
-							Color.YELLOW);
-					this.ugoTabbedPane.getGraph().setSelectionCell(cell);
-
-					boolean found = false;
-					for(int i = 0; i < this.m && !found; i++) {
-						for(int j = 0; j < this.n && !found; j++)
-							if(this.cells[i][j].equals(cell)) {
-								this.activeCoordinates = new IntPoint(i, j);
-								found = true;
-								this.parent.cableBindingSelected(i, j);
-							}
-					}
-
-				}
-			}
-			else
-				if(ev.isSelected(ObjectSelectedEvent.ALL_DESELECTED)) {
-					this.activeCoordinates = null;
-				}
 		}
 	}
 
@@ -227,5 +191,31 @@ public class TunnelLayout implements PropertyChangeListener {
 		graph.getGraphLayoutCache().insert(new Object[] {cell}, viewMap, null, null, null);
 		
 		return cell;
+	}
+
+	public void valueChanged(GraphSelectionEvent e) {
+		Object obj = e.getCell();
+		removeSelection();
+
+		if(obj instanceof EllipseCell) {
+			EllipseCell cell = (EllipseCell )obj;
+			GraphActions.setObjectBackColor(
+					this.ugoTabbedPane.getGraph(),
+					cell,
+					Color.YELLOW);
+			this.ugoTabbedPane.getGraph().setSelectionCell(cell);
+
+			boolean found = false;
+			for(int i = 0; i < this.m && !found; i++) {
+				for(int j = 0; j < this.n && !found; j++)
+					if(this.cells[i][j].equals(cell)) {
+						this.activeCoordinates = new IntPoint(i, j);
+						found = true;
+						this.parent.cableBindingSelected(i, j);
+					}
+			}
+		} else {
+			this.activeCoordinates = null;
+		}
 	}
 }

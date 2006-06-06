@@ -1,5 +1,5 @@
 /*-
- * $$Id: CollectorEditor.java,v 1.26 2006/05/03 04:46:32 stas Exp $$
+ * $$Id: CollectorEditor.java,v 1.27 2006/06/06 12:59:52 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,6 +36,7 @@ import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.client.resource.MiscUtil;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.Collector;
 import com.syrus.AMFICOM.map.PhysicalLink;
@@ -44,12 +45,12 @@ import com.syrus.AMFICOM.map.corba.IdlSiteNodeTypePackage.SiteNodeTypeSort;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2006/05/03 04:46:32 $
+ * @version $Revision: 1.27 $, $Date: 2006/06/06 12:59:52 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
-public class CollectorEditor extends DefaultStorableObjectEditor {
+public class CollectorEditor extends DefaultStorableObjectEditor<Collector> {
 	Collector collector;
 
 	private JPanel jPanel = new JPanel();
@@ -250,8 +251,7 @@ public class CollectorEditor extends DefaultStorableObjectEditor {
 		this.topologicalLengthTextField.setEnabled(false);
 	}
 
-	public Object getObject()
-	{
+	public Collector getObject() {
 		return this.collector;
 	}
 
@@ -260,7 +260,7 @@ public class CollectorEditor extends DefaultStorableObjectEditor {
 		return MapPermissionManager.isEditionAllowed();
 	}
 
-	public void setObject(Object object) {
+	public void setObject(Collector object) {
 		this.commitButton.setEnabled(isEditable());
 		
 		this.collector = (Collector)object;

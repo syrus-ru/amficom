@@ -1,5 +1,5 @@
 /*-
- * $$Id: CablePathEditor.java,v 1.23 2006/05/03 04:46:32 stas Exp $$
+ * $$Id: CablePathEditor.java,v 1.24 2006/06/06 12:59:52 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,12 +36,12 @@ import com.syrus.AMFICOM.mapview.CablePath;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2006/05/03 04:46:32 $
+ * @version $Revision: 1.24 $, $Date: 2006/06/06 12:59:52 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
-public class CablePathEditor extends DefaultStorableObjectEditor {
+public class CablePathEditor extends DefaultStorableObjectEditor<CablePath> {
 
 	private GridBagLayout gridBagLayout1 = new GridBagLayout();
 	private JPanel jPanel = new JPanel();
@@ -320,7 +320,7 @@ public class CablePathEditor extends DefaultStorableObjectEditor {
 		super.addToUndoableListener(this.descTextArea);
 	}
 
-	public Object getObject() {
+	public CablePath getObject() {
 		return this.cablePath;
 	}
 	
@@ -329,10 +329,10 @@ public class CablePathEditor extends DefaultStorableObjectEditor {
 		return MapPermissionManager.isEditionAllowed();
 	}
 
-	public void setObject(Object objectResource) {
+	public void setObject(CablePath objectResource) {
 		this.commitButton.setEnabled(isEditable());
 		
-		this.cablePath = (CablePath )objectResource;
+		this.cablePath = objectResource;
 
 		this.startComboBox.removeAllItems();
 		this.endComboBox.removeAllItems();

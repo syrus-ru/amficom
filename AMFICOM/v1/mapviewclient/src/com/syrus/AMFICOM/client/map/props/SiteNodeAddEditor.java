@@ -1,5 +1,5 @@
 /*-
- * $$Id: SiteNodeAddEditor.java,v 1.41 2006/05/03 04:46:32 stas Exp $$
+ * $$Id: SiteNodeAddEditor.java,v 1.42 2006/06/06 12:59:52 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -68,12 +68,12 @@ import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.41 $, $Date: 2006/05/03 04:46:32 $
+ * @version $Revision: 1.42 $, $Date: 2006/06/06 12:59:52 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
-public final class SiteNodeAddEditor extends DefaultStorableObjectEditor {
+public final class SiteNodeAddEditor extends DefaultStorableObjectEditor<SiteNode> {
 	private GridBagLayout gridBagLayout1 = new GridBagLayout();
 
 	private JPanel jPanel = new JPanel();
@@ -324,7 +324,7 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor {
 		this.crossingScrollPane.setVisible(true);
 	}
 
-	public Object getObject() {
+	public SiteNode getObject() {
 		return this.site;
 	}
 
@@ -576,10 +576,10 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor {
 		return MapPermissionManager.isEditionAllowed();
 	}
 
-	public void setObject(Object objectResource) {
+	public void setObject(SiteNode objectResource) {
 		this.commitButton.setEnabled(isEditable());
 		
-		this.site = (SiteNode )objectResource;
+		this.site = objectResource;
 		createTree(this.site);
 		this.schemePane.getGraph().removeAll();
 		this.crossingPanel.setSite(this.site);

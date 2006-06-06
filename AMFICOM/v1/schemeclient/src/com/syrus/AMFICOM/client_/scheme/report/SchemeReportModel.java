@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeReportModel.java,v 1.7 2006/04/19 12:46:41 stas Exp $
+ * $Id: SchemeReportModel.java,v 1.8 2006/06/06 12:58:03 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,6 +31,7 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.report.AbstractDataStorableElement;
 import com.syrus.AMFICOM.report.DestinationModules;
@@ -78,7 +79,7 @@ public class SchemeReportModel extends ReportModel {
 			}
 			else if (element.getReportName().equals(FRAME_ADDITIONAL_PROPERIES)) {
 				VisualManager visualManager = null;
-				Object dataObject = null;
+				StorableObject dataObject = null;
 				if (objectId.getMajor() == ObjectEntities.SCHEME_CODE) {
 					Scheme scheme = StorableObjectPool.getStorableObject(objectId,true);
 					visualManager = SchemePropertiesManager.getInstance(aContext);

@@ -1,5 +1,5 @@
 /*-
- * $$Id: MarkerEditor.java,v 1.22 2006/05/24 10:20:35 stas Exp $$
+ * $$Id: MarkerEditor.java,v 1.23 2006/06/06 12:59:52 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,12 +35,12 @@ import com.syrus.AMFICOM.mapview.Marker;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2006/05/24 10:20:35 $
+ * @version $Revision: 1.23 $, $Date: 2006/06/06 12:59:52 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
-public class MarkerEditor extends DefaultStorableObjectEditor {
+public class MarkerEditor extends DefaultStorableObjectEditor<Marker> {
 	private GridBagLayout gridBagLayout1 = new GridBagLayout();
 
 	private JPanel jPanel = new JPanel();
@@ -273,12 +273,12 @@ public class MarkerEditor extends DefaultStorableObjectEditor {
 		this.typeTextField.setEnabled(false);
 	}
 
-	public Object getObject() {
+	public Marker getObject() {
 		return this.marker;
 	}
 
-	public void setObject(Object object) {
-		this.marker = (Marker )object;
+	public void setObject(Marker object) {
+		this.marker = object;
 
 		this.pathComboBox.removeAllItems();
 

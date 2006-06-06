@@ -1,5 +1,5 @@
 /*-
- * $$Id: UnboundLinkEditor.java,v 1.18 2006/05/03 04:46:32 stas Exp $$
+ * $$Id: UnboundLinkEditor.java,v 1.19 2006/06/06 12:59:52 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,12 +30,12 @@ import com.syrus.AMFICOM.mapview.UnboundLink;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2006/05/03 04:46:32 $
+ * @version $Revision: 1.19 $, $Date: 2006/06/06 12:59:52 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
-public class UnboundLinkEditor extends DefaultStorableObjectEditor {
+public class UnboundLinkEditor extends DefaultStorableObjectEditor<UnboundLink> {
 	UnboundLink link;
 
 	private JPanel jPanel = new JPanel();
@@ -262,7 +262,7 @@ public class UnboundLinkEditor extends DefaultStorableObjectEditor {
 		this.topologicalLengthTextField.setEnabled(false);
 	}
 
-	public Object getObject() {
+	public UnboundLink getObject() {
 		return this.link;
 	}
 
@@ -271,8 +271,8 @@ public class UnboundLinkEditor extends DefaultStorableObjectEditor {
 		return MapPermissionManager.isEditionAllowed();
 	}
 
-	public void setObject(Object object) {
-		this.link = (UnboundLink )object;
+	public void setObject(UnboundLink object) {
+		this.link = object;
 
 		this.cableComboBox.removeAllItems();
 		this.typeComboBox.removeAllItems();

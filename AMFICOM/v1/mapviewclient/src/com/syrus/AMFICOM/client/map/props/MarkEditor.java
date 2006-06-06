@@ -1,5 +1,5 @@
 /*-
- * $$Id: MarkEditor.java,v 1.19 2006/05/03 04:46:32 stas Exp $$
+ * $$Id: MarkEditor.java,v 1.20 2006/06/06 12:59:52 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,12 +34,12 @@ import com.syrus.AMFICOM.map.Mark;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2006/05/03 04:46:32 $
+ * @version $Revision: 1.20 $, $Date: 2006/06/06 12:59:52 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
-public class MarkEditor extends DefaultStorableObjectEditor {
+public class MarkEditor extends DefaultStorableObjectEditor<Mark> {
 	private GridBagLayout gridBagLayout1 = new GridBagLayout();
 
 	private JPanel jPanel = new JPanel();
@@ -228,7 +228,7 @@ public class MarkEditor extends DefaultStorableObjectEditor {
 		this.linkComboBox.setEnabled(false);
 	}
 
-	public Object getObject() {
+	public Mark getObject() {
 		return this.mark;
 	}
 
@@ -237,10 +237,10 @@ public class MarkEditor extends DefaultStorableObjectEditor {
 		return MapPermissionManager.isEditionAllowed();
 	}
 
-	public void setObject(Object object) {
+	public void setObject(Mark object) {
 		this.commitButton.setEnabled(isEditable());
 		
-		this.mark = (Mark )object;
+		this.mark = object;
 
 		this.linkComboBox.removeAllItems();
 

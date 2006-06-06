@@ -1,5 +1,5 @@
 /*-
- * $$Id: MeasurementPathEditor.java,v 1.23 2006/05/03 04:46:32 stas Exp $$
+ * $$Id: MeasurementPathEditor.java,v 1.24 2006/06/06 12:59:52 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,6 +13,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -35,12 +36,12 @@ import com.syrus.AMFICOM.mapview.MeasurementPath;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2006/05/03 04:46:32 $
+ * @version $Revision: 1.24 $, $Date: 2006/06/06 12:59:52 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
-public class MeasurementPathEditor extends DefaultStorableObjectEditor {
+public class MeasurementPathEditor extends DefaultStorableObjectEditor<MeasurementPath> {
 
 	private JPanel jPanel = new JPanel();
 	private GridBagLayout gridBagLayout1 = new GridBagLayout();
@@ -318,7 +319,7 @@ public class MeasurementPathEditor extends DefaultStorableObjectEditor {
 		super.addToUndoableListener(this.descTextArea);
 	}
 
-	public Object getObject() {
+	public MeasurementPath getObject() {
 		return this.measurementPath;
 	}
 
@@ -327,10 +328,10 @@ public class MeasurementPathEditor extends DefaultStorableObjectEditor {
 		return MapPermissionManager.isEditionAllowed();
 	}
 
-	public void setObject(Object object) {
+	public void setObject(MeasurementPath object) {
 		this.commitButton.setEnabled(isEditable());
 		
-		this.measurementPath = (MeasurementPath )object;
+		this.measurementPath = object;
 
 		this.startComboBox.removeAllItems();
 		this.endComboBox.removeAllItems();

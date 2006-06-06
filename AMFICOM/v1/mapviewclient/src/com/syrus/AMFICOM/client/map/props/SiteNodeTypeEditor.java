@@ -1,5 +1,5 @@
 /*-
- * $$Id: SiteNodeTypeEditor.java,v 1.24 2006/05/03 04:46:32 stas Exp $$
+ * $$Id: SiteNodeTypeEditor.java,v 1.25 2006/06/06 12:59:52 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,6 +45,7 @@ import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.client.resource.MiscUtil;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -56,13 +57,12 @@ import com.syrus.AMFICOM.resource.FileImageResource;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2006/05/03 04:46:32 $
+ * @version $Revision: 1.25 $, $Date: 2006/06/06 12:59:52 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
-public final class SiteNodeTypeEditor
-		extends DefaultStorableObjectEditor {
+public final class SiteNodeTypeEditor<S> extends DefaultStorableObjectEditor<SiteNodeType> {
 	SiteNodeType type;
 
 	Identifier imageId;
@@ -361,7 +361,7 @@ public final class SiteNodeTypeEditor
 		this.imageButton.setEnabled(false);
 	}
 
-	public Object getObject() {
+	public SiteNodeType getObject() {
 		return this.type;
 	}
 
@@ -370,10 +370,10 @@ public final class SiteNodeTypeEditor
 		return MapPermissionManager.isEditionAllowed();
 	}
 
-	public void setObject(Object object) {
+	public void setObject(SiteNodeType object) {
 		this.commitButton.setEnabled(isEditable());
 		
-		this.type = (SiteNodeType )object;
+		this.type = object;
 		this.libraryComboBox.removeAllItems();
 		if(this.type == null) {
 			this.nameTextField.setEnabled(false);

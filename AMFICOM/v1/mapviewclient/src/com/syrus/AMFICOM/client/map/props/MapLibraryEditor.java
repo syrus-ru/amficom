@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapLibraryEditor.java,v 1.12 2006/05/03 04:46:32 stas Exp $$
+ * $$Id: MapLibraryEditor.java,v 1.13 2006/06/06 12:59:52 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,18 +33,19 @@ import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.client.resource.MiscUtil;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.MapLibrary;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2006/05/03 04:46:32 $
+ * @version $Revision: 1.13 $, $Date: 2006/06/06 12:59:52 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
-public class MapLibraryEditor extends DefaultStorableObjectEditor {
+public class MapLibraryEditor<S> extends DefaultStorableObjectEditor<MapLibrary> {
 	private GridBagLayout gridBagLayout1 = new GridBagLayout();
 
 	private JPanel jPanel = new JPanel();
@@ -207,7 +208,7 @@ public class MapLibraryEditor extends DefaultStorableObjectEditor {
 		super.addToUndoableListener(this.descTextArea);
 	}
 
-	public Object getObject() {
+	public MapLibrary getObject() {
 		return this.mapLibrary;
 	}
 
@@ -216,10 +217,10 @@ public class MapLibraryEditor extends DefaultStorableObjectEditor {
 		return MapPermissionManager.isEditionAllowed();
 	}
 
-	public void setObject(Object objectResource) {
+	public void setObject(MapLibrary objectResource) {
 		this.commitButton.setEnabled(isEditable());
 		
-		this.mapLibrary = (MapLibrary )objectResource;
+		this.mapLibrary = objectResource;
 
 		this.componentsList.removeAll();
 

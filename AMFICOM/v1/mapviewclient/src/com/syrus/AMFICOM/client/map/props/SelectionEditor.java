@@ -1,5 +1,5 @@
 /*-
- * $$Id: SelectionEditor.java,v 1.19 2006/02/15 12:54:38 stas Exp $$
+ * $$Id: SelectionEditor.java,v 1.20 2006/06/06 12:59:52 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,6 +30,8 @@ import com.syrus.AMFICOM.client.map.ui.SimpleMapElementController;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
+import com.syrus.AMFICOM.general.Identifiable;
+import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.mapview.Selection;
@@ -37,12 +39,12 @@ import com.syrus.AMFICOM.resource.DoublePoint;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2006/02/15 12:54:38 $
+ * @version $Revision: 1.20 $, $Date: 2006/06/06 12:59:52 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
-public class SelectionEditor extends DefaultStorableObjectEditor {
+public class SelectionEditor extends DefaultStorableObjectEditor<Selection> {
 	Selection selection;
 	double origX = 0.0D;
 	double origY = 0.0D;
@@ -224,12 +226,12 @@ public class SelectionEditor extends DefaultStorableObjectEditor {
 		super.addToUndoableListener(this.latTextField);
 	}
 
-	public Object getObject() {
+	public Selection getObject() {
 		return this.selection;
 	}
 
-	public void setObject(Object object) {
-		this.selection = (Selection )object;
+	public void setObject(Selection object) {
+		this.selection = object;
 
 		this.elementsList.removeAll();
 

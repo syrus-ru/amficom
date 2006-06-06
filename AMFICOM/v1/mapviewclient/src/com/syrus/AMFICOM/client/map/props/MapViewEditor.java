@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapViewEditor.java,v 1.26 2006/05/03 04:46:32 stas Exp $$
+ * $$Id: MapViewEditor.java,v 1.27 2006/06/06 12:59:52 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -42,17 +42,16 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.mapview.MapView;
-import com.syrus.AMFICOM.mapview.VoidElement;
 import com.syrus.AMFICOM.resource.DoublePoint;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2006/05/03 04:46:32 $
+ * @version $Revision: 1.27 $, $Date: 2006/06/06 12:59:52 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
-public class MapViewEditor extends DefaultStorableObjectEditor {
+public class MapViewEditor extends DefaultStorableObjectEditor<MapView> {
 	private GridBagLayout gridBagLayout1 = new GridBagLayout();
 
 	private JPanel jPanel = new JPanel();
@@ -369,7 +368,7 @@ public class MapViewEditor extends DefaultStorableObjectEditor {
 		super.addToUndoableListener(this.descTextArea);
 	}
 
-	public Object getObject() {
+	public MapView getObject() {
 		return this.mapView;
 	}
 
@@ -378,14 +377,14 @@ public class MapViewEditor extends DefaultStorableObjectEditor {
 		return MapPermissionManager.isEditionAllowed();
 	}
 
-	public void setObject(Object objectResource) {
+	public void setObject(MapView objectResource) {
 		this.commitButton.setEnabled(isEditable());
 		
-		if(objectResource instanceof VoidElement) {
-			this.mapView = ((VoidElement )objectResource).getMapView();
-		}
-		else
-			this.mapView = (MapView )objectResource;
+//		if(objectResource instanceof VoidElement) {
+//			this.mapView = ((VoidElement )objectResource).getMapView();
+//		}
+//		else
+			this.mapView = objectResource;
 
 		this.domainComboBox.removeAllItems();
 		this.mapComboBox.removeAllItems();
