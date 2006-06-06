@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMarqueeHandler.java,v 1.45 2006/06/01 14:30:40 stas Exp $
+ * $Id: SchemeMarqueeHandler.java,v 1.46 2006/06/06 12:47:50 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -67,7 +67,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.45 $, $Date: 2006/06/01 14:30:40 $
+ * @version $Revision: 1.46 $, $Date: 2006/06/06 12:47:50 $
  * @module schemeclient
  */
 
@@ -627,6 +627,8 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler implements MouseWh
 					graph.startEditingAtCell(cell);
 				}
 				event.consume();
+			} else {
+				graph.selectionNotify();
 			}
 		} else { // right mouse button pressed
 				boolean editable = graph.isEditable();
