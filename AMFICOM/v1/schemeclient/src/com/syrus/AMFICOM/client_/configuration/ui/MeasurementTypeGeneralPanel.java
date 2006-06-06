@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementTypeGeneralPanel.java,v 1.30 2006/05/03 04:49:00 stas Exp $
+ * $Id: MeasurementTypeGeneralPanel.java,v 1.31 2006/06/06 12:42:06 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,52 +8,13 @@
 
 package com.syrus.AMFICOM.client_.configuration.ui;
 
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextField;
-import javax.swing.JTree;
-import javax.swing.UIManager;
-
-import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
-import com.syrus.AMFICOM.client.UI.tree.CheckableNode;
-import com.syrus.AMFICOM.client.UI.tree.CheckableTreeUI;
-import com.syrus.AMFICOM.client.UI.tree.IconedNode;
-import com.syrus.AMFICOM.client.model.ApplicationContext;
-import com.syrus.AMFICOM.client.resource.I18N;
-import com.syrus.AMFICOM.client.resource.ResourceKeys;
-import com.syrus.AMFICOM.client_.scheme.SchemePermissionManager;
-import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.EquivalentCondition;
-import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.ParameterType;
-import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.logic.Item;
-import com.syrus.AMFICOM.measurement.MeasurementPortType;
-import com.syrus.AMFICOM.measurement.MeasurementType;
-import com.syrus.AMFICOM.resource.LangModelScheme;
-import com.syrus.AMFICOM.resource.SchemeResourceKeys;
-import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.30 $, $Date: 2006/05/03 04:49:00 $
+ * @version $Revision: 1.31 $, $Date: 2006/06/06 12:42:06 $
  * @module schemeclient
  */
-
+/*
 public class MeasurementTypeGeneralPanel extends DefaultStorableObjectEditor {
 	ApplicationContext aContext;
 	protected MeasurementType type;
@@ -231,16 +192,16 @@ public class MeasurementTypeGeneralPanel extends DefaultStorableObjectEditor {
 		return this.pnPanel0; 
 	}
 	
-	public Object getObject() {
+	public StorableObject getObject() {
 		return this.type;
 	}
 
 	@Override
 	protected boolean isEditable() {
-		return SchemePermissionManager.isTypeEditionAllowed();
+		return SchemePermissionManager.isPermitted(SchemePermissionManager.Operation.EDIT_TYPE);
 	}
 	
-	public void setObject(Object or) {
+	public void setObject(StorableObject or) {
 		this.commitButton.setEnabled(isEditable());
 		
 		this.type = (MeasurementType)or;
@@ -309,7 +270,7 @@ public class MeasurementTypeGeneralPanel extends DefaultStorableObjectEditor {
 //				apply();
 			}
 		}*/
-	}
+//	}
 	/*
 	private void apply() {
 		if (!this.type.getDescription().equals(this.tfNameText.getText())) {
@@ -354,7 +315,7 @@ public class MeasurementTypeGeneralPanel extends DefaultStorableObjectEditor {
 		}
 		this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, this.type.getId(), SchemeEvent.UPDATE_OBJECT));
 	}
-	*/
+	/
 	List getParameterTypeNodes(String way) {
 		for (Iterator it = this.parametersRoot.getChildren().iterator(); it.hasNext();) {
 			Item node = (Item)it.next();
@@ -400,3 +361,4 @@ public class MeasurementTypeGeneralPanel extends DefaultStorableObjectEditor {
 		return root;
 	}	
 }
+*/

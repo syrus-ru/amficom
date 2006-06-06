@@ -1,5 +1,5 @@
 /*
- * $Id: PortTypeGeneralPanel.java,v 1.23 2006/05/24 06:42:26 stas Exp $
+ * $Id: PortTypeGeneralPanel.java,v 1.24 2006/06/06 12:42:06 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,11 +27,11 @@ import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent;
 import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
-import com.syrus.AMFICOM.client.resource.MiscUtil;
 import com.syrus.AMFICOM.client.UI.AComboBox;
 import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.resource.I18N;
+import com.syrus.AMFICOM.client.resource.MiscUtil;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.client_.scheme.SchemePermissionManager;
@@ -48,11 +48,11 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.23 $, $Date: 2006/05/24 06:42:26 $
+ * @version $Revision: 1.24 $, $Date: 2006/06/06 12:42:06 $
  * @module schemeclient
  */
 
-public class PortTypeGeneralPanel extends DefaultStorableObjectEditor {
+public class PortTypeGeneralPanel extends DefaultStorableObjectEditor<PortType> {
 	ApplicationContext aContext;
 	protected PortType portType;
 	protected String[] sorts = new String[] { LangModelScheme.getString(SchemeResourceKeys.PORTTYPESORT_OPTICAL),
@@ -219,19 +219,19 @@ public class PortTypeGeneralPanel extends DefaultStorableObjectEditor {
 		return this.pnPanel0;
 	}
 
-	public Object getObject() {
+	public PortType getObject() {
 		return this.portType;
 	}
 
 	@Override
 	protected boolean isEditable() {
-		return SchemePermissionManager.isTypeEditionAllowed();
+		return SchemePermissionManager.isPermitted(SchemePermissionManager.Operation.EDIT_TYPE);
 	}
 	
-	public void setObject(final Object or) {
+	public void setObject(final PortType or) {
 		this.commitButton.setEnabled(isEditable());
 		
-		this.portType = (PortType) or;
+		this.portType = or;
 
 		if (this.portType != null) {
 			this.tfNameText.setText(this.portType.getName());

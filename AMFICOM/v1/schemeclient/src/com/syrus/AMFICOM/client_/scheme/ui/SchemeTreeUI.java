@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeTreeUI.java,v 1.40 2006/06/02 17:23:57 bass Exp $
+ * $Id: SchemeTreeUI.java,v 1.41 2006/06/06 12:41:55 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,6 @@ import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
-import com.syrus.AMFICOM.client_.scheme.ElementsPermissionManager;
 import com.syrus.AMFICOM.client_.scheme.SchemePermissionManager;
 import com.syrus.AMFICOM.configuration.CableLinkType;
 import com.syrus.AMFICOM.configuration.CableThreadType;
@@ -57,8 +56,8 @@ import com.syrus.AMFICOM.scheme.SchemeProtoGroup;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.40 $, $Date: 2006/06/02 17:23:57 $
+ * @author $Author: stas $
+ * @version $Revision: 1.41 $, $Date: 2006/06/06 12:41:55 $
  * @module schemeclient
  */
 
@@ -94,7 +93,7 @@ public class SchemeTreeUI extends IconedTreeUI {
 						Item item = (Item)selectedPath.getLastPathComponent();
 						Object object = item.getObject();
 						if (object instanceof Scheme) {
-							if (!SchemePermissionManager.isDeletionAllowed()) {
+							if (!SchemePermissionManager.isPermitted(SchemePermissionManager.Operation.DELETE)) {
 								JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(), 
 										LangModelScheme.getString("Message.error.access_denied"),  //$NON-NLS-1$ 
 										LangModelScheme.getString("Message.error"), //$NON-NLS-1$
@@ -144,7 +143,7 @@ public class SchemeTreeUI extends IconedTreeUI {
 								Log.errorMessage(e1);
 							}
 						} else if (object instanceof SchemePath) {
-							if (!SchemePermissionManager.isEditionAllowed()) {
+							if (!SchemePermissionManager.isPermitted(SchemePermissionManager.Operation.EDIT)) {
 								JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(), 
 										LangModelScheme.getString("Message.error.access_denied"),  //$NON-NLS-1$ 
 										LangModelScheme.getString("Message.error"), //$NON-NLS-1$
@@ -172,7 +171,7 @@ public class SchemeTreeUI extends IconedTreeUI {
 								Log.errorMessage(e1);
 							}
 						} else if (object instanceof SchemeProtoElement) {
-							if (!ElementsPermissionManager.isEditionAllowed()) {
+							if (!SchemePermissionManager.isPermitted(SchemePermissionManager.Operation.EDIT)) {
 								JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(), 
 										LangModelScheme.getString("Message.error.access_denied"),  //$NON-NLS-1$ 
 										LangModelScheme.getString("Message.error"), //$NON-NLS-1$
@@ -200,7 +199,7 @@ public class SchemeTreeUI extends IconedTreeUI {
 								Log.errorMessage(e1);
 							}
 						} else if (object instanceof SchemeProtoGroup) {
-							if (!ElementsPermissionManager.isEditionAllowed()) {
+							if (!SchemePermissionManager.isPermitted(SchemePermissionManager.Operation.EDIT)) {
 								JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(), 
 										LangModelScheme.getString("Message.error.access_denied"),  //$NON-NLS-1$ 
 										LangModelScheme.getString("Message.error"), //$NON-NLS-1$
@@ -236,7 +235,7 @@ public class SchemeTreeUI extends IconedTreeUI {
 								Log.errorMessage(e1);
 							}
 						} else if (object instanceof ProtoEquipment) {
-							if (!ElementsPermissionManager.isTypeEditionAllowed()) {
+							if (!SchemePermissionManager.isPermitted(SchemePermissionManager.Operation.EDIT_TYPE)) {
 								JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(), 
 										LangModelScheme.getString("Message.error.access_denied"),  //$NON-NLS-1$ 
 										LangModelScheme.getString("Message.error"), //$NON-NLS-1$
@@ -282,7 +281,7 @@ public class SchemeTreeUI extends IconedTreeUI {
 								Log.errorMessage(e1);
 							}
 						} else if (object instanceof LinkType) {
-							if (!ElementsPermissionManager.isTypeEditionAllowed()) {
+							if (!SchemePermissionManager.isPermitted(SchemePermissionManager.Operation.EDIT_TYPE)) {
 								JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(), 
 										LangModelScheme.getString("Message.error.access_denied"),  //$NON-NLS-1$ 
 										LangModelScheme.getString("Message.error"), //$NON-NLS-1$
@@ -318,7 +317,7 @@ public class SchemeTreeUI extends IconedTreeUI {
 								Log.errorMessage(e1);
 							}
 						} else if (object instanceof CableLinkType) {
-							if (!ElementsPermissionManager.isTypeEditionAllowed()) {
+							if (!SchemePermissionManager.isPermitted(SchemePermissionManager.Operation.EDIT_TYPE)) {
 								JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(), 
 										LangModelScheme.getString("Message.error.access_denied"),  //$NON-NLS-1$ 
 										LangModelScheme.getString("Message.error"), //$NON-NLS-1$
@@ -361,7 +360,7 @@ public class SchemeTreeUI extends IconedTreeUI {
 								Log.errorMessage(e1);
 							}
 						} else if (object instanceof PortType) {
-							if (!ElementsPermissionManager.isTypeEditionAllowed()) {
+							if (!SchemePermissionManager.isPermitted(SchemePermissionManager.Operation.EDIT_TYPE)) {
 								Log.debugMessage("PortType deletion is not allowed", Level.FINER);
 								JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(), 
 										LangModelScheme.getString("Message.error.access_denied"),  //$NON-NLS-1$ 

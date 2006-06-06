@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCablePortCharacteristicsPanel.java,v 1.16 2006/05/03 04:48:52 stas Exp $
+ * $Id: SchemeCablePortCharacteristicsPanel.java,v 1.17 2006/06/06 12:41:55 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,11 +19,11 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.16 $, $Date: 2006/05/03 04:48:52 $
+ * @version $Revision: 1.17 $, $Date: 2006/06/06 12:41:55 $
  * @module schemeclient
  */
 
-public class SchemeCablePortCharacteristicsPanel extends CharacteristicsPanel {
+public class SchemeCablePortCharacteristicsPanel extends CharacteristicsPanel<SchemeCablePort> {
 	protected SchemeCablePort schemeCablePort;
 
 	protected SchemeCablePortCharacteristicsPanel() {
@@ -35,17 +35,17 @@ public class SchemeCablePortCharacteristicsPanel extends CharacteristicsPanel {
 		setObject(p);
 	}
 
-	public Object getObject() {
+	public SchemeCablePort getObject() {
 		return this.schemeCablePort;
 	}
 	
 	@Override
 	protected boolean isEditable() {
-		return SchemePermissionManager.isEditionAllowed();
+		return SchemePermissionManager.isPermitted(SchemePermissionManager.Operation.EDIT);
 	}
 
-	public void setObject(Object or) {
-		this.schemeCablePort = (SchemeCablePort)or;
+	public void setObject(SchemeCablePort or) {
+		this.schemeCablePort = or;
 		super.clear();
 
 		if (this.schemeCablePort != null) {

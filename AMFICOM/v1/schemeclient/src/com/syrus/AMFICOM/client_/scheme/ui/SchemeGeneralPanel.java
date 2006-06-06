@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeGeneralPanel.java,v 1.18 2006/05/24 06:42:26 stas Exp $
+ * $Id: SchemeGeneralPanel.java,v 1.19 2006/06/06 12:41:55 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,12 +36,12 @@ import javax.swing.UIManager;
 import javax.swing.text.NumberFormatter;
 
 import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
-import com.syrus.AMFICOM.client.resource.MiscUtil;
 import com.syrus.AMFICOM.client.UI.AComboBox;
 import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
 import com.syrus.AMFICOM.client.UI.tree.IconedNode;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.resource.I18N;
+import com.syrus.AMFICOM.client.resource.MiscUtil;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.client_.scheme.SchemePermissionManager;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -57,11 +57,11 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.18 $, $Date: 2006/05/24 06:42:26 $
+ * @version $Revision: 1.19 $, $Date: 2006/06/06 12:41:55 $
  * @module schemeclient
  */
 
-public class SchemeGeneralPanel extends DefaultStorableObjectEditor {
+public class SchemeGeneralPanel extends DefaultStorableObjectEditor<Scheme> {
 	ApplicationContext aContext;
 	protected Scheme scheme;
 	private Identifier imageId;
@@ -390,13 +390,13 @@ public class SchemeGeneralPanel extends DefaultStorableObjectEditor {
 
 	@Override
 	protected boolean isEditable() {
-		return SchemePermissionManager.isEditionAllowed();
+		return SchemePermissionManager.isPermitted(SchemePermissionManager.Operation.EDIT);
 	}
 	
-	public void setObject(Object or) {
+	public void setObject(Scheme or) {
 		this.btCommitBut.setEnabled(isEditable());
 		
-		this.scheme = (Scheme)or;
+		this.scheme = or;
 		Icon symbol = null;
 		
 		if (this.scheme != null) {
@@ -428,7 +428,7 @@ public class SchemeGeneralPanel extends DefaultStorableObjectEditor {
 		return this.pnPanel0;
 	}
 
-	public Object getObject() {
+	public Scheme getObject() {
 		return this.scheme;
 	}
 

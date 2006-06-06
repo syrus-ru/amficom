@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementTypeCharacteristicsPanel.java,v 1.9 2006/05/03 04:49:00 stas Exp $
+ * $Id: MeasurementTypeCharacteristicsPanel.java,v 1.10 2006/06/06 12:42:06 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,16 +8,13 @@
 
 package com.syrus.AMFICOM.client_.configuration.ui;
 
-import com.syrus.AMFICOM.client.UI.CharacteristicsPanel;
-import com.syrus.AMFICOM.client_.scheme.SchemePermissionManager;
-import com.syrus.AMFICOM.measurement.MeasurementType;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.9 $, $Date: 2006/05/03 04:49:00 $
+ * @version $Revision: 1.10 $, $Date: 2006/06/06 12:42:06 $
  * @module schemeclient
  */
-
+/*
 public class MeasurementTypeCharacteristicsPanel extends CharacteristicsPanel {
 	protected MeasurementType type;
 
@@ -30,16 +27,16 @@ public class MeasurementTypeCharacteristicsPanel extends CharacteristicsPanel {
 		this.setObject(measurementType);
 	}
 
-	public Object getObject() {
+	public StorableObject getObject() {
 		return this.type;
 	}
 	
 	@Override
 	protected boolean isEditable() {
-		return SchemePermissionManager.isTypeEditionAllowed();
+		return SchemePermissionManager.isPermitted(SchemePermissionManager.Operation.EDIT_TYPE);
 	}
 
-	public void setObject(final Object or) {
+	public void setObject(final Identifiable or) {
 		this.type = (MeasurementType) or;
 		super.showNoSelection();
 	}
@@ -52,3 +49,4 @@ public class MeasurementTypeCharacteristicsPanel extends CharacteristicsPanel {
 		}
 	}
 }
+*/

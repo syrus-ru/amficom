@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePortGeneralPanel.java,v 1.34 2006/05/24 06:42:26 stas Exp $
+ * $Id: SchemePortGeneralPanel.java,v 1.35 2006/06/06 12:41:55 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.util.Collections;
 import java.util.Set;
 import java.util.logging.Level;
 
@@ -36,12 +35,12 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
-import com.syrus.AMFICOM.client.resource.MiscUtil;
 import com.syrus.AMFICOM.client.UI.ColorChooserComboBox;
 import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
 import com.syrus.AMFICOM.client.UI.WrapperedComboBox;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.resource.I18N;
+import com.syrus.AMFICOM.client.resource.MiscUtil;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.client_.scheme.SchemePermissionManager;
@@ -74,11 +73,11 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.34 $, $Date: 2006/05/24 06:42:26 $
+ * @version $Revision: 1.35 $, $Date: 2006/06/06 12:41:55 $
  * @module schemeclient
  */
 
-public class SchemePortGeneralPanel extends DefaultStorableObjectEditor {
+public class SchemePortGeneralPanel extends DefaultStorableObjectEditor<SchemePort> {
 	ApplicationContext aContext;
 	protected Set<SchemePort> schemePorts;
 	protected SchemePort schemePort;
@@ -513,83 +512,98 @@ public class SchemePortGeneralPanel extends DefaultStorableObjectEditor {
 
 	@Override
 	protected boolean isEditable() {
-		return SchemePermissionManager.isEditionAllowed();
+		return SchemePermissionManager.isPermitted(SchemePermissionManager.Operation.EDIT);
 	}
 	
-	public void setObject(final Object or) {
+	@Override
+	public Set<SchemePort> getObjects() {
+		return this.schemePorts;
+	}
+	
+	@Override
+	public void setObjects(final Set<SchemePort> ports) {
 		this.btCommitBut.setEnabled(isEditable());
 		
-		boolean multiplePorts = (or instanceof Set);
-		this.schemePorts = multiplePorts ? (Set<SchemePort>)or : Collections.singleton((SchemePort)or);
-		this.schemePort = multiplePorts ? ((Set<SchemePort>)or).iterator().next() : (SchemePort)or;
+		this.schemePorts = ports;
+		this.schemePort = ports.iterator().next();
 		
-		MeasurementPort mPort = null;
-		Port port = null;
 		this.cmbTypeCombo.removeAllItems();
 		this.cmbMpTypeCombo.removeAllItems();
 		this.cmbExistMPCombo.removeAllItems();
 		this.rbExistMPBut.setEnabled(false);
 		this.rbNewMPBut.doClick();
+		
+		this.tfNameText.setText("...");
+		this.taDescrArea.setText("");
 
+		this.setPortEnabled(false);
+		this.tfMarkText.setText(SchemeResourceKeys.EMPTY);
+		
+		this.cbMpBox.setSelected(false);
+		
+		final TypicalCondition condition1 = new TypicalCondition(PortTypeKind._PORT_KIND_SIMPLE,
+				0,
+				OperationSort.OPERATION_EQUALS,
+				ObjectEntities.PORT_TYPE_CODE,
+				PortTypeWrapper.COLUMN_KIND);
+		try {
+			final Set<PortType> portTypes = StorableObjectPool.getStorableObjectsByCondition(condition1, true);
+			this.cmbTypeCombo.addElements(portTypes);
+		} catch (ApplicationException e) {
+			Log.errorMessage(e);
+		}
+		final EquivalentCondition condition2 = new EquivalentCondition(ObjectEntities.MEASUREMENTPORT_TYPE_CODE);
+		try {
+			final Set<MeasurementPortType> measurementPortTypes = StorableObjectPool.getStorableObjectsByCondition(condition2, true);
+			this.cmbMpTypeCombo.addElements(measurementPortTypes);
+		} catch (ApplicationException e) {
+			Log.errorMessage(e);
+		}
+		this.cmbTypeCombo.setSelectedItem(this.schemePort.getPortType());
+		
+		if (ports.size() == 1) {
+			setObject(this.schemePort);
+		}
+	}
+	
+	public void setObject(final SchemePort or) {
+		MeasurementPort mPort = null;
+		Port port = null;
 		if (this.schemePort != null) {
 			try {
-				if (!multiplePorts) {
-					this.parent = this.schemePort.getParentSchemeDevice().getParentSchemeElement();
-					port = this.schemePort.getPort();
-					mPort = this.schemePort.getMeasurementPort();
-					this.kis = null;
+				this.parent = this.schemePort.getParentSchemeDevice().getParentSchemeElement();
+				port = this.schemePort.getPort();
+				mPort = this.schemePort.getMeasurementPort();
+				this.kis = null;
 
-					if (this.parent != null) {
-						SchemeElement topParent = this.parent;
-						while (this.kis == null && topParent != null) {
-							this.kis = topParent.getKis();
-							topParent = topParent.getParentSchemeElement();
-						}
+				if (this.parent != null) {
+					SchemeElement topParent = this.parent;
+					while (this.kis == null && topParent != null) {
+						this.kis = topParent.getKis();
+						topParent = topParent.getParentSchemeElement();
 					}
-					
-					if (this.kis != null) {
-						final Set<MeasurementPort> mPorts = this.kis.getMeasurementPorts(false);
-						if (!mPorts.isEmpty()) {
-							this.rbExistMPBut.setEnabled(true);
-							this.rbExistMPBut.doClick();
-							this.cmbExistMPCombo.addElements(mPorts);
-							
-							final MeasurementPort mp = this.schemePort.getMeasurementPort();
-							if (mp != null) {
-								this.cmbExistMPCombo.setSelectedItem(mp);
-							}
-						}
-					}
-					
-					this.tfNameText.setText(this.schemePort.getName());
-					this.taDescrArea.setText(this.schemePort.getDescription());
-				} else {
-					this.tfNameText.setText("...");
-					this.taDescrArea.setText("");
 				}
+
+				if (this.kis != null) {
+					final Set<MeasurementPort> mPorts = this.kis.getMeasurementPorts(false);
+					if (!mPorts.isEmpty()) {
+						this.rbExistMPBut.setEnabled(true);
+						this.rbExistMPBut.doClick();
+						this.cmbExistMPCombo.addElements(mPorts);
+						
+						final MeasurementPort mp = this.schemePort.getMeasurementPort();
+						if (mp != null) {
+							this.cmbExistMPCombo.setSelectedItem(mp);
+						}
+					}
+				}
+					
+				this.tfNameText.setText(this.schemePort.getName());
+				this.taDescrArea.setText(this.schemePort.getDescription());
 			} catch (IllegalStateException e1) {
 				Log.debugMessage("SchemeDevice has no parent SchemeElement yet", Level.FINEST); //$NON-NLS-1$
 				this.parent = null;
 			}
-			final TypicalCondition condition1 = new TypicalCondition(PortTypeKind._PORT_KIND_SIMPLE,
-					0,
-					OperationSort.OPERATION_EQUALS,
-					ObjectEntities.PORT_TYPE_CODE,
-					PortTypeWrapper.COLUMN_KIND);
-			try {
-				final Set<PortType> portTypes = StorableObjectPool.getStorableObjectsByCondition(condition1, true);
-				this.cmbTypeCombo.addElements(portTypes);
-			} catch (ApplicationException e) {
-				Log.errorMessage(e);
-			}
-			final EquivalentCondition condition2 = new EquivalentCondition(ObjectEntities.MEASUREMENTPORT_TYPE_CODE);
-			try {
-				final Set<MeasurementPortType> measurementPortTypes = StorableObjectPool.getStorableObjectsByCondition(condition2, true);
-				this.cmbMpTypeCombo.addElements(measurementPortTypes);
-			} catch (ApplicationException e) {
-				Log.errorMessage(e);
-			}
-			this.cmbTypeCombo.setSelectedItem(this.schemePort.getPortType());
 		}
 		if (port != null) {
 			this.setPortEnabled(true);
@@ -599,19 +613,15 @@ public class SchemePortGeneralPanel extends DefaultStorableObjectEditor {
 			// if (!isConatainsColor(color))
 			// colorCombo.addItem(color);
 			// colorCombo.setSelectedItem(color);
-		} else {
-			this.setPortEnabled(false);
-			this.tfMarkText.setText(SchemeResourceKeys.EMPTY);
 		}
+		
 		if (mPort != null) {
 			this.cbMpBox.setSelected(true);
 			this.cmbMpTypeCombo.setSelectedItem(mPort.getType());
-		} else {
-			this.cbMpBox.setSelected(false);
 		}
 	}
 
-	public Object getObject() {
+	public SchemePort getObject() {
 		return this.schemePort;
 	}
 
@@ -622,6 +632,7 @@ public class SchemePortGeneralPanel extends DefaultStorableObjectEditor {
 			PortType ptype = (PortType) this.cmbTypeCombo.getSelectedItem();
 			for (SchemePort schemePort1 : this.schemePorts) {
 				schemePort1.setPortType(ptype);
+				this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, schemePort1.getId(), SchemeEvent.UPDATE_OBJECT));
 			}
 		} else if (this.schemePort != null && MiscUtil.validName(this.tfNameText.getText())) {
 			this.schemePort.setName(this.tfNameText.getText());
@@ -690,4 +701,5 @@ public class SchemePortGeneralPanel extends DefaultStorableObjectEditor {
 			this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, this.schemePort.getId(), SchemeEvent.UPDATE_OBJECT));
 		}
 	}
+
 }

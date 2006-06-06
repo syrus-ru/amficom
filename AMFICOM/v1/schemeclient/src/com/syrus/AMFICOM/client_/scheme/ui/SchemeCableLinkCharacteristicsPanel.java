@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLinkCharacteristicsPanel.java,v 1.17 2006/05/03 04:48:52 stas Exp $
+ * $Id: SchemeCableLinkCharacteristicsPanel.java,v 1.18 2006/06/06 12:41:55 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,11 +19,11 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.17 $, $Date: 2006/05/03 04:48:52 $
+ * @version $Revision: 1.18 $, $Date: 2006/06/06 12:41:55 $
  * @module schemeclient
  */
 
-public class SchemeCableLinkCharacteristicsPanel extends CharacteristicsPanel {
+public class SchemeCableLinkCharacteristicsPanel extends CharacteristicsPanel<SchemeCableLink> {
 	protected SchemeCableLink schemeCableLink;
 
 	protected SchemeCableLinkCharacteristicsPanel() {
@@ -35,17 +35,17 @@ public class SchemeCableLinkCharacteristicsPanel extends CharacteristicsPanel {
 		setObject(l);
 	}
 
-	public Object getObject() {
+	public SchemeCableLink getObject() {
 		return this.schemeCableLink;
 	}
 	
 	@Override
 	protected boolean isEditable() {
-		return SchemePermissionManager.isEditionAllowed();
+		return SchemePermissionManager.isPermitted(SchemePermissionManager.Operation.EDIT);
 	}
 
-	public void setObject(Object or) {
-		this.schemeCableLink = (SchemeCableLink)or;
+	public void setObject(SchemeCableLink or) {
+		this.schemeCableLink = or;
 		super.clear();
 
 		if (this.schemeCableLink != null) {

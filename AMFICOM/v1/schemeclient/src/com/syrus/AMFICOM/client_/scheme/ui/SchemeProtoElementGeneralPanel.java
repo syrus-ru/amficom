@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElementGeneralPanel.java,v 1.32 2006/05/24 06:42:26 stas Exp $
+ * $Id: SchemeProtoElementGeneralPanel.java,v 1.33 2006/06/06 12:41:55 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,16 +35,16 @@ import javax.swing.JTextField;
 import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
-import com.syrus.AMFICOM.client.resource.MiscUtil;
 import com.syrus.AMFICOM.client.UI.AComboBox;
 import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
 import com.syrus.AMFICOM.client.UI.NameableListCellRenderer;
 import com.syrus.AMFICOM.client.UI.WrapperedComboBox;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.resource.I18N;
+import com.syrus.AMFICOM.client.resource.MiscUtil;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
-import com.syrus.AMFICOM.client_.scheme.ElementsPermissionManager;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
+import com.syrus.AMFICOM.client_.scheme.SchemePermissionManager;
 import com.syrus.AMFICOM.configuration.EquipmentType;
 import com.syrus.AMFICOM.configuration.ProtoEquipment;
 import com.syrus.AMFICOM.configuration.ProtoEquipmentWrapper;
@@ -66,11 +66,11 @@ import com.syrus.util.WrapperComparator;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.32 $, $Date: 2006/05/24 06:42:26 $
+ * @version $Revision: 1.33 $, $Date: 2006/06/06 12:41:55 $
  * @module schemeclient
  */
 
-public class SchemeProtoElementGeneralPanel extends DefaultStorableObjectEditor {
+public class SchemeProtoElementGeneralPanel extends DefaultStorableObjectEditor<SchemeProtoElement> {
 	ApplicationContext aContext;
 	protected SchemeProtoElement schemeProtoElement;
 	private Identifier imageId;
@@ -405,19 +405,19 @@ public class SchemeProtoElementGeneralPanel extends DefaultStorableObjectEditor 
 		return this.panel0;
 	}
 
-	public Object getObject() {
+	public SchemeProtoElement getObject() {
 		return this.schemeProtoElement;
 	}
 
 	@Override
 	protected boolean isEditable() {
-		return ElementsPermissionManager.isEditionAllowed();
+		return SchemePermissionManager.isPermitted(SchemePermissionManager.Operation.EDIT);
 	}
 	
-	public void setObject(final Object or) {
+	public void setObject(final SchemeProtoElement or) {
 		this.commitButton.setEnabled(isEditable());
 		
-		this.schemeProtoElement = (SchemeProtoElement) or;
+		this.schemeProtoElement = or;
 		ProtoEquipment protoEq = null;
 		Icon symbol = null;
 

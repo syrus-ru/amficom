@@ -1,5 +1,5 @@
 /*-
- * $Id: EmptyStorableObjectEditor.java,v 1.8 2006/02/15 12:18:11 stas Exp $
+ * $Id: EmptyStorableObjectEditor.java,v 1.9 2006/06/06 12:41:55 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,15 +14,16 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 
 import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
+import com.syrus.AMFICOM.general.Identifiable;
 
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.8 $, $Date: 2006/02/15 12:18:11 $
+ * @version $Revision: 1.9 $, $Date: 2006/06/06 12:41:55 $
  * @module schemeclient
  */
 
-public class EmptyStorableObjectEditor extends DefaultStorableObjectEditor {
+public class EmptyStorableObjectEditor extends DefaultStorableObjectEditor<Identifiable> {
 	JPanel pnPanel0 = new JPanel();
 	
 	public EmptyStorableObjectEditor() {
@@ -33,11 +34,11 @@ public class EmptyStorableObjectEditor extends DefaultStorableObjectEditor {
 		return this.pnPanel0;
 	}
 
-	public void setObject(Object object) {
+	public void setObject(Identifiable object) {
 		// nothing
 	}
 
-	public Object getObject() {
+	public Identifiable getObject() {
 		return null;
 	}
 

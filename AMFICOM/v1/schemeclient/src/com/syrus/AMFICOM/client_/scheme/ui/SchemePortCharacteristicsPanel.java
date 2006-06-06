@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePortCharacteristicsPanel.java,v 1.17 2006/05/03 04:48:52 stas Exp $
+ * $Id: SchemePortCharacteristicsPanel.java,v 1.18 2006/06/06 12:41:55 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,8 +7,6 @@
  */
 
 package com.syrus.AMFICOM.client_.scheme.ui;
-
-import java.util.Set;
 
 import com.syrus.AMFICOM.client.UI.CharacteristicsPanel;
 import com.syrus.AMFICOM.client_.scheme.SchemePermissionManager;
@@ -21,11 +19,11 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.17 $, $Date: 2006/05/03 04:48:52 $
+ * @version $Revision: 1.18 $, $Date: 2006/06/06 12:41:55 $
  * @module schemeclient
  */
 
-public class SchemePortCharacteristicsPanel extends CharacteristicsPanel {
+public class SchemePortCharacteristicsPanel extends CharacteristicsPanel<SchemePort> {
 	protected SchemePort schemePort;
 
 	protected SchemePortCharacteristicsPanel() {
@@ -37,21 +35,18 @@ public class SchemePortCharacteristicsPanel extends CharacteristicsPanel {
 		setObject(p);
 	}
 
-	public Object getObject() {
+	public SchemePort getObject() {
 		return this.schemePort;
 	}
 	
 	@Override
 	protected boolean isEditable() {
-		return SchemePermissionManager.isEditionAllowed();
+		return SchemePermissionManager.isPermitted(SchemePermissionManager.Operation.EDIT);
 	}
 
-	public void setObject(Object or) {
-		if (or instanceof Set) {
-			this.schemePort = null;
-		} else {
-			this.schemePort = (SchemePort)or;
-		}
+	public void setObject(SchemePort or) {
+		this.schemePort = or;
+
 		super.clear();
 		if (this.schemePort != null) {
 			try {

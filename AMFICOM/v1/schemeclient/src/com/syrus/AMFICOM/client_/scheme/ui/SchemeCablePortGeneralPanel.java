@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCablePortGeneralPanel.java,v 1.24 2006/05/24 06:42:26 stas Exp $
+ * $Id: SchemeCablePortGeneralPanel.java,v 1.25 2006/06/06 12:41:55 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,12 +27,12 @@ import javax.swing.JTextField;
 import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
-import com.syrus.AMFICOM.client.resource.MiscUtil;
 import com.syrus.AMFICOM.client.UI.ColorChooserComboBox;
 import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
 import com.syrus.AMFICOM.client.UI.WrapperedComboBox;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.resource.I18N;
+import com.syrus.AMFICOM.client.resource.MiscUtil;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.client_.scheme.SchemePermissionManager;
 import com.syrus.AMFICOM.configuration.Port;
@@ -53,11 +53,11 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.24 $, $Date: 2006/05/24 06:42:26 $
+ * @version $Revision: 1.25 $, $Date: 2006/06/06 12:41:55 $
  * @module schemeclient
  */
 
-public class SchemeCablePortGeneralPanel extends DefaultStorableObjectEditor {
+public class SchemeCablePortGeneralPanel extends DefaultStorableObjectEditor<SchemeCablePort> {
 	ApplicationContext aContext;
 	protected SchemeCablePort schemePort;
 	protected SchemeElement parent;
@@ -293,13 +293,13 @@ public class SchemeCablePortGeneralPanel extends DefaultStorableObjectEditor {
 
 	@Override
 	protected boolean isEditable() {
-		return SchemePermissionManager.isEditionAllowed();
+		return SchemePermissionManager.isPermitted(SchemePermissionManager.Operation.EDIT);
 	}
 	
-	public void setObject(final Object or) {
+	public void setObject(final SchemeCablePort or) {
 		this.btCommitBut.setEnabled(isEditable());
 		
-		this.schemePort = (SchemeCablePort) or;
+		this.schemePort = or;
 		Port port = null;
 		this.cmbTypeCombo.removeAllItems();
 
@@ -341,7 +341,7 @@ public class SchemeCablePortGeneralPanel extends DefaultStorableObjectEditor {
 		}
 	}
 
-	public Object getObject() {
+	public SchemeCablePort getObject() {
 		return this.schemePort;
 	}
 

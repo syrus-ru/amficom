@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePathCharacteristicsPanel.java,v 1.6 2006/05/03 04:48:52 stas Exp $
+ * $Id: SchemePathCharacteristicsPanel.java,v 1.7 2006/06/06 12:41:55 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.IdlCharacter
 import com.syrus.AMFICOM.scheme.SchemePath;
 import com.syrus.util.Log;
 
-public class SchemePathCharacteristicsPanel extends CharacteristicsPanel {
+public class SchemePathCharacteristicsPanel extends CharacteristicsPanel<SchemePath> {
 	protected SchemePath schemePath;
 
 	protected SchemePathCharacteristicsPanel() {
@@ -28,17 +28,17 @@ public class SchemePathCharacteristicsPanel extends CharacteristicsPanel {
 		setObject(schemePath);
 	}
 
-	public Object getObject() {
+	public SchemePath getObject() {
 		return this.schemePath;
 	}
 	
 	@Override
 	protected boolean isEditable() {
-		return SchemePermissionManager.isEditionAllowed();
+		return SchemePermissionManager.isPermitted(SchemePermissionManager.Operation.EDIT);
 	}
 
-	public void setObject(Object or) {
-		this.schemePath = (SchemePath)or;
+	public void setObject(SchemePath or) {
+		this.schemePath = or;
 		super.clear();
 
 		if (this.schemePath != null) {

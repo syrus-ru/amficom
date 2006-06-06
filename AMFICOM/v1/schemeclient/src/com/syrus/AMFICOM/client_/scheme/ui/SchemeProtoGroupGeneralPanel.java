@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoGroupGeneralPanel.java,v 1.19 2006/05/24 06:42:26 stas Exp $
+ * $Id: SchemeProtoGroupGeneralPanel.java,v 1.20 2006/06/06 12:41:55 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,14 +32,14 @@ import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent;
 import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
-import com.syrus.AMFICOM.client.resource.MiscUtil;
 import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
 import com.syrus.AMFICOM.client.UI.WrapperedComboBox;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.resource.I18N;
+import com.syrus.AMFICOM.client.resource.MiscUtil;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
-import com.syrus.AMFICOM.client_.scheme.ElementsPermissionManager;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
+import com.syrus.AMFICOM.client_.scheme.SchemePermissionManager;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.EquivalentCondition;
@@ -58,11 +58,11 @@ import com.syrus.util.WrapperComparator;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.19 $, $Date: 2006/05/24 06:42:26 $
+ * @version $Revision: 1.20 $, $Date: 2006/06/06 12:41:55 $
  * @module schemeclient
  */
 
-public class SchemeProtoGroupGeneralPanel extends DefaultStorableObjectEditor {
+public class SchemeProtoGroupGeneralPanel extends DefaultStorableObjectEditor<SchemeProtoGroup> {
 	ApplicationContext aContext;
 	protected SchemeProtoGroup schemeProtoGroup;
 	private Identifier imageId;
@@ -226,19 +226,19 @@ public class SchemeProtoGroupGeneralPanel extends DefaultStorableObjectEditor {
 		return this.panel0;
 	}
 
-	public Object getObject() {
+	public SchemeProtoGroup getObject() {
 		return this.schemeProtoGroup;
 	}
 
 	@Override
 	protected boolean isEditable() {
-		return ElementsPermissionManager.isEditionAllowed();
+		return SchemePermissionManager.isPermitted(SchemePermissionManager.Operation.EDIT);
 	}
 	
-	public void setObject(final Object or) {
+	public void setObject(final SchemeProtoGroup or) {
 		this.commitButton.setEnabled(isEditable());
 		
-		this.schemeProtoGroup = (SchemeProtoGroup) or;
+		this.schemeProtoGroup = or;
 		Icon symbol = null;
 
 		this.parentCombo.removeAllItems();

@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkTypeGeneralPanel.java,v 1.24 2006/05/24 06:42:26 stas Exp $
+ * $Id: CableLinkTypeGeneralPanel.java,v 1.25 2006/06/06 12:42:06 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -75,11 +75,11 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.24 $, $Date: 2006/05/24 06:42:26 $
+ * @version $Revision: 1.25 $, $Date: 2006/06/06 12:42:06 $
  * @module schemeclient
  */
 
-public class CableLinkTypeGeneralPanel extends DefaultStorableObjectEditor {
+public class CableLinkTypeGeneralPanel extends DefaultStorableObjectEditor<CableLinkType> {
 	ApplicationContext aContext;
 	protected CableLinkType linkType;
 	protected List<CableThreadType> sortedTheradTypes;
@@ -502,19 +502,19 @@ public class CableLinkTypeGeneralPanel extends DefaultStorableObjectEditor {
 		return this.pnPanel0;
 	}
 
-	public Object getObject() {
+	public CableLinkType getObject() {
 		return this.linkType;
 	}
 	
 	@Override
 	protected boolean isEditable() {
-		return SchemePermissionManager.isTypeEditionAllowed();
+		return SchemePermissionManager.isPermitted(SchemePermissionManager.Operation.EDIT_TYPE);
 	}
 
-	public void setObject(Object or) {
+	public void setObject(CableLinkType or) {
 		this.commitButton.setEnabled(isEditable());
 		
-		this.linkType = (CableLinkType) or;
+		this.linkType = or;
 
 		this.cmbTTypeCombo.removeAllItems();
 		try {

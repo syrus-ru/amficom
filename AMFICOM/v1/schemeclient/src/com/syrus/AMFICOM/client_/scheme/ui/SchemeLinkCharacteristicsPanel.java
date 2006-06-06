@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeLinkCharacteristicsPanel.java,v 1.17 2006/05/03 04:48:52 stas Exp $
+ * $Id: SchemeLinkCharacteristicsPanel.java,v 1.18 2006/06/06 12:41:55 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,11 +19,11 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.17 $, $Date: 2006/05/03 04:48:52 $
+ * @version $Revision: 1.18 $, $Date: 2006/06/06 12:41:55 $
  * @module schemeclient
  */
 
-public class SchemeLinkCharacteristicsPanel extends CharacteristicsPanel {
+public class SchemeLinkCharacteristicsPanel extends CharacteristicsPanel<SchemeLink> {
 	protected SchemeLink schemeLink;
 
 	protected SchemeLinkCharacteristicsPanel() {
@@ -35,17 +35,17 @@ public class SchemeLinkCharacteristicsPanel extends CharacteristicsPanel {
 		setObject(l);
 	}
 
-	public Object getObject() {
+	public SchemeLink getObject() {
 		return this.schemeLink;
 	}
 	
 	@Override
 	protected boolean isEditable() {
-		return SchemePermissionManager.isEditionAllowed();
+		return SchemePermissionManager.isPermitted(SchemePermissionManager.Operation.EDIT);
 	}
 
-	public void setObject(Object or) {
-		this.schemeLink = (SchemeLink)or;
+	public void setObject(SchemeLink or) {
+		this.schemeLink = or;
 		super.clear();
 
 		if (this.schemeLink != null) {

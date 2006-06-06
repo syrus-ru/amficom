@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLinkGeneralPanel.java,v 1.30 2006/05/24 06:42:26 stas Exp $
+ * $Id: SchemeCableLinkGeneralPanel.java,v 1.31 2006/06/06 12:41:55 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,12 +37,12 @@ import javax.swing.event.ChangeListener;
 import javax.swing.text.NumberFormatter;
 
 import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
-import com.syrus.AMFICOM.client.resource.MiscUtil;
 import com.syrus.AMFICOM.client.UI.ColorChooserComboBox;
 import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
 import com.syrus.AMFICOM.client.UI.WrapperedComboBox;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.resource.I18N;
+import com.syrus.AMFICOM.client.resource.MiscUtil;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.client_.scheme.SchemePermissionManager;
@@ -69,11 +69,11 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.30 $, $Date: 2006/05/24 06:42:26 $
+ * @version $Revision: 1.31 $, $Date: 2006/06/06 12:41:55 $
  * @module schemeclient
  */
 
-public class SchemeCableLinkGeneralPanel extends DefaultStorableObjectEditor {
+public class SchemeCableLinkGeneralPanel extends DefaultStorableObjectEditor<SchemeCableLink> {
 	ApplicationContext aContext;
 	protected SchemeCableLink schemeCableLink;
 
@@ -448,13 +448,13 @@ public class SchemeCableLinkGeneralPanel extends DefaultStorableObjectEditor {
 	
 	@Override
 	protected boolean isEditable() {
-		return SchemePermissionManager.isEditionAllowed();
+		return SchemePermissionManager.isPermitted(SchemePermissionManager.Operation.EDIT);
 	}
 
-	public void setObject(final Object or) {
+	public void setObject(final SchemeCableLink or) {
 		this.btCommitBut.setEnabled(isEditable());
 		
-		this.schemeCableLink = (SchemeCableLink) or;
+		this.schemeCableLink = or;
 
 		this.cmbTypeCombo.removeAllItems();
 		if (this.schemeCableLink != null) {
@@ -503,7 +503,7 @@ public class SchemeCableLinkGeneralPanel extends DefaultStorableObjectEditor {
 		}
 	}
 
-	public Object getObject() {
+	public SchemeCableLink getObject() {
 		return this.schemeCableLink;
 	}
 

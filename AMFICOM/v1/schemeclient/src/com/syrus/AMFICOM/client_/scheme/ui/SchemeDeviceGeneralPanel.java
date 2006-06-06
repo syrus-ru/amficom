@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDeviceGeneralPanel.java,v 1.21 2006/05/03 04:48:52 stas Exp $
+ * $Id: SchemeDeviceGeneralPanel.java,v 1.22 2006/06/06 12:41:55 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,6 +44,7 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.client_.scheme.SchemePermissionManager;
 import com.syrus.AMFICOM.client_.scheme.utils.NumberedComparator;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.resource.LangModelScheme;
@@ -60,11 +61,11 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.21 $, $Date: 2006/05/03 04:48:52 $
+ * @version $Revision: 1.22 $, $Date: 2006/06/06 12:41:55 $
  * @module schemeclient
  */
 
-public class SchemeDeviceGeneralPanel extends DefaultStorableObjectEditor {
+public class SchemeDeviceGeneralPanel extends DefaultStorableObjectEditor<SchemeDevice> {
 	protected SchemeDevice schemeDevice;
 	ApplicationContext aContext;
 
@@ -144,17 +145,17 @@ public class SchemeDeviceGeneralPanel extends DefaultStorableObjectEditor {
 
 	@Override
 	protected boolean isEditable() {
-		return SchemePermissionManager.isEditionAllowed();
+		return SchemePermissionManager.isPermitted(SchemePermissionManager.Operation.EDIT);
 	}
 	
 	/**
 	 * @param or SchemeDevice
-	 * @see StorableObjectEditor#setObject(java.lang.Object)
+	 * @see StorableObjectEditor#setObject(Identifiable)
 	 */
-	public void setObject(Object or) {
+	public void setObject(SchemeDevice or) {
 		this.commitBut.setEnabled(isEditable());
 		
-		this.schemeDevice = (SchemeDevice)or;
+		this.schemeDevice = or;
 		this.combo.removeAllItems();
 		if (this.schemeDevice != null) {
 			try {
@@ -250,7 +251,7 @@ public class SchemeDeviceGeneralPanel extends DefaultStorableObjectEditor {
 	 * @return SchemeDevice
 	 * @see StorableObjectEditor#getObject()
 	 */
-	public Object getObject() {
+	public SchemeDevice getObject() {
 		return this.schemeDevice;
 	}
 

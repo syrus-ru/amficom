@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePathGeneralPanel.java,v 1.18 2006/05/24 06:42:26 stas Exp $
+ * $Id: SchemePathGeneralPanel.java,v 1.19 2006/06/06 12:41:55 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,15 +29,16 @@ import javax.swing.JTextField;
 import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
-import com.syrus.AMFICOM.client.resource.MiscUtil;
 import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
 import com.syrus.AMFICOM.client.UI.WrapperedComboBox;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.resource.I18N;
+import com.syrus.AMFICOM.client.resource.MiscUtil;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.client_.scheme.SchemePermissionManager;
 import com.syrus.AMFICOM.configuration.TransmissionPath;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.LoginManager;
@@ -55,7 +56,7 @@ import com.syrus.AMFICOM.scheme.SchemeMonitoringSolutionWrapper;
 import com.syrus.AMFICOM.scheme.SchemePath;
 import com.syrus.util.Log;
 
-public class SchemePathGeneralPanel extends DefaultStorableObjectEditor {
+public class SchemePathGeneralPanel extends DefaultStorableObjectEditor<SchemePath> {
 	ApplicationContext aContext;
 	protected SchemePath schemePath;
 
@@ -270,17 +271,17 @@ public class SchemePathGeneralPanel extends DefaultStorableObjectEditor {
 
 	@Override
 	protected boolean isEditable() {
-		return SchemePermissionManager.isEditionAllowed();
+		return SchemePermissionManager.isPermitted(SchemePermissionManager.Operation.EDIT);
 	}
 	
-	public void setObject(final Object or) {
+	public void setObject(final SchemePath or) {
 		this.btCommitBut.setEnabled(isEditable());
 		
 		boolean updateOnly = false;
 		if (or.equals(this.schemePath)) {
 			updateOnly = true;
 		}
-		this.schemePath = (SchemePath) or;
+		this.schemePath = or;
 
 		if (this.schemePath != null) {
 			if (!updateOnly) {
@@ -334,7 +335,7 @@ public class SchemePathGeneralPanel extends DefaultStorableObjectEditor {
 		return this.pnPanel0;
 	}
 
-	public Object getObject() {
+	public SchemePath getObject() {
 		return this.schemePath;
 	}
 

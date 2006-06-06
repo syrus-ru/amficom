@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeEventHandler.java,v 1.16 2006/06/01 14:30:40 stas Exp $
+ * $Id: SchemeEventHandler.java,v 1.17 2006/06/06 12:41:55 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,13 +29,12 @@ import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceGroup;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.16 $, $Date: 2006/06/01 14:30:40 $
+ * @version $Revision: 1.17 $, $Date: 2006/06/06 12:41:55 $
  * @module schemeclient
  */
 
@@ -74,50 +73,50 @@ public class SchemeEventHandler extends AbstractEventHandler {
 			 */
 			
 			if (!event.isSelected(ObjectSelectedEvent.ALL_DESELECTED)) {
-				try {
-					StorableObject object = StorableObjectPool.getStorableObject(event.getSelectedObject().getId(), false);
-					if (!event.isSelected(ObjectSelectedEvent.INRACK)) {
-						this.frame.setVisualManager(event.getVisualManager());
-						StorableObjectEditor editor = this.frame.getCurrentEditor();
-						if (editor != null)
-							editor.setObject(object);
-					} else if (event.isSelected(ObjectSelectedEvent.SCHEME_ELEMENT)) {
-						SchemeElement se = (SchemeElement)object;
+				if (!event.isSelected(ObjectSelectedEvent.INRACK)) {
+					this.frame.setVisualManager(event.getVisualManager());
+					StorableObjectEditor<StorableObject> editor = this.frame.getCurrentEditor();
+					if (editor != null) {
 						try {
-							if (se.getProtoEquipment().getType().getCodename().equals(RACK.stringValue())) {
-								this.frame.setVisualManager(event.getVisualManager());
-								StorableObjectEditor editor = this.frame.getCurrentEditor();
-								if (editor != null)
-									editor.setObject(object);
-							} else {
-								StorableObjectEditor editor = this.frame.getCurrentEditor();
-								if (editor instanceof SchemeCellPanel) {
-									SchemeCellPanel panel = (SchemeCellPanel)editor;
-									UgoTabbedPane pane = (UgoTabbedPane)panel.getGUI();
-									SchemeGraph graph = pane.getGraph();
-									DefaultGraphCell cell = SchemeActions.findObjectById(graph, object.getId());
-									if (cell instanceof DeviceGroup) {
-										cell = GraphActions.getMainCell((DeviceGroup)cell);
-									}
-									graph.setSelectionCell(cell);
-								}
-							}
+							editor.setObjects(event.getSelectedObjects());
 						} catch (ApplicationException e1) {
 							Log.errorMessage(e1);
 						}
-					} else {
-						StorableObjectEditor editor = this.frame.getCurrentEditor();
-						Object selectedObject = event.getSelectedObject();
-						if (editor instanceof SchemeCellPanel 
-								&& selectedObject instanceof Identifiable) {
-							SchemeCellPanel panel = (SchemeCellPanel)editor;
-							UgoTabbedPane pane = (UgoTabbedPane)panel.getGUI();
-							SchemeGraph graph = pane.getGraph();
-							graph.setSelectionCell(SchemeActions.findObjectById(graph, ((Identifiable)selectedObject).getId()));
-						}
 					}
-				} catch (ApplicationException e1) {
-					Log.errorMessage(e1);
+				} else if (event.isSelected(ObjectSelectedEvent.SCHEME_ELEMENT)) {
+					try {
+						SchemeElement se = (SchemeElement)event.getStorableObject();
+						if (se.getProtoEquipment().getType().getCodename().equals(RACK.stringValue())) {
+							this.frame.setVisualManager(event.getVisualManager());
+							StorableObjectEditor<StorableObject> editor = this.frame.getCurrentEditor();
+							if (editor != null)
+								editor.setObject(event.getStorableObject());
+						} else {
+							StorableObjectEditor editor = this.frame.getCurrentEditor();
+							if (editor instanceof SchemeCellPanel) {
+								SchemeCellPanel panel = (SchemeCellPanel)editor;
+								UgoTabbedPane pane = (UgoTabbedPane)panel.getGUI();
+								SchemeGraph graph = pane.getGraph();
+								DefaultGraphCell cell = SchemeActions.findObjectById(graph, event.getIdentifiable().getId());
+								if (cell instanceof DeviceGroup) {
+									cell = GraphActions.getMainCell((DeviceGroup)cell);
+								}
+								graph.setSelectionCell(cell);
+							}
+						}
+					} catch (ApplicationException e1) {
+						Log.errorMessage(e1);
+					}
+				} else {
+					StorableObjectEditor editor = this.frame.getCurrentEditor();
+					Object selectedObject = event.getIdentifiable();
+					if (editor instanceof SchemeCellPanel 
+							&& selectedObject instanceof Identifiable) {
+						SchemeCellPanel panel = (SchemeCellPanel)editor;
+						UgoTabbedPane pane = (UgoTabbedPane)panel.getGUI();
+						SchemeGraph graph = pane.getGraph();
+						graph.setSelectionCell(SchemeActions.findObjectById(graph, ((Identifiable)selectedObject).getId()));
+					}
 				}
 			}
 		} else if (e.getPropertyName().equals(SchemeEvent.TYPE)) {

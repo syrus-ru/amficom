@@ -1,5 +1,5 @@
 /*-
- * $Id: CableLinkTypeLayout.java,v 1.19 2006/06/01 14:30:40 stas Exp $
+ * $Id: CableLinkTypeLayout.java,v 1.20 2006/06/06 12:42:06 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,11 +40,11 @@ import com.syrus.AMFICOM.general.Identifiable;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.19 $, $Date: 2006/06/01 14:30:40 $
+ * @version $Revision: 1.20 $, $Date: 2006/06/06 12:42:06 $
  * @module schemeclient
  */
 
-public class CableLinkTypeLayout extends DefaultStorableObjectEditor implements PropertyChangeListener {
+public class CableLinkTypeLayout extends DefaultStorableObjectEditor<CableLinkType> implements PropertyChangeListener {
 	protected CableLinkType type;
 	ApplicationContext aContext;
 	
@@ -72,8 +72,8 @@ public class CableLinkTypeLayout extends DefaultStorableObjectEditor implements 
 		return false;
 	}
 
-	public void setObject(Object or) {
-		this.type = (CableLinkType) or;
+	public void setObject(CableLinkType or) {
+		this.type = or;
 //		this.mapping.clear();
 		GraphActions.clearGraph(this.panel.getGraph());
 
@@ -95,7 +95,7 @@ public class CableLinkTypeLayout extends DefaultStorableObjectEditor implements 
 		}
 	}
 	
-	public Object getObject() {
+	public CableLinkType getObject() {
 		return this.type;
 	}
 		
@@ -167,7 +167,7 @@ public class CableLinkTypeLayout extends DefaultStorableObjectEditor implements 
 		if (oe.getPropertyName().equals(ObjectSelectedEvent.TYPE)) {
 			ObjectSelectedEvent ev = (ObjectSelectedEvent) oe;
 			if (ev.isSelected(ObjectSelectedEvent.OTHER_OBJECT)) {
-				Identifiable obj = ev.getSelectedObject();
+				Identifiable obj = ev.getIdentifiable();
 				if (obj instanceof ThreadTypeCell) {
 					ThreadTypeCell cell = (ThreadTypeCell)obj;
 					Color newColor = new Color(cell.getCableThreadType().getColor());

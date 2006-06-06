@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeTreeSelectionListener.java,v 1.22 2006/06/01 14:30:40 stas Exp $
+ * $Id: SchemeTreeSelectionListener.java,v 1.23 2006/06/06 12:41:55 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,7 +32,6 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client_.scheme.utils.ClientUtils;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifiable;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.logic.ItemTreeModel;
 import com.syrus.AMFICOM.measurement.Measurement;
@@ -42,7 +41,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.22 $, $Date: 2006/06/01 14:30:40 $
+ * @version $Revision: 1.23 $, $Date: 2006/06/06 12:41:55 $
  * @module schemeclient
  */
 
@@ -73,7 +72,7 @@ public class SchemeTreeSelectionListener implements TreeSelectionListener, Prope
 							aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, schemeElement.getId(), SchemeEvent.OPEN_SCHEMEELEMENT));
 							treeUI.getTree().setCursor(Cursor.getDefaultCursor());
 						} else if (object instanceof Measurement) {
-							ObjectSelectedEvent ev = new ObjectSelectedEvent(this, (Measurement)object, null, ObjectEntities.MEASUREMENT_CODE);
+							ObjectSelectedEvent ev = new ObjectSelectedEvent(this, (Measurement)object, null, ObjectSelectedEvent.MEASUREMENT);
 							treeUI.getTree().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 							aContext.getDispatcher().firePropertyChange(ev, false);
 							treeUI.getTree().setCursor(Cursor.getDefaultCursor());
@@ -129,8 +128,17 @@ public class SchemeTreeSelectionListener implements TreeSelectionListener, Prope
 				manager = visualizableNode.getVisualManager();
 				type = ClientUtils.getEventType(objects.iterator().next());
 			} else {
-				manager = MultipleSelectionPropertiesManager.getInstance(this.aContext); 
+				boolean hasEqualType = ClientUtils.hasEqualType(objects);
 				type = ClientUtils.getEventType(objects.iterator().next()) + ObjectSelectedEvent.MULTIPLE;
+				if (hasEqualType) {
+					if (type == ObjectSelectedEvent.SCHEME_PORT) {
+						manager = SchemePortPropertiesManager.getInstance(this.aContext);
+					} else {
+						manager = MultipleSelectionPropertiesManager.getInstance(this.aContext);
+					}
+				} else {
+					manager = MultipleSelectionPropertiesManager.getInstance(this.aContext);
+				}
 			}
 			if (this.treeUI.isLinkObjects()) {
 				type += ObjectSelectedEvent.INSURE_VISIBLE;
@@ -145,7 +153,7 @@ public class SchemeTreeSelectionListener implements TreeSelectionListener, Prope
 			ObjectSelectedEvent ev = (ObjectSelectedEvent)e;
 			if (this.treeUI.isLinkObjects()) {
 				Set<TreePath> paths = new HashSet<TreePath>();
-				for (Identifiable selected : ev.getSelectedObjects()) {
+				for (Identifiable selected : ev.getIdentifiables()) {
 					ItemTreeModel model = this.treeUI.getTreeUI().getTreeModel();
 					Item node = this.treeUI.findNode((Item)model.getRoot(), selected, false);
 					

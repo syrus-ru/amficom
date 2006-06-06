@@ -1,5 +1,5 @@
 /*-
- * $Id: ProtoEquipmentGeneralPanel.java,v 1.13 2006/05/24 06:42:26 stas Exp $
+ * $Id: ProtoEquipmentGeneralPanel.java,v 1.14 2006/06/06 12:42:06 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,12 +28,12 @@ import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent;
 import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
-import com.syrus.AMFICOM.client.resource.MiscUtil;
 import com.syrus.AMFICOM.client.UI.AComboBox;
 import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
 import com.syrus.AMFICOM.client.UI.NameableListCellRenderer;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.resource.I18N;
+import com.syrus.AMFICOM.client.resource.MiscUtil;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.client_.scheme.SchemePermissionManager;
@@ -49,11 +49,11 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.13 $, $Date: 2006/05/24 06:42:26 $
+ * @version $Revision: 1.14 $, $Date: 2006/06/06 12:42:06 $
  * @module schemeclient
  */
 
-public class ProtoEquipmentGeneralPanel extends DefaultStorableObjectEditor {
+public class ProtoEquipmentGeneralPanel extends DefaultStorableObjectEditor<ProtoEquipment> {
 	ApplicationContext aContext;
 	protected ProtoEquipment protoEq;
 
@@ -276,19 +276,19 @@ public class ProtoEquipmentGeneralPanel extends DefaultStorableObjectEditor {
 		return this.pnPanel0;
 	}
 
-	public Object getObject() {
+	public ProtoEquipment getObject() {
 		return this.protoEq;
 	}
 
 	@Override
 	protected boolean isEditable() {
-		return SchemePermissionManager.isEditionAllowed();
+		return SchemePermissionManager.isPermitted(SchemePermissionManager.Operation.EDIT);
 	}
 	
-	public void setObject(final Object or) {
+	public void setObject(final ProtoEquipment or) {
 		this.commitButton.setEnabled(isEditable());
 		
-		this.protoEq = (ProtoEquipment) or;
+		this.protoEq = or;
 
 		if (this.protoEq != null) {
 			this.tfNameText.setText(this.protoEq.getName());

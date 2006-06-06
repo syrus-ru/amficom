@@ -1,5 +1,5 @@
 /*-
- * $Id: ProtoEquipmentCharacteristicsPanel.java,v 1.5 2006/05/03 04:49:00 stas Exp $
+ * $Id: ProtoEquipmentCharacteristicsPanel.java,v 1.6 2006/06/06 12:42:06 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,11 +16,11 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.5 $, $Date: 2006/05/03 04:49:00 $
+ * @version $Revision: 1.6 $, $Date: 2006/06/06 12:42:06 $
  * @module schemeclient
  */
 
-public class ProtoEquipmentCharacteristicsPanel extends CharacteristicsPanel {
+public class ProtoEquipmentCharacteristicsPanel extends CharacteristicsPanel<ProtoEquipment> {
 	protected ProtoEquipment type;
 
 	protected ProtoEquipmentCharacteristicsPanel() {
@@ -32,17 +32,17 @@ public class ProtoEquipmentCharacteristicsPanel extends CharacteristicsPanel {
 		this.setObject(protoEq);
 	}
 
-	public Object getObject() {
+	public ProtoEquipment getObject() {
 		return this.type;
 	}
 
 	@Override
 	protected boolean isEditable() {
-		return SchemePermissionManager.isEditionAllowed();
+		return SchemePermissionManager.isPermitted(SchemePermissionManager.Operation.EDIT);
 	}
 	
-	public void setObject(final Object or) {
-		this.type = (ProtoEquipment) or;
+	public void setObject(final ProtoEquipment or) {
+		this.type = or;
 		super.clear();
 
 		if (this.type != null) {

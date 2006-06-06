@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortTypeGeneralPanel.java,v 1.33 2006/05/24 06:42:26 stas Exp $
+ * $Id: MeasurementPortTypeGeneralPanel.java,v 1.34 2006/06/06 12:42:06 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -54,11 +54,11 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.33 $, $Date: 2006/05/24 06:42:26 $
+ * @version $Revision: 1.34 $, $Date: 2006/06/06 12:42:06 $
  * @module schemeclient
  */
 
-public class MeasurementPortTypeGeneralPanel extends DefaultStorableObjectEditor {
+public class MeasurementPortTypeGeneralPanel extends DefaultStorableObjectEditor<MeasurementPortType> {
 	ApplicationContext aContext;
 	protected MeasurementPortType type;
 
@@ -226,19 +226,19 @@ public class MeasurementPortTypeGeneralPanel extends DefaultStorableObjectEditor
 		return this.pnPanel0;
 	}
 
-	public Object getObject() {
+	public MeasurementPortType getObject() {
 		return this.type;
 	}
 	
 	@Override
 	protected boolean isEditable() {
-		return SchemePermissionManager.isTypeEditionAllowed();
+		return SchemePermissionManager.isPermitted(SchemePermissionManager.Operation.EDIT_TYPE);
 	}
 
-	public void setObject(final Object or) {
+	public void setObject(final MeasurementPortType or) {
 		this.commitButton.setEnabled(isEditable());
 		
-		this.type = (MeasurementPortType) or;
+		this.type = or;
 
 		if (this.type != null) {
 			this.tfNameText.setText(this.type.getName());

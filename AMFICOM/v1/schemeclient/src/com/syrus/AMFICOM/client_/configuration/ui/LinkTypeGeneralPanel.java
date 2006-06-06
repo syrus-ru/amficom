@@ -1,5 +1,5 @@
 /*
- * $Id: LinkTypeGeneralPanel.java,v 1.15 2006/05/24 06:42:26 stas Exp $
+ * $Id: LinkTypeGeneralPanel.java,v 1.16 2006/06/06 12:42:06 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,11 +44,11 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.15 $, $Date: 2006/05/24 06:42:26 $
+ * @version $Revision: 1.16 $, $Date: 2006/06/06 12:42:06 $
  * @module schemeclient
  */
 
-public class LinkTypeGeneralPanel extends DefaultStorableObjectEditor {
+public class LinkTypeGeneralPanel extends DefaultStorableObjectEditor<LinkType> {
 	ApplicationContext aContext;
 	protected LinkType linkType;
 
@@ -233,19 +233,19 @@ public class LinkTypeGeneralPanel extends DefaultStorableObjectEditor {
 		return this.pnPanel0;
 	}
 
-	public Object getObject() {
+	public LinkType getObject() {
 		return this.linkType;
 	}
 
 	@Override
 	protected boolean isEditable() {
-		return SchemePermissionManager.isTypeEditionAllowed();
+		return SchemePermissionManager.isPermitted(SchemePermissionManager.Operation.EDIT_TYPE);
 	}
 	
-	public void setObject(final Object or) {
+	public void setObject(final LinkType or) {
 		this.commitButton.setEnabled(isEditable());
 		
-		this.linkType = (LinkType) or;
+		this.linkType = or;
 
 		// EquivalentCondition condition = new
 		// EquivalentCondition(ObjectEntities.LINK_TYPE_CODE);

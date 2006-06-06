@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElementGeneralPanel.java,v 1.34 2006/05/24 06:42:26 stas Exp $
+ * $Id: SchemeElementGeneralPanel.java,v 1.35 2006/06/06 12:41:55 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,13 +36,13 @@ import javax.swing.event.ChangeListener;
 import javax.swing.text.NumberFormatter;
 
 import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
-import com.syrus.AMFICOM.client.resource.MiscUtil;
 import com.syrus.AMFICOM.client.UI.AComboBox;
 import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
 import com.syrus.AMFICOM.client.UI.NameableListCellRenderer;
 import com.syrus.AMFICOM.client.UI.WrapperedComboBox;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.resource.I18N;
+import com.syrus.AMFICOM.client.resource.MiscUtil;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.client_.scheme.SchemePermissionManager;
@@ -69,11 +69,11 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.34 $, $Date: 2006/05/24 06:42:26 $
+ * @version $Revision: 1.35 $, $Date: 2006/06/06 12:41:55 $
  * @module schemeclient
  */
 
-public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
+public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor<SchemeElement> {
 	ApplicationContext aContext;
 	protected SchemeElement schemeElement;
 	private Identifier imageId;
@@ -782,19 +782,19 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 		return this.pnPanel0; 
 	}
 
-	public Object getObject() {
+	public SchemeElement getObject() {
 		return this.schemeElement;
 	}
 
 	@Override
 	protected boolean isEditable() {
-		return SchemePermissionManager.isEditionAllowed();
+		return SchemePermissionManager.isPermitted(SchemePermissionManager.Operation.EDIT);
 	}
 
-	public void setObject(final Object or) {
+	public void setObject(final SchemeElement or) {
 		this.btCommitBut.setEnabled(isEditable());
 		
-		this.schemeElement = (SchemeElement) or;
+		this.schemeElement = or;
 		ProtoEquipment protoEq = null;
 		Equipment eq = null;
 		KIS kis = null;

@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractPropertiesFrame.java,v 1.5 2005/09/08 14:25:57 bob Exp $
+ * $Id: AbstractPropertiesFrame.java,v 1.6 2006/06/06 12:41:15 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,16 +23,17 @@ import javax.swing.WindowConstants;
 
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
+import com.syrus.AMFICOM.general.StorableObject;
 
 /**
- * @author $Author: bob $
- * @version $Revision: 1.5 $, $Date: 2005/09/08 14:25:57 $
+ * @author $Author: stas $
+ * @version $Revision: 1.6 $, $Date: 2006/06/06 12:41:15 $
  * @module commonclient
  */
 
 public abstract class AbstractPropertiesFrame extends JInternalFrame {
 	protected List<AbstractEventHandler> eventHandlers = new LinkedList<AbstractEventHandler>();
-	protected StorableObjectEditor editor;
+	protected StorableObjectEditor<StorableObject> editor;
 	protected JComponent emptyPane;
 	
 	protected AbstractPropertiesFrame(String title) {
@@ -101,9 +102,9 @@ public abstract class AbstractPropertiesFrame extends JInternalFrame {
 		});
 	}
 	
-	protected abstract StorableObjectEditor getEditor(VisualManager manager);
+	protected abstract StorableObjectEditor<StorableObject> getEditor(VisualManager manager);
 	
-	public StorableObjectEditor getCurrentEditor() {
+	public StorableObjectEditor<StorableObject> getCurrentEditor() {
 		return this.editor;
 	}
 }

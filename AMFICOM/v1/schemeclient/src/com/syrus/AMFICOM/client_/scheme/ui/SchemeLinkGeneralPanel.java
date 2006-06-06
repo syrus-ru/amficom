@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeLinkGeneralPanel.java,v 1.23 2006/05/24 06:42:26 stas Exp $
+ * $Id: SchemeLinkGeneralPanel.java,v 1.24 2006/06/06 12:41:55 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,12 +33,12 @@ import javax.swing.event.ChangeListener;
 import javax.swing.text.NumberFormatter;
 
 import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
-import com.syrus.AMFICOM.client.resource.MiscUtil;
 import com.syrus.AMFICOM.client.UI.ColorChooserComboBox;
 import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
 import com.syrus.AMFICOM.client.UI.WrapperedComboBox;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.resource.I18N;
+import com.syrus.AMFICOM.client.resource.MiscUtil;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.client_.scheme.SchemePermissionManager;
@@ -59,11 +59,11 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.23 $, $Date: 2006/05/24 06:42:26 $
+ * @version $Revision: 1.24 $, $Date: 2006/06/06 12:41:55 $
  * @module schemeclient
  */
 
-public class SchemeLinkGeneralPanel extends DefaultStorableObjectEditor {
+public class SchemeLinkGeneralPanel extends DefaultStorableObjectEditor<SchemeLink> {
 	ApplicationContext aContext;
 	protected SchemeLink schemeLink;
 
@@ -464,13 +464,13 @@ public class SchemeLinkGeneralPanel extends DefaultStorableObjectEditor {
 
 	@Override
 	protected boolean isEditable() {
-		return SchemePermissionManager.isEditionAllowed();
+		return SchemePermissionManager.isPermitted(SchemePermissionManager.Operation.EDIT);
 	}
 	
-	public void setObject(final Object or) {
+	public void setObject(final SchemeLink or) {
 		this.btCommitBut.setEnabled(isEditable());
 		
-		this.schemeLink = (SchemeLink) or;
+		this.schemeLink = or;
 
 		this.cmbTypeCombo.removeAllItems();
 		if (this.schemeLink != null) {
@@ -525,7 +525,7 @@ public class SchemeLinkGeneralPanel extends DefaultStorableObjectEditor {
 		}
 	}
 
-	public Object getObject() {
+	public SchemeLink getObject() {
 		return this.schemeLink;
 	}
 

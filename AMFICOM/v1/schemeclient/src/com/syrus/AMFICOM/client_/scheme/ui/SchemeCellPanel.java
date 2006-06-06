@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCellPanel.java,v 1.12 2006/05/03 04:48:52 stas Exp $
+ * $Id: SchemeCellPanel.java,v 1.13 2006/06/06 12:41:55 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,17 +26,18 @@ import com.syrus.AMFICOM.client_.scheme.graph.UgoTabbedPane;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.GraphActions;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.SchemeActions;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.resource.SchemeImageResource;
 import com.syrus.AMFICOM.scheme.SchemeCellContainer;
 import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.12 $, $Date: 2006/05/03 04:48:52 $
+ * @version $Revision: 1.13 $, $Date: 2006/06/06 12:41:55 $
  * @module schemeclient
  */
 
-public class SchemeCellPanel extends DefaultStorableObjectEditor {
+public class SchemeCellPanel extends DefaultStorableObjectEditor<SchemeCellContainer> {
 	ApplicationContext aContext;
 	protected SchemeCellContainer schemeCellContainer;
 	
@@ -82,18 +83,18 @@ public class SchemeCellPanel extends DefaultStorableObjectEditor {
 
 	@Override
 	protected boolean isEditable() {
-		return SchemePermissionManager.isEditionAllowed();
+		return SchemePermissionManager.isPermitted(SchemePermissionManager.Operation.EDIT);
 	}
 	
 	/**
 	 * @param or SchemeCellContainer
-	 * @see com.syrus.AMFICOM.client.UI.StorableObjectEditor#setObject(java.lang.Object)
+	 * @see com.syrus.AMFICOM.client.UI.StorableObjectEditor#setObject(Identifiable)
 	 */
-	public void setObject(Object or) {
+	public void setObject(SchemeCellContainer or) {
 		this.commitButton.setEnabled(isEditable());
 		this.pane.setEditable(isEditable());
 		
-		this.schemeCellContainer = (SchemeCellContainer)or;
+		this.schemeCellContainer = or;
 		GraphActions.clearGraph(this.pane.getGraph());
 		if (this.schemeCellContainer != null) {
 			SchemeActions.openSchemeImageResource(this.pane.getGraph(), this.schemeCellContainer.getUgoCell(), false);
@@ -104,7 +105,7 @@ public class SchemeCellPanel extends DefaultStorableObjectEditor {
 	 * @return SchemeCellContainer
 	 * @see com.syrus.AMFICOM.client.UI.StorableObjectEditor#getObject()
 	 */
-	public Object getObject() {
+	public SchemeCellContainer getObject() {
 		return this.schemeCellContainer;
 	}
 

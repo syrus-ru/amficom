@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLinkLayout.java,v 1.22 2006/06/01 14:30:40 stas Exp $
+ * $Id: SchemeCableLinkLayout.java,v 1.23 2006/06/06 12:41:55 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,7 +29,6 @@ import com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent;
 import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
-import com.syrus.AMFICOM.client_.scheme.SchemePermissionManager;
 import com.syrus.AMFICOM.client_.scheme.graph.Constants;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
 import com.syrus.AMFICOM.client_.scheme.graph.UgoTabbedPane;
@@ -52,11 +51,11 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.22 $, $Date: 2006/06/01 14:30:40 $
+ * @version $Revision: 1.23 $, $Date: 2006/06/06 12:41:55 $
  * @module schemeclient
  */
 
-public class SchemeCableLinkLayout extends DefaultStorableObjectEditor implements PropertyChangeListener {
+public class SchemeCableLinkLayout extends DefaultStorableObjectEditor<SchemeCableLink> implements PropertyChangeListener {
 	protected SchemeCableLink link;
 	ApplicationContext aContext;
 	
@@ -96,8 +95,8 @@ public class SchemeCableLinkLayout extends DefaultStorableObjectEditor implement
 		return false;
 	}
 
-	public void setObject(Object or) {
-		this.link = (SchemeCableLink) or;
+	public void setObject(SchemeCableLink or) {
+		this.link = or;
 //		this.mapping.clear();
 		GraphActions.clearGraph(this.panel.getGraph());
 
@@ -123,7 +122,7 @@ public class SchemeCableLinkLayout extends DefaultStorableObjectEditor implement
 		}
 	}
 	
-	public Object getObject() {
+	public SchemeCableLink getObject() {
 		return this.link;
 	}
 	
@@ -205,7 +204,7 @@ public class SchemeCableLinkLayout extends DefaultStorableObjectEditor implement
 		if (evt.getPropertyName().equals(ObjectSelectedEvent.TYPE)) {
 			ObjectSelectedEvent ev = (ObjectSelectedEvent)evt;
 			if (ev.isSelected(ObjectSelectedEvent.OTHER_OBJECT)) {
-				Identifiable obj = ev.getSelectedObject();
+				Identifiable obj = ev.getIdentifiable();
 				if (obj instanceof ThreadCell) {
 					ThreadCell cell = (ThreadCell)obj;
 					SchemeCableThread sct = cell.getSchemeCableThread();

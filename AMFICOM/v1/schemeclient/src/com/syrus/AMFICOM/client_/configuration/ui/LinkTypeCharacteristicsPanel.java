@@ -1,5 +1,5 @@
 /*
- * $Id: LinkTypeCharacteristicsPanel.java,v 1.16 2006/05/03 04:49:00 stas Exp $
+ * $Id: LinkTypeCharacteristicsPanel.java,v 1.17 2006/06/06 12:42:06 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,11 +16,11 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.16 $, $Date: 2006/05/03 04:49:00 $
+ * @version $Revision: 1.17 $, $Date: 2006/06/06 12:42:06 $
  * @module schemeclient
  */
 
-public class LinkTypeCharacteristicsPanel extends CharacteristicsPanel {
+public class LinkTypeCharacteristicsPanel extends CharacteristicsPanel<LinkType> {
 	protected LinkType type;
 
 	protected LinkTypeCharacteristicsPanel() {
@@ -32,17 +32,17 @@ public class LinkTypeCharacteristicsPanel extends CharacteristicsPanel {
 		this.setObject(linkType);
 	}
 
-	public Object getObject() {
+	public LinkType getObject() {
 		return this.type;
 	}
 	
 	@Override
 	protected boolean isEditable() {
-		return SchemePermissionManager.isTypeEditionAllowed();
+		return SchemePermissionManager.isPermitted(SchemePermissionManager.Operation.EDIT_TYPE);
 	}
 
-	public void setObject(final Object or) {
-		this.type = (LinkType) or;
+	public void setObject(final LinkType or) {
+		this.type = or;
 		super.clear();
 
 		if (this.type != null) {

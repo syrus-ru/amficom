@@ -1,5 +1,5 @@
 /*-
- * $Id: CharacteristicsPanel.java,v 1.28 2006/06/02 10:46:07 arseniy Exp $
+ * $Id: CharacteristicsPanel.java,v 1.29 2006/06/06 12:41:15 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -54,6 +54,7 @@ import com.syrus.AMFICOM.general.CharacteristicTypeSort;
 import com.syrus.AMFICOM.general.CharacteristicWrapper;
 import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -64,11 +65,11 @@ import com.syrus.util.PropertyChangeException;
 import com.syrus.util.Wrapper;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.28 $, $Date: 2006/06/02 10:46:07 $
+ * @author $Author: stas $
+ * @version $Revision: 1.29 $, $Date: 2006/06/06 12:41:15 $
  * @module commonclient
  */
-public abstract class CharacteristicsPanel extends DefaultStorableObjectEditor {
+public abstract class CharacteristicsPanel<S extends Identifiable> extends DefaultStorableObjectEditor<S> {
 	protected static IdlCharacteristicTypeSort[] sorts = new IdlCharacteristicTypeSort[] {
 		IdlCharacteristicTypeSort.CHARACTERISTICTYPESORT_OPTICAL,	
 		IdlCharacteristicTypeSort.CHARACTERISTICTYPESORT_ELECTRICAL,
