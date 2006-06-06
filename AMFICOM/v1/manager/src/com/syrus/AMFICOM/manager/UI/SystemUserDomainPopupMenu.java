@@ -1,5 +1,5 @@
 /*-
-* $Id: SystemUserDomainPopupMenu.java,v 1.13 2006/02/17 12:57:06 arseniy Exp $
+* $Id: SystemUserDomainPopupMenu.java,v 1.14 2006/06/06 15:35:21 arseniy Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -27,7 +27,6 @@ import com.syrus.AMFICOM.general.Checker;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.LoginException;
 import com.syrus.AMFICOM.general.LoginManager;
-import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.manager.beans.UserBean;
 import com.syrus.AMFICOM.manager.graph.MPort;
 import com.syrus.AMFICOM.manager.perspective.DomainPerpective;
@@ -35,7 +34,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.13 $, $Date: 2006/02/17 12:57:06 $
+ * @version $Revision: 1.14 $, $Date: 2006/06/06 15:35:21 $
  * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -87,13 +86,12 @@ public class SystemUserDomainPopupMenu extends AbstractItemPopupMenu<DomainPerpe
 			
 			popupMenu.add(checkBoxMenuItem);
 		}
-		
-		final StorableObjectVersion version = user.getVersion();
-		if (StorableObjectVersion.INITIAL_VERSION != version) {
+
+		if (!user.isNew()) {
 			popupMenu.addSeparator();
-			final AbstractAction changePasswordAction = 
-				new AbstractAction(I18N.getString("Manager.Dialog.ChangeUserPassword")) {
-	
+			final AbstractAction changePasswordAction = new AbstractAction(I18N.getString("Manager.Dialog.ChangeUserPassword")) {
+				private static final long serialVersionUID = 7454796643374199388L;
+
 				public void actionPerformed(final ActionEvent e) {
 					final PasswordSetter setter = new PasswordSetter(user);
 					setter.initUI();

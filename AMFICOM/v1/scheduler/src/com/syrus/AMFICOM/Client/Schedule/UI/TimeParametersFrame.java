@@ -274,9 +274,7 @@ public class TimeParametersFrame extends JInternalFrame {
 									.getSelectedTest();
 								if (TimeParametersPanel.this.propertyChangeEvent == null && 
 										TimeParametersPanel.this.isTestAgree(selectedTest)) {
-									if (selectedTest != null && 
-											selectedTest.getVersion().equals(
-												StorableObjectVersion.INITIAL_VERSION)) {
+									if (selectedTest != null && selectedTest.isNew()) {
 										final Identifier temporalPatternId = 
 											selectedTest.getTemporalPatternId();
 										if (temporalPatternId != null && 
@@ -362,7 +360,7 @@ public class TimeParametersFrame extends JInternalFrame {
 							TimeParametersPanel.this.isTestAgree(selectedTest)) {
 
 						if (selectedTest != null
-								&& selectedTest.getVersion().equals(StorableObjectVersion.INITIAL_VERSION)) {
+								&& selectedTest.isNew()) {
 							Date startDate = TimeParametersPanel.this
 									.getStartDate();
 							Date endDate = TimeParametersPanel.this

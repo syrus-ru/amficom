@@ -65,8 +65,8 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.110 $, $Date: 2006/04/05 06:04:36 $
- * @author $Author: saa $
+ * @version $Revision: 1.111 $, $Date: 2006/06/06 15:37:52 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module scheduler
  */
@@ -854,7 +854,7 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 					final Set<Test> tests = this.schedulerModel.getSelectedTests();
 					final Map<Identifier, Identifier> unchangedMeasurementSetupNewMap = new HashMap<Identifier, Identifier>();
 					for (final Test test : tests) {
-						if (test.getVersion().equals(StorableObjectVersion.INITIAL_VERSION)) {
+						if (test.isNew()) {
 							final Set<Identifier> measurementSetupIds = test.getMeasurementSetupIds();
 							if (measurementSetupIds.size() == 1) {
 								final MeasurementSetup baseMeasurementSetup =

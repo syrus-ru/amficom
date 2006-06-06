@@ -186,7 +186,7 @@ final class TestParametersPanel implements PropertyChangeListener {
 				if (TestParametersPanel.this.propertyChangeEvent == null) {
 					final Set<Test> tests = TestParametersPanel.this.schedulerModel.getSelectedTests();
 					for (final Test test : tests) {
-						if (test.getVersion().equals(StorableObjectVersion.INITIAL_VERSION)) {
+						if (test.isNew()) {
 							test.setAnalysisType(analysisType);
 						}
 					}

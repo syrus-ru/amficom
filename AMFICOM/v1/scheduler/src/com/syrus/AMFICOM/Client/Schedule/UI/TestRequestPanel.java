@@ -72,7 +72,7 @@ final class TestRequestPanel extends JPanel implements PropertyChangeListener {
 					AbstractMainFrame.showErrorMessage(I18N.getString("Error.CannotAcquireObject"));
 					return;
 				}
-				if (selectedTest != null && selectedTest.getVersion().equals(StorableObjectVersion.INITIAL_VERSION)) {
+				if (selectedTest != null && selectedTest.isNew()) {
 					selectedTest.setDescription(textField.getText());
 					TestRequestPanel.this.dispatcher.firePropertyChange(
 							new PropertyChangeEvent(TestRequestPanel.this,

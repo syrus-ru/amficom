@@ -1,5 +1,5 @@
 /*-
- * $Id: SchedulerModel.java,v 1.190 2006/04/05 08:05:33 saa Exp $
+ * $Id: SchedulerModel.java,v 1.191 2006/06/06 15:37:52 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -73,8 +73,8 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.190 $, $Date: 2006/04/05 08:05:33 $
- * @author $Author: saa $
+ * @version $Revision: 1.191 $, $Date: 2006/06/06 15:37:52 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module scheduler
  */
@@ -966,7 +966,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 			Collections.singleton(newMeasurementSetup.getId());
 		final Set<Test> tests = this.getSelectedTests();
 		for (final Test test : tests) {
-			if (test.getVersion().equals(StorableObjectVersion.INITIAL_VERSION)) {
+			if (test.isNew()) {
 				final String reason = this.isValid(test, newMeasurementSetup);
 				if (reason != null) {
 					this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_REFRESH_MEASUREMENT_SETUP, null, null));
@@ -979,7 +979,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 
 		final Set<Identifier> changedTestId = new HashSet<Identifier>();
 		for (final Test test : tests) {
-			if (test.getVersion().equals(StorableObjectVersion.INITIAL_VERSION)) {
+			if (test.isNew()) {
 				changedTestId.add(test.getId());
 				test.setMeasurementSetupIds(measurementSetupIdSet);
 				test.normalize();
@@ -993,7 +993,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 	public void changeTemporalPattern(final AbstractTemporalPattern temporalPattern)
 	throws ApplicationException {
 		final Test test = this.getSelectedTest();
-		if (test.getVersion().equals(StorableObjectVersion.INITIAL_VERSION)) {
+		if (test.isNew()) {
 			final String reason = this.isValid(test, temporalPattern);
 			if (reason != null) {
 				this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_REFRESH_MEASUREMENT_SETUP, null, null));
@@ -1004,7 +1004,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 		}
 
 		final Set<Identifier> changedTestId = new HashSet<Identifier>();
-		if (test.getVersion().equals(StorableObjectVersion.INITIAL_VERSION)) {
+		if (test.isNew()) {
 			changedTestId.add(test.getId());
 			test.setTemporalPatternId(temporalPattern.getId());
 			test.normalize();
@@ -1166,7 +1166,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 
 
 			for (final Test selectedTest : selectedTests) {
-				if (selectedTest.getVersion().equals(StorableObjectVersion.INITIAL_VERSION)) {
+				if (selectedTest.isNew()) {
 					final String reason = this.isValid(selectedTest, offset);
 					if (reason != null) {
 						throw new ApplicationException(I18N.getString("Scheduler.Error.CannotMoveTests")
@@ -1178,7 +1178,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 			}
 
 			for (final Test selectedTest : selectedTests) {
-				if (selectedTest.getVersion().equals(StorableObjectVersion.INITIAL_VERSION)) {
+				if (selectedTest.isNew()) {
 					final Date newStartDate = new Date(selectedTest.getStartTime().getTime() + offset);
 					Date newEndDate = selectedTest.getEndTime();
 					if (newEndDate != null) {
@@ -1384,7 +1384,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 	}
 
 	public boolean isTestNewer(final Test test) {
-		return test.getVersion().equals(StorableObjectVersion.INITIAL_VERSION);
+		return test.isNew();
 	}
 
 

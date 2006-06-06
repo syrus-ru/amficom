@@ -1,5 +1,5 @@
 /*-
-* $Id: TestView.java,v 1.24 2006/03/24 07:39:10 saa Exp $
+* $Id: TestView.java,v 1.25 2006/06/06 15:37:52 arseniy Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -31,7 +31,6 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
@@ -46,8 +45,8 @@ import com.syrus.util.WrapperComparator;
 
 
 /**
- * @version $Revision: 1.24 $, $Date: 2006/03/24 07:39:10 $
- * @author $Author: saa $
+ * @version $Revision: 1.25 $, $Date: 2006/06/06 15:37:52 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
  */
@@ -369,7 +368,7 @@ public final class TestView {
 
 	
 	public boolean isTestNewer() {
-		return this.test.getVersion().equals(StorableObjectVersion.INITIAL_VERSION);
+		return this.test.isNew();
 	}	
 	
 	public static final synchronized TestView valueOf(final Test test) {
