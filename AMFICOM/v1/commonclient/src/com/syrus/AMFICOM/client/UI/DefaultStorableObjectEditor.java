@@ -1,5 +1,5 @@
 /*-
- * $Id: DefaultStorableObjectEditor.java,v 1.5 2006/05/16 06:00:45 stas Exp $
+ * $Id: DefaultStorableObjectEditor.java,v 1.6 2006/06/06 12:39:51 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,23 +14,42 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import javax.swing.JComponent;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import com.syrus.AMFICOM.general.Identifiable;
+import com.syrus.AMFICOM.general.StorableObject;
+
 /**
  * @author $Author: stas $
- * @version $Revision: 1.5 $, $Date: 2006/05/16 06:00:45 $
+ * @version $Revision: 1.6 $, $Date: 2006/06/06 12:39:51 $
  * @module commonclient
  */
 
-public abstract class DefaultStorableObjectEditor implements StorableObjectEditor {
+/**
+ * @todo parametrize this class by {@link StorableObject} after map objects 
+ * such as CablePath will extends {@link StorableObject} 
+ */
+public abstract class DefaultStorableObjectEditor<S extends Identifiable> 
+		implements StorableObjectEditor<S> {
 	List<ChangeListener> changeListeners = new LinkedList<ChangeListener>(); 
 	UndoableKeyAdapter keyAdapter;
 	
 	protected DefaultStorableObjectEditor() {
 		this.keyAdapter = new UndoableKeyAdapter(this);
+	}
+	
+	public void setObjects(Set<S> objects) {
+		if (!objects.isEmpty()) {
+			setObject(objects.iterator().next());
+		}
+	}
+	
+	public Set<S> getObjects() {
+		return Collections.singleton(getObject());
 	}
 	
 	public void addChangeListener(final ChangeListener listener) {
@@ -63,9 +82,9 @@ public abstract class DefaultStorableObjectEditor implements StorableObjectEdito
 	}
 	
 	protected class UndoableKeyAdapter extends KeyAdapter {
-		StorableObjectEditor editor;
+		StorableObjectEditor<S> editor;
 
-		UndoableKeyAdapter(final StorableObjectEditor editor) {
+		UndoableKeyAdapter(final StorableObjectEditor<S> editor) {
 			this.editor = editor;
 		}
 		
@@ -77,7 +96,7 @@ public abstract class DefaultStorableObjectEditor implements StorableObjectEdito
 				}
 			} else if(e.getKeyCode() == KeyEvent.VK_ESCAPE) {
 				if (isEditable()) {
-					this.editor.setObject(this.editor.getObject());
+					this.editor.setObjects(this.editor.getObjects());
 				}
 			}
 		}

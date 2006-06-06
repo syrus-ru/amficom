@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectEditor.java,v 1.3 2005/08/19 12:45:55 bob Exp $
+ * $Id: StorableObjectEditor.java,v 1.4 2006/06/06 12:39:51 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,17 +9,25 @@
 package com.syrus.AMFICOM.client.UI;
 
 import java.util.Collection;
+import java.util.Set;
 
 import javax.swing.JComponent;
 import javax.swing.event.ChangeListener;
 
+import com.syrus.AMFICOM.general.Identifiable;
+import com.syrus.AMFICOM.general.StorableObject;
+
 /**
- * @author $Author: bob $
- * @version $Revision: 1.3 $, $Date: 2005/08/19 12:45:55 $
+ * @author $Author: stas $
+ * @version $Revision: 1.4 $, $Date: 2006/06/06 12:39:51 $
  * @module commonclient
  */
 
-public interface StorableObjectEditor {
+/**
+ * @todo parametrize this interaface by {@link StorableObject} after map objects 
+ * such as CablePath will extends {@link StorableObject} 
+ */
+public interface StorableObjectEditor<T extends Identifiable> {
 	/**
 	 * @return component witch can render properties 
 	 */
@@ -27,11 +35,19 @@ public interface StorableObjectEditor {
 	/**
 	 * @param object - editing object
 	 */
-	void setObject(Object object);
+	void setObject(T object);
+	/**
+	 * @param objects - editing objects
+	 */
+	void setObjects(Set<T> objects);
 	/**
 	 * @return editing object
 	 */
-	Object getObject();
+	T getObject();
+	/**
+	 * @return editing objects
+	 */
+	Set<T> getObjects();
 	/**
 	 * commit changes made by editor 
 	 */
