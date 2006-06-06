@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.219 2006/06/06 11:24:32 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.220 2006/06/06 15:32:44 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,6 +12,7 @@ import static com.syrus.AMFICOM.general.ErrorMessages.ENTITY_POOL_NOT_REGISTERED
 import static com.syrus.AMFICOM.general.ErrorMessages.ILLEGAL_ENTITY_CODE;
 import static com.syrus.AMFICOM.general.ErrorMessages.ILLEGAL_GROUP_CODE;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
 import static com.syrus.AMFICOM.general.StorableObjectVersion.ILLEGAL_VERSION;
 import static java.util.logging.Level.SEVERE;
 import gnu.trove.TShortObjectHashMap;
@@ -41,7 +42,7 @@ import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.219 $, $Date: 2006/06/06 11:24:32 $
+ * @version $Revision: 1.220 $, $Date: 2006/06/06 15:32:44 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -826,18 +827,12 @@ public final class StorableObjectPool {
 	private static void markAsDeleted(final Set<? extends Identifiable> identifiables) {
 		try {
 			for (final Identifiable identifiable : identifiables) {
-				final StorableObject storableObject;
-				if (identifiable instanceof StorableObject) {
-					storableObject = (StorableObject) identifiable;
+				final StorableObject storableObject = fromIdentifiable(identifiable);
+				if (storableObject != null) {
 					storableObject.markAsDeleted();
 				} else {
-					final Identifier id = identifiable.getId();
-					storableObject = getStorableObject(id, false);
-					if (storableObject != null) {
-						storableObject.markAsDeleted();
-					} else {
-						Log.debugMessage("Object '" + id + "' not found in pool, probably already deleted", Log.DEBUGLEVEL08);
-					}
+					Log.debugMessage("Object '" + identifiable.getId() + "' not found in pool, probably already deleted",
+							Log.DEBUGLEVEL08);
 				}
 			}
 		} catch (final ApplicationException ae) {
@@ -869,15 +864,14 @@ public final class StorableObjectPool {
 		final LRUMap<Identifier, StorableObject> objectPool = getLRUMap(entityCode);
 		if (objectPool != null) {
 			objectPool.remove(id);
-		}
-		else {
-			Log.errorMessage(ENTITY_POOL_NOT_REGISTERED + ": '"
-					+ ObjectEntities.codeToString(entityCode) + "'/" + entityCode);
+		} else {
+			Log.errorMessage(ENTITY_POOL_NOT_REGISTERED + ": '" + ObjectEntities.codeToString(entityCode) + "'/" + entityCode);
 		}
 	}
 
 	/**
 	 * Mark objects with ids from given set as deleted
+	 * 
 	 * @param identifiables
 	 */
 	public static void delete(final Set<? extends Identifiable> identifiables) {
@@ -1094,15 +1088,18 @@ public final class StorableObjectPool {
 	/**
 	 * Найти объект {@code StorableObject}, соответствующий аргументу
 	 * {@code identifiable}. Поиск производится только локально, без обращений
-	 * подгрузчику {@link #objectLoader}.
+	 * подгрузчику {@link #objectLoader}. Этот метод не меняет расположения
+	 * объектов (в отличие от
+	 * {@link #getStorableObject(Identifier, boolean), например}).
 	 * <p>
 	 * Если аргумент - объект класса {@link StorableObject}, то он же и
 	 * возвращается.
 	 * <p>
 	 * Если аргумент - объект класса {@link Identifier}, то ищется
 	 * соответствующая кишка {@link LRUMap} и возвращается объект, хранящийся в
-	 * этой кишке по ключу {@link identifiable}. Если объект в кишке на найден,
-	 * либо не найдена сама кишка, то возвращается {@code null}.
+	 * этой кишке по ключу {@code identifiable}. Положение объектов в кишке при
+	 * этом не меняется. Если же объект в кишке на найден, либо не найдена сама
+	 * кишка, то возвращается {@code null}.
 	 * <p>
 	 * Если аргумент не является объектом ни одного из вышеперечисленных
 	 * классов, возбуждается исключение {@link IllegalDataException}.
@@ -1112,6 +1109,7 @@ public final class StorableObjectPool {
 	 * @throws IllegalDataException
 	 *         Если аргумент {@code identifiable} не является объектом классов
 	 *         {@link StorableObject} или {@link Identifier}.
+	 * @see LRUMap#unmodifiableGet(Object).
 	 */
 	private static final StorableObject fromIdentifiable(final Identifiable identifiable) throws IllegalDataException {
 		assert identifiable != null : NON_NULL_EXPECTED;
@@ -1147,12 +1145,57 @@ public final class StorableObjectPool {
 		}
 	}
 
+	/**
+	 * Сохранить объекты.
+	 * <p>
+	 * Этот метод занимается "вставкой" новых объектов и сохранением изменений в
+	 * существующих объектах. Перед началом сохранения пытается убедиться, что
+	 * никакой другой поток в данный момент не сохраняет какие-нибудь из
+	 * объектов {@code storableObjects}. Если это не так - кидает
+	 * {@link UpdateObjectException}. Иначе - блокирует все эти объекты.
+	 * <p>
+	 * Затем для каждого из сохраняемых объектов происходит проверка версии.
+	 * Сохранение возможно только в случае, когда версия локального объекта
+	 * равна версии удалённого объекта; только в этом случае можно быть
+	 * уверенным, что никто другой не изменил удалённый объект без нашего
+	 * ведома. Следовательно, соотношение
+	 * {@code <локальная_версия>.isOlder(<удалённая_версия>) == true} означает,
+	 * что наш локальный объект является устаревшим по отношению к своему
+	 * удалённому собрату. Если проверка версии не удалась хотя бы для одного
+	 * объекта из {@code storableObjects}, то, в зависимости от параметра
+	 * {@code force}, либо происходит сохранение с перезаписыванием, либо
+	 * кидается {@link VersionCollisionException}.
+	 * <p>
+	 * После успешной провери версий все объекты передаются через загрузчик
+	 * {@link #objectLoader}. Перед завершением метода все объекты обратно
+	 * разблокируются.
+	 * 
+	 * @param storableObjects
+	 *        Объекты, которые надо сохранить. Должны быть одной сущности. Все
+	 *        они изменённые, т. е. {@link StorableObject#isChanged()} для
+	 *        каждого из них вернёт {@code true}.
+	 * @param modifierId
+	 *        Идентификатор пользователя, производящего эту операцию.
+	 * @param force
+	 *        Определяет поведение при несоответствии локальной и удалённой
+	 *        версий объекта. Если {@code true}, объект всё равно сохранается.
+	 *        Если {@code false}, то бросается
+	 *        {@link VersionCollisionException}.
+	 * @throws ApplicationException
+	 *         {@link UpdateObjectException}, если не удалось заблокировать
+	 *         хотя бы один объект из {@code storableObjects};
+	 *         {@link VersionCollisionException}, если аргумент
+	 *         {@code force == true} и не удалась проверка версии хотя бы для
+	 *         одного объекта из {@code storableObjects};
+	 *         {@link ApplicationException}, при ошибке работы подгрузчика
+	 *         {@link #objectLoader}.
+	 */
 	private static void saveStorableObjects(final Set<StorableObject> storableObjects,
 			final Identifier modifierId,
 			final boolean force) throws ApplicationException {
 		final Set<Identifier> ids = Identifier.createIdentifiers(storableObjects);
 		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(storableObjects);
-		assert ObjectEntities.isEntityCodeValid(entityCode);
+		assert ObjectEntities.isEntityCodeValid(entityCode) : ILLEGAL_ENTITY_CODE;
 
 		lockSavingObjects(ids);
 
@@ -1164,7 +1207,31 @@ public final class StorableObjectPool {
 				final StorableObjectVersion version = storableObject.getVersion();
 				final StorableObjectVersion remoteVersion = versionsMap.get(id);
 
-				if (!remoteVersion.equals(ILLEGAL_VERSION) && version.isOlder(remoteVersion)) {
+				/*
+				 * Этого просто не должно быть. Версия локального объекта может
+				 * быть больше версии удалённого объекта только в промежуток
+				 * времени между 1) повышением версии через вызов метода
+				 * StorableObject#setUpdated(Identifier) и 2) сбросом локальных
+				 * объектов через подгрузчик
+				 * ObjectLoader#saveStorableObjects(Set<StorableObject>).
+				 */
+				assert !version.isNewer(remoteVersion) : OBJECT_STATE_ILLEGAL
+						+ "; id: '" + id + "', version: " + version + ", remoteVersion: " + remoteVersion;
+
+				/*
+				 * Если флаг force не выставлен, то сохранить объект можно в
+				 * двух случаях:
+				 * 1. Этот объект -- новый, а соответствующего ему объекта на сервере
+				 * не существует:
+				 * remoteVersion.equals(ILLEGAL_VERSION) && storableObject.isNew()
+				 * 2. Версия сохраняемого локального объекта равна версии
+				 * соответствующего объекта на сервере:
+				 * !version.isOlder(remoteVersion)
+				 * В нижеприведённом условном операторе написано отрицание
+				 * объединения условий 1 и 2: !(1 || 2). В этом случае сохранять
+				 * объект можно только с флагом force.
+				 */
+				if ((!remoteVersion.equals(ILLEGAL_VERSION) || !storableObject.isNew()) && version.isOlder(remoteVersion)) {
 					if (force) {
 						storableObject.version = remoteVersion;
 					} else {
@@ -1181,14 +1248,12 @@ public final class StorableObjectPool {
 			for (final StorableObject setUpdatedObject : setUpdatedObjects) {
 				setUpdatedObject.cleanupUpdate();
 			}
-		}
-		catch (final ApplicationException ae) {
+		} catch (final ApplicationException ae) {
 			for (final StorableObject setUpdatedObject : setUpdatedObjects) {
 				setUpdatedObject.rollbackUpdate();
 			}
 			throw ae;
-		}
-		finally {
+		} finally {
 			unlockSavingObjects(ids);
 		}
 
