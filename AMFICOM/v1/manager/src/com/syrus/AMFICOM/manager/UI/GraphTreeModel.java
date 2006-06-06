@@ -1,5 +1,5 @@
 /*-
-* $Id: GraphTreeModel.java,v 1.8 2005/09/08 14:35:02 bob Exp $
+* $Id: GraphTreeModel.java,v 1.9 2006/06/06 15:34:26 arseniy Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.swing.event.EventListenerList;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 import javax.swing.tree.MutableTreeNode;
@@ -32,8 +31,8 @@ import org.jgraph.graph.GraphModel;
 import com.syrus.AMFICOM.general.ErrorMessages;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/09/08 14:35:02 $
- * @author $Author: bob $
+ * @version $Revision: 1.9 $, $Date: 2006/06/06 15:34:26 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module manager
  */

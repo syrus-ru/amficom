@@ -1,5 +1,5 @@
 /*-
-* $Id: Manager.java,v 1.30 2006/03/13 08:43:23 arseniy Exp $
+* $Id: Manager.java,v 1.31 2006/06/06 15:34:26 arseniy Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -7,6 +7,8 @@
 */
 
 package com.syrus.AMFICOM.manager.UI;
+
+import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 
 import java.util.Set;
 
@@ -23,7 +25,6 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.DirectLoginPerformer;
 import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifier;
-import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -36,7 +37,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2006/03/13 08:43:23 $
+ * @version $Revision: 1.31 $, $Date: 2006/06/06 15:34:26 $
  * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module manager

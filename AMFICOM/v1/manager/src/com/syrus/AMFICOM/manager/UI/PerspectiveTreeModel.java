@@ -1,5 +1,5 @@
 /*-
-* $Id: PerspectiveTreeModel.java,v 1.14 2005/12/22 14:27:27 bob Exp $
+* $Id: PerspectiveTreeModel.java,v 1.15 2006/06/06 15:34:26 arseniy Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 
-import javax.swing.event.EventListenerList;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -44,8 +43,8 @@ import com.syrus.util.Log;
  * 
  * TODO rebuild moving methods to nodes (pattern visitor)
  * 
- * @version $Revision: 1.14 $, $Date: 2005/12/22 14:27:27 $
- * @author $Author: bob $
+ * @version $Revision: 1.15 $, $Date: 2006/06/06 15:34:26 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module manager
  */
