@@ -16,6 +16,7 @@ import javax.swing.JTree;
 import javax.swing.UIDefaults;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
+import javax.swing.tree.TreeSelectionModel;
 
 import com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelSchematics;
@@ -90,7 +91,7 @@ public class ObserverMainFrame extends AbstractMainFrame {
 		this.schemePane = new SchemeTabbedPane(this.aContext);
 		new SchemeAlarmHandler(this.aContext, this.schemePane);
 		this.schemePane.setEditable(false);
-		this.schemePane.setToolBarVisible(false);
+//		this.schemePane.setToolBarVisible(false);
 		
 		this.frames.put(FRAME_EDITOR_MAIN, new UIDefaults.LazyValue() {
 			public Object createValue(UIDefaults table) {
@@ -176,6 +177,7 @@ public class ObserverMainFrame extends AbstractMainFrame {
 						iconedTreeUI, 
 						ObserverMainFrame.this.aContext, 
 						model.getRoot());
+				tree.getSelectionModel().setSelectionMode(TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION);
 				tree.addTreeSelectionListener(mapViewTreeEventHandler);
 				tree.addTreeWillExpandListener(mapViewTreeEventHandler);
 				tree.addMouseListener(new MapViewTreeMouseListener(tree, ObserverMainFrame.this.aContext));
@@ -349,7 +351,7 @@ public class ObserverMainFrame extends AbstractMainFrame {
 		if (evt.getPropertyName().equals(ObjectSelectedEvent.TYPE)) {
 			ObjectSelectedEvent ose = (ObjectSelectedEvent)evt;
 			if (ose.isSelected(ObjectSelectedEvent.SCHEME)) {
-				Identifier id = ((Identifiable)ose.getSelectedObject()).getId();
+				Identifier id = ose.getIdentifiable().getId();
 				ApplicationModel aModel = this.aContext.getApplicationModel();
 				aModel.getCommand(ObserverApplicationModel.MENU_OPEN_MAP).setParameter("scheme_id", id);
 				aModel.setEnabled(ObserverApplicationModel.MENU_OPEN_MAP, true);

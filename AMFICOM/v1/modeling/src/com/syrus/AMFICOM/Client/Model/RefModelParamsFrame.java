@@ -177,7 +177,11 @@ public class RefModelParamsFrame extends JInternalFrame
 		if (evt.getPropertyName().equals(ObjectSelectedEvent.TYPE)) {
 			ObjectSelectedEvent se = (ObjectSelectedEvent)evt;
 			if (se.isSelected(ObjectSelectedEvent.SCHEME_PATH)) {
-				setModelingPath((SchemePath)se.getSelectedObject());
+				try {
+					setModelingPath((SchemePath)se.getStorableObject());
+				} catch (ApplicationException e) {
+					Log.errorMessage(e);
+				}
 			}
 		}
 	}

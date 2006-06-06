@@ -675,7 +675,7 @@ public class ModelMDIMain extends AbstractMainFrame implements BsHashChangeListe
 		if (evt.getPropertyName().equals(ObjectSelectedEvent.TYPE)) {
 			ObjectSelectedEvent ose = (ObjectSelectedEvent)evt;
 			if (ose.isSelected(ObjectSelectedEvent.SCHEME)) {
-				Identifier id = ((Identifiable)ose.getSelectedObject()).getId();
+				Identifier id = ose.getIdentifiable().getId();
 				ApplicationModel aModel = this.aContext.getApplicationModel();
 				aModel.getCommand("menuViewMapViewOpen").setParameter("scheme_id", id);
 				aModel.setEnabled("menuViewMapViewOpen", ModelingPermissionManager.isOpenMapAllowed());

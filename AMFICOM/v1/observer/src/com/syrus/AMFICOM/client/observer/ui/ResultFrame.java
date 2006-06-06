@@ -1,5 +1,5 @@
 /*-
- * $Id: ResultFrame.java,v 1.10 2006/04/24 09:09:06 arseniy Exp $
+ * $Id: ResultFrame.java,v 1.11 2006/06/06 13:17:41 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -78,8 +78,8 @@ import com.syrus.io.DataFormatException;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.10 $, $Date: 2006/04/24 09:09:06 $
+ * @author $Author: stas $
+ * @version $Revision: 1.11 $, $Date: 2006/06/06 13:17:41 $
  * @module surveyclient_v1
  */
 
@@ -179,12 +179,11 @@ public class ResultFrame extends JInternalFrame implements PropertyChangeListene
 	public void propertyChange(PropertyChangeEvent e) {
 		if (e.getPropertyName().equals(ObjectSelectedEvent.TYPE)) {
 			ObjectSelectedEvent ev = (ObjectSelectedEvent)e;
-			Object selected = ev.getSelectedObject();
 			if (ev.isSelected(ObjectSelectedEvent.MEASUREMENT)) {
-				Measurement m = (Measurement)selected;
-				Result r = null;
 				try {
-					StorableObjectCondition condition2 = new LinkedIdsCondition(m.getId(), ObjectEntities.RESULT_CODE);
+					Identifier measurementId = ev.getIdentifiable().getId();
+					Result r = null;
+					StorableObjectCondition condition2 = new LinkedIdsCondition(measurementId, ObjectEntities.RESULT_CODE);
 					Set<StorableObject> resultSet = StorableObjectPool.getStorableObjectsByCondition(condition2, true);
 					for (Iterator<StorableObject> iter = resultSet.iterator(); iter.hasNext();) {
 						Result res = (Result) iter.next();
@@ -193,10 +192,10 @@ public class ResultFrame extends JInternalFrame implements PropertyChangeListene
 							break;
 						}
 					}
+					showResult(r);
 				} catch (ApplicationException e1) {
 					Log.errorMessage(e1);
 				}
-				showResult(r);
 			}
 		}
 	}
