@@ -55,6 +55,7 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.ApplicationModel;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.model.ShowWindowCommand;
+import com.syrus.AMFICOM.client_.scheme.SchemePermissionManager;
 import com.syrus.AMFICOM.report.DestinationModules;
 import com.syrus.util.Log;
 
@@ -362,6 +363,8 @@ public class PredictionMDIMain extends AbstractMainFrame implements BsHashChange
 	
 	@Override
 	public void loggedIn() {
+		SchemePermissionManager.setSchemeTranslation();
+		
 		ApplicationModel aModel = this.aContext.getApplicationModel();
 //		aModel.setEnabled("menuNetStudy", true);
 		

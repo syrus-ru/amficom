@@ -56,6 +56,7 @@ import com.syrus.AMFICOM.client.observer.ui.ResultFrame;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
+import com.syrus.AMFICOM.client_.scheme.SchemePermissionManager;
 import com.syrus.AMFICOM.client_.scheme.SchemeViewerFrame;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeAlarmHandler;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeTabbedPane;
@@ -364,7 +365,8 @@ public class ObserverMainFrame extends AbstractMainFrame {
 	@Override
 	public void loggedIn() {
 //		AlarmReceiver.getInstance().setContext(this.aContext);
-
+		SchemePermissionManager.setSchemeTranslation();
+		
 		Command command = new OpenSchemeViewCommand(this.aContext);
 		command.execute();
 

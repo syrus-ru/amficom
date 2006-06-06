@@ -81,6 +81,7 @@ import com.syrus.AMFICOM.client.model.ShowWindowCommand;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
+import com.syrus.AMFICOM.client_.scheme.SchemePermissionManager;
 import com.syrus.AMFICOM.client_.scheme.SchemeViewerFrame;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeAlarmHandler;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeTabbedPane;
@@ -584,6 +585,8 @@ public class ModelMDIMain extends AbstractMainFrame implements BsHashChangeListe
 
 	@Override
 	public void loggedIn() {
+		SchemePermissionManager.setSchemeTranslation();
+		
 		final ApplicationModel aModel = aContext.getApplicationModel();
 
 		aModel.setEnabled("menuViewSchemeOpen", true);
