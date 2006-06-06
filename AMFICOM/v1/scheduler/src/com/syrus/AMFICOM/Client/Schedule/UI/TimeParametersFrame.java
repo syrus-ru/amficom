@@ -48,7 +48,6 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.measurement.AbstractTemporalPattern;
 import com.syrus.AMFICOM.measurement.PeriodicalTemporalPattern;
 import com.syrus.AMFICOM.measurement.Test;
@@ -359,8 +358,7 @@ public class TimeParametersFrame extends JInternalFrame {
 					if (TimeParametersPanel.this.propertyChangeEvent == null && 
 							TimeParametersPanel.this.isTestAgree(selectedTest)) {
 
-						if (selectedTest != null
-								&& selectedTest.isNew()) {
+						if (selectedTest != null && selectedTest.isNew()) {
 							Date startDate = TimeParametersPanel.this
 									.getStartDate();
 							Date endDate = TimeParametersPanel.this
