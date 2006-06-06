@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapPropertiesEventHandler.java,v 1.13 2006/02/14 10:20:07 stas Exp $$
+ * $$Id: MapPropertiesEventHandler.java,v 1.14 2006/06/06 13:02:36 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,6 +24,7 @@ import com.syrus.AMFICOM.client.map.LogicalNetLayer;
 import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.client.map.command.MapDesktopCommand;
 import com.syrus.AMFICOM.client.map.props.CablePathAddEditor;
+import com.syrus.AMFICOM.client.map.props.MapEditor;
 import com.syrus.AMFICOM.client.map.props.MapViewVisualManager;
 import com.syrus.AMFICOM.client.map.props.MapVisualManager;
 import com.syrus.AMFICOM.client.map.props.MarkerEditor;
@@ -34,15 +35,17 @@ import com.syrus.AMFICOM.client.map.props.SiteNodeAddEditor;
 import com.syrus.AMFICOM.client.map.props.SiteNodeEditor;
 import com.syrus.AMFICOM.client.map.props.SiteNodeTypeEditor;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.MapLibrary;
 import com.syrus.AMFICOM.map.PhysicalLinkType;
 import com.syrus.AMFICOM.map.SiteNodeType;
 import com.syrus.AMFICOM.mapview.MapView;
+import com.syrus.AMFICOM.mapview.VoidElement;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2006/02/14 10:20:07 $
+ * @version $Revision: 1.14 $, $Date: 2006/06/06 13:02:36 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -66,16 +69,14 @@ public class MapPropertiesEventHandler extends AbstractEventHandler implements C
 	}
 	
 	public void propertyChange(PropertyChangeEvent pce) {
-		long d0 = System.currentTimeMillis();
 		if(!this.performProcessing)
 			return;
 		if(this.frame.getParent() == null)
 			return;
-		String mesg2 = ""; //$NON-NLS-1$
 		if(pce.getPropertyName().equals(MapEvent.MAP_EVENT_TYPE)) {
 			MapEvent mapEvent = (MapEvent )pce;
 			String mapEventType = mapEvent.getMapEventType();
-			Object selectedObject = null;
+			Identifiable selectedObject = null;
 
 			MapFrame mapFrame = MapDesktopCommand.findMapFrame(
 					(JDesktopPane )this.frame.getParent());
@@ -83,12 +84,12 @@ public class MapPropertiesEventHandler extends AbstractEventHandler implements C
 				return;
 
 			StorableObjectEditor previousEditor = this.frame.getCurrentEditor();
-
+			StorableObjectEditor editor = null;
+			
 			NetMapViewer netMapViewer = mapFrame.getMapViewer();
 
 			if(mapEventType.equals(MapEvent.SELECTION_CHANGED)) {
 				LogicalNetLayer lnl = netMapViewer.getLogicalNetLayer();
-				long d1 = System.currentTimeMillis();
 				Collection selection = (Collection )pce.getNewValue();
 				MapElement mapElement;
 				// get selection object
@@ -98,34 +99,32 @@ public class MapPropertiesEventHandler extends AbstractEventHandler implements C
 				else {
 					mapElement = lnl.getCurrentMapElement();
 				}
-				long d2 = System.currentTimeMillis();
 				VisualManager vm = MapVisualManager.getVisualManager(mapElement);
-				long d3 = System.currentTimeMillis();
 				this.frame.setVisualManager(vm);
-				long d4 = System.currentTimeMillis();
 				selectedObject = mapElement;
-				long d5 = System.currentTimeMillis();
-				mesg2 = "		 " + (d1 - d0) + " " + (d2 - d1) + " " + (d3 - d2) + " " + (d4 - d3) + " " + (d5 - d4) + " ms ---------"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
+				editor = this.frame.getCurrentEditor();
 			}
 			else if(mapEventType.equals(MapEvent.MAP_SELECTED)) {
-				selectedObject = pce.getNewValue();
+				selectedObject = (Map)pce.getNewValue();
 				VisualManager vm = MapVisualManager.getInstance();
 				this.frame.setVisualManager(vm);
+				editor = this.frame.getCurrentEditor();
 			}
 			else if(mapEventType.equals(MapEvent.MAP_VIEW_SELECTED)) {
-				selectedObject = pce.getNewValue();
+				selectedObject = (MapView)pce.getNewValue();
 				VisualManager vm = MapViewVisualManager.getInstance();
 				this.frame.setVisualManager(vm);
+				editor = this.frame.getCurrentEditor();
 			}
 			else if(mapEventType.equals(MapEvent.OTHER_SELECTED)) {
-				selectedObject = pce.getNewValue();
+				selectedObject = (MapElement)pce.getNewValue();
 				VisualManager vm = MapVisualManager.getVisualManager(selectedObject);
 				if(vm != null) {
 					this.frame.setVisualManager(vm);
+					editor = this.frame.getCurrentEditor();
 				}
 			}
 
-			StorableObjectEditor editor = this.frame.getCurrentEditor();
 			if(editor != null) {
 				if(editor instanceof PhysicalLinkEditor) {
 					PhysicalLinkEditor linkEditor = (PhysicalLinkEditor )editor;
@@ -159,6 +158,11 @@ public class MapPropertiesEventHandler extends AbstractEventHandler implements C
 					MarkerEditor markerEditor = (MarkerEditor )editor;
 					markerEditor.setNetMapViewer(netMapViewer);
 				}
+				else if(editor instanceof MapEditor) {
+					if(selectedObject instanceof VoidElement) {
+						selectedObject = ((VoidElement)selectedObject).getMapView().getMap();
+					}
+				}
 				if(selectedObject != null) {
 					if(previousEditor != null) {
 						previousEditor.removeChangeListener(this);
@@ -168,8 +172,6 @@ public class MapPropertiesEventHandler extends AbstractEventHandler implements C
 				}
 			}
 		}
-		long f = System.currentTimeMillis();
-//		Log.debugMessage(pce.getPropertyName() + " -------- " + (f - d0) + " ms --------- " + mesg2, Level.INFO);
 	}
 
 	public void stateChanged(ChangeEvent e) {
