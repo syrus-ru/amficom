@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeObjectsFactory.java,v 1.60 2006/06/01 14:30:40 stas Exp $
+ * $Id: SchemeObjectsFactory.java,v 1.61 2006/06/06 12:45:18 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,19 +47,14 @@ import com.syrus.AMFICOM.configuration.corba.IdlPortTypePackage.PortTypeKind;
 import com.syrus.AMFICOM.configuration.corba.IdlPortTypePackage.PortTypeSort;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
-import com.syrus.AMFICOM.general.CharacteristicType;
-import com.syrus.AMFICOM.general.CharacteristicTypeSort;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.DataType;
 import com.syrus.AMFICOM.general.EquivalentCondition;
-import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.TypicalCondition;
-import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.IdlCharacteristicTypeSort;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.measurement.KIS;
 import com.syrus.AMFICOM.measurement.MeasurementPort;
@@ -90,7 +85,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.60 $, $Date: 2006/06/01 14:30:40 $
+ * @version $Revision: 1.61 $, $Date: 2006/06/06 12:45:18 $
  * @module schemeclient
  */
 
@@ -171,13 +166,13 @@ public class SchemeObjectsFactory {
 					public void propertyChange(PropertyChangeEvent evt) {
 						ObjectSelectedEvent ose = (ObjectSelectedEvent)evt;
 						if (ose.isSelected(ObjectSelectedEvent.CABLELINK_TYPE)) {
-							cachedCableLinkTypeId = ose.getSelectedObject().getId();	
+							cachedCableLinkTypeId = ose.getIdentifiable().getId();	
 						} else if (ose.isSelected(ObjectSelectedEvent.LINK_TYPE)) {
-							cachedLinkTypeId = ose.getSelectedObject().getId();	
+							cachedLinkTypeId = ose.getIdentifiable().getId();	
 						} else if (ose.isSelected(ObjectSelectedEvent.CABLEPORT_TYPE)) {
-							cachedCablePortTypeId = ose.getSelectedObject().getId();	
+							cachedCablePortTypeId = ose.getIdentifiable().getId();	
 						} else if (ose.isSelected(ObjectSelectedEvent.PORT_TYPE)) {
-							cachedPortTypeId = ose.getSelectedObject().getId();	
+							cachedPortTypeId = ose.getIdentifiable().getId();	
 						}
 					}
 		});
