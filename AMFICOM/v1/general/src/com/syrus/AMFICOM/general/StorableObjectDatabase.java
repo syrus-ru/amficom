@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectDatabase.java,v 1.210 2006/04/20 12:37:34 arseniy Exp $
+ * $Id: StorableObjectDatabase.java,v 1.211 2006/06/06 11:24:03 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -43,7 +43,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.210 $, $Date: 2006/04/20 12:37:34 $
+ * @version $Revision: 1.211 $, $Date: 2006/06/06 11:24:03 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -674,6 +674,18 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 		return storableObjectDatabase.isPresentInDatabase(id);
 	}
 
+	/**
+	 * Создать карту версий, т. е. - карту, где по ключу - идентификатор
+	 * объекта, а по величине - его версия. Если объект не найден в БД, то в
+	 * качестве его версии в карту помещается
+	 * {@link StorableObjectVersion#ILLEGAL_VERSION}.
+	 * 
+	 * @param ids
+	 *        Идентификаторы объектов. Должны быть одной сущности.
+	 * @return Карта версий для объектов {@code ids}.
+	 * @throws RetrieveObjectException
+	 *         Ошибка при выборке из БД.
+	 */
 	final Map<Identifier, StorableObjectVersion> retrieveVersions(final Set<Identifier> ids) throws RetrieveObjectException {
 		assert StorableObject.hasSingleTypeEntities(ids) : OBJECTS_NOT_OF_THE_SAME_ENTITY;
 		final String tableName = this.getEntityName();
