@@ -1,5 +1,5 @@
 /*-
- * $Id: ElementsEditorMainFrame.java,v 1.25 2006/05/24 06:14:27 stas Exp $
+ * $Id: ElementsEditorMainFrame.java,v 1.26 2006/06/06 12:43:26 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -51,7 +51,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.25 $, $Date: 2006/05/24 06:14:27 $
+ * @version $Revision: 1.26 $, $Date: 2006/06/06 12:43:26 $
  * @module schemeclient
  */
 
@@ -242,10 +242,11 @@ public class ElementsEditorMainFrame extends AbstractMainFrame {
 	public void loggedIn() {
 		SchemeObjectsFactory.init(this.aContext);
 		final ApplicationModel aModel = this.aContext.getApplicationModel();
-	
-		boolean creationAllowed = ElementsPermissionManager.isCreationAllowed(); 
-		boolean savingAllowed = ElementsPermissionManager.isSavingAllowed();
-		boolean editionAllowed = ElementsPermissionManager.isEditionAllowed();
+
+		SchemePermissionManager.setElementsTranslation();
+		boolean creationAllowed = SchemePermissionManager.isPermitted(SchemePermissionManager.Operation.CREATE); 
+		boolean savingAllowed = SchemePermissionManager.isPermitted(SchemePermissionManager.Operation.SAVE);
+		boolean editionAllowed = SchemePermissionManager.isPermitted(SchemePermissionManager.Operation.EDIT);
 		
 		this.elementsTab.setEditable(editionAllowed);
 		

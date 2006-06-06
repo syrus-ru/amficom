@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeEditorMainFrame.java,v 1.40 2006/06/01 14:30:40 stas Exp $
+ * $Id: SchemeEditorMainFrame.java,v 1.41 2006/06/06 12:43:26 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,7 +10,7 @@ package com.syrus.AMFICOM.client_.scheme;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.40 $, $Date: 2006/06/01 14:30:40 $
+ * @version $Revision: 1.41 $, $Date: 2006/06/06 12:43:26 $
  * @module schemeclient
  */
 
@@ -300,9 +300,10 @@ public class SchemeEditorMainFrame extends AbstractMainFrame {
 		SchemeObjectsFactory.init(this.aContext);
 		final ApplicationModel aModel = this.aContext.getApplicationModel();
 
-		boolean creationAllowed = SchemePermissionManager.isCreationAllowed(); 
-		boolean savingAllowed = SchemePermissionManager.isSavingAllowed();
-		boolean editionAllowed = SchemePermissionManager.isEditionAllowed();
+		SchemePermissionManager.setSchemeTranslation();
+		boolean creationAllowed = SchemePermissionManager.isPermitted(SchemePermissionManager.Operation.CREATE); 
+		boolean savingAllowed = SchemePermissionManager.isPermitted(SchemePermissionManager.Operation.SAVE);
+		boolean editionAllowed = SchemePermissionManager.isPermitted(SchemePermissionManager.Operation.EDIT);
 		
 		this.schemeTab.setEditable(editionAllowed);
 		
