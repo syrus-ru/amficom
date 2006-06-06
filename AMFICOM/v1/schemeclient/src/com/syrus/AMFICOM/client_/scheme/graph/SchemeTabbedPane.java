@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeTabbedPane.java,v 1.47 2006/06/06 12:50:53 stas Exp $
+ * $Id: SchemeTabbedPane.java,v 1.48 2006/06/06 15:45:59 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -59,7 +59,6 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.resource.LangModelScheme;
 import com.syrus.AMFICOM.resource.SchemeImageResource;
 import com.syrus.AMFICOM.scheme.Scheme;
@@ -71,8 +70,8 @@ import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.47 $, $Date: 2006/06/06 12:50:53 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.48 $, $Date: 2006/06/06 15:45:59 $
  * @module schemeclient
  */
 
@@ -249,17 +248,17 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 					SchemeResource res = ((ElementsPanel)p).getSchemeResource();
 					if (res.getCellContainerType() == SchemeResource.SCHEME) {
 						Scheme scheme = res.getScheme();
-						if (!scheme.getVersion().equals(StorableObjectVersion.INITIAL_VERSION)) {
+						if (!scheme.isNew()) {
 							scheme.discardChanges();
 						}
 					} else if (res.getCellContainerType() == SchemeResource.SCHEME_ELEMENT) {
 						SchemeElement schemeElement = res.getSchemeElement();
-						if (!schemeElement.getVersion().equals(StorableObjectVersion.INITIAL_VERSION)) {
+						if (!schemeElement.isNew()) {
 							schemeElement.discardChanges();
 						}
 					} else if (res.getCellContainerType() == SchemeResource.SCHEME_PROTO_ELEMENT) {
 						SchemeProtoElement schemeProtoElement = res.getSchemeProtoElement();
-						if (!schemeProtoElement.getVersion().equals(StorableObjectVersion.INITIAL_VERSION)) {
+						if (!schemeProtoElement.isNew()) {
 							schemeProtoElement.discardChanges();
 						}
 					}
