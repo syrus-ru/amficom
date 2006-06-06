@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapViewTreeEventHandler.java,v 1.19 2006/06/06 13:03:32 stas Exp $$
+ * $$Id: MapViewTreeEventHandler.java,v 1.20 2006/06/06 13:33:37 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,7 +44,7 @@ import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.AMFICOM.scheme.SchemePath;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2006/06/06 13:03:32 $
+ * @version $Revision: 1.20 $, $Date: 2006/06/06 13:33:37 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -97,7 +97,7 @@ public class MapViewTreeEventHandler implements TreeSelectionListener, PropertyC
 			TreePath paths[] = e.getPaths();
 			Collection toSelect = new LinkedList();
 			Collection toDeSelect = new LinkedList();
-			boolean sendSelectionEvent = true;
+			boolean sendSelectionEvent = this.iconedTreeUI.isLinkObjects();
 			for (int i = 0; i < paths.length; i++) 
 			{
 				Item node = (Item )paths[i].getLastPathComponent();
