@@ -1,5 +1,5 @@
 /*
- * $Id: SaveTemplateCommand.java,v 1.3 2006/06/02 17:23:57 bass Exp $
+ * $Id: SaveTemplateCommand.java,v 1.4 2006/06/06 17:39:36 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,6 @@ import com.syrus.AMFICOM.client.reportbuilder.TemplateOpenSaveDialog;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.LoginManager;
-import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.report.AbstractDataStorableElement;
 import com.syrus.AMFICOM.report.AttachedTextStorableElement;
 import com.syrus.AMFICOM.report.ImageStorableElement;
@@ -39,24 +38,20 @@ public class SaveTemplateCommand extends AbstractCommand {
 
 	@Override
 	public void execute() {
-		ReportTemplate currentTemplate = this.mainFrame.getTemplateRenderer().getTemplate();
+		final ReportTemplate currentTemplate = this.mainFrame.getTemplateRenderer().getTemplate();
 		if (isChanged()) {
-			String defaultLangName = I18N.getString(NewTemplateCommand.NEW_TEMPLATE_NAME);
+			final String defaultLangName = I18N.getString(NewTemplateCommand.NEW_TEMPLATE_NAME);
 			if (currentTemplate.getName().equals(defaultLangName)) {
 				TemplateOpenSaveDialog.saveTemplate(currentTemplate);
 			} else {
 				try {
 					currentTemplate.saveChanges(LoginManager.getUserId());
-					currentTemplate.setNew(false);
+					currentTemplate.setNewDeprecated(false);
 				} catch (ApplicationException e1) {
 					Log.errorMessage("SaveTemplateCommand.execute | " + e1.getMessage());
-					Log.errorMessage(e1);			
-					JOptionPane.showMessageDialog(
-							Environment.getActiveWindow(),
-							I18N.getString("report.Exception.saveTemplateError")
-								+ " ("
-								+ e1.getMessage()
-								+ ").",
+					Log.errorMessage(e1);
+					JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+							I18N.getString("report.Exception.saveTemplateError") + " (" + e1.getMessage() + ").",
 							I18N.getString("report.Exception.error"),
 							JOptionPane.ERROR_MESSAGE);
 				}
@@ -64,7 +59,7 @@ public class SaveTemplateCommand extends AbstractCommand {
 		}
 		this.result = RESULT_OK;
 	}
-	
+
 	private boolean isChanged() {
 		ReportTemplate template = this.mainFrame.getTemplateRenderer().getTemplate();
 		if (template == null) {
