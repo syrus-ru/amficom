@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapViewTreeEventHandler.java,v 1.18 2005/10/31 12:30:09 bass Exp $$
+ * $$Id: MapViewTreeEventHandler.java,v 1.19 2006/06/06 13:03:32 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,8 +44,8 @@ import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.AMFICOM.scheme.SchemePath;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/10/31 12:30:09 $
- * @author $Author: bass $
+ * @version $Revision: 1.19 $, $Date: 2006/06/06 13:03:32 $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -102,16 +102,16 @@ public class MapViewTreeEventHandler implements TreeSelectionListener, PropertyC
 			{
 				Item node = (Item )paths[i].getLastPathComponent();
 				Object userObject = node.getObject();
-				if(userObject instanceof MapElement
-						|| userObject instanceof SchemeElement
-						|| userObject instanceof SchemeCableLink
-						|| userObject instanceof SchemePath) {
-					Object mapElement = userObject;
-					if(e.isAddedPath(paths[i]))
-						toSelect.add(mapElement);
-					else
-						toDeSelect.add(mapElement);
-				}
+				Object mapElement = null;
+				if(userObject instanceof MapElement) {
+					mapElement = userObject;
+				} else if (userObject instanceof SchemeElement) {
+					mapElement = this.mapView.findElement((SchemeElement)userObject);
+				} else if (userObject instanceof SchemeCableLink) {
+					mapElement = this.mapView.findCablePath((SchemeCableLink)userObject);
+				} else if (userObject instanceof SchemePath) {
+					mapElement = this.mapView.findMeasurementPath((SchemePath)userObject);
+				} 
 				else if(userObject instanceof Map) {
 					Map map = (Map )userObject;
 					if(e.isAddedPath(paths[i])) {
@@ -134,9 +134,17 @@ public class MapViewTreeEventHandler implements TreeSelectionListener, PropertyC
 						sendSelectionEvent = false;
 					}
 				}
-			}
-			if(sendSelectionEvent) {
 
+				if(mapElement != null) {
+					if (e.isAddedPath(paths[i])) {
+						toSelect.add(mapElement);
+					} else {
+						toDeSelect.add(mapElement);
+					}
+				}
+			}
+
+			if(sendSelectionEvent) {
 				for(Iterator iter = toSelect.iterator(); iter.hasNext();) {
 					Object element = iter.next();
 					if(element instanceof MapElement) {
