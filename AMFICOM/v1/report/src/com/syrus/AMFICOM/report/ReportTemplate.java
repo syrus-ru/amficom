@@ -1,5 +1,5 @@
 /*
- * $Id: ReportTemplate.java,v 1.37 2006/06/02 17:23:20 bass Exp $
+ * $Id: ReportTemplate.java,v 1.38 2006/06/06 16:01:10 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -60,8 +60,8 @@ import com.syrus.util.transport.idl.IdlTransferableObjectExt;
  * <p>Тип шаблона характеризует из какого модуля по нему можно построить
  * отчёт </p>
  * 
- * @author $Author: bass $
- * @version $Revision: 1.37 $, $Date: 2006/06/02 17:23:20 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.38 $, $Date: 2006/06/06 16:01:10 $
  * @module report
  */
 public final class ReportTemplate extends StorableObject
@@ -110,8 +110,6 @@ public final class ReportTemplate extends StorableObject
 	private String destinationModule;
 
 	private transient Set<StorableElement> storableElementsToRemove;
-
-	private transient boolean isNew = false;
 
 	private transient LinkedIdsCondition	attTextCondition;
 	private transient LinkedIdsCondition	imageCondition;
@@ -506,14 +504,6 @@ public final class ReportTemplate extends StorableObject
 		return Collections.emptySet();
 	}
 
-	public boolean isNew() {
-		return this.isNew;
-	}
-
-	public void setNew(final boolean isNew) {
-		this.isNew = isNew;
-	}
-
 	/**
 	 * @see com.syrus.AMFICOM.general.StorableObject#getWrapper()
 	 */
@@ -533,8 +523,6 @@ public final class ReportTemplate extends StorableObject
 		clone.destinationModule = this.destinationModule;
 
 		clone.storableElementsToRemove = null;
-
-		clone.isNew = false;
 
 		clone.attTextCondition = null;
 		clone.imageCondition = null;
