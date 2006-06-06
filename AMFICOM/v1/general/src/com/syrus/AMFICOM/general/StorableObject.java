@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObject.java,v 1.155 2006/06/06 15:27:52 arseniy Exp $
+ * $Id: StorableObject.java,v 1.156 2006/06/06 17:32:32 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,7 +47,7 @@ import com.syrus.util.LRUMap.Retainable;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.155 $, $Date: 2006/06/06 15:27:52 $
+ * @version $Revision: 1.156 $, $Date: 2006/06/06 17:32:32 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -259,7 +259,10 @@ public abstract class StorableObject implements Identifiable, Retainable, Serial
 	 * @return {@code true}, если объект - новый.
 	 */
 	public final boolean isNew() {
-		return this.version.equals(INITIAL_VERSION);
+		final boolean itIsNew = this.version.equals(INITIAL_VERSION);
+		assert (itIsNew && this.isChanged()) || (!itIsNew && !this.isChanged()) : OBJECT_STATE_ILLEGAL
+				+ "; id: '" + this.id + "' + version: " + this.version;
+		return itIsNew;
 	}
 
 	/**
@@ -780,7 +783,9 @@ public abstract class StorableObject implements Identifiable, Retainable, Serial
 
 	/**
 	 * Discards changes made to this object and/or its reverse dependencies.
-	 *
+	 * 
+	 * @todo Если этот объект {@code {@link #isNew()} == true}, то удалять его
+	 *       из {@link StorableObjectPool}.
 	 * @throws ApplicationException
 	 */
 	public void discardChanges() throws ApplicationException {
@@ -842,7 +847,7 @@ public abstract class StorableObject implements Identifiable, Retainable, Serial
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: arseniy $
-	 * @version $Revision: 1.155 $, $Date: 2006/06/06 15:27:52 $
+	 * @version $Revision: 1.156 $, $Date: 2006/06/06 17:32:32 $
 	 * @module general
 	 */
 	@Crutch134(notes = "This class should be made final.")
@@ -951,7 +956,7 @@ public abstract class StorableObject implements Identifiable, Retainable, Serial
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: arseniy $
-	 * @version $Revision: 1.155 $, $Date: 2006/06/06 15:27:52 $
+	 * @version $Revision: 1.156 $, $Date: 2006/06/06 17:32:32 $
 	 * @module general
 	 */
 	@Retention(SOURCE)
