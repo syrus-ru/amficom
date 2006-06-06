@@ -1,5 +1,5 @@
 /*-
- * $Id: Identifier.java,v 1.96 2006/06/06 11:23:02 arseniy Exp $
+ * $Id: Identifier.java,v 1.97 2006/06/06 13:58:18 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,14 +33,14 @@ import com.syrus.util.transport.idl.IdlTransferableObject;
  * its respective <code>creatorId</code> and <code>modifierId</code>. But
  * there&apos;s a particular task of <code>id</code> handling.
  *
- * @version $Revision: 1.96 $, $Date: 2006/06/06 11:23:02 $
+ * @version $Revision: 1.97 $, $Date: 2006/06/06 13:58:18 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
 public final class Identifier implements Comparable<Identifier>,
 		IdlTransferableObject<IdlIdentifier>, Identifiable, Serializable {
-	private static final long serialVersionUID = 3791899971058394687L;
+	private static final long serialVersionUID = 1721559813677093072L;
 
 	public static final char SEPARATOR = '_';
 	private static final int MINOR_SIZE_BITS = 48;
