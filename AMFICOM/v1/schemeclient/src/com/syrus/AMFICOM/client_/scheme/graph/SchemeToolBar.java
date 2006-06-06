@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeToolBar.java,v 1.15 2005/10/17 14:59:15 stas Exp $
+ * $Id: SchemeToolBar.java,v 1.16 2006/06/06 12:50:53 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceGroup;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.15 $, $Date: 2005/10/17 14:59:15 $
+ * @version $Revision: 1.16 $, $Date: 2006/06/06 12:50:53 $
  * @module schemeclient
  */
 
@@ -94,7 +94,7 @@ public class SchemeToolBar extends ElementsToolBar {
 		group.add(mh.linkButt);
 		group.add(mh.pathButt);
 		group.add(mh.rackButt);
-		mh.linkButt.doClick();
+		mh.linkButt.setSelected(true);
 		mh.s.doClick();
 
 		return bttns;

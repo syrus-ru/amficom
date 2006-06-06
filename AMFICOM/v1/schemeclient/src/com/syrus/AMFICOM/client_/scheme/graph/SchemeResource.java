@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeResource.java,v 1.23 2006/06/01 14:30:40 stas Exp $
+ * $Id: SchemeResource.java,v 1.24 2006/06/06 12:50:01 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,7 +38,7 @@ import com.syrus.util.Log;
 /**
  * 
  * @author $Author: stas $
- * @version $Revision: 1.23 $, $Date: 2006/06/01 14:30:40 $
+ * @version $Revision: 1.24 $, $Date: 2006/06/06 12:50:01 $
  * @module schemeclient
  */
 
@@ -70,23 +70,23 @@ public class SchemeResource {
 
 	public static void setSchemePath(SchemePath path, boolean forEdit) {
 		schemePath = path;
-		isEditing = SchemePermissionManager.isEditionAllowed() && forEdit;
+		isEditing = SchemePermissionManager.isPermitted(SchemePermissionManager.Operation.EDIT) && forEdit;
 		
 		if (aContext != null) {
 			ApplicationModel aModel = aContext.getApplicationModel();
 			if (path == null) {
-				aModel.setEnabled("menuPathNew", SchemePermissionManager.isEditionAllowed());
+				aModel.setEnabled("menuPathNew", SchemePermissionManager.isPermitted(SchemePermissionManager.Operation.EDIT));
 				aModel.setEnabled("menuPathEdit", false);
 				aModel.setEnabled("menuPathSave", false);
 				aModel.setEnabled("menuPathCancel", false);
 			} else if (forEdit) {
 				aModel.setEnabled("menuPathNew", false);
 				aModel.setEnabled("menuPathEdit", false);
-				aModel.setEnabled("menuPathSave", SchemePermissionManager.isEditionAllowed());
+				aModel.setEnabled("menuPathSave", SchemePermissionManager.isPermitted(SchemePermissionManager.Operation.EDIT));
 				aModel.setEnabled("menuPathCancel", true);
 			} else {
-				aModel.setEnabled("menuPathNew", SchemePermissionManager.isEditionAllowed());
-				aModel.setEnabled("menuPathEdit", SchemePermissionManager.isEditionAllowed());
+				aModel.setEnabled("menuPathNew", SchemePermissionManager.isPermitted(SchemePermissionManager.Operation.EDIT));
+				aModel.setEnabled("menuPathEdit", SchemePermissionManager.isPermitted(SchemePermissionManager.Operation.EDIT));
 				aModel.setEnabled("menuPathSave", false);
 				aModel.setEnabled("menuPathCancel", false);
 			}
