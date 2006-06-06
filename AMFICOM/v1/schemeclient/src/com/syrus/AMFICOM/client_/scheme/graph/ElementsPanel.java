@@ -1,5 +1,5 @@
 /*
- * $Id: ElementsPanel.java,v 1.22 2006/06/01 14:30:40 stas Exp $
+ * $Id: ElementsPanel.java,v 1.23 2006/06/06 12:46:58 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,9 +10,7 @@ package com.syrus.AMFICOM.client_.scheme.graph;
 
 import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import com.jgraph.graph.GraphModel;
 import com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent;
@@ -22,7 +20,6 @@ import com.syrus.AMFICOM.client_.scheme.graph.actions.GraphActions;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.SchemeActions;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifiable;
-import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.scheme.Scheme;
@@ -32,7 +29,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.22 $, $Date: 2006/06/01 14:30:40 $
+ * @version $Revision: 1.23 $, $Date: 2006/06/06 12:46:58 $
  * @module schemeclient
  */
 
@@ -108,7 +105,7 @@ public class ElementsPanel extends UgoPanel {
 			
 			if (ev.isSelected(ObjectSelectedEvent.SCHEME_PATH)) {
 				try {
-					for (Identifiable id : ev.getSelectedObjects()) {
+					for (Identifiable id : ev.getIdentifiables()) {
 						if (id.getId().getMajor() == ObjectEntities.SCHEMEPATH_CODE) {
 							SchemePath path = StorableObjectPool.getStorableObject(id.getId(), false);
 							cells.addAll(this.schemeResource.getPathElements(path));
@@ -121,7 +118,7 @@ public class ElementsPanel extends UgoPanel {
 				}
 			} else if (ev.isSelected(ObjectSelectedEvent.SCHEME)) {
 				try {
-					for (Identifiable id : ev.getSelectedObjects()) {
+					for (Identifiable id : ev.getIdentifiables()) {
 						if (id.getId().getMajor() == ObjectEntities.SCHEME_CODE) {
 							Scheme scheme = StorableObjectPool.getStorableObject(id.getId(), false);
 							SchemeElement schemeElement = scheme.getParentSchemeElement();
@@ -141,7 +138,7 @@ public class ElementsPanel extends UgoPanel {
 					|| ev.isSelected(ObjectSelectedEvent.SCHEME_CABLEPORT)
 					|| ev.isSelected(ObjectSelectedEvent.SCHEME_LINK)
 					|| ev.isSelected(ObjectSelectedEvent.SCHEME_CABLELINK)) {
-				for (Identifiable id : ev.getSelectedObjects()) {
+				for (Identifiable id : ev.getIdentifiables()) {
 					cells.add(SchemeActions.findObjectById(this.graph, id.getId()));	
 				}
 			}

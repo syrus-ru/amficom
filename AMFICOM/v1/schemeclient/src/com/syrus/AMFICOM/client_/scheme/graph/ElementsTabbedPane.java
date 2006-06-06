@@ -1,5 +1,5 @@
 /*
- * $Id: ElementsTabbedPane.java,v 1.27 2006/06/01 14:30:40 stas Exp $
+ * $Id: ElementsTabbedPane.java,v 1.28 2006/06/06 12:46:58 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,8 +28,8 @@ import com.jgraph.graph.DefaultGraphCell;
 import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
-import com.syrus.AMFICOM.client_.scheme.ElementsPermissionManager;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
+import com.syrus.AMFICOM.client_.scheme.SchemePermissionManager;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.DeleteAction;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.GraphActions;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.RedoAction;
@@ -50,7 +50,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.27 $, $Date: 2006/06/01 14:30:40 $
+ * @version $Revision: 1.28 $, $Date: 2006/06/06 12:46:58 $
  * @module schemeclient
  */
 
@@ -207,7 +207,7 @@ public class ElementsTabbedPane extends UgoTabbedPane implements PropertyChangeL
 	}
 	
 	public boolean confirmUnsavedChanges() {
-		if (!ElementsPermissionManager.isSavingAllowed()) {
+		if (!SchemePermissionManager.isPermitted(SchemePermissionManager.Operation.SAVE)) {
 			return true;
 		}
 		return confirmUnsavedChanges(this.panel);
