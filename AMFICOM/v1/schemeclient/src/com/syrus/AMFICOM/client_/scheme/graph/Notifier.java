@@ -1,5 +1,5 @@
 /*-
- * $Id: Notifier.java,v 1.25 2006/06/01 14:30:40 stas Exp $
+ * $Id: Notifier.java,v 1.26 2006/06/06 12:49:26 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -65,7 +65,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.25 $, $Date: 2006/06/01 14:30:40 $
+ * @version $Revision: 1.26 $, $Date: 2006/06/06 12:49:26 $
  * @module schemeclient
  */
 
@@ -246,13 +246,27 @@ public class Notifier {
 					dispatcher.firePropertyChange(new ObjectSelectedEvent(graph, selectedObject, manager, selectedType));
 				}
 			} else if (selectedObjects.size() > 1) {
-				long type = ClientUtils.getEventType(selectedObjects.iterator().next()) + MULTIPLE;
+				boolean hasEqualType = ClientUtils.hasEqualType(selectedObjects);
+				long type = ClientUtils.getEventType(selectedObjects.iterator().next());
+				
+				VisualManager manager;
+				if (hasEqualType) {
+					if (type == ObjectSelectedEvent.SCHEME_PORT) {
+						manager = SchemePortPropertiesManager.getInstance(aContext);
+					} else {
+						type += MULTIPLE;
+						manager = MultipleSelectionPropertiesManager.getInstance(aContext);
+					}
+				} else {
+					type += MULTIPLE;
+					manager = MultipleSelectionPropertiesManager.getInstance(aContext);
+				}
 				
 				if (SchemeGraph.getMode().equals(Constants.RACK_MODE)) {
 					type += ObjectSelectedEvent.INRACK;
 				}
 				dispatcher.firePropertyChange(new ObjectSelectedEvent(graph, selectedObjects, 
-						MultipleSelectionPropertiesManager.getInstance(aContext), type));
+						manager, type));
 			} 
 		}catch (Exception e) {
 			Log.errorMessage(e);
