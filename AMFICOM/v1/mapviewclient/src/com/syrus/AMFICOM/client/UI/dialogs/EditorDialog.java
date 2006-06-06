@@ -1,5 +1,5 @@
 /*-
- * $$Id: EditorDialog.java,v 1.11 2005/10/11 08:56:11 krupenn Exp $$
+ * $$Id: EditorDialog.java,v 1.12 2006/06/06 13:07:43 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,18 +20,19 @@ import com.syrus.AMFICOM.client.UI.StorableObjectEditor;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
+import com.syrus.AMFICOM.general.Identifiable;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/10/11 08:56:11 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.12 $, $Date: 2006/06/06 13:07:43 $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
 public class EditorDialog {
 	public static boolean showEditorDialog(
 			String title,
-			Object object,
-			StorableObjectEditor editor) {
+			Identifiable object,
+			StorableObjectEditor<Identifiable> editor) {
 		
 		if(editor != null)
 			editor.setObject(object);

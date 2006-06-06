@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapEditorNewLibraryCommand.java,v 1.16 2006/02/14 10:20:06 stas Exp $$
+ * $$Id: MapEditorNewLibraryCommand.java,v 1.17 2006/06/06 13:07:03 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,6 +23,7 @@ import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.Map;
@@ -30,7 +31,7 @@ import com.syrus.AMFICOM.map.MapLibrary;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2006/02/14 10:20:06 $
+ * @version $Revision: 1.17 $, $Date: 2006/06/06 13:07:03 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -67,7 +68,7 @@ public class MapEditorNewLibraryCommand extends AbstractCommand {
 					MapEditorResourceKeys.EMPTY_STRING,
 					null);
 			
-			MapLibraryEditor mapLibraryEditor = new MapLibraryEditor();
+			MapLibraryEditor mapLibraryEditor = new MapLibraryEditor<MapLibrary>();
 			if(EditorDialog.showEditorDialog(
 					I18N.getString(MapEditorResourceKeys.ENTITY_SITE_NODE_TYPE),
 					mapLibrary,
