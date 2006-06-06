@@ -1,5 +1,5 @@
 /*-
-* $Id: XMLStorableObjectCondition.java,v 1.6 2005/10/31 12:30:18 bass Exp $
+* $Id: XMLStorableObjectCondition.java,v 1.7 2006/06/06 11:28:05 arseniy Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -23,8 +23,8 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/10/31 12:30:18 $
- * @author $Author: bass $
+ * @version $Revision: 1.7 $, $Date: 2006/06/06 11:28:05 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module general
  */
@@ -62,7 +62,7 @@ public abstract class XMLStorableObjectCondition<T extends StorableObjectConditi
 			for (int i = 0; i < idNodeList.getLength(); i++) {
 				Node node = idNodeList.item(i);
 				node = useParent ? node.getParentNode() : node;
-				idSet.add(new Identifier(node.getNodeName()));
+				idSet.add(Identifier.valueOf(node.getNodeName()));
 			}
 
 			return idSet;

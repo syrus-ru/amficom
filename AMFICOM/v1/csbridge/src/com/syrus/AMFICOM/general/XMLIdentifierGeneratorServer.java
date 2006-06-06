@@ -1,5 +1,5 @@
 /*
- * $Id: XMLIdentifierGeneratorServer.java,v 1.16 2005/12/06 09:41:41 bass Exp $
+ * $Id: XMLIdentifierGeneratorServer.java,v 1.17 2006/06/06 11:29:44 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,6 +7,8 @@
  */
 
 package com.syrus.AMFICOM.general;
+
+import static com.syrus.AMFICOM.general.Identifier.SEPARATOR;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,8 +20,8 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/12/06 09:41:41 $
- * @author $Author: bass $
+ * @version $Revision: 1.17 $, $Date: 2006/06/06 11:29:44 $
+ * @author $Author: arseniy $
  * @author Voffka
  * @module csbridge
  */
@@ -61,7 +63,7 @@ public class XMLIdentifierGeneratorServer implements IdentifierGeneratorServer, 
 
 		final long minor = count.longValue() + 1;
 		this.entityCount.put(code, new Long(minor));
-		final Identifier identifier = new Identifier(ObjectEntities.codeToString(code) + Identifier.SEPARATOR + minor);
+		final Identifier identifier = Identifier.valueOf(ObjectEntities.codeToString(code) + SEPARATOR + minor);
 		return identifier.getIdlTransferable();
 	}
 

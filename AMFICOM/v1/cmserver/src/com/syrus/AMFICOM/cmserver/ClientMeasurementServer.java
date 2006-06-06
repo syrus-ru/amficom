@@ -1,5 +1,5 @@
 /*-
- * $Id: ClientMeasurementServer.java,v 1.74 2006/03/30 12:35:40 arseniy Exp $
+ * $Id: ClientMeasurementServer.java,v 1.75 2006/06/06 11:29:12 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.74 $, $Date: 2006/03/30 12:35:40 $
+ * @version $Revision: 1.75 $, $Date: 2006/06/06 11:29:12 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module cmserver
@@ -112,7 +112,7 @@ final class ClientMeasurementServer {
 		/*	Retrieve info about server*/
 		/*	Retrieve info about process*/
 		/*	Retrieve info about user*/
-		serverId = new Identifier(ApplicationProperties.getString(KEY_SERVER_ID, SERVER_ID));
+		serverId = Identifier.valueOf(ApplicationProperties.getString(KEY_SERVER_ID, SERVER_ID));
 		processCodename = ApplicationProperties.getString(KEY_CMSERVER_PROCESS_CODENAME, CMSERVER_PROCESS_CODENAME);
 		final StorableObjectDatabase<Server> serverDatabase = DatabaseContext.getDatabase(SERVER_CODE);
 		final Server server = serverDatabase.retrieveForId(serverId);

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.147 2006/03/30 12:40:44 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.148 2006/06/06 11:29:12 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -48,7 +48,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.147 $, $Date: 2006/03/30 12:40:44 $
+ * @version $Revision: 1.148 $, $Date: 2006/06/06 11:29:12 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -205,7 +205,7 @@ final class MeasurementControlModule extends SleepButWorkThread {
 		DatabaseContextSetup.initDatabaseContext();
 
 		/*	Retrieve information about MCM, it's user and server*/
-		mcmId = new Identifier(ApplicationProperties.getString(KEY_MCM_ID, MCM_ID));
+		mcmId = Identifier.valueOf(ApplicationProperties.getString(KEY_MCM_ID, MCM_ID));
 		final StorableObjectDatabase<MCM> mcmDatabase = DatabaseContext.getDatabase(ObjectEntities.MCM_CODE);
 		final MCM mcm = mcmDatabase.retrieveForId(mcmId);
 

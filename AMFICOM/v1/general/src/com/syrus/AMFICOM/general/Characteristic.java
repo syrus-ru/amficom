@@ -1,5 +1,5 @@
 /*-
- * $Id: Characteristic.java,v 1.95 2006/06/02 17:23:02 bass Exp $
+ * $Id: Characteristic.java,v 1.96 2006/06/06 11:28:05 arseniy Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,8 +36,8 @@ import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
- * @version $Revision: 1.95 $, $Date: 2006/06/02 17:23:02 $
- * @author $Author: bass $
+ * @version $Revision: 1.96 $, $Date: 2006/06/06 11:28:05 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
@@ -278,11 +278,11 @@ public final class Characteristic extends AbstractCloneableStorableObject
 		try {
 			super.fromIdlTransferable(ct);
 
-			this.type = StorableObjectPool.getStorableObject(new Identifier(ct._typeId), true);
+			this.type = StorableObjectPool.getStorableObject(Identifier.valueOf(ct._typeId), true);
 			this.name = ct.name;
 			this.description = ct.description;
 			this.value = ct.value;
-			this.parentCharacterizableId = new Identifier(ct.characterizableId);
+			this.parentCharacterizableId = Identifier.valueOf(ct.characterizableId);
 			this.editable = ct.editable;
 			this.visible = ct.visible;
 

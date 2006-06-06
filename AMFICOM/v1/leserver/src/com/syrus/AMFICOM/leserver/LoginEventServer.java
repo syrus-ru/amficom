@@ -1,5 +1,5 @@
 /*-
- * $Id: LoginEventServer.java,v 1.38 2006/06/02 13:49:30 arseniy Exp $
+ * $Id: LoginEventServer.java,v 1.39 2006/06/06 11:29:12 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.38 $, $Date: 2006/06/02 13:49:30 $
+ * @version $Revision: 1.39 $, $Date: 2006/06/06 11:29:12 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module leserver
@@ -101,7 +101,7 @@ final class LoginEventServer {
 		DatabaseContextSetup.initDatabaseContext();
 
 		/*	Retrieve info about server*/
-		final Identifier serverId = new Identifier(ApplicationProperties.getString(KEY_SERVER_ID, SERVER_ID));
+		final Identifier serverId = Identifier.valueOf(ApplicationProperties.getString(KEY_SERVER_ID, SERVER_ID));
 		final StorableObjectDatabase<Server> serverDatabase = DatabaseContext.getDatabase(SERVER_CODE);
 		final Server server = serverDatabase.retrieveForId(serverId);
 

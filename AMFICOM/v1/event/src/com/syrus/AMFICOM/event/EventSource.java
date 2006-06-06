@@ -1,5 +1,5 @@
 /*
- * $Id: EventSource.java,v 1.48 2006/05/29 09:07:50 bass Exp $
+ * $Id: EventSource.java,v 1.49 2006/06/06 11:27:43 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,8 +33,8 @@ import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.48 $, $Date: 2006/05/29 09:07:50 $
- * @author $Author: bass $
+ * @version $Revision: 1.49 $, $Date: 2006/06/06 11:27:43 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module event
  */
@@ -90,7 +90,7 @@ public final class EventSource extends StorableObject
 	public synchronized void fromIdlTransferable(final IdlEventSource est)
 	throws IdlConversionException {
 		super.fromIdlTransferable(est);
-		this.sourceEntityId = new Identifier(est.sourceEntityId);
+		this.sourceEntityId = Identifier.valueOf(est.sourceEntityId);
 
 		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}

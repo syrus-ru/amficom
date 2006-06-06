@@ -1,5 +1,5 @@
 /*-
- * $Id: MapSchemeAdministrationResourceServer.java,v 1.27 2006/03/30 12:12:09 arseniy Exp $
+ * $Id: MapSchemeAdministrationResourceServer.java,v 1.28 2006/06/06 11:29:13 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,7 +31,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2006/03/30 12:12:09 $
+ * @version $Revision: 1.28 $, $Date: 2006/06/06 11:29:13 $
  * @author $Author: arseniy $
  * @module mscharserver
  */
@@ -127,7 +127,7 @@ final class MapSchemeAdministrationResourceServer {
 		establishDatabaseConnection();
 
 		DatabaseContextSetup.initDatabaseContext();
-		serverId = new Identifier(ApplicationProperties.getString(KEY_SERVER_ID, SERVER_ID));
+		serverId = Identifier.valueOf(ApplicationProperties.getString(KEY_SERVER_ID, SERVER_ID));
 		processCodename = ApplicationProperties.getString(ServerProcessWrapper.KEY_MSCHARSERVER_PROCESS_CODENAME,
 				ServerProcessWrapper.MSCHARSERVER_PROCESS_CODENAME);
 		final StorableObjectDatabase<Server> serverDatabase = DatabaseContext.getDatabase(SERVER_CODE);

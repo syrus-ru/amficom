@@ -1,5 +1,5 @@
 /*-
- * $Id: Event.java,v 1.57 2006/05/29 09:07:50 bass Exp $
+ * $Id: Event.java,v 1.58 2006/06/06 11:27:43 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,8 +37,8 @@ import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.57 $, $Date: 2006/05/29 09:07:50 $
- * @author $Author: bass $
+ * @version $Revision: 1.58 $, $Date: 2006/06/06 11:27:43 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module event
  */
@@ -139,7 +139,7 @@ public final class Event extends StorableObject
 		try {
 			super.fromIdlTransferable(event);
 	
-			this.type = StorableObjectPool.getStorableObject(new Identifier(event._typeId), true);
+			this.type = StorableObjectPool.getStorableObject(Identifier.valueOf(event._typeId), true);
 	
 			this.description = event.description;
 	

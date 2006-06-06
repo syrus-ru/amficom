@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectXMLDriver.java,v 1.37 2006/04/19 13:22:17 bass Exp $
+ * $Id: StorableObjectXMLDriver.java,v 1.38 2006/06/06 11:28:05 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,6 +7,8 @@
  */
 
 package com.syrus.AMFICOM.general;
+
+import static com.syrus.AMFICOM.general.Identifier.SEPARATOR;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -34,14 +36,12 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.apache.xpath.XPathAPI;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
-
 import org.xml.sax.SAXException;
 
 import com.syrus.util.Log;
@@ -49,8 +49,8 @@ import com.syrus.util.Log;
 /**
  * XML Driver for storable object package, one per package.
  *
- * @version $Revision: 1.37 $, $Date: 2006/04/19 13:22:17 $
- * @author $Author: bass $
+ * @version $Revision: 1.38 $, $Date: 2006/06/06 11:28:05 $
+ * @author $Author: arseniy $
  * @module general
  */
 public class StorableObjectXMLDriver extends StorableObjectXMLData {
@@ -205,7 +205,7 @@ public class StorableObjectXMLDriver extends StorableObjectXMLData {
 		try {
 			// XXX just only for current representation of id
 			final NodeList idNodeList = XPathAPI.selectNodeList(this.doc, "//" + this.packageName + "/"
-					+ "*[starts-with(name(),'" + ObjectEntities.codeToString(entityCode) + Identifier.SEPARATOR + "')]");
+					+ "*[starts-with(name(),'" + ObjectEntities.codeToString(entityCode) + SEPARATOR + "')]");
 			final int size = idNodeList.getLength();
 			if (size == 0)
 				return Collections.emptySet();
@@ -213,7 +213,7 @@ public class StorableObjectXMLDriver extends StorableObjectXMLData {
 			final Set<Identifier> idSet = new HashSet<Identifier>(size);
 			for (int i = 0; i < idNodeList.getLength(); i++) {
 				final Node node = idNodeList.item(i);
-				idSet.add(new Identifier(node.getNodeName()));
+				idSet.add(Identifier.valueOf(node.getNodeName()));
 			}
 			
 			return idSet;

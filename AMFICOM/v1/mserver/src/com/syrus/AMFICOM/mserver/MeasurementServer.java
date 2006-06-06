@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementServer.java,v 1.99 2006/06/02 13:34:23 arseniy Exp $
+ * $Id: MeasurementServer.java,v 1.100 2006/06/06 11:29:12 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -49,7 +49,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.99 $, $Date: 2006/06/02 13:34:23 $
+ * @version $Revision: 1.100 $, $Date: 2006/06/06 11:29:12 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mserver
@@ -161,7 +161,7 @@ final class MeasurementServer extends SleepButWorkThread {
 		/*	Retrieve info about process*/
 		/*	Retrieve info about user*/
 		/*	Retrieve MCM ids for this server*/
-		final Identifier serverId = new Identifier(ApplicationProperties.getString(KEY_SERVER_ID, SERVER_ID));
+		final Identifier serverId = Identifier.valueOf(ApplicationProperties.getString(KEY_SERVER_ID, SERVER_ID));
 		final String processCodename = ApplicationProperties.getString(ServerProcessWrapper.KEY_MSERVER_PROCESS_CODENAME,
 				ServerProcessWrapper.MSERVER_PROCESS_CODENAME);
 		final StorableObjectDatabase<Server> serverDatabase = DatabaseContext.getDatabase(ObjectEntities.SERVER_CODE);

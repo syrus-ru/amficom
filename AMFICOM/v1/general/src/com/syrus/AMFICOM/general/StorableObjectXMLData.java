@@ -1,5 +1,5 @@
 /*-
-* $Id: StorableObjectXMLData.java,v 1.7 2006/03/15 15:17:43 arseniy Exp $
+* $Id: StorableObjectXMLData.java,v 1.8 2006/06/06 11:28:05 arseniy Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -8,6 +8,8 @@
 
 package com.syrus.AMFICOM.general;
 
+import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
+
 import java.math.BigInteger;
 import java.util.Collection;
 import java.util.Date;
@@ -15,7 +17,7 @@ import java.util.Map;
 
 
 /**
- * @version $Revision: 1.7 $, $Date: 2006/03/15 15:17:43 $
+ * @version $Revision: 1.8 $, $Date: 2006/06/06 11:28:05 $
  * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module general
@@ -25,14 +27,14 @@ public abstract class StorableObjectXMLData {
 	public final Object getObject(final String className, final String value) throws IllegalDataException {
 		Object object = null;
 		if (className.equals(StorableObject.class.getName())) {
-			final Identifier id = value != null ? new Identifier(value) : Identifier.VOID_IDENTIFIER;
+			final Identifier id = value != null ? Identifier.valueOf(value) : VOID_IDENTIFIER;
 			try {
 				object = StorableObjectPool.getStorableObject(id, true);
 			} catch (ApplicationException e) {
 				throw new IllegalDataException("StorableObjectXMLData.getObject | Caught ApplicationException " + e.getMessage());
 			}
 		} else if (className.equals(Identifier.class.getName())) {
-			object = value != null ? new Identifier(value) : Identifier.VOID_IDENTIFIER;
+			object = value != null ? Identifier.valueOf(value) : VOID_IDENTIFIER;
 		} else if (className.equals(StorableObjectVersion.class.getName())) {
 			object = StorableObjectVersion.valueOf(Long.parseLong(value));
 		} else if (className.equals(DataType.class.getName())) {
