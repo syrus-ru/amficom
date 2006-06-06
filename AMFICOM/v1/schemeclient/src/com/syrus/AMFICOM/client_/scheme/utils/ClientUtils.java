@@ -1,5 +1,5 @@
 /*-
- * $Id: ClientUtils.java,v 1.9 2006/06/01 14:30:40 stas Exp $
+ * $Id: ClientUtils.java,v 1.10 2006/06/06 12:49:09 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -101,6 +101,16 @@ public class ClientUtils {
 		Collections.sort(threads, new NumberedComparator<CableThreadType>(CableThreadTypeWrapper.getInstance(),
 				StorableObjectWrapper.COLUMN_NAME));
 		return threads;
+	}
+	
+	public static boolean hasEqualType(Set<Identifiable> objects) {
+		short entity = objects.iterator().next().getId().getMajor();
+		for (Identifiable identifiable2 : objects) {
+			if (identifiable2.getId().getMajor() != entity) {
+				return false;
+			}
+		}
+		return true;
 	}
 	
 	public static long getEventType(Identifiable object) {
