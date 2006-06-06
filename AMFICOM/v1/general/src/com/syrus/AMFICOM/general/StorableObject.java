@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObject.java,v 1.154 2006/06/02 17:23:02 bass Exp $
+ * $Id: StorableObject.java,v 1.155 2006/06/06 15:27:52 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,8 +47,8 @@ import com.syrus.util.LRUMap.Retainable;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.154 $, $Date: 2006/06/02 17:23:02 $
- * @author $Author: bass $
+ * @version $Revision: 1.155 $, $Date: 2006/06/06 15:27:52 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
@@ -248,24 +248,54 @@ public abstract class StorableObject implements Identifiable, Retainable, Serial
 	}
 
 	/**
-	 * Returns <code>true</code> if object was changed locally (with respect
-	 * to server).
+	 * Проверить, что объект является новым, т. е. он только что создан и ещё не
+	 * сохранён.
+	 * <p>
+	 * Этот метод вернёт {@code true} лишь для только что созданных объектов,
+	 * для которых ещё ни разу не было вызвано сохранение
+	 * {@link #saveChanges(Identifier)}. Такие объекты обладают версией, равной
+	 * {@link StorableObjectVersion#INITIAL_VERSION}.
+	 * 
+	 * @return {@code true}, если объект - новый.
+	 */
+	public final boolean isNew() {
+		return this.version.equals(INITIAL_VERSION);
+	}
+
+	/**
+	 * Проверить, что объект является изменённым, т. е. в него локально были
+	 * внесены изменения относительно сервера.
+	 * 
+	 * @return {@code true}, если объект является изменённым.
+	 * @see #markAsChanged()
 	 */
 	public final boolean isChanged() {
 		return this.changed;
 	}
 
+	/**
+	 * Проверить, что объект является удалённым, т. е. был помечен на удаление.
+	 * 
+	 * @return {@code true}, если объект удалён.
+	 * @see #markAsDeleted()
+	 */
 	final boolean isDeleted() {
 		return this.deleted;
 	}
 
 	/**
-	 * This method is called in:
-	 * 1) all setters of a StorableObject
-	 * 2) static method createInstance of StorableObject
-	 * i. e., in all methods, which change state of an object.
-	 * Subsequent call to StorableObjectPool.flush will save this changed object.
-	 *
+	 * Пометить объект, как изменённый.
+	 * <p>
+	 * Этот метод вызывается тогда, когда изменяется состояние объекта, а
+	 * именно:
+	 * <ul>
+	 * <li> во всех доступных пользователю методах, изменяющих внутренние поля
+	 * объекта (например, методы вида {@code set<...>()});
+	 * <li> в статических методах {@code createInstance()}, создающих объект.
+	 * </ul>
+	 * После его вызова метод {@link #isChanged()} всегда возвращает
+	 * {@code true}. Последующий вызов {@link #saveChanges(Identifier)} сбросит
+	 * это состояние обратно в {@code false}.
 	 */
 	protected final void markAsChanged() {
 		if (!this.changed) {
@@ -278,6 +308,13 @@ public abstract class StorableObject implements Identifiable, Retainable, Serial
 		}
 	}
 
+	/**
+	 * Пометить объект на удаление.
+	 * <p>
+	 * Этот метод вызывается только в {@link StorableObjectPool#markAsDeleted()}.
+	 * После его вызова метод {@link #isDeleted()} всегда возвращает
+	 * {@code true}.
+	 */
 	final void markAsDeleted() {
 		this.deleted = true;
 	}
@@ -804,8 +841,8 @@ public abstract class StorableObject implements Identifiable, Retainable, Serial
 	 * at com.sun.tools.javac.Main.main(Main.java:52)</pre>
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: bass $
-	 * @version $Revision: 1.154 $, $Date: 2006/06/02 17:23:02 $
+	 * @author $Author: arseniy $
+	 * @version $Revision: 1.155 $, $Date: 2006/06/06 15:27:52 $
 	 * @module general
 	 */
 	@Crutch134(notes = "This class should be made final.")
@@ -913,8 +950,8 @@ public abstract class StorableObject implements Identifiable, Retainable, Serial
 
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: bass $
-	 * @version $Revision: 1.154 $, $Date: 2006/06/02 17:23:02 $
+	 * @author $Author: arseniy $
+	 * @version $Revision: 1.155 $, $Date: 2006/06/06 15:27:52 $
 	 * @module general
 	 */
 	@Retention(SOURCE)
