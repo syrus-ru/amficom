@@ -1,5 +1,5 @@
 /*
- * $Id: TestAnalysisResult.java,v 1.5.2.1 2006/03/06 13:57:50 arseniy Exp $
+ * $Id: TestAnalysisResult.java,v 1.5.2.2 2006/06/06 15:47:28 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.io.DataFormatException;
 
 /**
- * @version $Revision: 1.5.2.1 $, $Date: 2006/03/06 13:57:50 $
+ * @version $Revision: 1.5.2.2 $, $Date: 2006/06/06 15:47:28 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -46,7 +46,7 @@ public final class TestAnalysisResult extends TestCase {
 
 	public void testLoadResult() throws ApplicationException, DataFormatException {
 		final long t0 = System.nanoTime();
-		final Identifier analysisId = new Identifier("Analysis_63");
+		final Identifier analysisId = Identifier.valueOf("Analysis_63");
 		//Analysis analysis = StorableObjectPool.getStorableObject(analysisId, true);
 		final LinkedIdsCondition lic = new LinkedIdsCondition(analysisId, ANALYSISRESULTPARAMETER_CODE);
 		final long t1 = System.nanoTime();

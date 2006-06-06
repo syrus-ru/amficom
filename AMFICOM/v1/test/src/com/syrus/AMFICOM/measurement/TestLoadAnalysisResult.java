@@ -1,5 +1,5 @@
 /*
- * $Id: TestLoadAnalysisResult.java,v 1.4 2006/01/17 11:03:07 saa Exp $
+ * $Id: TestLoadAnalysisResult.java,v 1.4.2.1 2006/06/06 15:47:28 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,8 +20,8 @@ import com.syrus.AMFICOM.reflectometry.MeasurementReflectometryAnalysisResult;
 import com.syrus.io.DataFormatException;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2006/01/17 11:03:07 $
- * @author $Author: saa $
+ * @version $Revision: 1.4.2.1 $, $Date: 2006/06/06 15:47:28 $
+ * @author $Author: arseniy $
  * @module test
  */
 public final class TestLoadAnalysisResult extends TestCase {
@@ -52,7 +52,7 @@ public final class TestLoadAnalysisResult extends TestCase {
 		final double expectedTime = 1000.0;
 		
 		
-		final Identifier measurementId = new Identifier("Measurement_8686");
+		final Identifier measurementId = Identifier.valueOf("Measurement_8686");
 		
 		boolean tooLongLoadMeasurement = false;
 		boolean tooLongCreateMRAR = false;

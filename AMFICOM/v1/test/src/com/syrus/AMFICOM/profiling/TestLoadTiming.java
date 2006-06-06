@@ -1,5 +1,5 @@
 /*
- * $Id: TestLoadTiming.java,v 1.3.2.1 2006/03/22 08:53:59 arseniy Exp $
+ * $Id: TestLoadTiming.java,v 1.3.2.2 2006/06/06 15:47:28 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.MeasurementResultParameter;
 
 /**
- * @version $Revision: 1.3.2.1 $, $Date: 2006/03/22 08:53:59 $
+ * @version $Revision: 1.3.2.2 $, $Date: 2006/06/06 15:47:28 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -194,7 +194,7 @@ public final class TestLoadTiming extends TestCase {
 		System.out.println(" --- preparing ids ---");
 		this.analysisIds = new Identifier[analysisIdNames.length];
 		for (int i = 0; i < analysisIdNames.length; i++) {
-			this.analysisIds[i] = new Identifier(analysisIdNames[i]);
+			this.analysisIds[i] = Identifier.valueOf(analysisIdNames[i]);
 		}
 		System.out.println(" --- starting measurments ---");
 		System.gc();
