@@ -310,51 +310,48 @@ public class TemplateOpenSaveDialog extends JDialog {
 	}
 
 	protected void openSaveButton_actionPerformed() throws ApplicationException {
-		ReportTemplate selectedTemplate =
-			this.templateForName(this.selectedTemplateNameField.getText());
-		
+		final ReportTemplate selectedTemplate = this.templateForName(this.selectedTemplateNameField.getText());
+
 		if (this.mode == OPEN) {
 			if (selectedTemplate == null) {
-				JOptionPane.showMessageDialog(
-						Environment.getActiveWindow(),
+				JOptionPane.showMessageDialog(Environment.getActiveWindow(),
 						I18N.getString("report.Exception.noTemplateForName"),
 						I18N.getString("report.Exception.error"),
 						JOptionPane.ERROR_MESSAGE);
 				return;
 			}
-			this.templateProcessed = selectedTemplate;
+			templateProcessed = selectedTemplate;
 			this.setVisible(false);
-		}
-		else if (this.mode == SAVE) {
-			if (this.selectedTemplateNameField.getText().length() == 0)
+		} else if (this.mode == SAVE) {
+			if (this.selectedTemplateNameField.getText().length() == 0) {
 				return;
+			}
 			if (selectedTemplate != null) {
-				int replace = JOptionPane.showConfirmDialog(
-						Environment.getActiveWindow(),
-						I18N.getString(
-								"report.Command.SaveTemplate.templateExists"),
+				final int replace = JOptionPane.showConfirmDialog(Environment.getActiveWindow(),
+						I18N.getString("report.Command.SaveTemplate.templateExists"),
 						I18N.getString("report.File.confirm"),
 						JOptionPane.YES_NO_OPTION);
-				if (replace == JOptionPane.NO_OPTION)
+				if (replace == JOptionPane.NO_OPTION) {
 					return;
+				}
 			} else {
-				if (!this.templateProcessed.getVersion().equals(StorableObjectVersion.INITIAL_VERSION)) {
+				if (!templateProcessed.getVersion().equals(StorableObjectVersion.INITIAL_VERSION)) {
 					try {
-						ReportTemplate oldTemplate = this.templateProcessed;
-						this.templateProcessed = this.templateProcessed.clone();
+						ReportTemplate oldTemplate = templateProcessed;
+						templateProcessed = templateProcessed.clone();
 						oldTemplate.discardChanges();
 					} catch (CloneNotSupportedException e) {
 						Log.errorMessage(e);
 					}
-					
+
 				}
-					
+
 			}
-						
-			this.templateProcessed.setName(this.selectedTemplateNameField.getText());
-			
-			this.templateProcessed.saveChanges(LoginManager.getUserId());
-			this.templateProcessed.setNew(false);
+
+			templateProcessed.setName(this.selectedTemplateNameField.getText());
+
+			templateProcessed.saveChanges(LoginManager.getUserId());
+			templateProcessed.setNewDeprecated(false);
 			this.setVisible(false);
 		}
 	}
