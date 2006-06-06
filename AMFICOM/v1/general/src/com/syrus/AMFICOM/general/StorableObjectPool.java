@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.217 2006/06/05 15:41:14 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.218 2006/06/06 08:20:18 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,7 +41,7 @@ import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.217 $, $Date: 2006/06/05 15:41:14 $
+ * @version $Revision: 1.218 $, $Date: 2006/06/06 08:20:18 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -522,19 +522,14 @@ public final class StorableObjectPool {
 			loaded = loadedObjects.size();
 
 			for (final T loadedStorableObject : loadedObjects) {
-				final Identifier id = loadedStorableObject.getId();
-				if (!objectPool.containsKey(id)) {
-					objectPool.put(id, loadedStorableObject);
+				final Identifier loadedId = loadedStorableObject.getId();
+				if (!objectPool.containsKey(loadedId)) {
+					objectPool.put(loadedId, loadedStorableObject);
 					storableObjects.add(loadedStorableObject);
 				} else {
-					final T poolStorableObject = objectPool.get(id);
-					if (!poolStorableObject.isChanged()) {
-						setStorableObjectAttributes(poolStorableObject, loadedStorableObject);
-						storableObjects.add(poolStorableObject);
-					} else {
-						Log.errorMessage("Local version of object '" + id
-								+ "' do not match condition, but remote version matches condition; it is changed locally -- not returning it");
-					}
+					Log.debugMessage("Local version of object '"
+							+ loadedId + "' do not match condition, but remote version matches condition; ignore this object",
+							Log.DEBUGLEVEL08);
 				}
 			}
 		} else {
@@ -673,17 +668,13 @@ public final class StorableObjectPool {
 			Log.debugMessage("Loaded " + loadedIdentifiers.size() + " identifiers: " + Identifier.toString(loadedIdentifiers),
 					Log.DEBUGLEVEL08);
 
-			for (final Identifier loadedIdentifier : loadedIdentifiers) {
-				if (!objectPool.containsKey(loadedIdentifier)) {
-					identifiers.add(loadedIdentifier);
+			for (final Identifier loadedId : loadedIdentifiers) {
+				if (!objectPool.containsKey(loadedId)) {
+					identifiers.add(loadedId);
 				} else {
-					final StorableObject poolStorableObject = objectPool.get(loadedIdentifier);
-					if (!poolStorableObject.isChanged()) {
-						identifiers.add(loadedIdentifier);
-					} else {
-						Log.errorMessage("Local version of object '" + loadedIdentifier
-								+ "' do not match condition, but remote version matches condition; it is changed locally -- not returning it");
-					}
+					Log.debugMessage("Local version of object '"
+							+ loadedId + "' do not match condition, but remote version matches condition; ignore this object",
+							Log.DEBUGLEVEL08);
 				}
 			}
 
