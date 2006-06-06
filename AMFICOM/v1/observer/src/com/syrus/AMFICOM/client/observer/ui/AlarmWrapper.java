@@ -1,5 +1,5 @@
 /*-
- * $Id: AlarmWrapper.java,v 1.3 2006/05/18 14:00:05 stas Exp $
+ * $Id: AlarmWrapper.java,v 1.4 2006/06/06 13:19:44 stas Exp $
  *
  * Copyright ¿ 2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,8 +15,8 @@ import java.util.Date;
 import java.util.List;
 
 import com.syrus.AMFICOM.alarm.Alarm;
-import com.syrus.AMFICOM.alarm.AlarmState;
 import com.syrus.AMFICOM.client.resource.I18N;
+import com.syrus.AMFICOM.eventv2.LineMismatchEvent.AlarmStatus;
 import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.Severity;
 import com.syrus.util.PropertyChangeException;
 import com.syrus.util.Wrapper;
@@ -124,9 +124,9 @@ public class AlarmWrapper implements Wrapper<Alarm> {
 			return Double.valueOf(alarm.getMismatchPhysicalDistance());
 		}
 		if (internedKey == COLOR) {
-			AlarmState state = alarm.getState();
+			AlarmStatus state = alarm.getState();
 			
-			if (state == AlarmState.OPENED) {
+			if (state == AlarmStatus.PENDING) {
 					if (alarm.getSeverity() == Severity.SEVERITY_HARD) {
 						return Color.RED;
 					}
@@ -135,23 +135,24 @@ public class AlarmWrapper implements Wrapper<Alarm> {
 					}
 					return Color.WHITE;
 				}
-				if (state == AlarmState.ABORTED) {
-					return Color.WHITE;
+				if (state == AlarmStatus.ACKNOWLEDGED 
+						|| state == AlarmStatus.IN_PROGRESS
+						|| state == AlarmStatus.XTRA_ASSIGNED
+						|| state == AlarmStatus.XTRA_VTEST_IN_PROGRESS) {
+					return Color.ORANGE;
 				}
-				if (state == AlarmState.ACCEPTED) {
-					return Color.ORANGE; 
+				if (state == AlarmStatus.IGNORED
+						|| state == AlarmStatus.TIMED_OUT 
+						|| state == AlarmStatus.ABANDONED) {
+					return Color.GRAY;
 				}
-				if (state == AlarmState.CLOSED) {
-					return Color.WHITE; 
-				}
-				if (state == AlarmState.FIXED) {
-					return Color.GREEN; 
-				}
-				if (state == AlarmState.REPARING) {
-					return Color.YELLOW;
-				}
-				if (state == AlarmState.TESTING) {
+				if (state == AlarmStatus.XTRA_TT_COMPLETED) {
 					return Color.CYAN;
+				}
+				if (state == AlarmStatus.RESOLVED
+						|| state == AlarmStatus.XTRA_VERIFIED
+						|| state == AlarmStatus.XTRA_CLOSED) {
+					return Color.GREEN; 
 				}
 		}
 		return null;

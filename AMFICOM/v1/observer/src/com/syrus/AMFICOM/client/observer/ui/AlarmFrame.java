@@ -33,7 +33,6 @@ import javax.swing.table.TableModel;
 
 import com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent;
 import com.syrus.AMFICOM.alarm.Alarm;
-import com.syrus.AMFICOM.alarm.AlarmState;
 import com.syrus.AMFICOM.client.UI.ADefaultTableCellRenderer;
 import com.syrus.AMFICOM.client.UI.WrapperedTable;
 import com.syrus.AMFICOM.client.UI.WrapperedTableModel;
@@ -119,21 +118,21 @@ public class AlarmFrame extends JInternalFrame {
 				try {
 					final Identifier lmeId = popupNotificationEvent.getLineMismatchEventId(); 
 					final AbstractLineMismatchEvent lineMismatchEvent = StorableObjectPool.getStorableObject(lmeId, true);
+					final LineMismatchEvent parentLineMismatchEvent = lineMismatchEvent.getParentLineMismatchEvent();
 					
-					boolean added = false;
-					List<Alarm> alarms = AlarmFrame.this.model.getValues();
-					for (Alarm alarm : alarms) {
-						if (alarm.isSuitable(lineMismatchEvent)) {
-							alarm.addLineMismatchEvent(lineMismatchEvent);
-							added = true;
-							break;
-						}
-					}
-					if (!added) {
+					if (parentLineMismatchEvent == null) { // leader
 						Alarm alarm = new Alarm(lineMismatchEvent);
 						AlarmFrame.this.model.addObject(alarm);
 						AlarmFrame.this.table.setSelectedValue(alarm);
 						alarmSignal();
+					} else {
+						List<Alarm> alarms = AlarmFrame.this.model.getValues();
+						for (Alarm alarm : alarms) {
+							if (alarm.getLeadEvent().equals(parentLineMismatchEvent)) {
+								alarm.addLineMismatchEvent(lineMismatchEvent);
+								break;
+							}
+						}
 					}
 				} catch (ApplicationException e) {
 					Log.errorMessage(e);
@@ -394,29 +393,19 @@ public class AlarmFrame extends JInternalFrame {
 	public void updateContents() {
 		setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 		
+		
 		EquivalentCondition condition = new EquivalentCondition(ObjectEntities.LINEMISMATCHEVENT_CODE);
 		try {
-			Set<AbstractLineMismatchEvent> lineMismatchEvents = StorableObjectPool.getStorableObjectsByCondition(condition , true);
+			Set<AbstractLineMismatchEvent> leaders = StorableObjectPool.getStorableObjectsByCondition(condition , true);
 			
-			for (LineMismatchEvent event : lineMismatchEvents) {
-				boolean added = false;
-				List<Alarm> alarms = this.model.getValues();
-				for (Alarm alarm : alarms) {
-					if (alarm.isSuitable(event)) {
-						alarm.addLineMismatchEvent(event);
-						added = true;
-						break;
-					}
-				}
-				if (!added) {
-					Alarm alarm = new Alarm(event);
-					this.model.addObject(alarm);
-				}
+			for (LineMismatchEvent event : leaders) {
+				Alarm alarm = new Alarm(event);
+				this.model.addObject(alarm);
 			}
 			this.table.sortColumn(4);
 			this.model.sortRows(4, false);
 			
-			if (!lineMismatchEvents.isEmpty()) {
+			if (!leaders.isEmpty()) {
 				alarmSignal();
 			}
 		} catch (ApplicationException e) {
