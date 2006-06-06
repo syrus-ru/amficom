@@ -1,5 +1,5 @@
 /*-
- * $Id: ReportModels.java,v 1.5 2006/04/12 06:11:49 stas Exp $
+ * $Id: ReportModels.java,v 1.6 2006/06/06 17:36:28 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,19 +10,18 @@ package com.syrus.AMFICOM.client.reportbuilder;
 import com.syrus.AMFICOM.Client.Analysis.Report.AnalysisReportModel;
 import com.syrus.AMFICOM.Client.Analysis.Report.EvaluationReportModel;
 import com.syrus.AMFICOM.Client.Analysis.Report.SurveyReportModel;
-import com.syrus.AMFICOM.Client.Schedule.report.SchedulerReportModel;
 import com.syrus.AMFICOM.client.map.report.MapReportModel;
-import com.syrus.AMFICOM.report.ModelingReportModel;
-import com.syrus.AMFICOM.report.ObserverReportModel;
-import com.syrus.AMFICOM.report.PredictionReportModel;
 import com.syrus.AMFICOM.client.report.ReportModel;
 import com.syrus.AMFICOM.client_.scheme.report.SchemeReportModel;
 import com.syrus.AMFICOM.report.DestinationModules;
+import com.syrus.AMFICOM.report.ModelingReportModel;
+import com.syrus.AMFICOM.report.ObserverReportModel;
+import com.syrus.AMFICOM.report.PredictionReportModel;
 
 /**
  * @author max
- * @author $Author: stas $
- * @version $Revision: 1.5 $, $Date: 2006/04/12 06:11:49 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.6 $, $Date: 2006/06/06 17:36:28 $
  * @module reportbuilder
  */
 
