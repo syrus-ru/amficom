@@ -1,5 +1,5 @@
 /*-
- * $Id: ObjectSelectedEvent.java,v 1.12 2006/06/01 14:29:21 stas Exp $
+ * $Id: ObjectSelectedEvent.java,v 1.13 2006/06/06 12:53:26 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,14 +10,21 @@ package com.syrus.AMFICOM.Client.General.Event;
 
 import java.beans.PropertyChangeEvent;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import com.syrus.AMFICOM.client.UI.VisualManager;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifiable;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.12 $, $Date: 2006/06/01 14:29:21 $
+ * @version $Revision: 1.13 $, $Date: 2006/06/06 12:53:26 $
  * @module schemeclient
  */
 
@@ -57,7 +64,7 @@ public class ObjectSelectedEvent extends PropertyChangeEvent {
 	private long type;
 	private VisualManager manager;
 	
-	public ObjectSelectedEvent(Object source,	Set<Identifiable> selectedObjects, VisualManager manager, long type) {
+	public ObjectSelectedEvent(Object source,	Set<? extends Identifiable> selectedObjects, VisualManager manager, long type) {
 		super(source, TYPE, null, selectedObjects);
 		this.type = type;
 		this.manager = manager;
@@ -75,15 +82,42 @@ public class ObjectSelectedEvent extends PropertyChangeEvent {
 		return this.manager;
 	}
 	
-	public Set<Identifiable> getSelectedObjects() {
+	public Set<Identifiable> getIdentifiables() {
 		return (Set<Identifiable>) getNewValue();
 	}
 	
-	public Identifiable getSelectedObject() {
-		Set<Identifiable> identifiables = getSelectedObjects();
+	public Identifiable getIdentifiable() {
+		Set<Identifiable> identifiables = getIdentifiables();
 		if (identifiables.isEmpty()) {
 			return null;
 		}
-		return identifiables.iterator().next();
+		return identifiables.iterator().next(); 
+	}
+	
+	public Set<StorableObject> getSelectedObjects() throws ApplicationException {
+		Set<StorableObject> objects = new HashSet<StorableObject>();
+		Set<Identifiable> identifiables = getIdentifiables();
+		Map<Short, Set<Identifier>> identifiers = new HashMap<Short, Set<Identifier>>();
+		for (Identifiable identifiable : identifiables) {
+			Set<Identifier> ids = identifiers.get(Short.valueOf(identifiable.getId().getMajor()));
+			if (ids == null) {
+				ids = new HashSet<Identifier>();
+				identifiers.put(Short.valueOf(identifiable.getId().getMajor()), ids);	
+			}
+			ids.add(identifiable.getId());
+		}
+		for (Set<Identifier> ids : identifiers.values()) {
+			objects.addAll(StorableObjectPool.getStorableObjects(ids, true));
+		}
+		return objects; 
+	}
+	
+	public StorableObject getStorableObject() throws ApplicationException {
+		Set<Identifiable> identifiables = getIdentifiables();
+		if (identifiables.isEmpty()) {
+			return null;
+		}
+		Identifier id = identifiables.iterator().next().getId();
+		return StorableObjectPool.getStorableObject(id, true);
 	}
 }
