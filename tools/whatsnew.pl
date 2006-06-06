@@ -38,6 +38,10 @@ sub wider($$$)
 	return $line;
 }
 
+my $nul;
+foreach (qw(nul /dev/null)) { $nul=$_ if -e $_; }
+die "failed to determine null file" unless $nul;
+
 my $targetOpt = $targetTag eq '' ? '' : "-r $targetTag";
 my @cvsUpOut;
 foreach (`cvs -q -n up -d $targetOpt`)
@@ -74,7 +78,7 @@ foreach (@cvsUpOut)
 
 	my $workingRev = '';
 	my $repositRev = '';
-	open FTMP, "cvs status $ffn 2>nul |";
+	open FTMP, "cvs status $ffn 2>$nul |";
 	while(<FTMP>)
 	{
 		$workingRev = $1 if m/^\s*Working revision\:\s*([\d.]+)/;
