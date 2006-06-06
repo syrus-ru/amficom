@@ -1,5 +1,5 @@
 /*-
- * $$Id: NetMapViewer.java,v 1.75 2006/05/24 10:19:41 stas Exp $$
+ * $$Id: NetMapViewer.java,v 1.76 2006/06/06 13:04:55 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -56,6 +56,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapElement;
+import com.syrus.AMFICOM.map.MapLibrary;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.PhysicalLinkType;
@@ -85,7 +86,7 @@ import com.syrus.util.Log;
  * <br> реализация com.syrus.AMFICOM.client.map.objectfx.OfxNetMapViewer 
  * <br> реализация com.syrus.AMFICOM.client.map.mapinfo.MapInfoNetMapViewer
  * 
- * @version $Revision: 1.75 $, $Date: 2006/05/24 10:19:41 $
+ * @version $Revision: 1.76 $, $Date: 2006/06/06 13:04:55 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -659,20 +660,20 @@ public abstract class NetMapViewer {
 			else if(pce.getPropertyName().equals(ObjectSelectedEvent.TYPE)) {
 				ObjectSelectedEvent selectEvent = (ObjectSelectedEvent )pce;
 				if(selectEvent.isSelected(ObjectSelectedEvent.SCHEME_ELEMENT)) {
-					SchemeElement schemeElement = (SchemeElement )selectEvent.getSelectedObject();
+					SchemeElement schemeElement = (SchemeElement )selectEvent.getStorableObject();
 
 					SiteNode site = mapView.findElement(schemeElement);
 					if(site != null) {
 						mapView.getMap().setSelected(site, true);
 					}
 				} else if (selectEvent.isSelected(ObjectSelectedEvent.SCHEME_PATH)) {
-					SchemePath schemePath = (SchemePath )selectEvent.getSelectedObject();
+					SchemePath schemePath = (SchemePath )selectEvent.getStorableObject();
 					
 					MeasurementPath measurementPath = mapView.findMeasurementPath(schemePath);
 					if(measurementPath != null)
 						mapView.getMap().setSelected(measurementPath, true);
 				} else if(selectEvent.isSelected(ObjectSelectedEvent.SCHEME_CABLELINK)) {
-					SchemeCableLink schemeCableLink = (SchemeCableLink )selectEvent.getSelectedObject();
+					SchemeCableLink schemeCableLink = (SchemeCableLink )selectEvent.getStorableObject();
 					CablePath cablePath = mapView.findCablePath(schemeCableLink);
 					if(cablePath != null) {
 						mapView.getMap().setSelected(cablePath, true);
@@ -793,7 +794,7 @@ public abstract class NetMapViewer {
 					true, 
 					physicalLinkType.getMapLibrary().getId());
 			newPhysicalLinkType.setCodename(newPhysicalLinkType.getId().toString());
-			PhysicalLinkTypeEditor physicalLinkTypeEditor = new PhysicalLinkTypeEditor();
+			PhysicalLinkTypeEditor physicalLinkTypeEditor = new PhysicalLinkTypeEditor<MapLibrary>();
 			physicalLinkTypeEditor.setNetMapViewer(this);
 			if(EditorDialog.showEditorDialog(
 					I18N.getString(MapEditorResourceKeys.ENTITY_PHYSICAL_LINK_TYPE),
