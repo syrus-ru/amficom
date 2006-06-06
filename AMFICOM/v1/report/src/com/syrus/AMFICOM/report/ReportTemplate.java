@@ -1,5 +1,5 @@
 /*
- * $Id: ReportTemplate.java,v 1.38 2006/06/06 16:01:10 arseniy Exp $
+ * $Id: ReportTemplate.java,v 1.39 2006/06/06 17:33:39 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -61,7 +61,7 @@ import com.syrus.util.transport.idl.IdlTransferableObjectExt;
  * отчёт </p>
  * 
  * @author $Author: arseniy $
- * @version $Revision: 1.38 $, $Date: 2006/06/06 16:01:10 $
+ * @version $Revision: 1.39 $, $Date: 2006/06/06 17:33:39 $
  * @module report
  */
 public final class ReportTemplate extends StorableObject
@@ -110,6 +110,13 @@ public final class ReportTemplate extends StorableObject
 	private String destinationModule;
 
 	private transient Set<StorableElement> storableElementsToRemove;
+
+	/**
+	 * @deprecated Используйте {@link StorableObject#isNew()}. Это свойство
+	 *             объекта выставляется при его создании в {@code true}.
+	 */
+	@Deprecated
+	private transient boolean isNew = false;
 
 	private transient LinkedIdsCondition	attTextCondition;
 	private transient LinkedIdsCondition	imageCondition;
@@ -505,6 +512,25 @@ public final class ReportTemplate extends StorableObject
 	}
 
 	/**
+	 * @deprecated Используйте {@link StorableObject#isNew()}. Это свойство
+	 *             объекта выставляется при его создании в {@code true}.
+	 */
+	@Deprecated
+	public boolean isNewDeprecated() {
+		return this.isNew;
+	}
+
+	/**
+	 * @deprecated Используйте {@link StorableObject#isNew()}. Это свойство
+	 *             объекта выставляется при его создании в {@code true}.
+	 * @param isNew
+	 */
+	@Deprecated
+	public void setNewDeprecated(final boolean isNew) {
+		this.isNew = isNew;
+	}
+
+	/**
 	 * @see com.syrus.AMFICOM.general.StorableObject#getWrapper()
 	 */
 	@Override
@@ -523,6 +549,8 @@ public final class ReportTemplate extends StorableObject
 		clone.destinationModule = this.destinationModule;
 
 		clone.storableElementsToRemove = null;
+
+		clone.isNew = false;
 
 		clone.attTextCondition = null;
 		clone.imageCondition = null;
