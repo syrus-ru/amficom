@@ -1,5 +1,5 @@
 /*
- * $Id: DeviceView.java,v 1.9 2006/03/17 10:29:10 stas Exp $
+ * $Id: DeviceView.java,v 1.10 2006/06/06 12:52:08 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,10 +8,6 @@
 
 package com.syrus.AMFICOM.client_.scheme.graph.objects;
 
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
@@ -21,21 +17,18 @@ import java.util.Map;
 import com.jgraph.JGraph;
 import com.jgraph.graph.CellHandle;
 import com.jgraph.graph.CellMapper;
-import com.jgraph.graph.CellView;
-import com.jgraph.graph.CellViewRenderer;
 import com.jgraph.graph.DefaultGraphCell;
 import com.jgraph.graph.DefaultPort;
 import com.jgraph.graph.Edge;
 import com.jgraph.graph.GraphConstants;
 import com.jgraph.graph.GraphContext;
 import com.jgraph.graph.Port;
-import com.jgraph.graph.VertexRenderer;
 import com.jgraph.graph.VertexView;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.GraphActions;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.9 $, $Date: 2006/03/17 10:29:10 $
+ * @version $Revision: 1.10 $, $Date: 2006/06/06 12:52:08 $
  * @module schemeclient
  */
 
