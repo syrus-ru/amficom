@@ -88,7 +88,6 @@ import com.syrus.AMFICOM.client_.scheme.ui.SchemeEventHandler;
 import com.syrus.AMFICOM.client_.scheme.ui.SchemeTreeUI;
 import com.syrus.AMFICOM.filter.UI.FilterPanel;
 import com.syrus.AMFICOM.filter.UI.TreeFilterUI;
-import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.report.DestinationModules;
 import com.syrus.io.BellcoreStructure;
@@ -457,10 +456,10 @@ public class ModelMDIMain extends AbstractMainFrame implements BsHashChangeListe
 			analysisFrame.setGraph(panel, true, key);
 
 			if (bs.schemePathId != null) {
-				panel.setSchemePathId(new Identifier(bs.schemePathId));
+				panel.setSchemePathId(Identifier.valueOf(bs.schemePathId));
 			}
 			if (bs.monitoredElementId != null) {
-				panel.setMonitoredElementId(new Identifier(bs.monitoredElementId));
+				panel.setMonitoredElementId(Identifier.valueOf(bs.monitoredElementId));
 			}
 			panel.updEvents(key);
 			updFrames();

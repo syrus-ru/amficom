@@ -56,7 +56,7 @@ public class SaveModelingCommand extends AbstractCommand {
 		if(bs.monitoredElementId == null) {
 			if (bs.schemePathId != null) {
 				try {
-					SchemePath schemePath = StorableObjectPool.getStorableObject(new Identifier(bs.schemePathId), false);
+					SchemePath schemePath = StorableObjectPool.getStorableObject(Identifier.valueOf(bs.schemePathId), false);
 					
 					SortedSet<PathElement> pathMemebers = schemePath.getPathMembers();
 					if (!pathMemebers.isEmpty()) {
@@ -99,7 +99,7 @@ public class SaveModelingCommand extends AbstractCommand {
 		Identifier userId = LoginManager.getUserId();
 
 		Set<Identifier> meIds = new HashSet<Identifier>();
-		meIds.add(new Identifier(bs.monitoredElementId));
+		meIds.add(Identifier.valueOf(bs.monitoredElementId));
 
 		try {
 			Parameter[] parameters = new Parameter[1];
@@ -118,7 +118,7 @@ public class SaveModelingCommand extends AbstractCommand {
 			Modeling m = Modeling.createInstance(
 					userId,
 					ModelingType.DADARA_MODELING,
-					new Identifier(bs.monitoredElementId),
+					Identifier.valueOf(bs.monitoredElementId),
 					title,
 					argumentSet);
 			
