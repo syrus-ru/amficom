@@ -1,5 +1,5 @@
 /*-
- * $Id: CorbaTestContext.java,v 1.3 2006/04/25 10:13:09 arseniy Exp $
+ * $Id: CorbaTestContext.java,v 1.4 2006/06/06 15:52:38 arseniy Exp $
  * 
  * Copyright ¿ 2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: arseniy $
- * @version $Revision: 1.3 $, $Date: 2006/04/25 10:13:09 $
+ * @version $Revision: 1.4 $, $Date: 2006/06/06 15:52:38 $
  * @module
  */
 public class CorbaTestContext implements TestContext {
@@ -24,7 +24,7 @@ public class CorbaTestContext implements TestContext {
 	private static void login() {
 		try {
 			ClientSessionEnvironment.createInstance(SessionKind.ALL, null);
-			ClientSessionEnvironment.getInstance().login("sys", "sys", new Identifier("Domain_1"));
+			ClientSessionEnvironment.getInstance().login("sys", "sys", Identifier.valueOf("Domain_1"));
 		} catch (ApplicationException ae) {
 			Log.errorMessage(ae);
 			Assert.fail(ae.getMessage());

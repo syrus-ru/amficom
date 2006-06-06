@@ -1,5 +1,5 @@
 /*
- * $Id: TestAnalysisResult.java,v 1.5 2006/01/18 15:06:51 saa Exp $
+ * $Id: TestAnalysisResult.java,v 1.6 2006/06/06 15:52:38 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,8 +25,8 @@ import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch;
 import com.syrus.io.DataFormatException;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2006/01/18 15:06:51 $
- * @author $Author: saa $
+ * @version $Revision: 1.6 $, $Date: 2006/06/06 15:52:38 $
+ * @author $Author: arseniy $
  * @module test
  */
 public final class TestAnalysisResult extends TestCase {
@@ -47,7 +47,7 @@ public final class TestAnalysisResult extends TestCase {
 
 	public void testLoadResult() throws ApplicationException, DataFormatException {
 		long t0 = System.nanoTime();
-		Identifier analysisId = new Identifier("Analysis_63");
+		Identifier analysisId = Identifier.valueOf("Analysis_63");
 		//Analysis analysis = (Analysis) StorableObjectPool.getStorableObject(analysisId, true);
 		LinkedIdsCondition lic =
 			new LinkedIdsCondition(analysisId, ObjectEntities.RESULT_CODE);

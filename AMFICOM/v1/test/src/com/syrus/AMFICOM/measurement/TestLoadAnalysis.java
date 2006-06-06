@@ -1,5 +1,5 @@
 /*
- * $Id: TestLoadAnalysis.java,v 1.4 2006/01/30 10:04:25 saa Exp $
+ * $Id: TestLoadAnalysis.java,v 1.5 2006/06/06 15:52:38 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,8 +23,8 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2006/01/30 10:04:25 $
- * @author $Author: saa $
+ * @version $Revision: 1.5 $, $Date: 2006/06/06 15:52:38 $
+ * @author $Author: arseniy $
  * @module test
  */
 public final class TestLoadAnalysis extends TestCase {
@@ -51,7 +51,7 @@ public final class TestLoadAnalysis extends TestCase {
 	}
 
 	public void testLoadAnalysis() throws ApplicationException {
-		Identifier mId = new Identifier("Measurement_8686");
+		Identifier mId = Identifier.valueOf("Measurement_8686");
 		LinkedIdsCondition lic =
 			new LinkedIdsCondition(mId, ObjectEntities.ANALYSIS_CODE);
 		boolean tooLong = false;

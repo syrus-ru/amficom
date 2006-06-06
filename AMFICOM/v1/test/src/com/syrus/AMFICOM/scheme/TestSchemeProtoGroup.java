@@ -1,5 +1,5 @@
 /*-
- * $Id: TestSchemeProtoGroup.java,v 1.4 2006/04/25 10:31:46 arseniy Exp $
+ * $Id: TestSchemeProtoGroup.java,v 1.5 2006/06/06 15:52:38 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2006/04/25 10:31:46 $
+ * @version $Revision: 1.5 $, $Date: 2006/06/06 15:52:38 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -41,8 +41,8 @@ public final class TestSchemeProtoGroup extends TestCase {
 		//final EquivalentCondition ec = new EquivalentCondition(ObjectEntities.SCHEMEPROTOGROUP_CODE);
 		final LinkedIdsCondition lic = new LinkedIdsCondition(Identifier.VOID_IDENTIFIER,ObjectEntities.SCHEMEPROTOGROUP_CODE);
 		final Set<Identifier> butIds = new HashSet<Identifier>();
-		butIds.add(new Identifier("SchemeProtoGroup_91"));
-		//butIds.add(new Identifier("SchemeProtoGroup_93"));
+		butIds.add(Identifier.valueOf("SchemeProtoGroup_91"));
+		//butIds.add(Identifier.valueOf("SchemeProtoGroup_93"));
 		butIds.add(Identifier.VOID_IDENTIFIER);
 		//final Set<SchemeProtoGroup> set = StorableObjectPool.getStorableObjectsByCondition(lic, true);
 		final Set<SchemeProtoGroup> set = StorableObjectPool.getStorableObjectsButIdsByCondition(butIds, lic, true);

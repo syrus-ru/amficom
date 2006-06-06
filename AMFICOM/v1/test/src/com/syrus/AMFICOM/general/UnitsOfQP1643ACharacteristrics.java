@@ -1,5 +1,5 @@
 /*
- * $Id: UnitsOfQP1643ACharacteristrics.java,v 1.7 2006/02/17 12:04:55 arseniy Exp $
+ * $Id: UnitsOfQP1643ACharacteristrics.java,v 1.8 2006/06/06 15:52:38 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.measurement.MeasurementPort;
 import com.syrus.AMFICOM.measurement.MeasurementPortType;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2006/02/17 12:04:55 $
+ * @version $Revision: 1.8 $, $Date: 2006/06/06 15:52:38 $
  * @author $Author: arseniy $
  * @module tools
  */
@@ -36,7 +36,7 @@ public class UnitsOfQP1643ACharacteristrics extends TestCase {
 	public void testCreateCharacteristics() throws ApplicationException {
 		final Identifier userId = LoginManager.getUserId();
 
-		final MeasurementPort measurementPort = (MeasurementPort) StorableObjectPool.getStorableObject(new Identifier("MeasurementPort_19"),
+		final MeasurementPort measurementPort = (MeasurementPort) StorableObjectPool.getStorableObject(Identifier.valueOf("MeasurementPort_19"),
 				true);
 		final MeasurementPortType measurementPortType = measurementPort.getType();
 		if (true) {

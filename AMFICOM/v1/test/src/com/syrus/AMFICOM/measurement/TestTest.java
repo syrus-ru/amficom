@@ -1,5 +1,5 @@
 /*-
- * $Id: TestTest.java,v 1.4 2006/02/17 12:04:55 arseniy Exp $
+ * $Id: TestTest.java,v 1.5 2006/06/06 15:52:38 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2006/02/17 12:04:55 $
+ * @version $Revision: 1.5 $, $Date: 2006/06/06 15:52:38 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module test
@@ -37,7 +37,7 @@ public final class TestTest extends TestCase {
 	public void testAddStops() throws ApplicationException {
 		final Identifier userId = LoginManager.getUserId();
 
-		final Identifier testId = new Identifier("Test_321");//146085512912830785
+		final Identifier testId = Identifier.valueOf("Test_321");//146085512912830785
 		final com.syrus.AMFICOM.measurement.Test test = StorableObjectPool.getStorableObject(testId, true);
 		System.out.println("Loaded: " + test.toString() + ", status: " + test.getStatus().value());
 		System.out.println("Stops: " + test.getStoppingMap());

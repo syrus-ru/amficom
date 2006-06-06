@@ -1,5 +1,5 @@
 /*
- * $Id: TestIdentifier.java,v 1.12 2005/12/12 07:47:39 arseniy Exp $
+ * $Id: TestIdentifier.java,v 1.13 2006/06/06 15:52:38 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,7 +16,7 @@ import junit.framework.TestCase;
 
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/12/12 07:47:39 $
+ * @version $Revision: 1.13 $, $Date: 2006/06/06 15:52:38 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -33,32 +33,32 @@ public class TestIdentifier extends TestCase {
 	}
 
 	public void _testEquals() {
-		final Identifier id1 = new Identifier("Measurement_1");
+		final Identifier id1 = Identifier.valueOf("Measurement_1");
 		Identifier id2 = new Identifier(ObjectEntities.MEASUREMENT_CODE, 1);
 		assertEquals(id1, id2);
 
-		id2 = new Identifier(id1.getIdentifierCode());
+		id2 = Identifier.valueOf(id1.getIdentifierCode());
 		assertEquals(id1, id2);
 
-		id2 = new Identifier(id1.getIdentifierString());
+		id2 = Identifier.valueOf(id1.getIdentifierString());
 		assertEquals(id1, id2);
 
 		id2 = new Identifier(ObjectEntities.EQUIPMENT_CODE, 1);
 		assertFalse("Different majors", id1.equals(id2));
 
-		id2 = new Identifier("Measurement_2");
+		id2 = Identifier.valueOf("Measurement_2");
 		assertFalse("Different minors", id1.equals(id2));
 	}
 
 	public void _testIllegalMajor() {
-		Identifier id = new Identifier(StorableObjectPool.БАЙАН + "_1");
+		Identifier id = Identifier.valueOf(StorableObjectPool.БАЙАН + "_1");
 		System.out.println("major: " + id.getMajor() + ", minor: " + id.getMinor()
 				+ ", code: " + id.getIdentifierCode() + ", string: " + id.getIdentifierString());
 	}
 
 	public void _testIllegalMinor() {
 		try {
-			new Identifier("Measurement_100000000000000000");
+			Identifier.valueOf("Measurement_100000000000000000");
 			fail("Illegal minor");
 		}
 		catch (AssertionError ae) {
@@ -70,18 +70,18 @@ public class TestIdentifier extends TestCase {
 		final Set<Identifier> ids = new HashSet<Identifier>();
 
 		//1
-		ids.add(new Identifier("Measurement_2491"));
-		ids.add(new Identifier("Measurement_2492"));
-		ids.add(new Identifier("Measurement_2493"));
-		ids.add(new Identifier("Measurement_2494"));
+		ids.add(Identifier.valueOf("Measurement_2491"));
+		ids.add(Identifier.valueOf("Measurement_2492"));
+		ids.add(Identifier.valueOf("Measurement_2493"));
+		ids.add(Identifier.valueOf("Measurement_2494"));
 		final Set<Identifiable> identifiables1 = new HashSet<Identifiable>(ids);
 
 		ids.clear();
 
 		//2
-		ids.add(new Identifier("Measurement_2741"));
-		ids.add(new Identifier("Measurement_2742"));
-		ids.add(new Identifier("Measurement_2744"));
+		ids.add(Identifier.valueOf("Measurement_2741"));
+		ids.add(Identifier.valueOf("Measurement_2742"));
+		ids.add(Identifier.valueOf("Measurement_2744"));
 		final Set<Identifiable> identifiables2 = new HashSet<Identifiable>(ids);
 
 		//create sum
@@ -102,18 +102,18 @@ public class TestIdentifier extends TestCase {
 		final Set<Identifier> ids = new HashSet<Identifier>();
 
 		//1
-		ids.add(new Identifier("Measurement_2491"));
-		ids.add(new Identifier("Measurement_2492"));
-		ids.add(new Identifier("Measurement_2493"));
-		ids.add(new Identifier("Measurement_2494"));
+		ids.add(Identifier.valueOf("Measurement_2491"));
+		ids.add(Identifier.valueOf("Measurement_2492"));
+		ids.add(Identifier.valueOf("Measurement_2493"));
+		ids.add(Identifier.valueOf("Measurement_2494"));
 		final Set<Identifiable> identifiables1 = new HashSet<Identifiable>(ids);
 
 		ids.clear();
 
 		//2
-		ids.add(new Identifier("Measurement_2491"));
-		ids.add(new Identifier("Measurement_2492"));
-		ids.add(new Identifier("Measurement_2493"));
+		ids.add(Identifier.valueOf("Measurement_2491"));
+		ids.add(Identifier.valueOf("Measurement_2492"));
+		ids.add(Identifier.valueOf("Measurement_2493"));
 		final Set<Identifiable> identifiables2 = new HashSet<Identifiable>(ids);
 
 		// Create substraction
@@ -142,12 +142,12 @@ public class TestIdentifier extends TestCase {
 	}
 
 	public void testToString() {
-		final Identifier id = new Identifier(181269885001678185L);
+		final Identifier id = Identifier.valueOf(181269885001678185L);
 		System.out.println("String: " + id);
 	}
 
 	public void _testGetLongValue() {
-		final Identifier identifier = new Identifier("ParameterSet_24");
+		final Identifier identifier = Identifier.valueOf("ParameterSet_24");
 		final long identifierCode = identifier.getIdentifierCode();
 		System.out.println("Identifier: '" + identifier + "', code: " + identifierCode);
 	}

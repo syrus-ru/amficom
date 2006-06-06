@@ -1,5 +1,5 @@
 /*
- * $Id: TestEventSource.java,v 1.8 2006/04/25 10:30:04 arseniy Exp $
+ * $Id: TestEventSource.java,v 1.9 2006/06/06 15:52:38 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2006/04/25 10:30:04 $
+ * @version $Revision: 1.9 $, $Date: 2006/06/06 15:52:38 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -43,16 +43,16 @@ public class TestEventSource extends TestCase {
 		Identifier sourceEntityId;
 		final List<EventSource> eventSources = new LinkedList<EventSource>();
 
-		sourceEntityId = new Identifier("MCM_19");
+		sourceEntityId = Identifier.valueOf("MCM_19");
 		eventSources.add(createAndTestEventSource(sourceEntityId));
 
-		sourceEntityId = new Identifier("Port_38");
+		sourceEntityId = Identifier.valueOf("Port_38");
 		eventSources.add(createAndTestEventSource(sourceEntityId));
 
-		sourceEntityId = new Identifier("Equipment_19");
+		sourceEntityId = Identifier.valueOf("Equipment_19");
 		eventSources.add(createAndTestEventSource(sourceEntityId));
 
-		sourceEntityId = new Identifier("TransmissionPath_19");
+		sourceEntityId = Identifier.valueOf("TransmissionPath_19");
 		eventSources.add(createAndTestEventSource(sourceEntityId));
 
 		System.out.println("Event Sources: "+ Identifier.toString(eventSources));
