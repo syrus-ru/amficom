@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.220 2006/06/06 15:32:44 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.221 2006/06/06 17:32:56 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -42,7 +42,7 @@ import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.220 $, $Date: 2006/06/06 15:32:44 $
+ * @version $Revision: 1.221 $, $Date: 2006/06/06 17:32:56 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -743,6 +743,7 @@ public final class StorableObjectPool {
 	 * Clean from pool changed objects from the supplied set.
 	 * Also cleans delete marks on the supplied objects (if any). 
 	 * Objects must NOT belong to the same entity.
+	 * @todo Исправить ошибку, связанную с удалением из {@link #DELETED_IDS_MAP}.
 	 * @param identifiables
 	 */
 	public static void cleanChangedStorableObjects(final Set<? extends Identifiable> identifiables) {
