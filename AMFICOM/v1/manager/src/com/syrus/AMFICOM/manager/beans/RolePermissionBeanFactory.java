@@ -1,5 +1,5 @@
 /*-
-* $Id: RolePermissionBeanFactory.java,v 1.2 2005/11/28 14:47:05 bob Exp $
+* $Id: RolePermissionBeanFactory.java,v 1.3 2006/06/06 11:34:18 arseniy Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -27,8 +27,8 @@ import com.syrus.AMFICOM.manager.perspective.RolePerpective;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/11/28 14:47:05 $
- * @author $Author: bob $
+ * @version $Revision: 1.3 $, $Date: 2006/06/06 11:34:18 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module manager
  */
@@ -91,7 +91,7 @@ public final class RolePermissionBeanFactory extends AbstractBeanFactory<RolePer
 	@Override
 	public RolePermissionBean createBean(final String codename) 
 	throws ApplicationException {
-		return this.createBean(new Identifier(codename));
+		return this.createBean(Identifier.valueOf(codename));
 	}
 	
 	protected RolePermissionBean createBean(final Identifier identifier) 

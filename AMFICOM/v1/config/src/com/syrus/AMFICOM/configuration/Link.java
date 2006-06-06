@@ -1,5 +1,5 @@
 /*-
- * $Id: Link.java,v 1.82 2006/04/19 13:22:15 bass Exp $
+ * $Id: Link.java,v 1.83 2006/06/06 11:31:16 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,8 +30,8 @@ import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.82 $, $Date: 2006/04/19 13:22:15 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.83 $, $Date: 2006/06/06 11:31:16 $
  * @module config
  */
 public final class Link extends AbstractLink implements IdlTransferableObjectExt<IdlLink> {
@@ -128,7 +128,7 @@ public final class Link extends AbstractLink implements IdlTransferableObjectExt
 
 	public synchronized void fromIdlTransferable(final IdlLink idlLink) throws IdlConversionException {
 		try {
-			super.fromIdlTransferable(idlLink, new Identifier(idlLink.domainId));
+			super.fromIdlTransferable(idlLink, Identifier.valueOf(idlLink.domainId));
 
 			this.name = idlLink.name;
 			this.description = idlLink.description;
@@ -136,7 +136,7 @@ public final class Link extends AbstractLink implements IdlTransferableObjectExt
 			this.supplier = idlLink.supplier;
 			this.supplierCode = idlLink.supplierCode;
 
-			super.type = (LinkType) StorableObjectPool.getStorableObject(new Identifier(idlLink._typeId), true);
+			super.type = StorableObjectPool.getStorableObject(Identifier.valueOf(idlLink._typeId), true);
 		} catch (final ApplicationException ae) {
 			throw new IdlConversionException(ae);
 		}

@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemePort.java,v 1.97 2006/06/02 17:23:20 bass Exp $
+ * $Id: AbstractSchemePort.java,v 1.98 2006/06/06 11:31:15 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -57,8 +57,8 @@ import com.syrus.util.Log;
 import com.syrus.util.transport.xml.XmlConversionException;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.97 $, $Date: 2006/06/02 17:23:20 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.98 $, $Date: 2006/06/06 11:31:15 $
  * @module scheme
  */
 public abstract class AbstractSchemePort
@@ -539,10 +539,10 @@ public abstract class AbstractSchemePort
 		this.name = abstractSchemePort.name;
 		this.description = abstractSchemePort.description;
 		this.directionType = abstractSchemePort.directionType.value();
-		this.portTypeId = new Identifier(abstractPortTypeId);
-		this.portId = new Identifier(abstractPortId);
-		this.measurementPortId = new Identifier(abstractSchemePort.measurementPortId);
-		this.parentSchemeDeviceId = new Identifier(abstractSchemePort.parentSchemeDeviceId);
+		this.portTypeId = Identifier.valueOf(abstractPortTypeId);
+		this.portId = Identifier.valueOf(abstractPortId);
+		this.measurementPortId = Identifier.valueOf(abstractSchemePort.measurementPortId);
+		this.parentSchemeDeviceId = Identifier.valueOf(abstractSchemePort.parentSchemeDeviceId);
 
 		this.portTypeSet = true;
 	}

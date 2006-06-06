@@ -1,5 +1,5 @@
 /*
- * $Id: Parameter.java,v 1.25 2006/03/27 11:21:42 bass Exp $
+ * $Id: Parameter.java,v 1.26 2006/06/06 11:31:16 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,8 +30,8 @@ import com.syrus.util.Log;
 import com.syrus.util.transport.idl.IdlTransferableObject;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2006/03/27 11:21:42 $
- * @author $Author: bass $
+ * @version $Revision: 1.26 $, $Date: 2006/06/06 11:31:16 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
@@ -50,7 +50,7 @@ public final class Parameter implements IdlTransferableObject<IdlParameter>,
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	public Parameter(final IdlParameter pt) {
-		this.id = new Identifier(pt.id);
+		this.id = Identifier.valueOf(pt.id);
 		this.type = ParameterType.fromTransferable(pt.type);
 		this.value = new byte[pt.value.length];
 		System.arraycopy(pt.value, 0, this.value, 0, this.value.length);

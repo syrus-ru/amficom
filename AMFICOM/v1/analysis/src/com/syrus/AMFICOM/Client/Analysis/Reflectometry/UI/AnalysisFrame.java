@@ -94,7 +94,7 @@ implements BsHashChangeListener, EtalonMTMListener {
 			final String meId = pf.getBS().monitoredElementId;
 			if (meId != null) {
 				try {
-					MonitoredElement me = StorableObjectPool.getStorableObject(new Identifier(meId), true);
+					MonitoredElement me = StorableObjectPool.getStorableObject(Identifier.valueOf(meId), true);
 					title1 = me.getName();
 				} catch(ApplicationException ex) {
 					Log.errorMessage(ex);

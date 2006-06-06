@@ -1,5 +1,5 @@
 /*
- * $Id: Server.java,v 1.67 2006/06/05 13:40:59 arseniy Exp $
+ * $Id: Server.java,v 1.68 2006/06/06 11:31:15 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,7 +38,7 @@ import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.67 $, $Date: 2006/06/05 13:40:59 $
+ * @version $Revision: 1.68 $, $Date: 2006/06/06 11:31:15 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module administration
@@ -91,7 +91,7 @@ public final class Server extends DomainMember
 	 */
 	public synchronized void fromIdlTransferable(final IdlServer st)
 	throws IdlConversionException {
-		super.fromIdlTransferable(st, new Identifier(st.domainId));
+		super.fromIdlTransferable(st, Identifier.valueOf(st.domainId));
 		this.name = st.name;
 		this.description = st.description;
 		this.hostname = st.hostname;

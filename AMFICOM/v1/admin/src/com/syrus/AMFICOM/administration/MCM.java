@@ -1,5 +1,5 @@
 /*
- * $Id: MCM.java,v 1.66 2006/06/05 13:40:59 arseniy Exp $
+ * $Id: MCM.java,v 1.67 2006/06/06 11:31:15 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,7 +38,7 @@ import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.66 $, $Date: 2006/06/05 13:40:59 $
+ * @version $Revision: 1.67 $, $Date: 2006/06/06 11:31:15 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module administration
@@ -97,12 +97,12 @@ public final class MCM extends DomainMember
 	 */
 	public synchronized void fromIdlTransferable(final IdlMCM mt)
 	throws IdlConversionException {
-		super.fromIdlTransferable(mt, new Identifier(mt.domainId));
+		super.fromIdlTransferable(mt, Identifier.valueOf(mt.domainId));
 		this.name = mt.name;
 		this.description = mt.description;
 		this.hostname = mt.hostname;
-		this.userId = new Identifier(mt.userId);
-		this.serverId = new Identifier(mt.serverId);
+		this.userId = Identifier.valueOf(mt.userId);
+		this.serverId = Identifier.valueOf(mt.serverId);
 		
 		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}

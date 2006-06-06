@@ -1,5 +1,5 @@
 /*
- * $Id: StorableElement.java,v 1.15 2006/03/15 14:47:29 bass Exp $
+ * $Id: StorableElement.java,v 1.16 2006/06/06 11:31:16 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,8 +18,8 @@ import com.syrus.AMFICOM.resource.IntPoint;
 
 /**
  * @author Maxim Selivanov
- * @author $Author: bass $
- * @version $Revision: 1.15 $, $Date: 2006/03/15 14:47:29 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.16 $, $Date: 2006/06/06 11:31:16 $
  * @module report
  */
 public abstract class StorableElement
@@ -130,7 +130,7 @@ public abstract class StorableElement
 		super.fromIdlTransferable(iae);
 		this.location = new IntPoint(iae.locationX, iae.locationY);
 		this.size = new IntDimension(iae.width, iae.height);
-		this.reportTemplateId  = new Identifier(iae.idlReportTemplateId);
+		this.reportTemplateId  = Identifier.valueOf(iae.idlReportTemplateId);
 	}
 	
 	synchronized void setAttributes(final Date created,

@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.132 2006/06/02 17:23:20 bass Exp $
+ * $Id: Scheme.java,v 1.133 2006/06/06 11:31:15 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -87,8 +87,8 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
 /**
  * #03 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.132 $, $Date: 2006/06/02 17:23:20 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.133 $, $Date: 2006/06/06 11:31:15 $
  * @module scheme
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
@@ -1150,18 +1150,18 @@ public final class Scheme extends AbstractCloneableDomainMember
 	 */
 	public void fromIdlTransferable(final IdlScheme scheme) {
 		synchronized (this) {
-			super.fromIdlTransferable(scheme, new Identifier(scheme.domainId));
+			super.fromIdlTransferable(scheme, Identifier.valueOf(scheme.domainId));
 			this.name = scheme.name;
 			this.description = scheme.description;
 			this.label = scheme.label;
 			this.width = scheme.width;
 			this.height = scheme.height;
 			this.kind = scheme.kind.value();
-			this.mapId = new Identifier(scheme.mapId);
-			this.symbolId = new Identifier(scheme.symbolId);
-			this.ugoCellId = new Identifier(scheme.ugoCellId);
-			this.schemeCellId = new Identifier(scheme.schemeCellId);
-			this.parentSchemeElementId = new Identifier(scheme.parentSchemeElementId);
+			this.mapId = Identifier.valueOf(scheme.mapId);
+			this.symbolId = Identifier.valueOf(scheme.symbolId);
+			this.ugoCellId = Identifier.valueOf(scheme.ugoCellId);
+			this.schemeCellId = Identifier.valueOf(scheme.schemeCellId);
+			this.parentSchemeElementId = Identifier.valueOf(scheme.parentSchemeElementId);
 		}
 	}
 

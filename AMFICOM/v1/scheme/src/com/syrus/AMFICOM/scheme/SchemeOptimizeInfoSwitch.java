@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfoSwitch.java,v 1.45 2006/06/02 17:23:20 bass Exp $
+ * $Id: SchemeOptimizeInfoSwitch.java,v 1.46 2006/06/06 11:31:15 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -49,8 +49,8 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * #06 in hierarchy.
  *
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.45 $, $Date: 2006/06/02 17:23:20 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.46 $, $Date: 2006/06/06 11:31:15 $
  * @module scheme
  */
 public final class SchemeOptimizeInfoSwitch
@@ -331,7 +331,7 @@ public final class SchemeOptimizeInfoSwitch
 			this.name = schemeOptimizeInfoSwitch.name;
 			this.priceUsd = schemeOptimizeInfoSwitch.priceUsd;
 			this.noOfPorts = schemeOptimizeInfoSwitch.noOfPorts;
-			this.parentSchemeOptimizeInfoId = new Identifier(schemeOptimizeInfoSwitch.parentSchemeOptimizeInfoId);
+			this.parentSchemeOptimizeInfoId = Identifier.valueOf(schemeOptimizeInfoSwitch.parentSchemeOptimizeInfoId);
 		}
 	}
 

@@ -1,5 +1,5 @@
 /*-
- * $Id: Map.java,v 1.131 2006/03/22 16:47:15 arseniy Exp $
+ * $Id: Map.java,v 1.132 2006/06/06 11:33:48 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -69,7 +69,7 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * линиях, коллекторов (объединяющих в себе линии).
  *
  * @author $Author: arseniy $
- * @version $Revision: 1.131 $, $Date: 2006/03/22 16:47:15 $
+ * @version $Revision: 1.132 $, $Date: 2006/06/06 11:33:48 $
  * @module map
  */
 public final class Map extends DomainMember
@@ -224,7 +224,7 @@ public final class Map extends DomainMember
 
 	public synchronized void fromIdlTransferable(final IdlMap mt)
 	throws IdlConversionException {
-		super.fromIdlTransferable(mt, new Identifier(mt.domainId));
+		super.fromIdlTransferable(mt, Identifier.valueOf(mt.domainId));
 
 		this.name = mt.name;
 		this.description = mt.description;

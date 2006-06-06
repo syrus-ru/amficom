@@ -1,5 +1,5 @@
 /*-
-* $Id: PermissionBeanFactory.java,v 1.4 2005/12/14 15:08:30 bob Exp $
+* $Id: PermissionBeanFactory.java,v 1.5 2006/06/06 11:34:18 arseniy Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -29,8 +29,8 @@ import com.syrus.AMFICOM.manager.perspective.SystemUserPerpective;
 
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/12/14 15:08:30 $
- * @author $Author: bob $
+ * @version $Revision: 1.5 $, $Date: 2006/06/06 11:34:18 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module manager
  */
@@ -103,7 +103,7 @@ public final class PermissionBeanFactory extends AbstractBeanFactory<PermissionB
 	@Override
 	public PermissionBean createBean(final String codename) 
 	throws ApplicationException {
-		return this.createBean(new Identifier(codename));
+		return this.createBean(Identifier.valueOf(codename));
 	}
 	
 	protected PermissionBean createBean(final Identifier identifier) 

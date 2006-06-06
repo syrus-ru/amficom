@@ -1,5 +1,5 @@
 /*-
- * $Id: PathElement.java,v 1.106 2006/06/02 17:23:20 bass Exp $
+ * $Id: PathElement.java,v 1.107 2006/06/06 11:31:15 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -71,8 +71,8 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * its {@link PathElement#getName() getName()} method actually returns
  * {@link PathElement#getAbstractSchemeElement() getAbstractSchemeElement()}<code>.</code>{@link AbstractSchemeElement#getName() getName()}.
  *
- * @author $Author: bass $
- * @version $Revision: 1.106 $, $Date: 2006/06/02 17:23:20 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.107 $, $Date: 2006/06/06 11:31:15 $
  * @module scheme
  * @todo If Scheme(Cable|)Port ever happens to belong to more than one
  *       SchemeElement
@@ -1192,29 +1192,29 @@ public final class PathElement extends StorableObject
 	throws IdlConversionException {
 		synchronized (this) {
 			super.fromIdlTransferable(pathElement);
-			this.parentSchemePathId = new Identifier(pathElement.parentSchemePathId);
+			this.parentSchemePathId = Identifier.valueOf(pathElement.parentSchemePathId);
 			this.sequentialNumber = pathElement.sequentialNumber;
 			final IdlData data = pathElement.data;
 			this.kind = data.discriminator().value();
 			switch (this.getKind().value()) {
 				case _SCHEME_ELEMENT:
 					final IdlSchemeElementData schemeElementData = data.schemeElementData();
-					this.startAbstractSchemePortId = new Identifier(schemeElementData.startAbstractSchemePortId);
-					this.endAbstractSchemePortId = new Identifier(schemeElementData.endAbstractSchemePortId);
+					this.startAbstractSchemePortId = Identifier.valueOf(schemeElementData.startAbstractSchemePortId);
+					this.endAbstractSchemePortId = Identifier.valueOf(schemeElementData.endAbstractSchemePortId);
 					this.schemeCableThreadId = VOID_IDENTIFIER;
 					this.schemeLinkId = VOID_IDENTIFIER;
 					break;
 				case _SCHEME_CABLE_LINK:
 					this.startAbstractSchemePortId = VOID_IDENTIFIER;
 					this.endAbstractSchemePortId = VOID_IDENTIFIER;
-					this.schemeCableThreadId = new Identifier(data.schemeCableThreadId());
+					this.schemeCableThreadId = Identifier.valueOf(data.schemeCableThreadId());
 					this.schemeLinkId = VOID_IDENTIFIER;
 					break;
 				case _SCHEME_LINK:
 					this.startAbstractSchemePortId = VOID_IDENTIFIER;
 					this.endAbstractSchemePortId = VOID_IDENTIFIER;
 					this.schemeCableThreadId = VOID_IDENTIFIER;
-					this.schemeLinkId = new Identifier(data.schemeLinkId());
+					this.schemeLinkId = Identifier.valueOf(data.schemeLinkId());
 					break;
 				default:
 					assert false;

@@ -1,5 +1,5 @@
 /*-
- * $Id: OpenSessionCommand.java,v 1.48 2006/01/16 09:17:49 bob Exp $
+ * $Id: OpenSessionCommand.java,v 1.49 2006/06/06 11:34:03 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -54,8 +54,8 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @author $Author: bob $
- * @version $Revision: 1.48 $, $Date: 2006/01/16 09:17:49 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.49 $, $Date: 2006/06/06 11:34:03 $
  * @module commonclient
  */
 public class OpenSessionCommand extends AbstractCommand {
@@ -96,7 +96,7 @@ public class OpenSessionCommand extends AbstractCommand {
 			this.password = passwordProperty;
 		}
 		if (domainIdProperty != null) {
-			this.domainId = new Identifier(domainIdProperty);			
+			this.domainId = Identifier.valueOf(domainIdProperty);			
 		} else {
 			this.domainId = VOID_IDENTIFIER;
 		}

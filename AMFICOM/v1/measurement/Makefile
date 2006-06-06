@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.78 2006/03/13 08:53:32 bass Exp $
+# $Id: Makefile,v 1.79 2006/06/06 11:31:16 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -84,7 +84,7 @@ $(LIBNAME):	.mach
 	touch $@
 
 .ora:	$(CLASSDIR)
-	$(JPUB) $(JPUB_FLAGS) \
+#	$(JPUB) $(JPUB_FLAGS) \
 		-sql=CRONSTRINGARRAY:CronStringArray
 	$(JAVAC) $(JAVACFLAGS) $(JAVAC_WARNOFF_FLAG) \
 		-classpath $(JDBCCLASSPATH):$(SQLJCLASSPATH) \
@@ -119,7 +119,7 @@ cleanmach:
 
 .PHONY:	cleanora
 cleanora:
-	$(RM) -r $(SRCDIR)/com/syrus/AMFICOM/measurement/ora
+#	$(RM) -r $(SRCDIR)/com/syrus/AMFICOM/measurement/ora
 	$(RM) -r $(CLASSDIR)/com/syrus/AMFICOM/measurement/ora
 	$(RM) .ora
 

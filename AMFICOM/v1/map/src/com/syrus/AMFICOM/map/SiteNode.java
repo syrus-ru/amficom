@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNode.java,v 1.125 2006/03/15 14:47:33 bass Exp $
+ * $Id: SiteNode.java,v 1.126 2006/06/06 11:33:48 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -68,8 +68,8 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * Дополнительно описывается полями
  * {@link #city}, {@link #street}, {@link #building} для поиска по
  * географическим параметрам.
- * @author $Author: bass $
- * @version $Revision: 1.125 $, $Date: 2006/03/15 14:47:33 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.126 $, $Date: 2006/06/06 11:33:48 $
  * @module map
  */
 public class SiteNode extends AbstractNode
@@ -237,12 +237,12 @@ public class SiteNode extends AbstractNode
 	throws IdlConversionException {
 		try {
 			super.fromIdlTransferable(idlSiteNode);
-			this.imageId = new Identifier(idlSiteNode.imageId);
+			this.imageId = Identifier.valueOf(idlSiteNode.imageId);
 			this.city = idlSiteNode.city;
 			this.street = idlSiteNode.street;
 			this.building = idlSiteNode.building;
-			this.attachmentSiteNodeId = new Identifier(idlSiteNode.attachmentSiteNodeId);
-			this.type = StorableObjectPool.getStorableObject(new Identifier(idlSiteNode.siteNodeTypeId), true);
+			this.attachmentSiteNodeId = Identifier.valueOf(idlSiteNode.attachmentSiteNodeId);
+			this.type = StorableObjectPool.getStorableObject(Identifier.valueOf(idlSiteNode.siteNodeTypeId), true);
 		} catch (final ApplicationException ae) {
 			throw new IdlConversionException(ae);
 		}

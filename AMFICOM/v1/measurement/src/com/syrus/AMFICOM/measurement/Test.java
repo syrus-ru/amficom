@@ -1,5 +1,5 @@
 /*-
- * $Id: Test.java,v 1.192 2006/03/30 12:10:47 bass Exp $
+ * $Id: Test.java,v 1.193 2006/06/06 11:31:16 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -47,8 +47,8 @@ import com.syrus.util.transport.idl.IdlTransferableObject;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.192 $, $Date: 2006/03/30 12:10:47 $
- * @author $Author: bass $
+ * @version $Revision: 1.193 $, $Date: 2006/06/06 11:31:16 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
@@ -228,9 +228,9 @@ public final class Test extends StorableObject
 			this.analysisType = AnalysisType.fromTransferable(tt.analysisType);
 	
 			this.status = tt.status.value();
-			this.groupTestId = new Identifier(tt.groupTestId);
+			this.groupTestId = Identifier.valueOf(tt.groupTestId);
 	
-			this.monitoredElement = (MonitoredElement) StorableObjectPool.getStorableObject(new Identifier(tt.monitoredElementId), true);
+			this.monitoredElement = StorableObjectPool.getStorableObject(Identifier.valueOf(tt.monitoredElementId), true);
 	
 			this.description = tt.description;
 			this.numberOfMeasurements = tt.numberOfMeasurements;
@@ -778,7 +778,7 @@ public final class Test extends StorableObject
 					PeriodicalTestTimeStamps ptts = ttst.ptts();
 					this.startTime = new Date(ptts.startTime);
 					this.endTime = new Date(ptts.endTime);
-					this.temporalPatternId = new Identifier(ptts.temporalPatternId);
+					this.temporalPatternId = Identifier.valueOf(ptts.temporalPatternId);
 					break;
 				default:
 					Log.errorMessage("TestTimeStamps | Illegal discriminator: " + this.discriminator);

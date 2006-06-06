@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkType.java,v 1.102 2006/04/19 13:22:15 bass Exp $
+ * $Id: LinkType.java,v 1.103 2006/06/06 11:31:16 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -56,8 +56,8 @@ import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
- * @version $Revision: 1.102 $, $Date: 2006/04/19 13:22:15 $
- * @author $Author: bass $
+ * @version $Revision: 1.103 $, $Date: 2006/06/06 11:31:16 $
+ * @author $Author: arseniy $
  * @module config
  */
 
@@ -266,7 +266,7 @@ public final class LinkType extends AbstractLinkType
 		this.sort = ltt.sort.value();
 		this.manufacturer = ltt.manufacturer;
 		this.manufacturerCode = ltt.manufacturerCode;
-		this.imageId = new Identifier(ltt.imageId);
+		this.imageId = Identifier.valueOf(ltt.imageId);
 		this.name = ltt.name;
 
 		assert this.isValid() : OBJECT_STATE_ILLEGAL;

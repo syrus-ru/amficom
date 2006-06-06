@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPath.java,v 1.112 2006/06/02 17:23:22 bass Exp $
+ * $Id: TransmissionPath.java,v 1.113 2006/06/06 11:31:16 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -42,8 +42,8 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 /**
- * @version $Revision: 1.112 $, $Date: 2006/06/02 17:23:22 $
- * @author $Author: bass $
+ * @version $Revision: 1.113 $, $Date: 2006/06/06 11:31:16 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
  */
@@ -134,14 +134,14 @@ public final class TransmissionPath extends DomainMember
 
 	public synchronized void fromIdlTransferable(final IdlTransmissionPath tpt) throws IdlConversionException {
 		try {
-			super.fromIdlTransferable(tpt, new Identifier(tpt.domainId));
+			super.fromIdlTransferable(tpt, Identifier.valueOf(tpt.domainId));
 
-			this.type = (TransmissionPathType) StorableObjectPool.getStorableObject(new Identifier(tpt._typeId), true);
+			this.type = StorableObjectPool.getStorableObject(Identifier.valueOf(tpt._typeId), true);
 
 			this.name = tpt.name;
 			this.description = tpt.description;
-			this.startPortId = new Identifier(tpt.startPortId);
-			this.finishPortId = new Identifier(tpt.finishPortId);
+			this.startPortId = Identifier.valueOf(tpt.startPortId);
+			this.finishPortId = Identifier.valueOf(tpt.finishPortId);
 		} catch (final ApplicationException ae) {
 			throw new IdlConversionException(ae);
 		}

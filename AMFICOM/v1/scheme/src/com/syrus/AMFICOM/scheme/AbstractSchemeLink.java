@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemeLink.java,v 1.56 2006/03/15 20:22:53 bass Exp $
+ * $Id: AbstractSchemeLink.java,v 1.57 2006/06/06 11:31:15 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -46,8 +46,8 @@ import com.syrus.util.transport.xml.XmlConversionException;
  * generated from IDL files to compile cleanly. Use other implementations of
  * {@link AbstractSchemeLink}instead.
  *
- * @author $Author: bass $
- * @version $Revision: 1.56 $, $Date: 2006/03/15 20:22:53 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.57 $, $Date: 2006/06/06 11:31:15 $
  * @module scheme
  */
 public abstract class AbstractSchemeLink
@@ -514,10 +514,10 @@ public abstract class AbstractSchemeLink
 		super.fromIdlTransferable(abstractSchemeLink);
 		this.physicalLength = abstractSchemeLink.physicalLength;
 		this.opticalLength = abstractSchemeLink.opticalLength;
-		this.abstractLinkTypeId = new Identifier(abstractLinkTypeId1);
-		this.abstractLinkId = new Identifier(abstractLinkId1);
-		this.sourceAbstractSchemePortId = new Identifier(sourceAbstractSchemePortId1);
-		this.targetAbstractSchemePortId = new Identifier(targetAbstractSchemePortId1);
+		this.abstractLinkTypeId = Identifier.valueOf(abstractLinkTypeId1);
+		this.abstractLinkId = Identifier.valueOf(abstractLinkId1);
+		this.sourceAbstractSchemePortId = Identifier.valueOf(sourceAbstractSchemePortId1);
+		this.targetAbstractSchemePortId = Identifier.valueOf(targetAbstractSchemePortId1);
 
 		this.abstractLinkTypeSet = true;
 	}

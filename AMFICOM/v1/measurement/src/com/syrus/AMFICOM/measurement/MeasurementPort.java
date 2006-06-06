@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPort.java,v 1.22 2006/03/15 14:47:30 bass Exp $
+ * $Id: MeasurementPort.java,v 1.23 2006/06/06 11:31:16 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,8 +40,8 @@ import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2006/03/15 14:47:30 $
- * @author $Author: bass $
+ * @version $Revision: 1.23 $, $Date: 2006/06/06 11:31:16 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
@@ -133,13 +133,13 @@ public final class MeasurementPort extends StorableObject
 		try {
 			super.fromIdlTransferable(mpt);
 	
-			this.type = (MeasurementPortType) StorableObjectPool.getStorableObject(new Identifier(mpt._typeId), true);
+			this.type = (MeasurementPortType) StorableObjectPool.getStorableObject(Identifier.valueOf(mpt._typeId), true);
 	
 			this.name = mpt.name;
 			this.description = mpt.description;
 	
-			this.kisId = new Identifier(mpt.kisId);
-			this.portId = new Identifier(mpt.portId);
+			this.kisId = Identifier.valueOf(mpt.kisId);
+			this.portId = Identifier.valueOf(mpt.portId);
 		} catch (final ApplicationException ae) {
 			throw new IdlConversionException(ae);
 		}

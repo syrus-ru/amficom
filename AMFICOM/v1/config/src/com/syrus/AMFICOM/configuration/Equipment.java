@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.162 2006/06/02 17:23:22 bass Exp $
+ * $Id: Equipment.java,v 1.163 2006/06/06 11:31:16 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -62,8 +62,8 @@ import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
- * @version $Revision: 1.162 $, $Date: 2006/06/02 17:23:22 $
- * @author $Author: bass $
+ * @version $Revision: 1.163 $, $Date: 2006/06/06 11:31:16 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
  */
@@ -257,13 +257,13 @@ public final class Equipment extends DomainMember
 	}
 
 	public synchronized void fromIdlTransferable(final IdlEquipment et) throws IdlConversionException {
-		super.fromIdlTransferable(et, new Identifier(et.domainId));
+		super.fromIdlTransferable(et, Identifier.valueOf(et.domainId));
 
-		this.protoEquipmentId = new Identifier(et.protoEquipmentId);
+		this.protoEquipmentId = Identifier.valueOf(et.protoEquipmentId);
 
 		this.name = et.name;
 		this.description = et.description;
-		this.imageId = new Identifier(et.imageId);
+		this.imageId = Identifier.valueOf(et.imageId);
 		this.supplier = et.supplier;
 		this.supplier = et.supplierCode;
 		this.latitude = et.latitude;

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMonitoringSolution.java,v 1.97 2006/06/02 17:23:20 bass Exp $
+ * $Id: SchemeMonitoringSolution.java,v 1.98 2006/06/06 11:31:15 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -56,8 +56,8 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
 /**
  * #08 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.97 $, $Date: 2006/06/02 17:23:20 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.98 $, $Date: 2006/06/06 11:31:15 $
  * @module scheme
  */
 public final class SchemeMonitoringSolution
@@ -713,8 +713,8 @@ public final class SchemeMonitoringSolution
 			this.description = schemeMonitoringSolution.description;
 			this.price = schemeMonitoringSolution.priceUsd;
 			this.active = schemeMonitoringSolution.active;
-			this.parentSchemeId = new Identifier(schemeMonitoringSolution.parentSchemeId);
-			this.parentSchemeOptimizeInfoId = new Identifier(schemeMonitoringSolution.parentSchemeOptimizeInfoId);
+			this.parentSchemeId = Identifier.valueOf(schemeMonitoringSolution.parentSchemeId);
+			this.parentSchemeOptimizeInfoId = Identifier.valueOf(schemeMonitoringSolution.parentSchemeOptimizeInfoId);
 		}
 	}
 

@@ -1,5 +1,5 @@
 /*
- * $Id: CableThread.java,v 1.53 2006/04/19 13:22:15 bass Exp $
+ * $Id: CableThread.java,v 1.54 2006/06/06 11:31:16 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,8 +33,8 @@ import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.53 $, $Date: 2006/04/19 13:22:15 $
- * @author $Author: bass $
+ * @version $Revision: 1.54 $, $Date: 2006/06/06 11:31:16 $
+ * @author $Author: arseniy $
  * @module config
  */
 public final class CableThread extends DomainMember
@@ -102,11 +102,11 @@ public final class CableThread extends DomainMember
 
 	public synchronized void fromIdlTransferable(final IdlCableThread ctt) throws IdlConversionException {
 		try {
-			super.fromIdlTransferable(ctt, new Identifier(ctt.domainId));
+			super.fromIdlTransferable(ctt, Identifier.valueOf(ctt.domainId));
 
 			this.name = ctt.name;
 			this.description = ctt.description;
-			this.type = (CableThreadType) StorableObjectPool.getStorableObject(new Identifier(ctt._typeId), true);
+			this.type = StorableObjectPool.getStorableObject(Identifier.valueOf(ctt._typeId), true);
 		} catch (final ApplicationException ae) {
 			throw new IdlConversionException(ae);
 		}

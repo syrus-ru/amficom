@@ -1,5 +1,5 @@
 /*-
- * $Id: Port.java,v 1.115 2006/06/02 17:23:22 bass Exp $
+ * $Id: Port.java,v 1.116 2006/06/06 11:31:16 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,8 +45,8 @@ import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.115 $, $Date: 2006/06/02 17:23:22 $
- * @author $Author: bass $
+ * @version $Revision: 1.116 $, $Date: 2006/06/06 11:31:16 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
  */
@@ -121,10 +121,10 @@ public final class Port extends StorableObject
 		try {
 			super.fromIdlTransferable(pt);
 
-			this.type = (PortType) StorableObjectPool.getStorableObject(new Identifier(pt._typeId), true);
+			this.type = (PortType) StorableObjectPool.getStorableObject(Identifier.valueOf(pt._typeId), true);
 
 			this.description = pt.description;
-			this.equipmentId = new Identifier(pt.equipmentId);
+			this.equipmentId = Identifier.valueOf(pt.equipmentId);
 		} catch (final ApplicationException ae) {
 			throw new IdlConversionException(ae);
 		}

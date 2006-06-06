@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoGroup.java,v 1.100 2006/06/02 17:23:20 bass Exp $
+ * $Id: SchemeProtoGroup.java,v 1.101 2006/06/06 11:31:15 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -66,8 +66,8 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
 /**
  * #01 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.100 $, $Date: 2006/06/02 17:23:20 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.101 $, $Date: 2006/06/06 11:31:15 $
  * @module scheme
  */
 public final class SchemeProtoGroup extends StorableObject
@@ -571,8 +571,8 @@ public final class SchemeProtoGroup extends StorableObject
 			super.fromIdlTransferable(schemeProtoGroup);
 			this.name = schemeProtoGroup.name;
 			this.description = schemeProtoGroup.description;
-			this.symbolId = new Identifier(schemeProtoGroup.symbolId);
-			this.parentSchemeProtoGroupId = new Identifier(schemeProtoGroup.parentSchemeProtoGroupId);
+			this.symbolId = Identifier.valueOf(schemeProtoGroup.symbolId);
+			this.parentSchemeProtoGroupId = Identifier.valueOf(schemeProtoGroup.parentSchemeProtoGroupId);
 		}
 	}
 

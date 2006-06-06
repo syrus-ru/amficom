@@ -1,5 +1,5 @@
 /*-
- * $Id: CableLink.java,v 1.22 2006/04/19 13:22:15 bass Exp $
+ * $Id: CableLink.java,v 1.23 2006/06/06 11:31:16 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,8 +31,8 @@ import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.22 $, $Date: 2006/04/19 13:22:15 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.23 $, $Date: 2006/06/06 11:31:16 $
  * @module config
  */
 public final class CableLink extends AbstractLink implements IdlTransferableObjectExt<IdlCableLink> {
@@ -129,7 +129,7 @@ public final class CableLink extends AbstractLink implements IdlTransferableObje
 
 	public synchronized void fromIdlTransferable(final IdlCableLink idlCableLink) throws IdlConversionException {
 		try {
-			super.fromIdlTransferable(idlCableLink, new Identifier(idlCableLink.domainId));
+			super.fromIdlTransferable(idlCableLink, Identifier.valueOf(idlCableLink.domainId));
 
 			this.name = idlCableLink.name;
 			this.description = idlCableLink.description;
@@ -137,7 +137,7 @@ public final class CableLink extends AbstractLink implements IdlTransferableObje
 			this.supplier = idlCableLink.supplier;
 			this.supplierCode = idlCableLink.supplierCode;
 
-			super.type = (CableLinkType) StorableObjectPool.getStorableObject(new Identifier(idlCableLink._typeId), true);
+			super.type = StorableObjectPool.getStorableObject(Identifier.valueOf(idlCableLink._typeId), true);
 		} catch (final ApplicationException ae) {
 			throw new IdlConversionException(ae);
 		}

@@ -1,5 +1,5 @@
 /*
- * $Id: Analysis.java,v 1.94 2006/03/15 14:47:30 bass Exp $
+ * $Id: Analysis.java,v 1.95 2006/06/06 11:31:16 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,8 +32,8 @@ import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.94 $, $Date: 2006/03/15 14:47:30 $
- * @author $Author: bass $
+ * @version $Revision: 1.95 $, $Date: 2006/06/06 11:31:16 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
@@ -90,12 +90,12 @@ public final class Analysis extends Action
 	public synchronized void fromIdlTransferable(final IdlAnalysis at)
 	throws IdlConversionException {
 		try {
-			super.fromIdlTransferable(at, AnalysisType.fromTransferable(at.type), new Identifier(at.monitoredElementId), null);
+			super.fromIdlTransferable(at, AnalysisType.fromTransferable(at.type), Identifier.valueOf(at.monitoredElementId), null);
 	
 			this.name = at.name;
-			super.parentActionId = new Identifier(at.measurementId);
+			super.parentActionId = Identifier.valueOf(at.measurementId);
 	
-			this.criteriaSet = (ParameterSet) StorableObjectPool.getStorableObject(new Identifier(at.criteriaSetId), true);
+			this.criteriaSet = (ParameterSet) StorableObjectPool.getStorableObject(Identifier.valueOf(at.criteriaSetId), true);
 	
 			assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		} catch (final ApplicationException ae) {

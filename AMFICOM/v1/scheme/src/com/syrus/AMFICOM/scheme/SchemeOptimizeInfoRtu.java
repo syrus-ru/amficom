@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfoRtu.java,v 1.45 2006/06/02 17:23:20 bass Exp $
+ * $Id: SchemeOptimizeInfoRtu.java,v 1.46 2006/06/06 11:31:15 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -49,8 +49,8 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * #07 in hierarchy.
  *
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.45 $, $Date: 2006/06/02 17:23:20 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.46 $, $Date: 2006/06/06 11:31:15 $
  * @module scheme
  */
 public final class SchemeOptimizeInfoRtu
@@ -332,7 +332,7 @@ public final class SchemeOptimizeInfoRtu
 			this.name = schemeOptimizeInfoRtu.name;
 			this.priceUsd = schemeOptimizeInfoRtu.priceUsd;
 			this.rangeDb = schemeOptimizeInfoRtu.rangeDb;
-			this.parentSchemeOptimizeInfoId = new Identifier(schemeOptimizeInfoRtu.parentSchemeOptimizeInfoId);
+			this.parentSchemeOptimizeInfoId = Identifier.valueOf(schemeOptimizeInfoRtu.parentSchemeOptimizeInfoId);
 		}
 	}
 

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetup.java,v 1.103 2006/03/15 14:47:30 bass Exp $
+ * $Id: MeasurementSetup.java,v 1.104 2006/06/06 11:31:16 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,8 +39,8 @@ import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.103 $, $Date: 2006/03/15 14:47:30 $
- * @author $Author: bass $
+ * @version $Revision: 1.104 $, $Date: 2006/06/06 11:31:16 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
@@ -167,16 +167,16 @@ public final class MeasurementSetup extends StorableObject
 			this.etalon = null;
 	
 			final Set<Identifier> parameterSetIds = new HashSet<Identifier>(4);
-			parameterSetIds.add(new Identifier(mst.parameterSetId));
-			Identifier psId = new Identifier(mst.criteriaSetId);
+			parameterSetIds.add(Identifier.valueOf(mst.parameterSetId));
+			Identifier psId = Identifier.valueOf(mst.criteriaSetId);
 			if (!psId.isVoid()) {
 				parameterSetIds.add(psId);
 			}
-			psId = new Identifier(mst.thresholdSetId);
+			psId = Identifier.valueOf(mst.thresholdSetId);
 			if (!psId.isVoid()) {
 				parameterSetIds.add(psId);
 			}
-			psId = new Identifier(mst.etalonId);
+			psId = Identifier.valueOf(mst.etalonId);
 			if (!psId.isVoid()) {
 				parameterSetIds.add(psId);
 			}

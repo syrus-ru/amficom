@@ -127,7 +127,7 @@ public final class ImageStorableElement extends StorableElement
 	public synchronized void fromIdlTransferable(final IdlImage idlImage)
 	throws IdlConversionException {
 		super.fromIdlTransferable(idlImage);
-		this.bitmapImageResourceId = new Identifier(idlImage.bitmapImageResource);
+		this.bitmapImageResourceId = Identifier.valueOf(idlImage.bitmapImageResource);
 	}
 	
 	@Override

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.161 2006/06/02 17:23:20 bass Exp $
+ * $Id: SchemeElement.java,v 1.162 2006/06/06 11:31:15 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -98,8 +98,8 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
 /**
  * #04 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.161 $, $Date: 2006/06/02 17:23:20 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.162 $, $Date: 2006/06/06 11:31:15 $
  * @module scheme
  */
 public final class SchemeElement extends AbstractSchemeElement
@@ -1530,14 +1530,14 @@ public final class SchemeElement extends AbstractSchemeElement
 			super.fromIdlTransferable(schemeElement);
 			this.label = schemeElement.label;
 			this.kind = schemeElement.kind.value();
-			this.protoEquipmentId = new Identifier(schemeElement.protoEquipmentId);
-			this.equipmentId = new Identifier(schemeElement.equipmentId);
-			this.kisId = new Identifier(schemeElement.kisId);
-			this.siteNodeId = new Identifier(schemeElement.siteNodeId);
-			this.symbolId = new Identifier(schemeElement.symbolId);
-			this.ugoCellId = new Identifier(schemeElement.ugoCellId);
-			this.schemeCellId = new Identifier(schemeElement.schemeCellId);
-			this.parentSchemeElementId = new Identifier(schemeElement.parentSchemeElementId);
+			this.protoEquipmentId = Identifier.valueOf(schemeElement.protoEquipmentId);
+			this.equipmentId = Identifier.valueOf(schemeElement.equipmentId);
+			this.kisId = Identifier.valueOf(schemeElement.kisId);
+			this.siteNodeId = Identifier.valueOf(schemeElement.siteNodeId);
+			this.symbolId = Identifier.valueOf(schemeElement.symbolId);
+			this.ugoCellId = Identifier.valueOf(schemeElement.ugoCellId);
+			this.schemeCellId = Identifier.valueOf(schemeElement.schemeCellId);
+			this.parentSchemeElementId = Identifier.valueOf(schemeElement.parentSchemeElementId);
 	
 			this.protoEquipmentSet = true;
 		}

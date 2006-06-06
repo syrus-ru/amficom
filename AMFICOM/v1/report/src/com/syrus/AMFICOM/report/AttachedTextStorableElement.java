@@ -150,8 +150,8 @@ public final class AttachedTextStorableElement extends StorableElement
 	throws IdlConversionException {
 		super.fromIdlTransferable(iat);
 		this.text = iat.text;
-		this.verticalAttacherId = new Identifier(iat.verticalAttacherId);
-		this.horizontalAttacherId = new Identifier(iat.horizontalAttacherId);
+		this.verticalAttacherId = Identifier.valueOf(iat.verticalAttacherId);
+		this.horizontalAttacherId = Identifier.valueOf(iat.horizontalAttacherId);
 		this.font = new Font(iat.font.name, iat.font.style, iat.font.size);
 		this.verticalAttachType = TextAttachingType.fromInt(iat.verticalAttachType);
 		this.horizontalAttachType = TextAttachingType.fromInt(iat.horizontalAttachType);

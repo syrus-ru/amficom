@@ -1,5 +1,5 @@
 /*
- * $Id: Result.java,v 1.91 2006/03/15 14:47:30 bass Exp $
+ * $Id: Result.java,v 1.92 2006/06/06 11:31:16 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,8 +35,8 @@ import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.91 $, $Date: 2006/03/15 14:47:30 $
- * @author $Author: bass $
+ * @version $Revision: 1.92 $, $Date: 2006/06/06 11:31:16 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
@@ -92,13 +92,13 @@ public final class Result extends StorableObject
 		this.sort = rt.sort.value();
 		switch (this.sort) {
 			case ResultSort._RESULT_SORT_MEASUREMENT:
-				this.actionId = new Identifier(rt.measurementId);
+				this.actionId = Identifier.valueOf(rt.measurementId);
 				break;
 			case ResultSort._RESULT_SORT_ANALYSIS:
-				this.actionId = new Identifier(rt.analysisId);
+				this.actionId = Identifier.valueOf(rt.analysisId);
 				break;
 			case ResultSort._RESULT_SORT_MODELING:
-				this.actionId = new Identifier(rt.modelingId);
+				this.actionId = Identifier.valueOf(rt.modelingId);
 				break;
 			default:
 				Log.errorMessage("Illegal sort: " + this.sort + " of result '" + super.id + "'");

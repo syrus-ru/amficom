@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeLink.java,v 1.114 2006/06/02 17:23:20 bass Exp $
+ * $Id: SchemeLink.java,v 1.115 2006/06/06 11:31:15 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -76,8 +76,8 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
 /**
  * #12 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.114 $, $Date: 2006/06/02 17:23:20 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.115 $, $Date: 2006/06/06 11:31:15 $
  * @module scheme
  */
 public final class SchemeLink extends AbstractSchemeLink
@@ -1248,9 +1248,9 @@ public final class SchemeLink extends AbstractSchemeLink
 					schemeLink.linkId,
 					schemeLink.sourceSchemePortId,
 					schemeLink.targetSchemePortId);
-			this.siteNodeId = new Identifier(schemeLink.siteNodeId);
-			this.parentSchemeElementId = new Identifier(schemeLink.parentSchemeElementId);
-			this.parentSchemeProtoElementId = new Identifier(schemeLink.parentSchemeProtoElementId);
+			this.siteNodeId = Identifier.valueOf(schemeLink.siteNodeId);
+			this.parentSchemeElementId = Identifier.valueOf(schemeLink.parentSchemeElementId);
+			this.parentSchemeProtoElementId = Identifier.valueOf(schemeLink.parentSchemeProtoElementId);
 		}
 
 		assert this.isValid() : OBJECT_STATE_ILLEGAL;

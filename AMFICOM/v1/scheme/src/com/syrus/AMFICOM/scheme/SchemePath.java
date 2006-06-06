@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePath.java,v 1.128 2006/06/02 17:23:20 bass Exp $
+ * $Id: SchemePath.java,v 1.129 2006/06/06 11:31:15 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -72,8 +72,8 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
 /**
  * #16 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.128 $, $Date: 2006/06/02 17:23:20 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.129 $, $Date: 2006/06/06 11:31:15 $
  * @module scheme
  */
 public final class SchemePath extends StorableObject
@@ -463,8 +463,8 @@ public final class SchemePath extends StorableObject
 			super.fromIdlTransferable(schemePath);
 			this.name = schemePath.name;
 			this.description = schemePath.description;
-			this.transmissionPathId = new Identifier(schemePath.transmissionPathId);
-			this.parentSchemeMonitoringSolutionId = new Identifier(schemePath.parentSchemeMonitoringSolutionId);
+			this.transmissionPathId = Identifier.valueOf(schemePath.transmissionPathId);
+			this.parentSchemeMonitoringSolutionId = Identifier.valueOf(schemePath.parentSchemeMonitoringSolutionId);
 		}
 
 		assert this.isValid() : OBJECT_STATE_ILLEGAL;

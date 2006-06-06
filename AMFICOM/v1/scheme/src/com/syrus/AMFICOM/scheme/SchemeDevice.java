@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDevice.java,v 1.125 2006/06/02 17:23:20 bass Exp $
+ * $Id: SchemeDevice.java,v 1.126 2006/06/06 11:31:15 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -79,8 +79,8 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
 /**
  * #09 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.125 $, $Date: 2006/06/02 17:23:20 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.126 $, $Date: 2006/06/06 11:31:15 $
  * @module scheme
  */
 public final class SchemeDevice
@@ -802,8 +802,8 @@ public final class SchemeDevice
 			super.fromIdlTransferable(schemeDevice);
 			this.name = schemeDevice.name;
 			this.description = schemeDevice.description;
-			this.parentSchemeProtoElementId = new Identifier(schemeDevice.parentSchemeProtoElementId);
-			this.parentSchemeElementId = new Identifier(schemeDevice.parentSchemeElementId);
+			this.parentSchemeProtoElementId = Identifier.valueOf(schemeDevice.parentSchemeProtoElementId);
+			this.parentSchemeElementId = Identifier.valueOf(schemeDevice.parentSchemeElementId);
 		}
 
 		assert this.isValid() : OBJECT_STATE_ILLEGAL;

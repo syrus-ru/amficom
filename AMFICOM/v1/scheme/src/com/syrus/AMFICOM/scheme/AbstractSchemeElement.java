@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemeElement.java,v 1.84 2006/06/02 17:23:20 bass Exp $
+ * $Id: AbstractSchemeElement.java,v 1.85 2006/06/06 11:31:15 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,8 +45,8 @@ import com.syrus.util.transport.xml.XmlConversionException;
  * generated from IDL files to compile cleanly. Use other implementations of
  * {@link AbstractSchemeElement}instead.
  *
- * @author $Author: bass $
- * @version $Revision: 1.84 $, $Date: 2006/06/02 17:23:20 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.85 $, $Date: 2006/06/06 11:31:15 $
  * @module scheme
  */
 public abstract class AbstractSchemeElement
@@ -235,7 +235,7 @@ public abstract class AbstractSchemeElement
 		super.fromIdlTransferable(abstractSchemeElement);
 		this.name = abstractSchemeElement.name;
 		this.description = abstractSchemeElement.description;
-		this.parentSchemeId = new Identifier(abstractSchemeElement.parentSchemeId);
+		this.parentSchemeId = Identifier.valueOf(abstractSchemeElement.parentSchemeId);
 	}
 
 	/**

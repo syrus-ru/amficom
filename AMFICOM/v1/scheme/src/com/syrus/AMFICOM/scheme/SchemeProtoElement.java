@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElement.java,v 1.138 2006/06/02 17:23:20 bass Exp $
+ * $Id: SchemeProtoElement.java,v 1.139 2006/06/06 11:31:15 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -85,8 +85,8 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
 /**
  * #02 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.138 $, $Date: 2006/06/02 17:23:20 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.139 $, $Date: 2006/06/06 11:31:15 $
  * @module scheme
  */
 public final class SchemeProtoElement
@@ -1214,12 +1214,12 @@ public final class SchemeProtoElement
 			this.name = schemeProtoElement.name;
 			this.description = schemeProtoElement.description;
 			this.label = schemeProtoElement.label;
-			this.protoEquipmentId = new Identifier(schemeProtoElement.protoEquipmentId);
-			this.symbolId = new Identifier(schemeProtoElement.symbolId);
-			this.ugoCellId = new Identifier(schemeProtoElement.ugoCellId);
-			this.schemeCellId = new Identifier(schemeProtoElement.schemeCellId);
-			this.parentSchemeProtoGroupId = new Identifier(schemeProtoElement.parentSchemeProtoGroupId);
-			this.parentSchemeProtoElementId = new Identifier(schemeProtoElement.parentSchemeProtoElementId);
+			this.protoEquipmentId = Identifier.valueOf(schemeProtoElement.protoEquipmentId);
+			this.symbolId = Identifier.valueOf(schemeProtoElement.symbolId);
+			this.ugoCellId = Identifier.valueOf(schemeProtoElement.ugoCellId);
+			this.schemeCellId = Identifier.valueOf(schemeProtoElement.schemeCellId);
+			this.parentSchemeProtoGroupId = Identifier.valueOf(schemeProtoElement.parentSchemeProtoGroupId);
+			this.parentSchemeProtoElementId = Identifier.valueOf(schemeProtoElement.parentSchemeProtoElementId);
 		}
 
 		assert this.isValid() : OBJECT_STATE_ILLEGAL;

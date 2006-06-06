@@ -1,5 +1,5 @@
 /*-
- * $Id: CableLinkType.java,v 1.96 2006/04/19 13:22:15 bass Exp $
+ * $Id: CableLinkType.java,v 1.97 2006/06/06 11:31:16 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -60,8 +60,8 @@ import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
- * @version $Revision: 1.96 $, $Date: 2006/04/19 13:22:15 $
- * @author $Author: bass $
+ * @version $Revision: 1.97 $, $Date: 2006/06/06 11:31:16 $
+ * @author $Author: arseniy $
  * @module config
  */
 public final class CableLinkType extends AbstractLinkType
@@ -269,7 +269,7 @@ public final class CableLinkType extends AbstractLinkType
 		this.sort = cltt.sort.value();
 		this.manufacturer = cltt.manufacturer;
 		this.manufacturerCode = cltt.manufacturerCode;
-		this.imageId = new Identifier(cltt.imageId);
+		this.imageId = Identifier.valueOf(cltt.imageId);
 		this.name = cltt.name;
 
 		assert this.isValid() : OBJECT_STATE_ILLEGAL;

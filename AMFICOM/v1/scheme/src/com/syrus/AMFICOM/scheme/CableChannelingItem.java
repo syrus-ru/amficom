@@ -1,5 +1,5 @@
 /*-
- * $Id: CableChannelingItem.java,v 1.94 2006/06/02 17:23:20 bass Exp $
+ * $Id: CableChannelingItem.java,v 1.95 2006/06/06 11:31:15 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -66,8 +66,8 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
 /**
  * #15 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.94 $, $Date: 2006/06/02 17:23:20 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.95 $, $Date: 2006/06/06 11:31:15 $
  * @module scheme
  */
 public final class CableChannelingItem
@@ -801,11 +801,11 @@ public final class CableChannelingItem
 				this.rowX = cableChannelingItem.rowX;
 				this.placeY = cableChannelingItem.placeY;
 				this.sequentialNumber = cableChannelingItem.sequentialNumber;
-				this.physicalLinkId = new Identifier(cableChannelingItem.physicalLinkId);
+				this.physicalLinkId = Identifier.valueOf(cableChannelingItem.physicalLinkId);
 				this.setPipeBlockId0(Identifier.valueOf(cableChannelingItem.pipeBlockId));
-				this.startSiteNodeId = new Identifier(cableChannelingItem.startSiteNodeId);
-				this.endSiteNodeId = new Identifier(cableChannelingItem.endSiteNodeId);
-				this.parentSchemeCableLinkId = new Identifier(cableChannelingItem.parentSchemeCableLinkId);
+				this.startSiteNodeId = Identifier.valueOf(cableChannelingItem.startSiteNodeId);
+				this.endSiteNodeId = Identifier.valueOf(cableChannelingItem.endSiteNodeId);
+				this.parentSchemeCableLinkId = Identifier.valueOf(cableChannelingItem.parentSchemeCableLinkId);
 			} catch (final ApplicationException ae) {
 				throw new IdlConversionException(ae);
 			}

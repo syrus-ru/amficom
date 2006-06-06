@@ -1,5 +1,5 @@
 /*
- * $Id: ServerProcess.java,v 1.37 2006/06/05 13:40:59 arseniy Exp $
+ * $Id: ServerProcess.java,v 1.38 2006/06/06 11:31:15 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.37 $, $Date: 2006/06/05 13:40:59 $
+ * @version $Revision: 1.38 $, $Date: 2006/06/06 11:31:15 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module administration
@@ -93,8 +93,8 @@ public final class ServerProcess extends StorableObject
 	throws IdlConversionException {
 		super.fromIdlTransferable(spt);
 		this.codename = spt.codename;
-		this.serverId = new Identifier(spt.serverId);
-		this.userId = new Identifier(spt.userId);
+		this.serverId = Identifier.valueOf(spt.serverId);
+		this.userId = Identifier.valueOf(spt.userId);
 		this.description = spt.description;
 		
 		assert this.isValid() : OBJECT_STATE_ILLEGAL;

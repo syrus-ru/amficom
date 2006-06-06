@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElement.java,v 1.18 2006/03/15 14:47:30 bass Exp $
+ * $Id: MonitoredElement.java,v 1.19 2006/06/06 11:31:16 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,8 +34,8 @@ import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2006/03/15 14:47:30 $
- * @author $Author: bass $
+ * @version $Revision: 1.19 $, $Date: 2006/06/06 11:31:16 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
@@ -132,8 +132,8 @@ public final class MonitoredElement extends DomainMember
 
 	public synchronized void fromIdlTransferable(final IdlMonitoredElement met)
 	throws IdlConversionException {
-		super.fromIdlTransferable(met, new Identifier(met.domainId));
-		this.measurementPortId = new Identifier(met.measurementPortId);
+		super.fromIdlTransferable(met, Identifier.valueOf(met.domainId));
+		this.measurementPortId = Identifier.valueOf(met.measurementPortId);
 		this.sort = met.sort.value();
 		this.localAddress = met.localAddress;
 

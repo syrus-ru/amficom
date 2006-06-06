@@ -1,5 +1,5 @@
 /*-
-* $Id: LayoutItem.java,v 1.23 2006/03/15 14:47:31 bass Exp $
+* $Id: LayoutItem.java,v 1.24 2006/06/06 11:33:31 arseniy Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -39,8 +39,8 @@ import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.23 $
- * @author $Author: bass $
+ * @version $Revision: 1.24 $
+ * @author $Author: arseniy $
  * @module resource
  */
 
@@ -136,7 +136,7 @@ public final class LayoutItem extends StorableObject
 	throws IdlConversionException {
 		super.fromIdlTransferable(ili);
 		
-		this.parentId = new Identifier(ili.parentId);
+		this.parentId = Identifier.valueOf(ili.parentId);
 		this.layoutName = ili.layoutName;
 		this.name = ili.name;
 

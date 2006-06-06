@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableThread.java,v 1.120 2006/06/02 17:23:20 bass Exp $
+ * $Id: SchemeCableThread.java,v 1.121 2006/06/06 11:31:15 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -77,8 +77,8 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
 /**
  * #14 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.120 $, $Date: 2006/06/02 17:23:20 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.121 $, $Date: 2006/06/06 11:31:15 $
  * @module scheme
  */
 public final class SchemeCableThread
@@ -846,11 +846,11 @@ public final class SchemeCableThread
 			super.fromIdlTransferable(schemeCableThread);
 			this.name = schemeCableThread.name;
 			this.description = schemeCableThread.description;
-			this.linkTypeId = new Identifier(schemeCableThread.linkTypeId);
-			this.linkId = new Identifier(schemeCableThread.linkId);
-			this.sourceSchemePortId = new Identifier(schemeCableThread.sourceSchemePortId);
-			this.targetSchemePortId = new Identifier(schemeCableThread.targetSchemePortId);
-			this.parentSchemeCableLinkId = new Identifier(schemeCableThread.parentSchemeCableLinkId);
+			this.linkTypeId = Identifier.valueOf(schemeCableThread.linkTypeId);
+			this.linkId = Identifier.valueOf(schemeCableThread.linkId);
+			this.sourceSchemePortId = Identifier.valueOf(schemeCableThread.sourceSchemePortId);
+			this.targetSchemePortId = Identifier.valueOf(schemeCableThread.targetSchemePortId);
+			this.parentSchemeCableLinkId = Identifier.valueOf(schemeCableThread.parentSchemeCableLinkId);
 
 			this.linkTypeSet = true;
 		}

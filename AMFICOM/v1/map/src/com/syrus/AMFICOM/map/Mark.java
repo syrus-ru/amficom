@@ -1,5 +1,5 @@
 /*-
- * $Id: Mark.java,v 1.75 2006/03/15 14:47:33 bass Exp $
+ * $Id: Mark.java,v 1.76 2006/06/06 11:33:48 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -42,8 +42,8 @@ import com.syrus.util.transport.idl.IdlTransferableObjectExt;
  * в связи с чем методы класса {@link AbstractNode}, работающие с линиями и
  * фрагментами линий, переопределены и бросают
  * <code>{@link UnsupportedOperationException}</code>.
- * @author $Author: bass $
- * @version $Revision: 1.75 $, $Date: 2006/03/15 14:47:33 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.76 $, $Date: 2006/06/06 11:33:48 $
  * @module map
  */
 public final class Mark extends AbstractNode
@@ -189,7 +189,7 @@ public final class Mark extends AbstractNode
 			this.city = idlMark.city;
 			this.street = idlMark.street;
 			this.building = idlMark.building;
-			this.physicalLink = StorableObjectPool.getStorableObject(new Identifier(idlMark.physicalLinkId), true);
+			this.physicalLink = StorableObjectPool.getStorableObject(Identifier.valueOf(idlMark.physicalLinkId), true);
 	
 			assert this.isValid() : OBJECT_STATE_ILLEGAL;
 		} catch (final ApplicationException ae) {

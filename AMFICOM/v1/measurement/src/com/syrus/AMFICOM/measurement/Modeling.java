@@ -1,5 +1,5 @@
 /*
- * $Id: Modeling.java,v 1.71 2006/03/15 14:47:30 bass Exp $
+ * $Id: Modeling.java,v 1.72 2006/06/06 11:31:16 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,8 +34,8 @@ import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.71 $, $Date: 2006/03/15 14:47:30 $
- * @author $Author: bass $
+ * @version $Revision: 1.72 $, $Date: 2006/06/06 11:31:16 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
@@ -90,9 +90,9 @@ public final class Modeling extends Action
 	public synchronized void fromIdlTransferable(final IdlModeling mt)
 	throws IdlConversionException {
 		try {
-			super.fromIdlTransferable(mt, ModelingType.fromTransferable(mt.type), new Identifier(mt.monitoredElementId), VOID_IDENTIFIER);
+			super.fromIdlTransferable(mt, ModelingType.fromTransferable(mt.type), Identifier.valueOf(mt.monitoredElementId), VOID_IDENTIFIER);
 	
-			this.argumentSet = (ParameterSet) StorableObjectPool.getStorableObject(new Identifier(mt.argumentSetId), true);
+			this.argumentSet = (ParameterSet) StorableObjectPool.getStorableObject(Identifier.valueOf(mt.argumentSetId), true);
 	
 			this.name = mt.name;
 			

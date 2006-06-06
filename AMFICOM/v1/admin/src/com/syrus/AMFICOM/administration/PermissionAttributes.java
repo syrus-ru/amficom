@@ -1,5 +1,5 @@
 /*-
-* $Id: PermissionAttributes.java,v 1.49 2006/06/05 13:40:59 arseniy Exp $
+* $Id: PermissionAttributes.java,v 1.50 2006/06/06 11:31:15 arseniy Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -41,7 +41,7 @@ import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 
 /**
- * @version $Revision: 1.49 $, $Date: 2006/06/05 13:40:59 $
+ * @version $Revision: 1.50 $, $Date: 2006/06/06 11:31:15 $
  * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module administration
@@ -715,8 +715,8 @@ public final class PermissionAttributes extends StorableObject
 	public synchronized void fromIdlTransferable(final IdlPermissionAttributes pat)
 	throws IdlConversionException {
 		super.fromIdlTransferable(pat);
-		this.domainId = new Identifier(pat.domainId);
-		this.parentId = new Identifier(pat.userId);
+		this.domainId = Identifier.valueOf(pat.domainId);
+		this.parentId = Identifier.valueOf(pat.userId);
 		this.module = Module.valueOf(pat._module);
 		if (this.permissions == null) {
 			this.permissions = new BitSet();

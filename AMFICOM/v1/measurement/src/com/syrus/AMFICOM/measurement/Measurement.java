@@ -1,5 +1,5 @@
 /*
- * $Id: Measurement.java,v 1.106 2006/03/30 12:10:30 bass Exp $
+ * $Id: Measurement.java,v 1.107 2006/06/06 11:31:16 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,8 +36,8 @@ import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.106 $, $Date: 2006/03/30 12:10:30 $
- * @author $Author: bass $
+ * @version $Revision: 1.107 $, $Date: 2006/06/06 11:31:16 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
@@ -111,16 +111,16 @@ public final class Measurement extends Action
 	public synchronized void fromIdlTransferable(final IdlMeasurement mt)
 	throws IdlConversionException {
 		try {
-			super.fromIdlTransferable(mt, MeasurementType.fromTransferable(mt.type), new Identifier(mt.monitoredElementId), VOID_IDENTIFIER);
+			super.fromIdlTransferable(mt, MeasurementType.fromTransferable(mt.type), Identifier.valueOf(mt.monitoredElementId), VOID_IDENTIFIER);
 	
-			this.setup = (MeasurementSetup) StorableObjectPool.getStorableObject(new Identifier(mt.setupId), true);
+			this.setup = (MeasurementSetup) StorableObjectPool.getStorableObject(Identifier.valueOf(mt.setupId), true);
 	
 			this.name = mt.name;
 			this.startTime = new Date(mt.startTime);
 			this.duration = mt.duration;
 			this.status = mt.status.value();
 			this.localAddress = mt.localAddress;
-			this.testId = new Identifier(mt.testId);
+			this.testId = Identifier.valueOf(mt.testId);
 	
 			assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		} catch (final ApplicationException ae) {

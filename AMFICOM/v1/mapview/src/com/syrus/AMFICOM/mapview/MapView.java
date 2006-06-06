@@ -1,5 +1,5 @@
 /*
-* $Id: MapView.java,v 1.84 2006/03/15 14:47:33 bass Exp $
+* $Id: MapView.java,v 1.85 2006/06/06 11:33:31 arseniy Exp $
 *
 * Copyright ї 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -61,9 +61,9 @@ import com.syrus.util.transport.idl.IdlTransferableObjectExt;
  * <br>&#9;- набор физических схем {@link Scheme}, которые проложены по данной
  * топологической схеме
  * 
- * @author $Author: bass $
+ * @author $Author: arseniy $
  * @author Andrei Kroupennikov
- * @version $Revision: 1.84 $, $Date: 2006/03/15 14:47:33 $
+ * @version $Revision: 1.85 $, $Date: 2006/06/06 11:33:31 $
  * @module mapview
  */
 public final class MapView extends DomainMember implements Describable,
@@ -195,7 +195,7 @@ public final class MapView extends DomainMember implements Describable,
 	public synchronized void fromIdlTransferable(final IdlMapView mvt)
 	throws IdlConversionException {
 		try {
-			super.fromIdlTransferable(mvt, new Identifier(mvt.domainId));
+			super.fromIdlTransferable(mvt, Identifier.valueOf(mvt.domainId));
 	
 			this.name = mvt.name;
 			this.description = mvt.description;

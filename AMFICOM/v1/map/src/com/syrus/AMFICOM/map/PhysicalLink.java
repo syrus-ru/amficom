@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLink.java,v 1.155 2006/03/15 14:47:33 bass Exp $
+ * $Id: PhysicalLink.java,v 1.156 2006/06/06 11:33:48 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -78,8 +78,8 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * Предуствновленными являются  два типа -
  * тоннель (<code>{@link PhysicalLinkType#DEFAULT_TUNNEL}</code>)
  * и коллектор (<code>{@link PhysicalLinkType#DEFAULT_COLLECTOR}</code>).
- * @author $Author: bass $
- * @version $Revision: 1.155 $, $Date: 2006/03/15 14:47:33 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.156 $, $Date: 2006/06/06 11:33:48 $
  * @module map
  */
 public class PhysicalLink extends StorableObject
@@ -287,10 +287,10 @@ public class PhysicalLink extends StorableObject
 			this.street = plt.street;
 			this.building = plt.building;
 	
-			this.physicalLinkType = StorableObjectPool.getStorableObject(new Identifier(plt.physicalLinkTypeId), true);
+			this.physicalLinkType = StorableObjectPool.getStorableObject(Identifier.valueOf(plt.physicalLinkTypeId), true);
 	
-			this.startNodeId = new Identifier(plt.startNodeId);
-			this.endNodeId = new Identifier(plt.endNodeId);
+			this.startNodeId = Identifier.valueOf(plt.startNodeId);
+			this.endNodeId = Identifier.valueOf(plt.endNodeId);
 			
 			assert !this.startNodeId.isVoid() : NON_VOID_EXPECTED; 
 			assert !this.endNodeId.isVoid() : NON_VOID_EXPECTED;

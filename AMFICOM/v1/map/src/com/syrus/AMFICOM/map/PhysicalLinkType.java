@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLinkType.java,v 1.117 2006/03/15 14:47:33 bass Exp $
+ * $Id: PhysicalLinkType.java,v 1.118 2006/06/06 11:33:48 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -63,8 +63,8 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * типов линий, которые определяются полем {@link #codename}, соответствующим
  * какому-либо значению {@link #DEFAULT_TUNNEL}, {@link #DEFAULT_COLLECTOR}, {@link #DEFAULT_INDOOR},
  * {@link #DEFAULT_SUBMARINE}, {@link #DEFAULT_OVERHEAD}, {@link #DEFAULT_UNBOUND}
- * @author $Author: bass $
- * @version $Revision: 1.117 $, $Date: 2006/03/15 14:47:33 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.118 $, $Date: 2006/06/06 11:33:48 $
  * @module map
  */
 public final class PhysicalLinkType extends StorableObjectType 
@@ -190,7 +190,7 @@ public final class PhysicalLinkType extends StorableObjectType
 		this.sort = pltt.sort;
 		this.bindingDimension = new IntDimension(pltt.dimensionX, pltt.dimensionY);
 		this.topological = pltt.topological;
-		this.mapLibraryId = new Identifier(pltt.mapLibraryId);
+		this.mapLibraryId = Identifier.valueOf(pltt.mapLibraryId);
 	}
 
 	@Override

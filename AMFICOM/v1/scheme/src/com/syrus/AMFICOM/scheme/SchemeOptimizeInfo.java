@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfo.java,v 1.90 2006/06/02 17:23:20 bass Exp $
+ * $Id: SchemeOptimizeInfo.java,v 1.91 2006/06/06 11:31:15 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -54,8 +54,8 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
 /**
  * #05 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.90 $, $Date: 2006/06/02 17:23:20 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.91 $, $Date: 2006/06/06 11:31:15 $
  * @module scheme
  */
 public final class SchemeOptimizeInfo extends StorableObject
@@ -671,7 +671,7 @@ public final class SchemeOptimizeInfo extends StorableObject
 			this.nodesSpliceProb = schemeOptimizeInfo.nodesSpliceProb;
 			this.nodesCutProb = schemeOptimizeInfo.nodesCutProb;
 			this.survivorRate = schemeOptimizeInfo.survivorRate;
-			this.parentSchemeId = new Identifier(schemeOptimizeInfo.parentSchemeId);
+			this.parentSchemeId = Identifier.valueOf(schemeOptimizeInfo.parentSchemeId);
 		}
 	}
 

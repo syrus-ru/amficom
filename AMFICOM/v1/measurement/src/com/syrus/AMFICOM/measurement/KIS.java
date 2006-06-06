@@ -1,5 +1,5 @@
 /*
- * $Id: KIS.java,v 1.17 2006/03/15 14:47:30 bass Exp $
+ * $Id: KIS.java,v 1.18 2006/06/06 11:31:16 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,8 +36,8 @@ import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2006/03/15 14:47:30 $
- * @author $Author: bass $
+ * @version $Revision: 1.18 $, $Date: 2006/06/06 11:31:16 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
@@ -134,10 +134,10 @@ public final class KIS extends DomainMember
 
 	public synchronized void fromIdlTransferable(final IdlKIS kt)
 	throws IdlConversionException {
-		super.fromIdlTransferable(kt, new Identifier(kt.domainId));
+		super.fromIdlTransferable(kt, Identifier.valueOf(kt.domainId));
 
-		this.equipmentId = new Identifier(kt.equipmentId);
-		this.mcmId = new Identifier(kt.mcmId);
+		this.equipmentId = Identifier.valueOf(kt.equipmentId);
+		this.mcmId = Identifier.valueOf(kt.mcmId);
 		this.name = kt.name;
 		this.description = kt.description;
 		this.hostname = kt.hostname;

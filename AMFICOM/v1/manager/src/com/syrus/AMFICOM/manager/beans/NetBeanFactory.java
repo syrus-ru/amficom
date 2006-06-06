@@ -1,5 +1,5 @@
 /*-
- * $Id: NetBeanFactory.java,v 1.5 2005/12/06 15:14:39 bob Exp $
+ * $Id: NetBeanFactory.java,v 1.6 2006/06/06 11:34:18 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,8 +20,8 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/12/06 15:14:39 $
- * @author $Author: bob $
+ * @version $Revision: 1.6 $, $Date: 2006/06/06 11:34:18 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module manager
  */
@@ -48,7 +48,7 @@ public final class NetBeanFactory extends AbstractBeanFactory<NonStorableBean> {
 	throws ApplicationException {
 		++super.count;
 		assert Log.debugMessage(codename, Log.DEBUGLEVEL10);
-		final Identifier domainId = new Identifier(codename.replaceFirst(NET_CODENAME, ""));
+		final Identifier domainId = Identifier.valueOf(codename.replaceFirst(NET_CODENAME, ""));
 		final Domain domain = StorableObjectPool.getStorableObject(domainId, true); 
 		final NonStorableBean bean = new NetBean(domain);
 		bean.setManagerMainFrame(super.graphText);

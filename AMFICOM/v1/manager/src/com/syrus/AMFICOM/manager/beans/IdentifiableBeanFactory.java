@@ -1,5 +1,5 @@
 /*-
-* $Id: IdentifiableBeanFactory.java,v 1.1 2005/11/17 09:00:32 bob Exp $
+* $Id: IdentifiableBeanFactory.java,v 1.2 2006/06/06 11:34:18 arseniy Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -13,8 +13,8 @@ import com.syrus.AMFICOM.general.Identifier;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/11/17 09:00:32 $
- * @author $Author: bob $
+ * @version $Revision: 1.2 $, $Date: 2006/06/06 11:34:18 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module manager
  */
@@ -27,7 +27,7 @@ public abstract class IdentifiableBeanFactory<T extends AbstractBean> extends Ab
 	
 	@Override
 	public T createBean(final String codename) throws ApplicationException {
-		return this.createBean(new Identifier(codename));
+		return this.createBean(Identifier.valueOf(codename));
 	}
 	
 	protected abstract T createBean(final Identifier id) throws ApplicationException;

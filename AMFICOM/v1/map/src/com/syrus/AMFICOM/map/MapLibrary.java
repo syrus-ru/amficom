@@ -1,5 +1,5 @@
 /*-
- * $Id: MapLibrary.java,v 1.47 2006/03/15 14:47:33 bass Exp $
+ * $Id: MapLibrary.java,v 1.48 2006/06/06 11:33:48 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -63,8 +63,8 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
 
 
 /**
- * @version $Revision: 1.47 $, $Date: 2006/03/15 14:47:33 $
- * @author $Author: bass $
+ * @version $Revision: 1.48 $, $Date: 2006/06/06 11:33:48 $
+ * @author $Author: arseniy $
  * @module map
  */
 public final class MapLibrary extends StorableObject
@@ -185,7 +185,7 @@ public final class MapLibrary extends StorableObject
 		this.codename = mlt.codename;
 		this.description = mlt.description;
 
-		this.parentMapLibraryId = new Identifier(mlt.parentMapLibraryId);
+		this.parentMapLibraryId = Identifier.valueOf(mlt.parentMapLibraryId);
 	}
 
 	@Override
