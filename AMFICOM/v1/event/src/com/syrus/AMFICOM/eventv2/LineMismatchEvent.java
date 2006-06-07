@@ -1,5 +1,5 @@
 /*-
- * $Id: LineMismatchEvent.java,v 1.23 2006/06/02 08:56:32 bass Exp $
+ * $Id: LineMismatchEvent.java,v 1.24 2006/06/07 09:39:17 arseniy Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,8 +35,8 @@ import com.syrus.util.transport.idl.IdlTransferableObjectExt;
  * {@link ReflectogramMismatchEvent}.
  * 
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.23 $, $Date: 2006/06/02 08:56:32 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.24 $, $Date: 2006/06/07 09:39:17 $
  * @module event
  */
 public interface LineMismatchEvent
@@ -275,9 +275,6 @@ public interface LineMismatchEvent
 	 * XTRA_}&raquo; prefix.
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: bass $
-	 * @version $Revision: 1.23 $, $Date: 2006/06/02 08:56:32 $
-	 * @module event
 	 */
 	enum AlarmStatus {
 		/**
@@ -596,10 +593,7 @@ public interface LineMismatchEvent
 		 * XTRA_CLOSED;</pre>
 		 *
 		 * @author Andrew ``Bass'' Shcheglov
-		 * @author $Author: bass $
-		 * @version $Revision: 1.23 $, $Date: 2006/06/02 08:56:32 $
 		 * @see AllowedSuccessors
-		 * @module event
 		 */
 		@Retention(RUNTIME)
 		@Target(FIELD)
@@ -609,10 +603,7 @@ public interface LineMismatchEvent
 
 		/**
 		 * @author Andrew ``Bass'' Shcheglov
-		 * @author $Author: bass $
-		 * @version $Revision: 1.23 $, $Date: 2006/06/02 08:56:32 $
 		 * @see AllowedPredecessors
-		 * @module event
 		 */
 		@Retention(RUNTIME)
 		@Target(FIELD)
@@ -624,9 +615,6 @@ public interface LineMismatchEvent
 		 * A mutable holder for immutable enum instances.
 		 *
 		 * @author Andrew ``Bass'' Shcheglov
-		 * @author $Author: bass $
-		 * @version $Revision: 1.23 $, $Date: 2006/06/02 08:56:32 $
-		 * @module event
 		 */
 		public static final class Proxy
 				implements IdlTransferableObjectExt<IdlAlarmStatus> {
