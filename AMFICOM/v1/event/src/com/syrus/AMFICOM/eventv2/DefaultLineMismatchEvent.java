@@ -1,5 +1,5 @@
 /*-
- * $Id: DefaultLineMismatchEvent.java,v 1.12 2006/06/02 08:56:32 bass Exp $
+ * $Id: DefaultLineMismatchEvent.java,v 1.13 2006/06/07 09:31:06 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,8 +28,8 @@ import com.syrus.util.transport.idl.IdlConversionException;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.12 $, $Date: 2006/06/02 08:56:32 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.13 $, $Date: 2006/06/07 09:31:06 $
  * @module event
  */
 public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
@@ -227,6 +227,7 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 	 * @param mismatchOpticalDistance
 	 * @param mismatchPhysicalDistance
 	 * @param plainTextMessage
+	 * @param richTextMessage
 	 * @param reflectogramMismatchEventId
 	 * @throws CreateObjectException
 	 */
