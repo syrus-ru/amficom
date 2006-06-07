@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectVersion.java,v 1.13 2006/06/06 15:28:21 arseniy Exp $
+ * $Id: StorableObjectVersion.java,v 1.14 2006/06/07 08:18:50 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,7 +11,7 @@ package com.syrus.AMFICOM.general;
 import java.io.Serializable;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2006/06/06 15:28:21 $
+ * @version $Revision: 1.14 $, $Date: 2006/06/07 08:18:50 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -100,9 +100,6 @@ public final class StorableObjectVersion implements Serializable, Comparable<Sto
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @спизжено_у Josh Bloch
-	 * @author $Author: arseniy $
-	 * @version $Revision: 1.13 $, $Date: 2006/06/06 15:28:21 $
-	 * @module general
 	 */
 	private static class VersionCache {
 		private VersionCache() {
