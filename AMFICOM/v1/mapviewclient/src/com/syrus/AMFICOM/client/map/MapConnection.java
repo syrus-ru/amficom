@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapConnection.java,v 1.23 2006/02/15 11:14:00 stas Exp $$
+ * $$Id: MapConnection.java,v 1.24 2006/06/07 07:44:42 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import java.util.logging.Level;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2006/02/15 11:14:00 $
+ * @version $Revision: 1.24 $, $Date: 2006/06/07 07:44:42 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -28,26 +28,30 @@ public abstract class MapConnection {
 	
 	private static Map<String,Boolean> LAYER_SEARCHABILITIES = new HashMap<String,Boolean>();
 	static{
-		LAYER_SEARCHABILITIES.put("Msk_Bridges_a", Boolean.valueOf(true)); //$NON-NLS-1$
-		LAYER_SEARCHABILITIES.put("Msk_Cemetry_a", Boolean.valueOf(true));		 //$NON-NLS-1$
+		LAYER_SEARCHABILITIES.put("selectionToolLayer", Boolean.valueOf(false)); //$NON-NLS-1$
+		LAYER_SEARCHABILITIES.put("Msk_Bridges_a", Boolean.valueOf(false)); //$NON-NLS-1$
+		LAYER_SEARCHABILITIES.put("Msk_Cemetry_a", Boolean.valueOf(false));		 //$NON-NLS-1$
 		LAYER_SEARCHABILITIES.put("Msk_house_a", Boolean.valueOf(false)); //$NON-NLS-1$
-		LAYER_SEARCHABILITIES.put("Msk_house_p", Boolean.valueOf(false)); //$NON-NLS-1$
-		LAYER_SEARCHABILITIES.put("Msk_hydrography_la", Boolean.valueOf(true)); //$NON-NLS-1$
-		LAYER_SEARCHABILITIES.put("Msk_metro_title_l", Boolean.valueOf(true)); //$NON-NLS-1$
+		LAYER_SEARCHABILITIES.put("Msk_house_p", Boolean.valueOf(true)); //$NON-NLS-1$
+		LAYER_SEARCHABILITIES.put("Msk_hydrography_la", Boolean.valueOf(false)); //$NON-NLS-1$
+		LAYER_SEARCHABILITIES.put("Msk_metro_title_l", Boolean.valueOf(false)); //$NON-NLS-1$
 		LAYER_SEARCHABILITIES.put("Msk_metro_title_p", Boolean.valueOf(true)); //$NON-NLS-1$
-		LAYER_SEARCHABILITIES.put("Msk_municip_a", Boolean.valueOf(true)); //$NON-NLS-1$
-		LAYER_SEARCHABILITIES.put("Msk_quarter_a", Boolean.valueOf(true)); //$NON-NLS-1$
-		LAYER_SEARCHABILITIES.put("Msk_railway_l", Boolean.valueOf(true)); //$NON-NLS-1$
+		LAYER_SEARCHABILITIES.put("Msk_metro_p", Boolean.valueOf(false)); //$NON-NLS-1$
+		LAYER_SEARCHABILITIES.put("Msk_municip_a", Boolean.valueOf(false)); //$NON-NLS-1$
+		LAYER_SEARCHABILITIES.put("Msk_quarter_a", Boolean.valueOf(false)); //$NON-NLS-1$
+		LAYER_SEARCHABILITIES.put("Msk_railway_l", Boolean.valueOf(false)); //$NON-NLS-1$
 		LAYER_SEARCHABILITIES.put("Msk_railway_p", Boolean.valueOf(true)); //$NON-NLS-1$
-		LAYER_SEARCHABILITIES.put("Msk_region_a", Boolean.valueOf(true)); //$NON-NLS-1$
+		LAYER_SEARCHABILITIES.put("Msk_region_a", Boolean.valueOf(false)); //$NON-NLS-1$
 		LAYER_SEARCHABILITIES.put("Msk_road_a", Boolean.valueOf(false)); //$NON-NLS-1$
 		LAYER_SEARCHABILITIES.put("Msk_square_a", Boolean.valueOf(true)); //$NON-NLS-1$
 		LAYER_SEARCHABILITIES.put("Msk_Street_l", Boolean.valueOf(true)); //$NON-NLS-1$
 		LAYER_SEARCHABILITIES.put("Msk_Street_l_1", Boolean.valueOf(true)); //$NON-NLS-1$
-		LAYER_SEARCHABILITIES.put("Msk_vegetation_a", Boolean.valueOf(true)); //$NON-NLS-1$
-		LAYER_SEARCHABILITIES.put("Msk_Bridges_a", Boolean.valueOf(true)); //$NON-NLS-1$
-		LAYER_SEARCHABILITIES.put("Msk_Bridges_a", Boolean.valueOf(true)); //$NON-NLS-1$
-		LAYER_SEARCHABILITIES.put("Msk_Bridges_a", Boolean.valueOf(true)); //$NON-NLS-1$
+		LAYER_SEARCHABILITIES.put("Msk_vegetation_a", Boolean.valueOf(false)); //$NON-NLS-1$
+		LAYER_SEARCHABILITIES.put("Mo_admin_a", Boolean.valueOf(false)); //$NON-NLS-1$
+		LAYER_SEARCHABILITIES.put("Mo_road_grunt_l", Boolean.valueOf(false)); //$NON-NLS-1$
+		LAYER_SEARCHABILITIES.put("Mo_road_l", Boolean.valueOf(false)); //$NON-NLS-1$
+		LAYER_SEARCHABILITIES.put("Mo_road_mag_l", Boolean.valueOf(true)); //$NON-NLS-1$
+		LAYER_SEARCHABILITIES.put("Mo_towns_a", Boolean.valueOf(true)); //$NON-NLS-1$
 	}
 
 	public abstract boolean connect() throws MapConnectionException;
