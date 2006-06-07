@@ -1,5 +1,5 @@
 /*-
- * $Id: MServerSessionEnvironment.java,v 1.10.2.1 2006/03/21 09:39:39 arseniy Exp $
+ * $Id: MServerSessionEnvironment.java,v 1.10.2.2 2006/06/07 10:10:57 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,7 +11,7 @@ package com.syrus.AMFICOM.mserver;
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.BaseSessionEnvironment;
+import com.syrus.AMFICOM.general.AbstractSessionEnvironment;
 import com.syrus.AMFICOM.general.CORBAServer;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.mserver.corba.MServer;
@@ -19,22 +19,18 @@ import com.syrus.AMFICOM.mserver.corba.MServerPOA;
 import com.syrus.AMFICOM.mserver.corba.MServerPOATie;
 
 /**
- * @version $Revision: 1.10.2.1 $, $Date: 2006/03/21 09:39:39 $
+ * @version $Revision: 1.10.2.2 $, $Date: 2006/06/07 10:10:57 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mserver
  */
-final class MServerSessionEnvironment extends BaseSessionEnvironment {
+final class MServerSessionEnvironment extends AbstractSessionEnvironment<MServerServantManager> {
 	private static MServerSessionEnvironment instance;
 
 	private MServerSessionEnvironment(final MServerServantManager mServerServantManager,
 			final MServerPoolContext mServerPoolContext,
 			final MServer mServer) {
 		super(mServerServantManager, mServerPoolContext, mServer, MeasurementServer.getLoginRestorer());
-	}
-
-	public MServerServantManager getMServerServantManager() {
-		return (MServerServantManager) super.baseConnectionManager;
 	}
 
 	public static void createInstance(final String serverHostName, final Set<Identifier> mcmIds, final String servantName)

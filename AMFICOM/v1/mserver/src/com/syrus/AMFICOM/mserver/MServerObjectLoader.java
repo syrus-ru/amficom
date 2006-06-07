@@ -1,5 +1,5 @@
 /*-
- * $Id: MServerObjectLoader.java,v 1.19.2.3 2006/03/21 09:39:39 arseniy Exp $
+ * $Id: MServerObjectLoader.java,v 1.19.2.4 2006/06/07 10:11:03 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,7 +36,7 @@ import com.syrus.AMFICOM.general.corba.CommonServer;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.19.2.3 $, $Date: 2006/03/21 09:39:39 $
+ * @version $Revision: 1.19.2.4 $, $Date: 2006/06/07 10:11:03 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mserver
@@ -215,11 +215,11 @@ final class MServerObjectLoader extends DatabaseObjectLoader {
 		}
 
 		public CommonServer getServerReference() throws CommunicationException {
-			return MServerSessionEnvironment.getInstance().getMServerServantManager().getVerifiedMCMReference(this.mcmId);
+			return MServerSessionEnvironment.getInstance().getConnectionManager().getVerifiedMCMReference(this.mcmId);
 		}
 
 		public CORBAServer getCORBAServer() {
-			return MServerSessionEnvironment.getInstance().getMServerServantManager().getCORBAServer();
+			return MServerSessionEnvironment.getInstance().getConnectionManager().getCORBAServer();
 		}
 	}
 
