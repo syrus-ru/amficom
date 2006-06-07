@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObject.java,v 1.151.2.1 2006/06/07 08:12:22 arseniy Exp $
+ * $Id: StorableObject.java,v 1.151.2.2 2006/06/07 08:14:24 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,14 +47,12 @@ import com.syrus.util.LRUMap.Retainable;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.151.2.1 $, $Date: 2006/06/07 08:12:22 $
+ * @version $Revision: 1.151.2.2 $, $Date: 2006/06/07 08:14:24 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
 public abstract class StorableObject implements Identifiable, Retainable, Serializable {
-	private static final long serialVersionUID = 3904998894075738999L;
-
 	protected Identifier id;
 	protected Date created;
 	protected Identifier creatorId;
@@ -846,9 +844,6 @@ public abstract class StorableObject implements Identifiable, Retainable, Serial
 	 * at com.sun.tools.javac.Main.main(Main.java:52)</pre>
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: arseniy $
-	 * @version $Revision: 1.151.2.1 $, $Date: 2006/06/07 08:12:22 $
-	 * @module general
 	 */
 	@Crutch134(notes = "This class should be made final.")
 	protected static class StorableObjectContainerWrappee<T extends StorableObject> {
@@ -955,9 +950,6 @@ public abstract class StorableObject implements Identifiable, Retainable, Serial
 
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: arseniy $
-	 * @version $Revision: 1.151.2.1 $, $Date: 2006/06/07 08:12:22 $
-	 * @module general
 	 */
 	@Retention(SOURCE)
 	@Target(METHOD)
