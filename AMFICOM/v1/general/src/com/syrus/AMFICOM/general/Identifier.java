@@ -1,5 +1,5 @@
 /*-
- * $Id: Identifier.java,v 1.95.2.1 2006/05/30 08:11:35 arseniy Exp $
+ * $Id: Identifier.java,v 1.95.2.2 2006/06/07 08:05:13 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,7 +33,7 @@ import com.syrus.util.transport.idl.IdlTransferableObject;
  * its respective <code>creatorId</code> and <code>modifierId</code>. But
  * there&apos;s a particular task of <code>id</code> handling.
  *
- * @version $Revision: 1.95.2.1 $, $Date: 2006/05/30 08:11:35 $
+ * @version $Revision: 1.95.2.2 $, $Date: 2006/06/07 08:05:13 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -66,14 +66,11 @@ public final class Identifier implements Comparable<Identifier>,
 	private transient long identifierCode;
 	private transient String identifierString;
 
-	/*
-	 * TODO valueOf method
-	 */
-	public Identifier(final IdlIdentifier idlId) {
+	private Identifier(final IdlIdentifier idlId) {
 		this(idlId.identifierCode);
 	}
 
-	public Identifier(final String identifierString) {
+	private Identifier(final String identifierString) {
 		this(ObjectEntities.stringToCode(identifierString.substring(0, identifierString.indexOf(SEPARATOR))),
 				Long.parseLong(identifierString.substring(identifierString.indexOf(SEPARATOR) + 1)));
 	}
@@ -83,7 +80,7 @@ public final class Identifier implements Comparable<Identifier>,
 				identifierCode & MINOR_MASK);
 	}
 
-	/*	Only for IdentifierGenerator	*/
+	/* Only for IdentifierGenerator */
 	Identifier(final short major, final long minor) {
 		assert (minor & MAJOR_MASK) == 0 : OBJECT_STATE_ILLEGAL;
 
@@ -191,6 +188,10 @@ public final class Identifier implements Comparable<Identifier>,
 	@Override
 	public String toString() {
 		return this.getIdentifierString();
+	}
+
+	public static Identifier valueOf(final String identifierString) {
+		return new Identifier(identifierString);
 	}
 
 	public static Identifier valueOf(final long identifierCode) {
