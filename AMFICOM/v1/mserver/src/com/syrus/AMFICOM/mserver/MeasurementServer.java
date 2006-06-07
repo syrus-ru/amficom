@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementServer.java,v 1.95.2.7 2006/04/28 13:24:20 arseniy Exp $
+ * $Id: MeasurementServer.java,v 1.95.2.8 2006/06/07 10:10:18 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -62,7 +62,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.95.2.7 $, $Date: 2006/04/28 13:24:20 $
+ * @version $Revision: 1.95.2.8 $, $Date: 2006/06/07 10:10:18 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mserver
@@ -245,7 +245,7 @@ final class MeasurementServer extends SleepButWorkThread {
 		 * от имени которого он работает в системе, а также о измерительных
 		 * модулях, подключенных к этому серверу.
 		 */
-		final Identifier serverId = new Identifier(ApplicationProperties.getString(KEY_SERVER_ID, SERVER_ID));
+		final Identifier serverId = Identifier.valueOf(ApplicationProperties.getString(KEY_SERVER_ID, SERVER_ID));
 		final String processCodename = ApplicationProperties.getString(KEY_MSERVER_PROCESS_CODENAME, MSERVER_PROCESS_CODENAME);
 
 		final StorableObjectDatabase<Server> serverDatabase = DatabaseContext.getDatabase(SERVER_CODE);
@@ -664,7 +664,7 @@ final class MeasurementServer extends SleepButWorkThread {
 		assert mcmId.getMajor() == MCM_CODE : ILLEGAL_ENTITY_CODE;
 		assert StorableObject.getEntityCodeOfIdentifiables(testIds) == TEST_CODE : ILLEGAL_ENTITY_CODE;
 
-		final MServerServantManager servantManager = MServerSessionEnvironment.getInstance().getMServerServantManager();
+		final MServerServantManager servantManager = MServerSessionEnvironment.getInstance().getConnectionManager();
 		final IdlSessionKey idlSessionKey = LoginManager.getSessionKey().getIdlTransferable();
 		try {
 			final com.syrus.AMFICOM.mcm.corba.MCM corbaMCMRef = servantManager.getVerifiedMCMReference(mcmId);
