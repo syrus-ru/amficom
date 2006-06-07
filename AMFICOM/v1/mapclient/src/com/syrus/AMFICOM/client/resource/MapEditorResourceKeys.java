@@ -1,5 +1,5 @@
 /*-
- * $Id: MapEditorResourceKeys.java,v 1.11 2005/10/31 16:10:01 krupenn Exp $
+ * $Id: MapEditorResourceKeys.java,v 1.12 2006/06/07 07:43:22 stas Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,8 +9,8 @@
 package com.syrus.AMFICOM.client.resource;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/10/31 16:10:01 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.12 $, $Date: 2006/06/07 07:43:22 $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapclient
  */
@@ -234,6 +234,7 @@ public interface MapEditorResourceKeys extends ResourceKeys {
 	String TREE_MAP_EDITOR_ROOT = "Tree.MapEditorRoot"; //$NON-NLS-1$
 	String TREE_ELEMENTS_IN_NODE = "Tree.ElementsInNode"; //$NON-NLS-1$
 	String TREE_TOPOLOGY = "Tree.Topology"; //$NON-NLS-1$
+	String TOPOLOGY_LAYER = "Layer"; //$NON-NLS-1$
 
 	String VALUE_DEFAULT_COLLECTOR_NAME = "Value.DefaultCollectorName"; //$NON-NLS-1$
 	String VALUE_NEW_MAP_VIEW = "Value.NewMapView"; //$NON-NLS-1$
