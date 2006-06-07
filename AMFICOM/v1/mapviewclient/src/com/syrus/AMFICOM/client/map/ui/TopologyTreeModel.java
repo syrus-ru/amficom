@@ -1,5 +1,5 @@
 /*-
- * $$Id: TopologyTreeModel.java,v 1.21 2006/02/15 12:54:38 stas Exp $$
+ * $$Id: TopologyTreeModel.java,v 1.22 2006/06/07 07:45:14 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,7 +39,7 @@ import com.syrus.AMFICOM.newFilter.Filter;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2006/02/15 12:54:38 $
+ * @version $Revision: 1.22 $, $Date: 2006/06/07 07:45:14 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -47,6 +47,7 @@ import com.syrus.util.Log;
 public class TopologyTreeModel implements ChildrenFactory {
 
 	public static final String TOPOLOGY_BRANCH = MapEditorResourceKeys.TREE_TOPOLOGY;
+	public static final String TOPOLOGY_LAYER = MapEditorResourceKeys.TOPOLOGY_LAYER + ".";
 
 	static final int IMG_SIZE = 16;
 
@@ -130,23 +131,22 @@ public class TopologyTreeModel implements ChildrenFactory {
 			for(SpatialLayer layer : layers) {
 				Item childNode = nodePresense.get(layer);
 				if(childNode == null) {
-					Item newItem;
 					if(this.netMapViewer.getMapContext().getMapConnection().searchIsAvailableForLayer(layer)) {
 						FiltrableIconedNode filterableItem = new FiltrableIconedNode();
 						filterableItem.setObject(layer);
 						filterableItem.setIcon(layerIcon);
-						filterableItem.setName(layer.getName());
+						filterableItem.setName(I18N.getString(TOPOLOGY_LAYER + layer.getName()));
 						filterableItem.setChildrenFactory(this);
 						filterableItem.setCanHaveChildren(true);
 						filterableItem.setDefaultCondition(null);
 						filterableItem.setFilter(new Filter(new TopologyConditionWrapper()));
-						newItem = filterableItem;
+						node.addChild(filterableItem);
 					}
-					else {
-						PopulatableIconedNode populatableItem = new PopulatableIconedNode(this, layer, layer.getName(), layerIcon, true);
-						newItem = populatableItem;
-					}
-					node.addChild(newItem);
+//					else {
+//						PopulatableIconedNode populatableItem = new PopulatableIconedNode(this, layer, layer.getName(), layerIcon, true);
+//						newItem = populatableItem;
+//					}
+					
 				}
 			}
 		} catch(Exception e) {
