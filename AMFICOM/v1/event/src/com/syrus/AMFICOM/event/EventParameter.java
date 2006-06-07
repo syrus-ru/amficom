@@ -1,5 +1,5 @@
 /*
- * $Id: EventParameter.java,v 1.30.2.3 2006/06/07 08:56:43 arseniy Exp $
+ * $Id: EventParameter.java,v 1.30.2.4 2006/06/07 09:25:21 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,6 +8,8 @@
 package com.syrus.AMFICOM.event;
 
 import static com.syrus.AMFICOM.general.ObjectEntities.EVENTPARAMETER_CODE;
+
+import java.io.Serializable;
 
 import org.omg.CORBA.ORB;
 
@@ -20,7 +22,7 @@ import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.util.transport.idl.IdlTransferableObject;
 
 /**
- * @version $Revision: 1.30.2.3 $, $Date: 2006/06/07 08:56:43 $
+ * @version $Revision: 1.30.2.4 $, $Date: 2006/06/07 09:25:21 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module event
@@ -43,7 +45,7 @@ public final class EventParameter implements Identifiable, Serializable,
 	private String value;
 
 	public EventParameter(final IdlEventParameter ept) {
-		this.id = new Identifier(ept.id);
+		this.id = Identifier.valueOf(ept.id);
 		this.typeId = Identifier.valueOf(ept._typeId);
 		this.value = ept.value;
 	}

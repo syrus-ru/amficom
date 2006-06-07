@@ -1,5 +1,5 @@
 /*
- * $Id: EventType.java,v 1.57.2.4 2006/03/17 12:08:11 arseniy Exp $
+ * $Id: EventType.java,v 1.57.2.5 2006/06/07 09:25:21 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,17 +14,20 @@ import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 
 import java.util.Collections;
 import java.util.Date;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.Map.Entry;
 
 import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.event.corba.IdlEventType;
 import com.syrus.AMFICOM.event.corba.IdlEventTypeHelper;
-import com.syrus.AMFICOM.event.corba.IdlEventTypePackage.AlertKind;
 import com.syrus.AMFICOM.event.corba.IdlEventTypePackage.IdlUserAlertKinds;
+import com.syrus.AMFICOM.eventv2.DeliveryMethod;
+import com.syrus.AMFICOM.eventv2.corba.IdlNotificationEventPackage.IdlDeliveryMethod;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
@@ -36,7 +39,7 @@ import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.57.2.4 $, $Date: 2006/03/17 12:08:11 $
+ * @version $Revision: 1.57.2.5 $, $Date: 2006/06/07 09:25:21 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module event
@@ -46,8 +49,14 @@ public final class EventType extends StorableObjectType implements IdlTransferab
 
 	public static final String CODENAME_MEASUREMENT_ALARM = "measurement_alarm";
 
+	/**
+	 * @serial include
+	 */
 	private Set<Identifier> parameterTypeIds;
-	private Map<Identifier, Set<AlertKind>> userAlertKindsMap;	//Map <Identifier userId, Set <AlertKind> alertKinds>
+	/**
+	 * @serial include
+	 */
+	private Map<Identifier, Set<DeliveryMethod>> userAlertKindsMap;	//Map <Identifier userId, Set <DeliveryMethod> alertKinds>
 
 	public EventType(final IdlEventType ett) throws CreateObjectException {
 		try {
@@ -63,7 +72,7 @@ public final class EventType extends StorableObjectType implements IdlTransferab
 			final String codename,
 			final String description,
 			final Set<Identifier> parameterTypeIds,
-			final Map<Identifier, Set<AlertKind>> userAlertKindsMap) {
+			final Map<Identifier, Set<DeliveryMethod>> userAlertKindsMap) {
 		super(id,
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
@@ -76,7 +85,7 @@ public final class EventType extends StorableObjectType implements IdlTransferab
 		this.parameterTypeIds = new HashSet<Identifier>();
 		this.setParameterTypes0(parameterTypeIds);
 
-		this.userAlertKindsMap = new HashMap<Identifier, Set<AlertKind>>();
+		this.userAlertKindsMap = new HashMap<Identifier, Set<DeliveryMethod>>();
 		this.setUserAlertKindsMap0(userAlertKindsMap);
 	}
 
@@ -94,7 +103,7 @@ public final class EventType extends StorableObjectType implements IdlTransferab
 			final String codename,
 			final String description,
 			final Set<Identifier> parameterTypeIds,
-			final Map<Identifier, Set<AlertKind>> userAlertKindsMap) throws CreateObjectException {
+			final Map<Identifier, Set<DeliveryMethod>> userAlertKindsMap) throws CreateObjectException {
 		if (creatorId == null || codename == null || description == null)
 			throw new IllegalArgumentException("Argument is null'");
 
@@ -117,20 +126,18 @@ public final class EventType extends StorableObjectType implements IdlTransferab
 		}
 	}
 
-	public synchronized void fromIdlTransferable(final IdlEventType ett) throws IdlConversionException {
-		super.fromIdlTransferable(ett, ett.codename, ett.description);
+	public synchronized void fromIdlTransferable(final IdlEventType eventType) throws IdlConversionException {
+		super.fromIdlTransferable(eventType, eventType.codename, eventType.description);
 
-		this.setParameterTypes0(Identifier.fromTransferables(ett.parameterTypeIds));
+		this.setParameterTypes0(Identifier.fromTransferables(eventType.parameterTypeIds));
 
-		this.userAlertKindsMap = new HashMap<Identifier, Set<AlertKind>>(ett.userAlertKinds.length);
-		for (int i = 0; i < ett.userAlertKinds.length; i++) {
-			final IdlUserAlertKinds userAlertKindsT = ett.userAlertKinds[i];
-			final Identifier userId = new Identifier(userAlertKindsT.userId);
-			final Set<AlertKind> userAlertKinds = new HashSet<AlertKind>(userAlertKindsT.alertKinds.length);
-			for (int j = 0; j < userAlertKindsT.alertKinds.length; j++) {
-				userAlertKinds.add(userAlertKindsT.alertKinds[j]);
+		this.userAlertKindsMap = new HashMap<Identifier, Set<DeliveryMethod>>(eventType.userAlertKinds.length);
+		for (final IdlUserAlertKinds userAlertKinds : eventType.userAlertKinds) {
+			final Set<DeliveryMethod> deliveryMethods = EnumSet.noneOf(DeliveryMethod.class);
+			for (final IdlDeliveryMethod deliveryMethod : userAlertKinds.alertKinds) {
+				deliveryMethods.add(DeliveryMethod.valueOf(deliveryMethod));
 			}
-			this.userAlertKindsMap.put(userId, userAlertKinds);
+			this.userAlertKindsMap.put(Identifier.valueOf(userAlertKinds.userId), deliveryMethods);
 		}
 
 		assert this.isValid() : OBJECT_STATE_ILLEGAL;
@@ -144,17 +151,16 @@ public final class EventType extends StorableObjectType implements IdlTransferab
 	public IdlEventType getIdlTransferable(final ORB orb) {
 		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 
-		final IdlUserAlertKinds[] userAlertKindsT = new IdlUserAlertKinds[this.userAlertKindsMap.size()];
-		int i, j;
-		i = 0;
-		for (final Identifier userId : this.userAlertKindsMap.keySet()) {
-			final Set<AlertKind> userAlertKinds = this.userAlertKindsMap.get(userId);
-			final AlertKind[] alertKindsT = new AlertKind[userAlertKinds.size()];
-			j = 0;
-			for (final AlertKind alertKind : userAlertKinds) {
-				alertKindsT[j] = alertKind;
+		final IdlUserAlertKinds[] userAlertKinds = new IdlUserAlertKinds[this.userAlertKindsMap.size()];
+		int i = 0;
+		for (final Entry<Identifier, Set<DeliveryMethod>> entry : this.userAlertKindsMap.entrySet()) {
+			final Set<DeliveryMethod> deliveryMethods = entry.getValue();
+			final IdlDeliveryMethod[] idlDeliveryMethods = new IdlDeliveryMethod[deliveryMethods.size()];
+			int j = 0;
+			for (final DeliveryMethod deliveryMethod : deliveryMethods) {
+				idlDeliveryMethods[j++] = (new DeliveryMethod.Proxy(deliveryMethod)).getIdlTransferable(orb);
 			}
-			userAlertKindsT[i] = new IdlUserAlertKinds(userId.getIdlTransferable(), alertKindsT);
+			userAlertKinds[i++] = new IdlUserAlertKinds(entry.getKey().getIdlTransferable(orb), idlDeliveryMethods);
 		}
 
 		return IdlEventTypeHelper.init(orb,
@@ -167,7 +173,7 @@ public final class EventType extends StorableObjectType implements IdlTransferab
 				super.codename,
 				super.description != null ? super.description : "",
 				Identifier.createTransferables(this.parameterTypeIds),
-				userAlertKindsT);
+				userAlertKinds);
 	}
 
   /**
@@ -217,46 +223,45 @@ public final class EventType extends StorableObjectType implements IdlTransferab
 		return this.userAlertKindsMap.keySet();
 	}
 
-	public Set<AlertKind> getUserAlertKinds(final Identifier userId) {
-		final Set<AlertKind> userAlertKinds = this.userAlertKindsMap.get(userId);
-		if (userAlertKinds != null) {
-			return userAlertKinds;
-		}
-		return Collections.emptySet();
+	public Set<DeliveryMethod> getUserAlertKinds(final Identifier userId) {
+		final Set<DeliveryMethod> userAlertKinds = this.userAlertKindsMap.get(userId);
+		return userAlertKinds == null
+				? Collections.<DeliveryMethod>emptySet()
+				: userAlertKinds;
 	}
 
-	protected Map<Identifier, Set<AlertKind>> getUserAlertKindsMap() {
+	protected Map<Identifier, Set<DeliveryMethod>> getUserAlertKindsMap() {
 		return Collections.unmodifiableMap(this.userAlertKindsMap);
 	}
 
-	protected void setUserAlertKindsMap0(final Map<Identifier, Set<AlertKind>> userAlertKindsMap) {
+	protected void setUserAlertKindsMap0(final Map<Identifier, Set<DeliveryMethod>> userAlertKindsMap) {
 		this.userAlertKindsMap.clear();
 		if (userAlertKindsMap != null) {
 			this.userAlertKindsMap.putAll(userAlertKindsMap);
 		}
 	}
 
-	public void addAlertKindToUser(final Identifier userId, final AlertKind alertKind) {
+	public void addAlertKindToUser(final Identifier userId, final DeliveryMethod deliveryMethod) {
 		assert (userId != null) : "User id is NULL";
-		assert (alertKind != null) : "Alert kind is NULL";
+		assert (deliveryMethod != null) : "Alert kind is NULL";
 		
-		Set<AlertKind> userAlertKinds = this.userAlertKindsMap.get(userId);
-		if (userAlertKinds == null) {
-			userAlertKinds = new HashSet<AlertKind>();
-			this.userAlertKindsMap.put(userId, userAlertKinds);
+		Set<DeliveryMethod> deliveryMethods = this.userAlertKindsMap.get(userId);
+		if (deliveryMethods == null) {
+			deliveryMethods = EnumSet.noneOf(DeliveryMethod.class);
+			this.userAlertKindsMap.put(userId, deliveryMethods);
 		}
-		userAlertKinds.add(alertKind);
+		deliveryMethods.add(deliveryMethod);
 		super.markAsChanged();
 	}
 
-	public void removeAlertKindFromUser(final Identifier userId, final AlertKind alertKind) {
+	public void removeAlertKindFromUser(final Identifier userId, final DeliveryMethod deliveryMethod) {
 		assert (userId != null) : "User id is NULL";
-		assert (alertKind != null) : "Alert kind is NULL";
+		assert (deliveryMethod != null) : "Alert kind is NULL";
 		
-		final Set<AlertKind> userAlertKinds = this.userAlertKindsMap.get(userId);
-		if (userAlertKinds != null) {
-			userAlertKinds.remove(alertKind);
-			if (userAlertKinds.isEmpty())
+		final Set<DeliveryMethod> deliveryMethods = this.userAlertKindsMap.get(userId);
+		if (deliveryMethods != null) {
+			deliveryMethods.remove(deliveryMethod);
+			if (deliveryMethods.isEmpty())
 				this.userAlertKindsMap.remove(userId);
 			super.markAsChanged();
 		}
@@ -280,9 +285,8 @@ public final class EventType extends StorableObjectType implements IdlTransferab
 	protected void printUserAlertKinds() {
 		for (final Identifier userId : this.userAlertKindsMap.keySet()) {
 			System.out.println("User '" + userId + "'");
-			final Set<AlertKind> userAlertKinds = this.userAlertKindsMap.get(userId);
-			for (final AlertKind alertKind : userAlertKinds) {
-				System.out.println("	alert kind: " + alertKind.value());
+			for (final DeliveryMethod deliveryMethod : this.userAlertKindsMap.get(userId)) {
+				System.out.println("	alert kind: " + deliveryMethod.getCodename());
 			}
 		}
 	}
