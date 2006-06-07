@@ -1,5 +1,5 @@
 /*-
- * $$Id: CablePathAddEditor.java,v 1.39 2006/06/06 12:59:52 stas Exp $$
+ * $$Id: CablePathAddEditor.java,v 1.40 2006/06/07 13:09:06 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -55,7 +55,6 @@ import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.PhysicalLink;
@@ -68,7 +67,7 @@ import com.syrus.AMFICOM.scheme.CableChannelingItem;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.39 $, $Date: 2006/06/06 12:59:52 $
+ * @version $Revision: 1.40 $, $Date: 2006/06/07 13:09:06 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -761,6 +760,9 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor<CableP
 	}
 	
 	private void setBindingPanels() {
+		this.startNodeTextField.setText(this.startNode.getName());
+		this.endNodeTextField.setText(this.endNode.getName());
+		
 		if(this.startNode.equals(this.cablePath.getEndNode()) 
 				&& this.endNode.equals(this.cablePath.getStartNode())) {
 			// no unbound elements
@@ -768,6 +770,8 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor<CableP
 			this.endLinkComboBox.setEnabled(false);
 			this.startNodeToComboBox.setEnabled(false);
 			this.endNodeToComboBox.setEnabled(false);
+			this.bindButton.setEnabled(false);
+			this.bindChainButton.setEnabled(false);
 		}
 		else {
 			this.startNodeTextField.setText(this.startNode.getName());
@@ -971,8 +975,6 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor<CableP
 			newCableChannelingItem.insertSelfAfter(unboundCableChannelingItem);
 		}
 
-		int a = 0;
-		
 		this.cablePath.addLink(link, newCableChannelingItem);
 		link.getBinding().add(this.cablePath);
 
