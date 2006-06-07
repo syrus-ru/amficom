@@ -1,5 +1,5 @@
 /*
- * $Id: TestEventType.java,v 1.8.2.2 2006/03/06 19:25:30 arseniy Exp $
+ * $Id: TestEventType.java,v 1.8.2.3 2006/06/07 10:30:28 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,7 +24,7 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 
 import com.syrus.AMFICOM.administration.SystemUser;
-import com.syrus.AMFICOM.event.corba.IdlEventTypePackage.AlertKind;
+import com.syrus.AMFICOM.eventv2.DeliveryMethod;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.DatabaseCommonTest;
@@ -35,7 +35,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.TypicalCondition;
 
 /**
- * @version $Revision: 1.8.2.2 $, $Date: 2006/03/06 19:25:30 $
+ * @version $Revision: 1.8.2.3 $, $Date: 2006/06/07 10:30:28 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -76,7 +76,7 @@ public class TestEventType extends TestCase {
 				codename,
 				description,
 				parameterTypeIds,
-				new HashMap<Identifier, Set<AlertKind>>());
+				new HashMap<Identifier, Set<DeliveryMethod>>());
 
 		StorableObjectPool.flush(eventType, userId, false);
 	}
