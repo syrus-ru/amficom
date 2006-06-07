@@ -1,5 +1,5 @@
 /*
- * $Id: KISReport.java,v 1.56.2.4 2006/03/16 11:59:21 arseniy Exp $
+ * $Id: KISReport.java,v 1.56.2.5 2006/06/07 10:27:14 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.MeasurementResultParameter;
 
 /**
- * @version $Revision: 1.56.2.4 $, $Date: 2006/03/16 11:59:21 $
+ * @version $Revision: 1.56.2.5 $, $Date: 2006/06/07 10:27:14 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -40,7 +40,7 @@ final class KISReport {
 	private Set<MeasurementResultParameter> measurementResultParameters;
 
 	public KISReport(final String measurementIdStr, final String[] parameterTypeCodenames, final byte[][] parameterValues) {
-		this.measurementId = new Identifier(measurementIdStr);
+		this.measurementId = Identifier.valueOf(measurementIdStr);
 		this.parameterTypeCodenames = parameterTypeCodenames;
 		this.parameterValues = parameterValues;
 		
