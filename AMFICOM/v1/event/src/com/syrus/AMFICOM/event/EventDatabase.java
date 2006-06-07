@@ -1,5 +1,5 @@
 /*-
- * $Id: EventDatabase.java,v 1.52.2.3 2006/06/07 08:53:11 arseniy Exp $
+ * $Id: EventDatabase.java,v 1.52.2.4 2006/06/07 08:54:06 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -50,7 +50,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.52.2.3 $, $Date: 2006/06/07 08:53:11 $
+ * @version $Revision: 1.52.2.4 $, $Date: 2006/06/07 08:54:06 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module event
@@ -113,7 +113,7 @@ public final class EventDatabase extends StorableObjectDatabase<Event> {
 						null,
 						null)
 					: storableObject;
-		EventType eventType;
+		final EventType eventType;
 		try {
 			eventType = StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_TYPE_ID), true);
 		} catch (ApplicationException ae) {
