@@ -1,5 +1,5 @@
 /*-
- * $Id: DeliveryMethod.java,v 1.2.4.2 2006/06/07 09:32:09 arseniy Exp $
+ * $Id: DeliveryMethod.java,v 1.2.4.3 2006/06/07 09:32:39 arseniy Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: arseniy $
- * @version $Revision: 1.2.4.2 $, $Date: 2006/06/07 09:32:09 $
+ * @version $Revision: 1.2.4.3 $, $Date: 2006/06/07 09:32:39 $
  * @module event
  */
 public enum DeliveryMethod {
