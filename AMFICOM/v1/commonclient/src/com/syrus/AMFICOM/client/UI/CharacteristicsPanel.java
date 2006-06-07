@@ -1,5 +1,5 @@
 /*-
- * $Id: CharacteristicsPanel.java,v 1.29 2006/06/06 12:41:15 stas Exp $
+ * $Id: CharacteristicsPanel.java,v 1.30 2006/06/07 10:48:20 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -66,7 +66,7 @@ import com.syrus.util.Wrapper;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.29 $, $Date: 2006/06/06 12:41:15 $
+ * @version $Revision: 1.30 $, $Date: 2006/06/07 10:48:20 $
  * @module commonclient
  */
 public abstract class CharacteristicsPanel<S extends Identifiable> extends DefaultStorableObjectEditor<S> {
@@ -428,7 +428,7 @@ public abstract class CharacteristicsPanel<S extends Identifiable> extends Defau
 						final CharacteristicType type = frame.getCharacteristicType();
 						final Identifier userId = LoginManager.getUserId();
 
-						if (object != null) {
+						if (object != null && type != null) {
 							final Characterizable characterizable = object.characterizable;
 
 							try {
