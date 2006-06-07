@@ -1,5 +1,5 @@
 /*-
- * $Id: Identifier.java,v 1.97 2006/06/06 13:58:18 arseniy Exp $
+ * $Id: Identifier.java,v 1.98 2006/06/07 08:06:23 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,7 +33,7 @@ import com.syrus.util.transport.idl.IdlTransferableObject;
  * its respective <code>creatorId</code> and <code>modifierId</code>. But
  * there&apos;s a particular task of <code>id</code> handling.
  *
- * @version $Revision: 1.97 $, $Date: 2006/06/06 13:58:18 $
+ * @version $Revision: 1.98 $, $Date: 2006/06/07 08:06:23 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -57,7 +57,10 @@ public final class Identifier implements Comparable<Identifier>,
 
 	private final short major;
 	private final long minor;
-	
+
+	/**
+	 * hashCode can be cached due to immutability
+	 */
 	private transient int hashCode; 
 
 	private transient long identifierCode;
@@ -167,10 +170,13 @@ public final class Identifier implements Comparable<Identifier>,
 	@Override
 	public int hashCode() {
 		if (this.hashCode == 0) {
-			// hashCode can be cached due to immutability 
-			this.hashCode = 17;
-			this.hashCode = 37 * this.hashCode + this.major;
-			this.hashCode = 37 * this.hashCode + (int)(this.minor ^ (this.minor >>> 32));
+			int hc = 17;
+			hc = 37 * hc + this.major;
+			hc = 37 * hc + (int) (this.minor ^ (this.minor >>> 32));
+			if (hc == 0) {
+				hc = 1;
+			}
+			this.hashCode = hc;
 		}
 		return this.hashCode;
 	}
