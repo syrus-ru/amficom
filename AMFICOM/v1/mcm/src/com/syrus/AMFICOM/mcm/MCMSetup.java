@@ -1,5 +1,5 @@
 /*
- * $Id: MCMSetup.java,v 1.23.2.1 2006/03/01 15:50:38 arseniy Exp $
+ * $Id: MCMSetup.java,v 1.23.2.2 2006/06/07 10:27:44 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,7 +29,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.23.2.1 $, $Date: 2006/03/01 15:50:38 $
+ * @version $Revision: 1.23.2.2 $, $Date: 2006/06/07 10:27:44 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -48,7 +48,7 @@ final class MCMSetup {
 	private static final Identifier ID;
 
 	static {
-		ID = new Identifier(ApplicationProperties.getString(KEY_MCM_ID, MCM_ID));
+		ID = Identifier.valueOf(ApplicationProperties.getString(KEY_MCM_ID, MCM_ID));
 	}
 
 	static void setup() {
@@ -89,7 +89,7 @@ final class MCMSetup {
 		/*-Login*/
 		final String mcmUserLogin = ApplicationProperties.getString(KEY_MCM_USER_LOGIN, MCM_USER_LOGIN);
 		final String mcmUserPassword = ApplicationProperties.getString(KEY_MCM_USER_PASSWORD, MCM_USER_PASSWORD);
-		final Identifier mcmDomainId = new Identifier(ApplicationProperties.getString(KEY_MCM_DOMAIN_ID, MCM_DOMAIN_ID));
+		final Identifier mcmDomainId = Identifier.valueOf(ApplicationProperties.getString(KEY_MCM_DOMAIN_ID, MCM_DOMAIN_ID));
 		MCMSessionEnvironment.getInstance().login(mcmUserLogin, mcmUserPassword, mcmDomainId);
 
 		/*-Retrieve data for this MCM*/
@@ -116,7 +116,7 @@ final class MCMSetup {
 	}
 
 	private static IdlMCM retrieveIdlMCM() throws ApplicationException {
-		final MServer mServerRef = MCMSessionEnvironment.getInstance().getMCMServantManager().getMServerReference();
+		final MServer mServerRef = MCMSessionEnvironment.getInstance().getConnectionManager().getMServerReference();
 		final IdlStorableObject[] idlStorableObjects;
 		try {
 			idlStorableObjects = mServerRef.transmitStorableObjects(new IdlIdentifier[] { ID.getIdlTransferable() },

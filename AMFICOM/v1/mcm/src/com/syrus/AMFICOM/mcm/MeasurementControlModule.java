@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementControlModule.java,v 1.146.2.18 2006/04/06 08:07:16 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.146.2.19 2006/06/07 10:28:00 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -64,7 +64,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.146.2.18 $, $Date: 2006/04/06 08:07:16 $
+ * @version $Revision: 1.146.2.19 $, $Date: 2006/06/07 10:28:00 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -305,7 +305,7 @@ final class MeasurementControlModule extends SleepButWorkThread {
 		 * Получить из БД данные о самом модуле, его сервере и пользователе, от
 		 * имени которого он работает в системе.
 		 */
-		final Identifier mcmId = new Identifier(ApplicationProperties.getString(KEY_MCM_ID, MCM_ID));
+		final Identifier mcmId = Identifier.valueOf(ApplicationProperties.getString(KEY_MCM_ID, MCM_ID));
 
 		final StorableObjectDatabase<MCM> mcmDatabase = DatabaseContext.getDatabase(MCM_CODE);
 		final MCM mcm = mcmDatabase.retrieveForId(mcmId);
@@ -386,7 +386,7 @@ final class MeasurementControlModule extends SleepButWorkThread {
 
 		this.transceivers = Collections.synchronizedMap(new HashMap<Identifier, Transceiver>());
 
-		this.objectSynchronizer = new MCMObjectSynchronizer(MCMSessionEnvironment.getInstance().getMCMServantManager());
+		this.objectSynchronizer = new MCMObjectSynchronizer(MCMSessionEnvironment.getInstance().getConnectionManager());
 		this.objectSynchronizer.start();
 
 		this.eventQueue = new EventQueue();
