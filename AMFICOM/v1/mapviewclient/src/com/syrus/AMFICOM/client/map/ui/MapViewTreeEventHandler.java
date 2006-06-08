@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapViewTreeEventHandler.java,v 1.20 2006/06/06 13:33:37 stas Exp $$
+ * $$Id: MapViewTreeEventHandler.java,v 1.21 2006/06/08 10:22:17 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,6 +31,7 @@ import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.client.map.SpatialLayer;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.logic.ItemTreeModel;
 import com.syrus.AMFICOM.map.Map;
@@ -39,12 +40,14 @@ import com.syrus.AMFICOM.map.MapLibrary;
 import com.syrus.AMFICOM.map.PhysicalLinkType;
 import com.syrus.AMFICOM.map.SiteNodeType;
 import com.syrus.AMFICOM.mapview.MapView;
+import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
 import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.AMFICOM.scheme.SchemePath;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2006/06/06 13:33:37 $
+ * @version $Revision: 1.21 $, $Date: 2006/06/08 10:22:17 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -111,18 +114,25 @@ public class MapViewTreeEventHandler implements TreeSelectionListener, PropertyC
 					mapElement = this.mapView.findCablePath((SchemeCableLink)userObject);
 				} else if (userObject instanceof SchemePath) {
 					mapElement = this.mapView.findMeasurementPath((SchemePath)userObject);
+				} else if (userObject instanceof Scheme) {
+					try {
+						final SchemeElement schemeElement = ((Scheme)userObject).getParentSchemeElement();
+						if (schemeElement != null) {
+							mapElement = this.mapView.findElement(schemeElement);		
+						}
+					} catch (ApplicationException e1) {
+						Log.errorMessage(e1);
+					}
 				} 
 				else if(userObject instanceof Map) {
-					Map map = (Map )userObject;
 					if(e.isAddedPath(paths[i])) {
-						dispatcher.firePropertyChange(new MapEvent(this, MapEvent.MAP_SELECTED, map));
+						dispatcher.firePropertyChange(new MapEvent(this, MapEvent.MAP_SELECTED, userObject));
 						sendSelectionEvent = false;
 					}
 				}
 				else if(userObject instanceof MapView) {
-					MapView mapView = (MapView )userObject;
 					if(e.isAddedPath(paths[i])) {
-						dispatcher.firePropertyChange(new MapEvent(this, MapEvent.MAP_VIEW_SELECTED, mapView));
+						dispatcher.firePropertyChange(new MapEvent(this, MapEvent.MAP_VIEW_SELECTED, userObject));
 						sendSelectionEvent = false;
 					}
 				}
@@ -169,7 +179,6 @@ public class MapViewTreeEventHandler implements TreeSelectionListener, PropertyC
 	}
 
 	public void propertyChange(PropertyChangeEvent pce) {
-		long d = System.currentTimeMillis();
 		if(!this.performProcessing) {
 			return;
 		}
@@ -184,10 +193,10 @@ public class MapViewTreeEventHandler implements TreeSelectionListener, PropertyC
 				updateTree(null);
 			}
 			else if(mapEventType.equals(MapEvent.MAP_VIEW_SELECTED)) {
-				MapView mapView = (MapView )pce.getNewValue();
-				if(this.mapView == null || !this.mapView.equals(mapView)) {
-					this.mapView = mapView;
-					updateTree(mapView);
+				MapView mapView1 = (MapView )pce.getNewValue();
+				if(this.mapView == null || !this.mapView.equals(mapView1)) {
+					this.mapView = mapView1;
+					updateTree(mapView1);
 					updateLinkToNetMapViewer();
 				}
 			}
@@ -203,9 +212,8 @@ public class MapViewTreeEventHandler implements TreeSelectionListener, PropertyC
 				updateTree(this.mapView);
 			}
 			else if(mapEventType.equals(MapEvent.MAP_VIEW_CHANGED)) {
-				MapView mapView = (MapView )pce.getNewValue();
-				this.mapView = mapView;
-				updateTree(mapView);
+				this.mapView = (MapView )pce.getNewValue();
+				updateTree(this.mapView);
 				updateLinkToNetMapViewer();
 			}
 			else if(mapEventType.equals(MapEvent.SELECTION_CHANGED)) {
