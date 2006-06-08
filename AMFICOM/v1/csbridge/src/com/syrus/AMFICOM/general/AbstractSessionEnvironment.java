@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSessionEnvironment.java,v 1.7 2006/06/08 16:22:56 arseniy Exp $
+ * $Id: AbstractSessionEnvironment.java,v 1.8 2006/06/08 16:39:20 arseniy Exp $
  *
  * Copyright © 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,7 +24,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.7 $, $Date: 2006/06/08 16:22:56 $
+ * @version $Revision: 1.8 $, $Date: 2006/06/08 16:39:20 $
  * @author Tashoyan Arseniy Feliksovich
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: arseniy $
@@ -121,9 +121,9 @@ public abstract class AbstractSessionEnvironment<T extends BaseConnectionManager
 	 * {@code connectionManager};
 	 * <li> поле {@link #sessionEstablishDate} выставляется в {@code null};
 	 * <li> создаётся контекст объектных пулов {@link #poolContext};
+	 * <li> инициализируется {@link LoginManager};
 	 * <li> создаётся и запускается поток, подтверждающий сессию,
 	 * {@link #loginValidator};
-	 * <li> инициализируется {@link LoginManager};
 	 * <li> инициализируется {@link IdentifierPool};
 	 * <li> добавляется "зацеп на выключение" ("shutdown hook"), позволяющий при
 	 * разрыве соединения с сервером остановить {@link #loginValidator};
