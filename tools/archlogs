@@ -1,6 +1,8 @@
 #!/bin/bash
 
-DATE_REGEXP=2[0-9]{3}[0-1][0-9][0-3][0-9]
+# Не работает, т. к. sed требует \{ и \}, а egrep - нет.
+#DATE_REGEXP=2[0-9]{3}[0-1][0-9][0-3][0-9]
+DATE_REGEXP=2[0-9][0-9][0-9][0-1][0-9][0-3][0-9]
 if [ -x /usr/xpg4/bin/sed ]
 then
 	SED=/usr/xpg4/bin/sed
@@ -97,6 +99,7 @@ print_usage() {
 	month -- один месяц;
 	year -- один год.
 -h
+-?
 	Вывести справку.
 EOF
 }
@@ -109,7 +112,7 @@ DELETE_DATE=
 while [ $# -gt 0 ]
 do
 	case "$1" in
-		-h)
+		-h|--help|-\?)
 			print_usage
 			exit 0
 			;;
