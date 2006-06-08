@@ -1,5 +1,5 @@
 /*-
- * $$Id: TunnelLayout.java,v 1.31 2006/06/06 12:59:52 stas Exp $$
+ * $$Id: TunnelLayout.java,v 1.32 2006/06/08 10:27:29 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.map.PipeBlock;
 import com.syrus.AMFICOM.resource.IntPoint;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2006/06/06 12:59:52 $
+ * @version $Revision: 1.32 $, $Date: 2006/06/08 10:27:29 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -48,6 +48,7 @@ public class TunnelLayout implements GraphSelectionListener {
 	IntPoint activeCoordinates = null;
 	
 	PhysicalLinkAddEditor parent;
+	private boolean perform_notify = false;
 
 	public TunnelLayout(PhysicalLinkAddEditor parent) {
 		this.parent = parent;
@@ -194,6 +195,11 @@ public class TunnelLayout implements GraphSelectionListener {
 	}
 
 	public void valueChanged(GraphSelectionEvent e) {
+		if (this.perform_notify) {
+			return;
+		}
+		this.perform_notify = true;
+		
 		Object obj = e.getCell();
 		removeSelection();
 
@@ -217,5 +223,6 @@ public class TunnelLayout implements GraphSelectionListener {
 		} else {
 			this.activeCoordinates = null;
 		}
+		this.perform_notify = false;
 	}
 }
