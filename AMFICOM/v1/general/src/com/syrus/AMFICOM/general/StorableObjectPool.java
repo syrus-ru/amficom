@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.221 2006/06/06 17:32:56 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.222 2006/06/08 10:40:00 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -42,7 +42,7 @@ import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.221 $, $Date: 2006/06/06 17:32:56 $
+ * @version $Revision: 1.222 $, $Date: 2006/06/08 10:40:00 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -1216,7 +1216,7 @@ public final class StorableObjectPool {
 				 * объектов через подгрузчик
 				 * ObjectLoader#saveStorableObjects(Set<StorableObject>).
 				 */
-				assert !version.isNewer(remoteVersion) : OBJECT_STATE_ILLEGAL
+				assert storableObject.isNew() || !version.isNewer(remoteVersion) : OBJECT_STATE_ILLEGAL
 						+ "; id: '" + id + "', version: " + version + ", remoteVersion: " + remoteVersion;
 
 				/*
