@@ -1,5 +1,5 @@
 /*-
- * $Id: ParameterType.java,v 1.74.2.13 2006/04/17 11:06:27 arseniy Exp $
+ * $Id: ParameterType.java,v 1.74.2.14 2006/06/08 15:56:44 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,13 +40,13 @@ import com.syrus.util.transport.idl.IdlTransferableObjectExt;
  * типов параметров для рефлектометрических измерений см. в
  * ReflectometryParameterTypeCodename.
  * 
- * @version $Revision: 1.74.2.13 $, $Date: 2006/04/17 11:06:27 $
+ * @version $Revision: 1.74.2.14 $, $Date: 2006/06/08 15:56:44 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
 public final class ParameterType extends StorableObjectType implements IdlTransferableObjectExt<IdlParameterType> {
-	private static final long serialVersionUID = -2843753663001680790L;
+	private static final long serialVersionUID = 2041571786752536005L;
 
 	/**
 	 * Тип данных.
@@ -57,13 +57,6 @@ public final class ParameterType extends StorableObjectType implements IdlTransf
 	 * Единицы измерения.
 	 */
 	private MeasurementUnit measurementUnit;
-
-
-	/**
-	 * Условие для поиска параметра по кодовому имени. См.
-	 * {@link #valueOf(String)}.
-	 */
-	private static TypicalCondition codenameCondition;
 
 	ParameterType(final Identifier id,
 			final Identifier creatorId,
@@ -229,15 +222,10 @@ public final class ParameterType extends StorableObjectType implements IdlTransf
 	public static ParameterType valueOf(final String codename) throws ApplicationException {
 		assert codename != null : NON_NULL_EXPECTED;
 
-		if (codenameCondition == null) {
-			codenameCondition = new TypicalCondition(codename,
-					OPERATION_EQUALS,
-					PARAMETER_TYPE_CODE,
-					COLUMN_CODENAME);
-		} else {
-			codenameCondition.setValue(codename);
-		}
-
+		final TypicalCondition codenameCondition = new TypicalCondition(codename,
+				OPERATION_EQUALS,
+				PARAMETER_TYPE_CODE,
+				COLUMN_CODENAME);
 		final Set<ParameterType> parameterTypes = StorableObjectPool.getStorableObjectsByCondition(codenameCondition, true);
 		if (parameterTypes.isEmpty()) {
 			throw new ObjectNotFoundException(OBJECT_NOT_FOUND + ": '" + codename + "'");

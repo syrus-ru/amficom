@@ -1,5 +1,5 @@
 /*-
- * $Id: Test.java,v 1.183.2.27 2006/06/08 14:30:05 arseniy Exp $
+ * $Id: Test.java,v 1.183.2.28 2006/06/08 15:56:44 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -69,14 +69,14 @@ import com.syrus.util.transport.idl.IdlTransferableObject;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.183.2.27 $, $Date: 2006/06/08 14:30:05 $
+ * @version $Revision: 1.183.2.28 $, $Date: 2006/06/08 15:56:44 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
 
 public final class Test extends StorableObject implements IdlTransferableObjectExt<IdlTest>, Describable {
-	private static final long serialVersionUID = -2487836825838569355L;
+	private static final long serialVersionUID = 5376673661145785655L;
 
 	private String description;
 	private Identifier groupTestId;
@@ -96,7 +96,6 @@ public final class Test extends StorableObject implements IdlTransferableObjectE
 	private transient Identifier mcmId;
 	private transient Identifier currentMeasurementSetupId;
 	private transient LinkedIdsCondition testMeasurementCondition;
-	private transient TypicalCondition statusMeasurementCondition;
 
 	Test(final Identifier id,
 			final Identifier creatorId,
@@ -697,15 +696,11 @@ public final class Test extends StorableObject implements IdlTransferableObjectE
 		if (measurementStatus == null) {
 			measurementCondition = this.testMeasurementCondition;
 		} else {
-			if (this.statusMeasurementCondition == null) {
-				this.statusMeasurementCondition = new TypicalCondition(measurementStatus,
-						OPERATION_EQUALS,
-						MEASUREMENT_CODE,
-						COLUMN_STATUS);
-			} else {
-				this.statusMeasurementCondition.setValue(measurementStatus);
-			}
-			measurementCondition = new CompoundCondition(this.testMeasurementCondition, AND, this.statusMeasurementCondition);
+			final TypicalCondition statusMeasurementCondition = new TypicalCondition(measurementStatus,
+					OPERATION_EQUALS,
+					MEASUREMENT_CODE,
+					COLUMN_STATUS);
+			measurementCondition = new CompoundCondition(this.testMeasurementCondition, AND, statusMeasurementCondition);
 		}
 
 		final Set<Identifier> measurementIds = StorableObjectPool.getIdentifiersByCondition(measurementCondition, true);
@@ -733,15 +728,11 @@ public final class Test extends StorableObject implements IdlTransferableObjectE
 		if (measurementStatus == null) {
 			measurementCondition = this.testMeasurementCondition;
 		} else {
-			if (this.statusMeasurementCondition == null) {
-				this.statusMeasurementCondition = new TypicalCondition(measurementStatus,
-						OPERATION_EQUALS,
-						MEASUREMENT_CODE,
-						COLUMN_STATUS);
-			} else {
-				this.statusMeasurementCondition.setValue(measurementStatus);
-			}
-			measurementCondition = new CompoundCondition(this.testMeasurementCondition, AND, this.statusMeasurementCondition);
+			final TypicalCondition statusMeasurementCondition = new TypicalCondition(measurementStatus,
+					OPERATION_EQUALS,
+					MEASUREMENT_CODE,
+					COLUMN_STATUS);
+			measurementCondition = new CompoundCondition(this.testMeasurementCondition, AND, statusMeasurementCondition);
 		}
 
 		final Set<Measurement> measurements = StorableObjectPool.getStorableObjectsByCondition(measurementCondition, true);

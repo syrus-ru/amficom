@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementType.java,v 1.111.2.12 2006/04/11 13:06:58 arseniy Exp $
+ * $Id: MeasurementType.java,v 1.111.2.13 2006/06/08 15:56:44 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,7 +37,7 @@ import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.111.2.12 $, $Date: 2006/04/11 13:06:58 $
+ * @version $Revision: 1.111.2.13 $, $Date: 2006/06/08 15:56:44 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -45,7 +45,6 @@ import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 public final class MeasurementType extends ActionType implements IdlTransferableObjectExt<IdlMeasurementType> {
 	private static final long serialVersionUID = 4944246651616691207L;
 
-	private static TypicalCondition codenameCondition;
 	private static EquivalentCondition equivalentCondition;
 
 	MeasurementType(final Identifier id,
@@ -131,15 +130,10 @@ public final class MeasurementType extends ActionType implements IdlTransferable
 	public static MeasurementType valueOf(final String codename) throws ApplicationException {
 		assert codename != null : NON_NULL_EXPECTED;
 
-		if (codenameCondition == null) {
-			codenameCondition = new TypicalCondition(codename,
-					OPERATION_EQUALS,
-					MEASUREMENT_TYPE_CODE,
-					COLUMN_CODENAME);
-		} else {
-			codenameCondition.setValue(codename);
-		}
-
+		final TypicalCondition codenameCondition = new TypicalCondition(codename,
+				OPERATION_EQUALS,
+				MEASUREMENT_TYPE_CODE,
+				COLUMN_CODENAME);
 		final Set<MeasurementType> measurementTypes = StorableObjectPool.getStorableObjectsByCondition(codenameCondition, true);
 		if (measurementTypes.isEmpty()) {
 			throw new ObjectNotFoundException(OBJECT_NOT_FOUND + ": '" + codename + "'");

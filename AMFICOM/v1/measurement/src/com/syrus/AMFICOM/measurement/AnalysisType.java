@@ -1,5 +1,5 @@
 /*-
- * $Id: AnalysisType.java,v 1.107.2.11 2006/04/11 13:06:58 arseniy Exp $
+ * $Id: AnalysisType.java,v 1.107.2.12 2006/06/08 15:56:44 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,7 +37,7 @@ import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.107.2.11 $, $Date: 2006/04/11 13:06:58 $
+ * @version $Revision: 1.107.2.12 $, $Date: 2006/06/08 15:56:44 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -45,7 +45,6 @@ import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 public final class AnalysisType extends ActionType implements IdlTransferableObjectExt<IdlAnalysisType> {
 	private static final long serialVersionUID = 1231695950918077519L;
 
-	private static TypicalCondition codenameCondition;
 	private static EquivalentCondition equivalentCondition;
 
 	AnalysisType(final Identifier id,
@@ -122,15 +121,10 @@ public final class AnalysisType extends ActionType implements IdlTransferableObj
 	public static AnalysisType valueOf(final String codename) throws ApplicationException {
 		assert codename != null : NON_NULL_EXPECTED;
 
-		if (codenameCondition == null) {
-			codenameCondition = new TypicalCondition(codename,
-					OPERATION_EQUALS,
-					ANALYSIS_TYPE_CODE,
-					COLUMN_CODENAME);
-		} else {
-			codenameCondition.setValue(codename);
-		}
-
+		final TypicalCondition codenameCondition = new TypicalCondition(codename,
+				OPERATION_EQUALS,
+				ANALYSIS_TYPE_CODE,
+				COLUMN_CODENAME);
 		final Set<AnalysisType> analysisTypes = StorableObjectPool.getStorableObjectsByCondition(codenameCondition, true);
 		if (analysisTypes.isEmpty()) {
 			throw new ObjectNotFoundException(OBJECT_NOT_FOUND + ": '" + codename + "'");

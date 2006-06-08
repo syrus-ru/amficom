@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementSetup.java,v 1.100.2.19 2006/06/08 14:29:40 arseniy Exp $
+ * $Id: MeasurementSetup.java,v 1.100.2.20 2006/06/08 15:56:44 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,13 +12,13 @@ import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.ObjectEntities.ACTIONTEMPLATE_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.TEST_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTPORT_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTSETUP_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MONITOREDELEMENT_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.TEST_CODE;
 import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
-import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort.OPERATION_EQUALS;
 import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort.AND;
+import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort.OPERATION_EQUALS;
 import static com.syrus.AMFICOM.measurement.TestWrapper.COLUMN_STATUS;
 
 import java.util.Collections;
@@ -75,13 +75,13 @@ import com.syrus.util.transport.idl.IdlTransferableObjectExt;
  * их основе шаблон измерительного задания может быть привязан лишь к тем
  * линиям, к которым привязан каждый из составляющих его шаблонов действия.
  * 
- * @version $Revision: 1.100.2.19 $, $Date: 2006/06/08 14:29:40 $
+ * @version $Revision: 1.100.2.20 $, $Date: 2006/06/08 15:56:44 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
 public final class MeasurementSetup extends StorableObject implements IdlTransferableObjectExt<IdlMeasurementSetup> {
-	private static final long serialVersionUID = 7296011372140670277L;
+	private static final long serialVersionUID = 7485325969465336325L;
 
 	/**
 	 * Идентификатор типа измерительного порта.
@@ -119,12 +119,6 @@ public final class MeasurementSetup extends StorableObject implements IdlTransfe
 	 * {@link #getTests(TestStatus)}.
 	 */
 	private transient LinkedIdsCondition msTestCondition;
-
-	/**
-	 * Вспомогательное поле. Используется в {@link #getTestIds(TestStatus)} и
-	 * {@link #getTests(TestStatus)}.
-	 */
-	private transient TypicalCondition statusTestCondition;
 
 	MeasurementSetup(final Identifier id,
 			final Identifier creatorId,
@@ -426,12 +420,8 @@ public final class MeasurementSetup extends StorableObject implements IdlTransfe
 		if (testStatus == null) {
 			testCondition = this.msTestCondition;
 		} else {
-			if (this.statusTestCondition == null) {
-				this.statusTestCondition = new TypicalCondition(testStatus, OPERATION_EQUALS, TEST_CODE, COLUMN_STATUS);
-			} else {
-				this.statusTestCondition.setValue(testStatus);
-			}
-			testCondition = new CompoundCondition(this.msTestCondition, AND, this.statusTestCondition);
+			final TypicalCondition statusTestCondition = new TypicalCondition(testStatus, OPERATION_EQUALS, TEST_CODE, COLUMN_STATUS);
+			testCondition = new CompoundCondition(this.msTestCondition, AND, statusTestCondition);
 		}
 
 		final Set<Identifier> testIds = StorableObjectPool.getIdentifiersByCondition(testCondition, true);
@@ -459,12 +449,8 @@ public final class MeasurementSetup extends StorableObject implements IdlTransfe
 		if (testStatus == null) {
 			testCondition = this.msTestCondition;
 		} else {
-			if (this.statusTestCondition == null) {
-				this.statusTestCondition = new TypicalCondition(testStatus, OPERATION_EQUALS, TEST_CODE, COLUMN_STATUS);
-			} else {
-				this.statusTestCondition.setValue(testStatus);
-			}
-			testCondition = new CompoundCondition(this.msTestCondition, AND, this.statusTestCondition);
+			final TypicalCondition statusTestCondition = new TypicalCondition(testStatus, OPERATION_EQUALS, TEST_CODE, COLUMN_STATUS);
+			testCondition = new CompoundCondition(this.msTestCondition, AND, statusTestCondition);
 		}
 
 		final Set<Test> tests = StorableObjectPool.getStorableObjectsByCondition(testCondition, true);

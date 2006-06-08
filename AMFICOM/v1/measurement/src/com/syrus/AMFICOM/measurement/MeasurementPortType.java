@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortType.java,v 1.21.2.11 2006/04/17 08:22:26 arseniy Exp $
+ * $Id: MeasurementPortType.java,v 1.21.2.12 2006/06/08 15:56:44 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -47,7 +47,7 @@ import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.21.2.11 $, $Date: 2006/04/17 08:22:26 $
+ * @version $Revision: 1.21.2.12 $, $Date: 2006/06/08 15:56:44 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -58,8 +58,6 @@ public final class MeasurementPortType extends StorableObjectType
 	private static final long serialVersionUID = 4361364717691901973L;
 
 	private String name;
-
-	private static TypicalCondition codenameCondition;
 
 	MeasurementPortType(final Identifier id,
 			final Identifier creatorId,
@@ -191,16 +189,12 @@ public final class MeasurementPortType extends StorableObjectType
 	public static MeasurementPortType valueOf(final String codename) throws ApplicationException {
 		assert codename != null : NON_NULL_EXPECTED;
 
-		if (codenameCondition == null) {
-			codenameCondition = new TypicalCondition(codename,
-					OPERATION_EQUALS,
-					MEASUREMENTPORT_TYPE_CODE,
-					COLUMN_CODENAME);
-		} else {
-			codenameCondition.setValue(codename);
-		}
-
-		final Set<MeasurementPortType> measurementPortTypes = StorableObjectPool.getStorableObjectsByCondition(codenameCondition, true);
+		final TypicalCondition codenameCondition = new TypicalCondition(codename,
+				OPERATION_EQUALS,
+				MEASUREMENTPORT_TYPE_CODE,
+				COLUMN_CODENAME);
+		final Set<MeasurementPortType> measurementPortTypes = StorableObjectPool.getStorableObjectsByCondition(codenameCondition,
+				true);
 		if (measurementPortTypes.isEmpty()) {
 			throw new ObjectNotFoundException(OBJECT_NOT_FOUND + ": '" + codename + "'");
 		}
