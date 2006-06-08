@@ -1,8 +1,17 @@
 #!/bin/bash
 
+print_usage() {
+	echo "Usage: `basename $0` <dest_host> <user> <dest_directory>"
+}
+
 if [ $# -gt 3 ];
 then
-	echo "Usage `basename $0` <dest_host> <user> <dest_directory>"
+	print_usage
+	exit
+fi
+if [ $1 = "-?" -o $1 = "-h" -o $1 = "--help" ];
+then
+	print_usage
 	exit
 fi
 
