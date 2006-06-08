@@ -1,5 +1,5 @@
 /*-
- * $$Id: SiteCrossingPanel.java,v 1.21 2005/10/18 07:21:13 krupenn Exp $$
+ * $$Id: SiteCrossingPanel.java,v 1.22 2006/06/08 12:33:17 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,8 +36,8 @@ import com.syrus.AMFICOM.mapview.CablePath;
 import com.syrus.AMFICOM.mapview.UnboundLink;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/10/18 07:21:13 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.22 $, $Date: 2006/06/08 12:33:17 $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -293,16 +293,18 @@ public class SiteCrossingPanel extends JPanel {
 
 		AbstractNode node = link.getOtherNode(this.site);
 		
-		String text = I18N.getString(MapEditorResourceKeys.TO_SITE_LOWERCASE) + " \"" + node.getName() + "\""; //$NON-NLS-1$ //$NON-NLS-2$
-
-		g2.setColor(LINE_COLOR);
-
-		Font font = this.getFont();
-		FontMetrics fm = this.getFontMetrics(font);
-		int textwidth = fm.stringWidth(text);
-		int textheight = fm.getHeight();
-		int ydelta = (sinA > 0) ? TEXT_DELTA + textheight : -TEXT_DELTA;
-		g2.drawString(text, endx - textwidth / 2, endy + ydelta);
+		if (node != null) {
+			String text = I18N.getString(MapEditorResourceKeys.TO_SITE_LOWERCASE) + " \"" + node.getName() + "\""; //$NON-NLS-1$ //$NON-NLS-2$
+			
+			g2.setColor(LINE_COLOR);
+			
+			Font font = this.getFont();
+			FontMetrics fm = this.getFontMetrics(font);
+			int textwidth = fm.stringWidth(text);
+			int textheight = fm.getHeight();
+			int ydelta = (sinA > 0) ? TEXT_DELTA + textheight : -TEXT_DELTA;
+			g2.drawString(text, endx - textwidth / 2, endy + ydelta);
+		}
 	}
 	
 	protected Point findIntersection(Line2D line, Arc2D arc) {
