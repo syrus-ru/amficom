@@ -1,5 +1,5 @@
 /*-
- * $Id: LineMismatchEventProcessor.java,v 1.29 2006/05/18 19:37:22 bass Exp $
+ * $Id: LineMismatchEventProcessor.java,v 1.30 2006/06/08 19:21:10 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -53,7 +53,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.29 $, $Date: 2006/05/18 19:37:22 $
+ * @version $Revision: 1.30 $, $Date: 2006/06/08 19:21:10 $
  * @module leserver
  */
 final class LineMismatchEventProcessor extends AbstractEventProcessor {
@@ -93,13 +93,8 @@ final class LineMismatchEventProcessor extends AbstractEventProcessor {
 			final LEServerServantManager servantManager = LEServerSessionEnvironment.getInstance().getLEServerServantManager();
 			final ORB orb = servantManager.getCORBAServer().getOrb();
 
-			/*
-			 * Cast here is ok: RME may not always be a storable
-			 * object, but storable object pulled by id with an
-			 * appropriate major is always a RME.
-			 */
 			final ReflectogramMismatchEvent reflectogramMismatchEvent =
-					(ReflectogramMismatchEvent) StorableObjectPool.getStorableObject(lineMismatchEvent.getReflectogramMismatchEventId(), true);
+					lineMismatchEvent.getReflectogramMismatchEvent();
 			final Severity severity = reflectogramMismatchEvent.getSeverity();
 			final Set<SystemUser> systemUsers = DeliveryAttributes
 					.getInstance(LoginManager.getUserId(), severity)

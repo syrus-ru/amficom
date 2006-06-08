@@ -1,5 +1,5 @@
 /*-
- * $Id: Alarm.java,v 1.5 2006/06/06 13:19:56 stas Exp $
+ * $Id: Alarm.java,v 1.6 2006/06/08 19:21:10 bass Exp $
  *
  * Copyright ¿ 2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,11 +8,13 @@
 
 package com.syrus.AMFICOM.alarm;
 
+import static java.util.logging.Level.SEVERE;
+
 import java.util.Date;
 import java.util.SortedSet;
 
-import com.syrus.AMFICOM.eventv2.AbstractReflectogramMismatchEvent;
 import com.syrus.AMFICOM.eventv2.LineMismatchEvent;
+import com.syrus.AMFICOM.eventv2.ReflectogramMismatchEvent;
 import com.syrus.AMFICOM.eventv2.LineMismatchEvent.AlarmStatus;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -49,20 +51,17 @@ public class Alarm {
 		try {
 			this.pathElement = StorableObjectPool.getStorableObject(leader.getAffectedPathElementId(), true);
 			this.schemePath = this.pathElement.getParentPathOwner();
-			AbstractReflectogramMismatchEvent rme = StorableObjectPool.getStorableObject(
-					leader.getReflectogramMismatchEventId(), true);
+			ReflectogramMismatchEvent rme = leader.getReflectogramMismatchEvent();
 			Measurement measurement = StorableObjectPool.getStorableObject(rme.getMeasurementId(), true);
 			this.monitoredElementId = measurement.getMonitoredElementId();
 			this.severity = rme.getSeverity();
 			this.startDate = rme.getCreated();
 			
-			// XXX remove cast bug 574
-			SortedSet<LineMismatchEvent> lineMismatchEvents = (SortedSet)leader.getChildLineMismatchEvents(true);
+			final SortedSet<LineMismatchEvent> lineMismatchEvents = leader.getChildLineMismatchEvents();
 			this.count = lineMismatchEvents.size();
 			
 			LineMismatchEvent last = lineMismatchEvents.last();
-			AbstractReflectogramMismatchEvent lastrme = StorableObjectPool.getStorableObject(
-					last.getReflectogramMismatchEventId(), true);
+			ReflectogramMismatchEvent lastrme = last.getReflectogramMismatchEvent();
 			this.endDate = lastrme.getCreated();
 			this.lastMeasurement = StorableObjectPool.getStorableObject(lastrme.getMeasurementId(), true);
 			this.lastMessage = last.getRichTextMessage();
@@ -124,7 +123,11 @@ public class Alarm {
 	}
 	
 	public void setState(AlarmStatus alarmStatus) {
-		this.leader.setAlarmStatus(alarmStatus);
+		try {
+			this.leader.setAlarmStatus(alarmStatus);
+		} catch (final ApplicationException ae) {
+			Log.debugMessage(ae, SEVERE);
+		}
 	}
 
 	public String getMessage() {
@@ -142,8 +145,7 @@ public class Alarm {
 	public void addLineMismatchEvent(final LineMismatchEvent lineMismatchEvent) throws ApplicationException {
 		this.count++;
 		
-		AbstractReflectogramMismatchEvent lastrme = StorableObjectPool.getStorableObject(
-				lineMismatchEvent.getReflectogramMismatchEventId(), true);
+		ReflectogramMismatchEvent lastrme = lineMismatchEvent.getReflectogramMismatchEvent();
 		this.endDate = lastrme.getCreated();
 		this.lastMeasurement = StorableObjectPool.getStorableObject(lastrme.getMeasurementId(), true);
 		this.lastMessage = lineMismatchEvent.getRichTextMessage();

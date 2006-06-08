@@ -1,5 +1,5 @@
 /*-
-* $Id: PopupNotificationCellRenderer.java,v 1.4 2006/05/18 19:37:23 bass Exp $
+* $Id: PopupNotificationCellRenderer.java,v 1.5 2006/06/08 19:21:10 bass Exp $
 *
 * Copyright © 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -28,7 +28,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.4 $, $Date: 2006/05/18 19:37:23 $
+ * @version $Revision: 1.5 $, $Date: 2006/06/08 19:21:10 $
  * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -68,10 +68,7 @@ final class PopupNotificationCellRenderer extends ZebraListCellRenderer {
 							true);
 			plainTextMessage = lineMismatchEvent.getPlainTextMessage();
 			try {
-				final ReflectogramMismatchEvent reflectogramMismatchEvent =
-						(ReflectogramMismatchEvent) StorableObjectPool.getStorableObject(
-								lineMismatchEvent.getReflectogramMismatchEventId(),
-								true);
+				final ReflectogramMismatchEvent reflectogramMismatchEvent = lineMismatchEvent.getReflectogramMismatchEvent();
 				severity = reflectogramMismatchEvent.getSeverity();
 			} catch (final ApplicationException ae) {
 				Log.debugMessage(ae, SEVERE);
