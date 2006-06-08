@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapPropertiesEventHandler.java,v 1.14 2006/06/06 13:02:36 stas Exp $$
+ * $$Id: MapPropertiesEventHandler.java,v 1.15 2006/06/08 10:23:29 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,7 +45,7 @@ import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.mapview.VoidElement;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2006/06/06 13:02:36 $
+ * @version $Revision: 1.15 $, $Date: 2006/06/08 10:23:29 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -105,26 +105,26 @@ public class MapPropertiesEventHandler extends AbstractEventHandler implements C
 				editor = this.frame.getCurrentEditor();
 			}
 			else if(mapEventType.equals(MapEvent.MAP_SELECTED)) {
-				selectedObject = (Map)pce.getNewValue();
+				selectedObject = (Identifiable)pce.getNewValue();
 				VisualManager vm = MapVisualManager.getInstance();
 				this.frame.setVisualManager(vm);
 				editor = this.frame.getCurrentEditor();
 			}
 			else if(mapEventType.equals(MapEvent.MAP_VIEW_SELECTED)) {
-				selectedObject = (MapView)pce.getNewValue();
+				selectedObject = (Identifiable)pce.getNewValue();
 				VisualManager vm = MapViewVisualManager.getInstance();
 				this.frame.setVisualManager(vm);
 				editor = this.frame.getCurrentEditor();
 			}
 			else if(mapEventType.equals(MapEvent.OTHER_SELECTED)) {
-				selectedObject = (MapElement)pce.getNewValue();
+				selectedObject = (Identifiable)pce.getNewValue();
 				VisualManager vm = MapVisualManager.getVisualManager(selectedObject);
 				if(vm != null) {
 					this.frame.setVisualManager(vm);
 					editor = this.frame.getCurrentEditor();
 				}
 			}
-
+			
 			if(editor != null) {
 				if(editor instanceof PhysicalLinkEditor) {
 					PhysicalLinkEditor linkEditor = (PhysicalLinkEditor )editor;
