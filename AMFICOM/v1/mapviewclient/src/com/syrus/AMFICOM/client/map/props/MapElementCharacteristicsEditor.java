@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapElementCharacteristicsEditor.java,v 1.27 2006/06/06 12:59:52 stas Exp $$
+ * $$Id: MapElementCharacteristicsEditor.java,v 1.28 2006/06/08 10:25:46 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,13 +13,12 @@ import java.util.logging.Level;
 import com.syrus.AMFICOM.client.UI.CharacteristicsPanel;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characterizable;
-import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.IdlCharacteristicTypeSort;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2006/06/06 12:59:52 $
+ * @version $Revision: 1.28 $, $Date: 2006/06/08 10:25:46 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -47,13 +46,8 @@ public class MapElementCharacteristicsEditor extends CharacteristicsPanel<MapEle
 
 		Characterizable characterizable = null;
 
-//		if(object instanceof MapElement) {
-			MapElement mapElement = object;
-			characterizable = mapElement.getCharacterizable();
-//		}
-//		else if(object instanceof Characterizable) {
-//			characterizable = (Characterizable) object;
-//		}
+		MapElement mapElement = object;
+		characterizable = mapElement.getCharacterizable();
 			
 		if(characterizable != null) {
 				super.setTypeSortMapping(
