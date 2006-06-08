@@ -1,5 +1,5 @@
 /*-
- * $Id: ProtoEquipment.java,v 1.33 2006/06/02 17:23:22 bass Exp $
+ * $Id: ProtoEquipment.java,v 1.34 2006/06/08 15:54:58 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -56,8 +56,8 @@ import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
- * @version $Revision: 1.33 $, $Date: 2006/06/02 17:23:22 $
- * @author $Author: bass $
+ * @version $Revision: 1.34 $, $Date: 2006/06/08 15:54:58 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
  */
@@ -239,7 +239,7 @@ public final class ProtoEquipment extends StorableObject
 					? protoEquipment.getManufacturerCode()
 					: "";
 			if (protoEquipment.isSetCharacteristics()) {
-				for (final XmlCharacteristic characteristic : protoEquipment.getCharacteristics().getCharacteristicArray()) {
+				for (final XmlCharacteristic characteristic : protoEquipment.getCharacteristics().getCharacteristicList()) {
 					Characteristic.createInstance(super.creatorId, characteristic, importType);
 				}
 			}

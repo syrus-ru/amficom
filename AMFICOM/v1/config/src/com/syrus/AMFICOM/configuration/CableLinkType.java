@@ -1,5 +1,5 @@
 /*-
- * $Id: CableLinkType.java,v 1.97 2006/06/06 11:31:16 arseniy Exp $
+ * $Id: CableLinkType.java,v 1.98 2006/06/08 15:54:58 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -60,7 +60,7 @@ import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
- * @version $Revision: 1.97 $, $Date: 2006/06/06 11:31:16 $
+ * @version $Revision: 1.98 $, $Date: 2006/06/08 15:54:58 $
  * @author $Author: arseniy $
  * @module config
  */
@@ -301,12 +301,12 @@ public final class CableLinkType extends AbstractLinkType
 			// TODO read imageId - see SiteNodeType.getImageId(Identifier userId, String codename) for example
 			this.imageId = VOID_IDENTIFIER;
 			if (cableLinkType.isSetCableThreadTypes()) {
-				for (final XmlCableThreadType cableThreadType : cableLinkType.getCableThreadTypes().getCableThreadTypeArray()) {
+				for (final XmlCableThreadType cableThreadType : cableLinkType.getCableThreadTypes().getCableThreadTypeList()) {
 					CableThreadType.createInstance(this.creatorId, cableThreadType, importType);
 				}
 			}
 			if (cableLinkType.isSetCharacteristics()) {
-				for (final XmlCharacteristic characteristic : cableLinkType.getCharacteristics().getCharacteristicArray()) {
+				for (final XmlCharacteristic characteristic : cableLinkType.getCharacteristics().getCharacteristicList()) {
 					Characteristic.createInstance(super.creatorId, characteristic, importType);
 				}
 			}

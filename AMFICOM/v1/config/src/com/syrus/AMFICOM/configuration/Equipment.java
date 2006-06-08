@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.163 2006/06/06 11:31:16 arseniy Exp $
+ * $Id: Equipment.java,v 1.164 2006/06/08 15:54:58 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -62,7 +62,7 @@ import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
- * @version $Revision: 1.163 $, $Date: 2006/06/06 11:31:16 $
+ * @version $Revision: 1.164 $, $Date: 2006/06/08 15:54:58 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
@@ -327,7 +327,7 @@ public final class Equipment extends DomainMember
 							MODE_THROW_IF_ABSENT)
 					: VOID_IDENTIFIER;
 			if (equipment.isSetCharacteristics()) {
-				for (final XmlCharacteristic characteristic : equipment.getCharacteristics().getCharacteristicArray()) {
+				for (final XmlCharacteristic characteristic : equipment.getCharacteristics().getCharacteristicList()) {
 					Characteristic.createInstance(super.creatorId, characteristic, importType);
 				}
 			}

@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkType.java,v 1.103 2006/06/06 11:31:16 arseniy Exp $
+ * $Id: LinkType.java,v 1.104 2006/06/08 15:54:58 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -56,7 +56,7 @@ import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
- * @version $Revision: 1.103 $, $Date: 2006/06/06 11:31:16 $
+ * @version $Revision: 1.104 $, $Date: 2006/06/08 15:54:58 $
  * @author $Author: arseniy $
  * @module config
  */
@@ -298,7 +298,7 @@ public final class LinkType extends AbstractLinkType
 			// TODO read imageId - see SiteNodeType.getImageId(Identifier userId, String codename) for example
 			this.imageId = VOID_IDENTIFIER;
 			if (linkType.isSetCharacteristics()) {
-				for (final XmlCharacteristic characteristic : linkType.getCharacteristics().getCharacteristicArray()) {
+				for (final XmlCharacteristic characteristic : linkType.getCharacteristics().getCharacteristicList()) {
 					Characteristic.createInstance(super.creatorId, characteristic, importType);
 				}
 			}

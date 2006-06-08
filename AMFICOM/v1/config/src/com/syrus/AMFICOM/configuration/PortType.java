@@ -1,5 +1,5 @@
 /*-
- * $Id: PortType.java,v 1.121 2006/06/02 17:23:22 bass Exp $
+ * $Id: PortType.java,v 1.122 2006/06/08 15:54:58 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -66,8 +66,8 @@ import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
- * @version $Revision: 1.121 $, $Date: 2006/06/02 17:23:22 $
- * @author $Author: bass $
+ * @version $Revision: 1.122 $, $Date: 2006/06/08 15:54:58 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
  */
@@ -289,7 +289,7 @@ public final class PortType extends StorableObjectType
 			this.sort = portType.getSort().intValue() - 1;
 			this.kind = portType.getKind().intValue() - 1;
 			if (portType.isSetCharacteristics()) {
-				for (final XmlCharacteristic characteristic : portType.getCharacteristics().getCharacteristicArray()) {
+				for (final XmlCharacteristic characteristic : portType.getCharacteristics().getCharacteristicList()) {
 					Characteristic.createInstance(super.creatorId, characteristic, importType);
 				}
 			}
