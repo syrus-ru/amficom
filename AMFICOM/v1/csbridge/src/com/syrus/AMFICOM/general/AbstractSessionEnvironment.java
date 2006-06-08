@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSessionEnvironment.java,v 1.6 2006/06/08 14:46:47 arseniy Exp $
+ * $Id: AbstractSessionEnvironment.java,v 1.7 2006/06/08 16:22:56 arseniy Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,7 +24,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.6 $, $Date: 2006/06/08 14:46:47 $
+ * @version $Revision: 1.7 $, $Date: 2006/06/08 16:22:56 $
  * @author Tashoyan Arseniy Feliksovich
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: arseniy $
@@ -152,10 +152,10 @@ public abstract class AbstractSessionEnvironment<T extends BaseConnectionManager
 		this.poolContext = poolContext;
 		this.poolContext.init();
 
+		LoginManager.init(new CORBALoginPerformer(this.connectionManager, commonUser), loginRestorer);
 		this.loginValidator = new LoginValidator();
 		this.loginValidator.start();
 
-		LoginManager.init(new CORBALoginPerformer(this.connectionManager, commonUser), loginRestorer);
 		IdentifierPool.init(this.connectionManager, identifierPoolCORBAActionProcessor);
 
 		final CORBAServer corbaServer = this.connectionManager.getCORBAServer();
