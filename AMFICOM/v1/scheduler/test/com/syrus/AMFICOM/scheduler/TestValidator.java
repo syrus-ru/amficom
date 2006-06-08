@@ -1,5 +1,5 @@
 /*
- * $Id: TestValidator.java,v 1.4 2006/02/17 10:23:57 bob Exp $
+ * $Id: TestValidator.java,v 1.5 2006/06/08 17:03:50 bass Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,8 +32,8 @@ import com.syrus.AMFICOM.validator.IntersectionValidator;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2006/02/17 10:23:57 $
- * @author $Author: bob $
+ * @version $Revision: 1.5 $, $Date: 2006/06/08 17:03:50 $
+ * @author $Author: bass $
  * @module scheduler
  */
 public final class TestValidator extends TestCase {
@@ -59,7 +59,7 @@ public final class TestValidator extends TestCase {
 	
 	private static void getMonitoredElement() throws ApplicationException {
 		final Identifier meId = 
-			new Identifier(ObjectEntities.MONITOREDELEMENT 
+			Identifier.valueOf(ObjectEntities.MONITOREDELEMENT 
 				+ Identifier.SEPARATOR 
 				+ "21");
 		MONITORED_ELEMENT = StorableObjectPool.getStorableObject(meId, true);
@@ -67,13 +67,13 @@ public final class TestValidator extends TestCase {
 	
 	private static void getMeasurementSetups() throws ApplicationException {
 		final Identifier longMsId = 
-			new Identifier(ObjectEntities.MEASUREMENTSETUP 
+			Identifier.valueOf(ObjectEntities.MEASUREMENTSETUP 
 				+ Identifier.SEPARATOR 
 				+ "941");
 		LONG_MEASUREMENT_SETUP = StorableObjectPool.getStorableObject(longMsId, true);
 		
 		final Identifier shortMsId = 
-			new Identifier(ObjectEntities.MEASUREMENTSETUP 
+			Identifier.valueOf(ObjectEntities.MEASUREMENTSETUP 
 				+ Identifier.SEPARATOR 
 				+ "632");
 		

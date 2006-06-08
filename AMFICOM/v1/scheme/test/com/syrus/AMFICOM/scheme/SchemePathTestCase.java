@@ -1,7 +1,7 @@
 /*-
- * $Id: SchemePathTestCase.java,v 1.39 2006/05/24 10:48:17 bass Exp $
+ * $Id: SchemePathTestCase.java,v 1.40 2006/06/08 17:03:50 bass Exp $
  *
- * Copyright ¿ 2004-2005 Syrus Systems.
+ * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
@@ -53,7 +53,7 @@ import com.syrus.util.Logger;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.39 $, $Date: 2006/05/24 10:48:17 $
+ * @version $Revision: 1.40 $, $Date: 2006/06/08 17:03:50 $
  * @module scheme
  */
 public final class SchemePathTestCase extends TestCase {
@@ -141,7 +141,7 @@ public final class SchemePathTestCase extends TestCase {
 			public synchronized IdlIdentifier[] getGeneratedIdentifierRange(short entity, int size) throws AMFICOMRemoteException {
 				final IdlIdentifier ids[] = new IdlIdentifier[size];
 				for (int i = 0; i < size; i++) {
-					ids[i] = new Identifier(ObjectEntities.codeToString(entity) + '_' + this.l++).getIdlTransferable();
+					ids[i] = Identifier.valueOf(ObjectEntities.codeToString(entity) + '_' + this.l++).getIdlTransferable();
 				}
 				return ids;
 			}
@@ -180,9 +180,9 @@ public final class SchemePathTestCase extends TestCase {
 	}
 
 	public void testSchemePath(final boolean processSubsequentSiblings, final boolean usePool) throws ApplicationException {
-		final Identifier userId = new Identifier("SystemUser_0");
-		final Identifier domainId = new Identifier("Domain_0");
-		final Identifier imageId = new Identifier("ImageResource_0");
+		final Identifier userId = Identifier.valueOf("SystemUser_0");
+		final Identifier domainId = Identifier.valueOf("Domain_0");
+		final Identifier imageId = Identifier.valueOf("ImageResource_0");
 
 		final LinkType linkType = LinkType.createInstance(userId, "codename", "description", "name", LinkTypeSort.LINKTYPESORT_AIR, "manufacturer", "manufactirer code", imageId);
 
@@ -253,8 +253,8 @@ public final class SchemePathTestCase extends TestCase {
 	public void testShiftLeft() throws ApplicationException {
 		final boolean usePool = false;
 
-		final Identifier userId = new Identifier("SystemUser_0");
-		final Identifier domainId = new Identifier("Domain_0");
+		final Identifier userId = Identifier.valueOf("SystemUser_0");
+		final Identifier domainId = Identifier.valueOf("Domain_0");
 
 		final String schemeName = "a scheme";
 		final Scheme scheme = Scheme.createInstance(userId, schemeName, IdlKind.BAY, domainId);
@@ -310,8 +310,8 @@ public final class SchemePathTestCase extends TestCase {
 	}
 
 	public void testShiftRight() throws ApplicationException {
-		final Identifier userId = new Identifier("SystemUser_0");
-		final Identifier domainId = new Identifier("Domain_0");
+		final Identifier userId = Identifier.valueOf("SystemUser_0");
+		final Identifier domainId = Identifier.valueOf("Domain_0");
 
 		final Scheme scheme0 = Scheme.createInstance(userId, "scheme0", IdlKind.BAY, domainId);
 		final SchemeMonitoringSolution schemeMonitoringSolution0 = SchemeMonitoringSolution.createInstance(userId, "schemeMonitoringSolution0", scheme0);
@@ -469,8 +469,8 @@ public final class SchemePathTestCase extends TestCase {
 	public void testSetSchemePaths() throws ApplicationException {
 		final boolean usePool = false;
 
-		final Identifier userId = new Identifier("SystemUser_0");
-		final Identifier domainId = new Identifier("Domain_0");
+		final Identifier userId = Identifier.valueOf("SystemUser_0");
+		final Identifier domainId = Identifier.valueOf("Domain_0");
 
 		final Scheme scheme0 = Scheme.createInstance(userId, "scheme0", IdlKind.BAY, domainId);
 		final Scheme scheme1 = Scheme.createInstance(userId, "scheme1", IdlKind.BAY, domainId);
@@ -525,7 +525,7 @@ public final class SchemePathTestCase extends TestCase {
 	public void testSchemeProtoElementClone() throws ApplicationException, CloneNotSupportedException {
 		final boolean usePool = false;
 
-		final Identifier userId = new Identifier("SystemUser_0");
+		final Identifier userId = Identifier.valueOf("SystemUser_0");
 		final SchemeProtoGroup schemeProtoGroup = SchemeProtoGroup.createInstance(userId, "a scheme proto group");
 		final SchemeProtoElement schemeProtoElement0 = SchemeProtoElement.createInstance(userId, "parent scheme proto element", schemeProtoGroup);
 		final SchemeImageResource ugoCell = SchemeImageResource.createInstance(userId);
@@ -579,8 +579,8 @@ public final class SchemePathTestCase extends TestCase {
 	public void testGetCurrentSchemeMonitoringSolution() throws ApplicationException {
 		final boolean usePool = false;
 
-		final Identifier userId = new Identifier("SystemUser_0");
-		final Identifier domainId = new Identifier("Domain_0");
+		final Identifier userId = Identifier.valueOf("SystemUser_0");
+		final Identifier domainId = Identifier.valueOf("Domain_0");
 
 		final Scheme scheme0 = Scheme.createInstance(userId, "scheme0", IdlKind.BAY, domainId);
 
@@ -652,9 +652,9 @@ public final class SchemePathTestCase extends TestCase {
 	}
 
 	public void testInvalidClone() throws CreateObjectException, CloneNotSupportedException {
-		final Identifier userId = new Identifier("SystemUser_0");
-		final Identifier domainId = new Identifier("Domain_0");
-		final Identifier imageId = new Identifier("ImageResource_0");
+		final Identifier userId = Identifier.valueOf("SystemUser_0");
+		final Identifier domainId = Identifier.valueOf("Domain_0");
+		final Identifier imageId = Identifier.valueOf("ImageResource_0");
 
 		final LinkType linkType0 = LinkType.createInstance(userId, "codename", "description", "linkType0", LinkTypeSort.LINKTYPESORT_OPTICAL, "manufacturer", "manufactirer code", imageId);
 
@@ -713,8 +713,8 @@ public final class SchemePathTestCase extends TestCase {
 	public void testSchemeClone() throws ApplicationException, CloneNotSupportedException {
 		final boolean usePool = false;
 
-		final Identifier userId = new Identifier("SystemUser_0");
-		final Identifier domainId = new Identifier("Domain_0");
+		final Identifier userId = Identifier.valueOf("SystemUser_0");
+		final Identifier domainId = Identifier.valueOf("Domain_0");
 
 		final Scheme scheme0 = Scheme.createInstance(userId, "scheme0", IdlKind.BAY, domainId);
 		final Scheme scheme1 = Scheme.createInstance(userId, "scheme1", IdlKind.BAY, domainId);
@@ -761,8 +761,8 @@ public final class SchemePathTestCase extends TestCase {
 	}
 
 	public void testBug182() throws ApplicationException {
-		final Identifier userId = new Identifier("SystemUser_0");
-		final Identifier domainId = new Identifier("Domain_0");
+		final Identifier userId = Identifier.valueOf("SystemUser_0");
+		final Identifier domainId = Identifier.valueOf("Domain_0");
 
 		final Scheme scheme = Scheme.createInstance(userId, "scheme", IdlKind.BAY, domainId);
 		final SchemeLink schemeLink = SchemeLink.createInstance(userId, "schemeLink", scheme);
@@ -783,8 +783,8 @@ public final class SchemePathTestCase extends TestCase {
 	}
 
 	public void testBug246() throws ApplicationException {
-		final Identifier userId = new Identifier("SystemUser_0");
-		final Identifier domainId = new Identifier("Domain_0");
+		final Identifier userId = Identifier.valueOf("SystemUser_0");
+		final Identifier domainId = Identifier.valueOf("Domain_0");
 
 		final Scheme scheme = Scheme.createInstance(userId, "scheme0", IdlKind.BAY, domainId);
 
