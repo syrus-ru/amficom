@@ -1,10 +1,10 @@
-/*
-* $Id: Wrapper.java,v 1.12 2006/03/17 06:55:40 bass Exp $
-*
-* Copyright ¿ 2004 Syrus Systems.
-* Dept. of Science & Technology.
-* Project: AMFICOM.
-*/
+/*-
+ * $Id: Wrapper.java,v 1.13 2006/06/08 17:06:07 bass Exp $
+ *
+ * Copyright ¿ 2004-2006 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
 
 package com.syrus.util;
 
@@ -12,7 +12,7 @@ import java.util.List;
 
 
 /**
- * Wrapper provides data from Model (such as StorableObject, ObjectResource) using key set.
+ * Wrapper provides data from Model (such as {@code StorableObject}) using key set.
  *
  * Model has various fields, accessors for them and many other things,
  * which are represented through controller to viewers using the same interface
@@ -20,10 +20,10 @@ import java.util.List;
  *
  * All entities of the same kind use a single Wrapper, that's why
  * wrapper's constructor must be private and its instance must be obtained
- * using a static method <code>getInstance()</code>.
+ * using a static method {@code getInstance()}.
  *
  * @author $Author: bass $
- * @version $Revision: 1.12 $, $Date: 2006/03/17 06:55:40 $
+ * @version $Revision: 1.13 $, $Date: 2006/06/08 17:06:07 $
  * @see <a href = "http://bass.science.syrus.ru/java/Bitter%20Java.pdf">&laquo;Bitter Java&raquo; by Bruce A. Tate</a>
  * @module util
  */
@@ -74,12 +74,14 @@ public interface Wrapper<T> {
 	void setPropertyValue(final String key, final Object objectKey, final Object objectValue);
 
 	/**
-	 * Model value witch linked to entity key.
+	 * Model value which is linked to entity key.
 	 *
 	 * @param object
 	 * @param key entity key
+	 * @throws PropertyQueryException
 	 */
-	Object getValue(final T object, final String key);
+	Object getValue(final T object, final String key)
+	throws PropertyQueryException;
 
 	/**
 	 * Returns <code>true</code> if the entity represented by
@@ -99,6 +101,7 @@ public interface Wrapper<T> {
 	 *        entity key
 	 * @param value
 	 *        value, which will be assigned to Model
+	 * @throws PropertyChangeException
 	 */
 	void setValue(final T object, final String key, final Object value)
 	throws PropertyChangeException;
