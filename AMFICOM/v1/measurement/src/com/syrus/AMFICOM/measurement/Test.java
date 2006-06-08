@@ -1,5 +1,5 @@
 /*-
- * $Id: Test.java,v 1.183.2.26 2006/05/29 12:55:49 saa Exp $
+ * $Id: Test.java,v 1.183.2.27 2006/06/08 14:30:05 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -20,10 +20,14 @@ import static com.syrus.AMFICOM.general.ObjectEntities.CRONTEMPORALPATTERN_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.INTERVALSTEMPORALPATTERN_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTSETUP_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENT_TYPE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MONITOREDELEMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PERIODICALTEMPORALPATTERN_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.TEST_CODE;
 import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
+import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort.AND;
+import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort.OPERATION_EQUALS;
+import static com.syrus.AMFICOM.measurement.ActionWrapper.COLUMN_STATUS;
 
 import java.io.Serializable;
 import java.util.Collections;
@@ -37,16 +41,21 @@ import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.administration.MCM;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Describable;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
+import com.syrus.AMFICOM.general.TypicalCondition;
+import com.syrus.AMFICOM.measurement.Action.ActionStatus;
 import com.syrus.AMFICOM.measurement.corba.IdlTest;
 import com.syrus.AMFICOM.measurement.corba.IdlTestHelper;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestStatus;
@@ -60,8 +69,8 @@ import com.syrus.util.transport.idl.IdlTransferableObject;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.183.2.26 $, $Date: 2006/05/29 12:55:49 $
- * @author $Author: saa $
+ * @version $Revision: 1.183.2.27 $, $Date: 2006/06/08 14:30:05 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
@@ -86,6 +95,8 @@ public final class Test extends StorableObject implements IdlTransferableObjectE
 	private transient Identifier kisId;
 	private transient Identifier mcmId;
 	private transient Identifier currentMeasurementSetupId;
+	private transient LinkedIdsCondition testMeasurementCondition;
+	private transient TypicalCondition statusMeasurementCondition;
 
 	Test(final Identifier id,
 			final Identifier creatorId,
@@ -666,6 +677,113 @@ public final class Test extends StorableObject implements IdlTransferableObjectE
 	}
 
 	/**
+	 * Найти все измерения по данному заданию, находящиеся в состоянии
+	 * {@code measurementStatus}.
+	 * <p>
+	 * Если {@code measurementStatus == null}, то ищутся все измерения по
+	 * данному заданию без учёта их состояний.
+	 * 
+	 * @param measurementStatus Состояние измерений.
+	 * @return Набор идентификаторов измерений по данному заданию и в данном
+	 *         состоянии.
+	 * @throws ApplicationException
+	 */
+	public Set<Identifier> getMeasurementIds(final ActionStatus measurementStatus) throws ApplicationException {
+		if (this.testMeasurementCondition == null) {
+			this.testMeasurementCondition = new LinkedIdsCondition(this, MEASUREMENT_CODE);
+		}
+
+		final StorableObjectCondition measurementCondition;
+		if (measurementStatus == null) {
+			measurementCondition = this.testMeasurementCondition;
+		} else {
+			if (this.statusMeasurementCondition == null) {
+				this.statusMeasurementCondition = new TypicalCondition(measurementStatus,
+						OPERATION_EQUALS,
+						MEASUREMENT_CODE,
+						COLUMN_STATUS);
+			} else {
+				this.statusMeasurementCondition.setValue(measurementStatus);
+			}
+			measurementCondition = new CompoundCondition(this.testMeasurementCondition, AND, this.statusMeasurementCondition);
+		}
+
+		final Set<Identifier> measurementIds = StorableObjectPool.getIdentifiersByCondition(measurementCondition, true);
+		return measurementIds;
+	}
+
+	/**
+	 * Найти все измерения по данному заданию, находящиеся в состоянии
+	 * {@code measurementStatus}.
+	 * <p>
+	 * Если {@code measurementStatus == null}, то ищутся все измерения по
+	 * данному заданию без учёта их состояний.
+	 * 
+	 * @param measurementStatus
+	 *        Состояние измерений.
+	 * @return Набор измерений по данному заданию и в данном состоянии.
+	 * @throws ApplicationException
+	 */
+	public Set<Measurement> getMeasurements(final ActionStatus measurementStatus) throws ApplicationException {
+		if (this.testMeasurementCondition == null) {
+			this.testMeasurementCondition = new LinkedIdsCondition(this, MEASUREMENT_CODE);
+		}
+
+		final StorableObjectCondition measurementCondition;
+		if (measurementStatus == null) {
+			measurementCondition = this.testMeasurementCondition;
+		} else {
+			if (this.statusMeasurementCondition == null) {
+				this.statusMeasurementCondition = new TypicalCondition(measurementStatus,
+						OPERATION_EQUALS,
+						MEASUREMENT_CODE,
+						COLUMN_STATUS);
+			} else {
+				this.statusMeasurementCondition.setValue(measurementStatus);
+			}
+			measurementCondition = new CompoundCondition(this.testMeasurementCondition, AND, this.statusMeasurementCondition);
+		}
+
+		final Set<Measurement> measurements = StorableObjectPool.getStorableObjectsByCondition(measurementCondition, true);
+		return measurements;
+	}
+
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
+	protected synchronized void setAttributes(final Date created,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			final StorableObjectVersion version,
+			final String description,
+			final Identifier groupTestId,
+			final Identifier monitoredElementId,
+			final TestStatus status,
+			final TestTemporalType temporalType,
+			final Date startTime,
+			final Date endTime,
+			final Identifier temporalPatternId,
+			final Identifier measurementTypeId,
+			final int numberOfMeasurements,
+			final Identifier analysisTypeId) {
+		super.setAttributes(created,
+			modified,
+			creatorId,
+			modifierId,
+			version);
+		this.description = description;
+		this.groupTestId = groupTestId;
+		this.monitoredElementId = monitoredElementId;
+		this.status = status;
+		this.temporalType = temporalType;
+		this.timeStamps = new TestTimeStamps(startTime, endTime, temporalPatternId);
+		this.measurementTypeId = measurementTypeId;
+		this.numberOfMeasurements = numberOfMeasurements;
+		this.analysisTypeId = analysisTypeId;
+	}
+
+	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	@Override
@@ -710,6 +828,55 @@ public final class Test extends StorableObject implements IdlTransferableObjectE
 	}
 
 	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
+	@Override
+	protected Set<Identifiable> getDependenciesTmpl() {
+		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
+
+		if (!this.groupTestId.isVoid() && !this.id.equals(this.groupTestId)) {
+			dependencies.add(this.groupTestId);
+		}
+
+		dependencies.add(this.monitoredElementId);
+
+		final Identifier temporalPatternId = this.timeStamps.getTemporalPatternId();
+		if (this.temporalType == TestTemporalType.TEST_TEMPORAL_TYPE_PERIODICAL && !temporalPatternId.isVoid()) {
+			dependencies.add(temporalPatternId);
+		}
+
+		dependencies.add(this.measurementTypeId);
+		dependencies.addAll(this.measurementSetupIds);
+		if (!this.analysisTypeId.isVoid()) {
+			dependencies.add(this.analysisTypeId);
+		}
+
+		return dependencies;
+	}
+
+	@Override
+	protected Set<Identifiable> getReverseDependencies(final boolean usePool) throws ApplicationException {
+		final Set<Identifiable> reverseDependencies = new HashSet<Identifiable>();
+		reverseDependencies.addAll(super.getReverseDependencies(usePool));
+
+		for (final Measurement measurement : this.getMeasurements(null)) {
+			reverseDependencies.addAll(getReverseDependencies(measurement, usePool));
+		}
+
+		reverseDependencies.remove(null);
+		reverseDependencies.remove(VOID_IDENTIFIER);
+		return Collections.unmodifiableSet(reverseDependencies);
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.general.StorableObject#getWrapper()
+	 */
+	@Override
+	protected TestWrapper getWrapper() {
+		return TestWrapper.getInstance();
+	}
+
+	/**
 	 * <p>
 	 * <b>Clients must never explicitly call this method.</b>
 	 * </p>
@@ -751,76 +918,6 @@ public final class Test extends StorableObject implements IdlTransferableObjectE
 		super.markAsChanged();
 
 		return measurement;
-	}
-
-	/**
-	 * <p><b>Clients must never explicitly call this method.</b></p>
-	 */
-	protected synchronized void setAttributes(final Date created,
-			final Date modified,
-			final Identifier creatorId,
-			final Identifier modifierId,
-			final StorableObjectVersion version,
-			final String description,
-			final Identifier groupTestId,
-			final Identifier monitoredElementId,
-			final TestStatus status,
-			final TestTemporalType temporalType,
-			final Date startTime,
-			final Date endTime,
-			final Identifier temporalPatternId,
-			final Identifier measurementTypeId,
-			final int numberOfMeasurements,
-			final Identifier analysisTypeId) {
-		super.setAttributes(created,
-			modified,
-			creatorId,
-			modifierId,
-			version);
-		this.description = description;
-		this.groupTestId = groupTestId;
-		this.monitoredElementId = monitoredElementId;
-		this.status = status;
-		this.temporalType = temporalType;
-		this.timeStamps = new TestTimeStamps(startTime, endTime, temporalPatternId);
-		this.measurementTypeId = measurementTypeId;
-		this.numberOfMeasurements = numberOfMeasurements;
-		this.analysisTypeId = analysisTypeId;
-	}
-
-	/**
-	 * <p><b>Clients must never explicitly call this method.</b></p>
-	 */
-	@Override
-	protected Set<Identifiable> getDependenciesTmpl() {
-		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
-
-		if (!this.groupTestId.isVoid() && !this.id.equals(this.groupTestId)) {
-			dependencies.add(this.groupTestId);
-		}
-
-		dependencies.add(this.monitoredElementId);
-
-		final Identifier temporalPatternId = this.timeStamps.getTemporalPatternId();
-		if (this.temporalType == TestTemporalType.TEST_TEMPORAL_TYPE_PERIODICAL && !temporalPatternId.isVoid()) {
-			dependencies.add(temporalPatternId);
-		}
-
-		dependencies.add(this.measurementTypeId);
-		dependencies.addAll(this.measurementSetupIds);
-		if (!this.analysisTypeId.isVoid()) {
-			dependencies.add(this.analysisTypeId);
-		}
-
-		return dependencies;
-	}
-
-	/**
-	 * @see com.syrus.AMFICOM.general.StorableObject#getWrapper()
-	 */
-	@Override
-	protected TestWrapper getWrapper() {
-		return TestWrapper.getInstance();
 	}
 
 	public static IdlTest[] createTransferables(final Set<Test> tests, final ORB orb) {
