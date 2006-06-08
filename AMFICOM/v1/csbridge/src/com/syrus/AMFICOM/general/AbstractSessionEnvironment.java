@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSessionEnvironment.java,v 1.5 2006/06/02 18:11:41 bass Exp $
+ * $Id: AbstractSessionEnvironment.java,v 1.6 2006/06/08 14:46:47 arseniy Exp $
  *
  * Copyright © 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,6 +10,7 @@ package com.syrus.AMFICOM.general;
 
 import static com.syrus.AMFICOM.general.ErrorMessages.ALREADY_LOGGED_IN;
 import static com.syrus.AMFICOM.general.ErrorMessages.NOT_LOGGED_IN;
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
 import static com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.IdlErrorCode._ERROR_NOT_LOGGED_IN;
 import static java.util.logging.Level.SEVERE;
 
@@ -23,10 +24,10 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.5 $, $Date: 2006/06/02 18:11:41 $
+ * @version $Revision: 1.6 $, $Date: 2006/06/08 14:46:47 $
  * @author Tashoyan Arseniy Feliksovich
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
+ * @author $Author: arseniy $
  * @module csbridge
  */
 public abstract class AbstractSessionEnvironment<T extends BaseConnectionManager> {
@@ -194,7 +195,9 @@ public abstract class AbstractSessionEnvironment<T extends BaseConnectionManager
 	 * @return Если сессия установлена - {@code true}, иначе - {@code false}.
 	 */
 	public final synchronized boolean isSessionEstablished() {
-		return this.sessionEstablishDate != null;
+		final boolean isSessionEstablished = this.sessionEstablishDate != null;
+		assert isSessionEstablished == LoginManager.isLoggedIn() : OBJECT_STATE_ILLEGAL;
+		return isSessionEstablished;
 	}
 
 	/**
