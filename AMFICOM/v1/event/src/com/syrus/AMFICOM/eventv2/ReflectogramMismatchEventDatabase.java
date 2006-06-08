@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectogramMismatchEventDatabase.java,v 1.3 2006/03/30 12:10:05 bass Exp $
+ * $Id: ReflectogramMismatchEventDatabase.java,v 1.4 2006/06/08 19:08:30 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,7 +47,7 @@ import com.syrus.util.database.DatabaseDate;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2006/03/30 12:10:05 $
+ * @version $Revision: 1.4 $, $Date: 2006/06/08 19:08:30 $
  * @module event
  */
 public final class ReflectogramMismatchEventDatabase
@@ -140,7 +140,7 @@ public final class ReflectogramMismatchEventDatabase
 	/**
 	 * @param reflectogramMismatchEvent
 	 * @param preparedStatement
-	 * @param startParameterNumber
+	 * @param initialStartParameterNumber
 	 * @throws IllegalDataException
 	 * @throws SQLException
 	 * @see StorableObjectDatabase#setEntityForPreparedStatementTmpl(com.syrus.AMFICOM.general.StorableObject, PreparedStatement, int)
@@ -149,8 +149,10 @@ public final class ReflectogramMismatchEventDatabase
 	protected int setEntityForPreparedStatementTmpl(
 			final DefaultReflectogramMismatchEvent reflectogramMismatchEvent,
 			final PreparedStatement preparedStatement,
-			int startParameterNumber)
+			final int initialStartParameterNumber)
 	throws IllegalDataException, SQLException {
+		int startParameterNumber = initialStartParameterNumber;
+
 		preparedStatement.setInt(++startParameterNumber, reflectogramMismatchEvent.getAlarmType().ordinal());
 		preparedStatement.setInt(++startParameterNumber, reflectogramMismatchEvent.getSeverity().ordinal());
 		preparedStatement.setInt(++startParameterNumber, reflectogramMismatchEvent.getCoord());

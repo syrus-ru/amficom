@@ -1,5 +1,5 @@
 /*-
- * $Id: LineMismatchEventDatabase.java,v 1.5 2006/06/08 19:04:55 bass Exp $
+ * $Id: LineMismatchEventDatabase.java,v 1.6 2006/06/08 19:08:30 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,6 @@ import static com.syrus.AMFICOM.eventv2.LineMismatchEventWrapper.COLUMN_PHYSICAL
 import static com.syrus.AMFICOM.eventv2.LineMismatchEventWrapper.COLUMN_PLAIN_TEXT_MESSAGE;
 import static com.syrus.AMFICOM.eventv2.LineMismatchEventWrapper.COLUMN_REFLECTOGRAM_MISMATCH_EVENT_ID;
 import static com.syrus.AMFICOM.eventv2.LineMismatchEventWrapper.COLUMN_RICH_TEXT_MESSAGE;
-import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.ObjectEntities.LINEMISMATCHEVENT_CODE;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CREATED;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CREATOR_ID;
@@ -45,7 +44,7 @@ import com.syrus.util.database.DatabaseString;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2006/06/08 19:04:55 $
+ * @version $Revision: 1.6 $, $Date: 2006/06/08 19:08:30 $
  * @module event
  */
 public final class LineMismatchEventDatabase
@@ -136,7 +135,7 @@ public final class LineMismatchEventDatabase
 	/**
 	 * @param lineMismatchEvent
 	 * @param preparedStatement
-	 * @param startParameterNumber
+	 * @param initialStartParameterNumber
 	 * @throws IllegalDataException
 	 * @throws SQLException
 	 * @see StorableObjectDatabase#setEntityForPreparedStatementTmpl(com.syrus.AMFICOM.general.StorableObject, java.sql.PreparedStatement, int)
@@ -145,9 +144,11 @@ public final class LineMismatchEventDatabase
 	protected int setEntityForPreparedStatementTmpl(
 			final DefaultLineMismatchEvent lineMismatchEvent,
 			final PreparedStatement preparedStatement,
-			int startParameterNumber)
+			final int initialStartParameterNumber)
 	throws IllegalDataException, SQLException {
 		final AlarmStatus alarmStatus = lineMismatchEvent.getAlarmStatus();
+
+		int startParameterNumber = initialStartParameterNumber;
 
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, lineMismatchEvent.getAffectedPathElementId());
 		if (lineMismatchEvent.isAffectedPathElementSpacious()) {
