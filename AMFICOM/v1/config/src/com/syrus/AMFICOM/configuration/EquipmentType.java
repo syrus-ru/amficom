@@ -1,5 +1,5 @@
 /*-
- * $Id: EquipmentType.java,v 1.111 2006/04/19 13:22:15 bass Exp $
+ * $Id: EquipmentType.java,v 1.112 2006/06/08 15:56:44 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -58,8 +58,8 @@ import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
- * @version $Revision: 1.111 $, $Date: 2006/04/19 13:22:15 $
- * @author $Author: bass $
+ * @version $Revision: 1.112 $, $Date: 2006/06/08 15:56:44 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
 */
@@ -81,9 +81,8 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
 
  */
 public final class EquipmentType extends StorableObjectType implements Namable, XmlTransferableObject<XmlEquipmentType>, IdlTransferableObjectExt<IdlEquipmentType> {
-	private static final long serialVersionUID = 361767579292639873L;
+	private static final long serialVersionUID = -5398393292053548210L;
 
-	private static TypicalCondition codenameCondition;
 	private static EquivalentCondition equivalentCondition;
 
 	EquipmentType(final Identifier id,
@@ -322,12 +321,10 @@ public final class EquipmentType extends StorableObjectType implements Namable, 
 	}
 
 	public static Identifier idOf(final String codename) throws ApplicationException {
-		if (codenameCondition == null) {
-			codenameCondition = new TypicalCondition(codename, OPERATION_EQUALS, EQUIPMENT_TYPE_CODE, COLUMN_CODENAME);
-		} else {
-			codenameCondition.setValue(codename);
-		}
-
+		final TypicalCondition codenameCondition = new TypicalCondition(codename,
+				OPERATION_EQUALS,
+				EQUIPMENT_TYPE_CODE,
+				COLUMN_CODENAME);
 		final Set<Identifier> equipmentTypeIds = StorableObjectPool.getIdentifiersByCondition(codenameCondition, true);
 		if (equipmentTypeIds.isEmpty()) {
 			throw new ObjectNotFoundException("EquipmentType '" + codename + "' not found");
@@ -343,12 +340,10 @@ public final class EquipmentType extends StorableObjectType implements Namable, 
 	}
 
 	public static EquipmentType valueOf(final String codename) throws ApplicationException {
-		if (codenameCondition == null) {
-			codenameCondition = new TypicalCondition(codename, OPERATION_EQUALS, EQUIPMENT_TYPE_CODE, COLUMN_CODENAME);
-		} else {
-			codenameCondition.setValue(codename);
-		}
-
+		final TypicalCondition codenameCondition = new TypicalCondition(codename,
+				OPERATION_EQUALS,
+				EQUIPMENT_TYPE_CODE,
+				COLUMN_CODENAME);
 		final Set<EquipmentType> equipmentTypes = StorableObjectPool.getStorableObjectsByCondition(codenameCondition, true);
 		if (equipmentTypes.isEmpty()) {
 			throw new ObjectNotFoundException("EquipmentType '" + codename + "' not found");
