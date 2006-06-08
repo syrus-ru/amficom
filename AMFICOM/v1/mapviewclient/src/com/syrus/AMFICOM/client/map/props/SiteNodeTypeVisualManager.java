@@ -1,5 +1,5 @@
 /*-
- * $$Id: SiteNodeTypeVisualManager.java,v 1.2 2005/09/30 16:08:41 krupenn Exp $$
+ * $$Id: SiteNodeTypeVisualManager.java,v 1.3 2006/06/08 10:28:36 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,8 +13,8 @@ import com.syrus.AMFICOM.client.UI.VisualManager;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/09/30 16:08:41 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.3 $, $Date: 2006/06/08 10:28:36 $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -23,7 +23,7 @@ public class SiteNodeTypeVisualManager implements VisualManager {
 	private static SiteNodeTypeVisualManager instance;
 
 	private static SiteNodeTypeEditor generalPanel;
-	private static MapElementCharacteristicsEditor charPanel;
+	private static CharacterizableCharacteristicsEditor charPanel;
 
 	public static SiteNodeTypeVisualManager getInstance() {
 		if (instance == null) 
@@ -39,7 +39,7 @@ public class SiteNodeTypeVisualManager implements VisualManager {
 
 	public StorableObjectEditor getCharacteristicPropertiesPanel() {
 		if (charPanel == null)
-			charPanel = new MapElementCharacteristicsEditor();
+			charPanel = new CharacterizableCharacteristicsEditor();
 		return charPanel;
 	}
 
