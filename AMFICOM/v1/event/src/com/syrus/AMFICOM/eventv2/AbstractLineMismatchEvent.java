@@ -1,7 +1,7 @@
 /*-
- * $Id: AbstractLineMismatchEvent.java,v 1.6 2006/05/18 19:37:22 bass Exp $
+ * $Id: AbstractLineMismatchEvent.java,v 1.7 2006/06/08 18:30:10 bass Exp $
  *
- * Copyright ¿ 2004-2005 Syrus Systems.
+ * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
@@ -9,6 +9,7 @@
 package com.syrus.AMFICOM.eventv2;
 
 import static com.syrus.AMFICOM.eventv2.EventType.LINE_MISMATCH;
+import static java.util.logging.Level.SEVERE;
 
 import java.util.Date;
 import java.util.HashSet;
@@ -21,15 +22,18 @@ import com.syrus.AMFICOM.eventv2.corba.IdlLineMismatchEventHelper;
 import com.syrus.AMFICOM.eventv2.corba.IdlLineMismatchEventPackage.IdlSpacialData;
 import com.syrus.AMFICOM.eventv2.corba.IdlLineMismatchEventPackage.IdlSpacialDataPackage.IdlAffectedPathElementSpacious;
 import com.syrus.AMFICOM.eventv2.corba.IdlLineMismatchEventPackage.IdlSpacialDataPackage.IdlPhysicalDistancePair;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
+import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2006/05/18 19:37:22 $
+ * @version $Revision: 1.7 $, $Date: 2006/06/08 18:30:10 $
  * @module event
  */
 public abstract class AbstractLineMismatchEvent extends StorableObject
@@ -49,8 +53,128 @@ public abstract class AbstractLineMismatchEvent extends StorableObject
 		return LINE_MISMATCH;
 	}
 
+	/**
+	 * <p>If both {@code this} and {@code that} belong to the same
+	 * <em>event&nbsp;group</em>, compares reflectogram mismatch events
+	 * they&apos;re referencing via {@link
+	 * LineMismatchEvent#getReflectogramMismatchEventId()}, otherwise throws
+	 * an {@link IllegalArgumentException}.</p>
+	 *
+	 * <p>Obviously, a <em>group&nbsp;leader</em> is <em>less&nbsp;than</em>
+	 * any other event in its group.</p>
+	 *
+	 * @param that
+	 * @see Comparable#compareTo(Object)
+	 * @throws IllegalArgumentException if {@code this} and {@code that}
+	 *         belong to different <em>event&nbsp;groups</em>.
+	 */
+	public final int compareTo(final LineMismatchEvent that) {
+		final Identifier thisParentId = this.getParentLineMismatchEventId();
+		final Identifier thatParentId = that.getParentLineMismatchEventId();
+		if (thisParentId.isVoid()) {
+			/*-
+			 * 1.
+			 *
+			 * "this" references no event.
+			 */
+			if (thatParentId.isVoid()) {
+				/*-
+				 * a.
+				 *
+				 * Unless "this" and "that" are the same event,
+				 * they are leaders of different groups and
+				 * hence should not be compared.
+				 */
+				if (this.equals(that)) {
+					return 0;
+				}
+				throw new IllegalArgumentException("Group leaders "
+						+ this.getId() + " and " + that.getId()
+						+ " should not be compared.");
+			} else if (thatParentId.equals(this)) {
+				/*-
+				 * b.
+				 *
+				 * "that" references "this".
+				 * Ensure "this" < "that" and return -1.
+				 */
+				final Identifier thisReflectogramMismatchEventId = this.getReflectogramMismatchEventId();
+				final Identifier thatReflectogramMismatchEventId = that.getReflectogramMismatchEventId();
+				try {
+					final ReflectogramMismatchEvent thisReflectogramMismatchEvent = this.getReflectogramMismatchEvent();
+					final ReflectogramMismatchEvent thatReflectogramMismatchEvent = that.getReflectogramMismatchEvent();
+					assert thisReflectogramMismatchEvent.compareTo(thatReflectogramMismatchEvent) < 0 :
+							thisReflectogramMismatchEventId
+							+ " (" + thisReflectogramMismatchEvent.getCreated() + ')'
+							+ " < "
+							+ thatReflectogramMismatchEventId
+							+ " (" + thatReflectogramMismatchEvent.getCreated() + ')';
+				} catch (final ApplicationException ae) {
+					Log.debugMessage(ae, SEVERE);
+					assert thisReflectogramMismatchEventId.compareTo(thatReflectogramMismatchEventId) < 0 :
+							thisReflectogramMismatchEventId
+							+ " < "
+							+ thatReflectogramMismatchEventId;
+				}
+				return -1;
+			} else {
+				/*-
+				 * c.
+				 *
+				 * "that" references some other event. Ensure it
+				 * doesn't reference itself and, if not, throw
+				 * an IAE.
+				 */
+				assert !thatParentId.equals(that) : that.getId();
+				throw new IllegalArgumentException(that.getId()
+						+ " doesn't belong to the group lead by "
+						+ this.getId());
+			}
+		} else if (thisParentId.equals(that)) {
+			/*-
+			 * 2. "this" references "that".
+			 */
+			throw new UnsupportedOperationException();
+		} else {
+			/*-
+			 * 3. "this" references some other event.
+			 */
+			throw new UnsupportedOperationException();
+		}
+	}
+
+	/**
+	 * @see LineMismatchEvent#getReflectogramMismatchEvent()
+	 */
+	public final ReflectogramMismatchEvent getReflectogramMismatchEvent()
+	throws ApplicationException {
+		return StorableObjectPool.<AbstractReflectogramMismatchEvent>getStorableObject(
+				this.getReflectogramMismatchEventId(),
+				true);
+	}
+
+	/**
+	 * @see LineMismatchEvent#setParentLineMismatchEvent(LineMismatchEvent)
+	 */
+	public final void setParentLineMismatchEvent(
+			final LineMismatchEvent parentLineMismatchEvent) {
+		this.setParentLineMismatchEventId(Identifier.possiblyVoid(parentLineMismatchEvent));
+	}
+
+	/**
+	 * @see LineMismatchEvent#getParentLineMismatchEvent()
+	 */
+	public final LineMismatchEvent getParentLineMismatchEvent()
+	throws ApplicationException {
+		return StorableObjectPool.<AbstractLineMismatchEvent>getStorableObject(
+				this.getParentLineMismatchEventId(),
+				true);
+	}
+
 	protected String paramString() {
-		return "reflectogramMismatchEventId = " + this.getReflectogramMismatchEventId();
+		return "id = " + this.id + "; "
+				+ "parentLineMismatchEvent = " + this.getParentLineMismatchEventId() + "; "
+				+ "reflectogramMismatchEventId = " + this.getReflectogramMismatchEventId();
 	}
 
 	@Override
