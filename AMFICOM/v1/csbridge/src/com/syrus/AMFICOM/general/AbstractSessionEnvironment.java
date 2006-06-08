@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSessionEnvironment.java,v 1.8 2006/06/08 16:39:20 arseniy Exp $
+ * $Id: AbstractSessionEnvironment.java,v 1.9 2006/06/08 16:40:52 arseniy Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,7 +24,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.8 $, $Date: 2006/06/08 16:39:20 $
+ * @version $Revision: 1.9 $, $Date: 2006/06/08 16:40:52 $
  * @author Tashoyan Arseniy Feliksovich
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: arseniy $
@@ -196,7 +196,8 @@ public abstract class AbstractSessionEnvironment<T extends BaseConnectionManager
 	 */
 	public final synchronized boolean isSessionEstablished() {
 		final boolean isSessionEstablished = this.sessionEstablishDate != null;
-		assert isSessionEstablished == LoginManager.isLoggedIn() : OBJECT_STATE_ILLEGAL;
+		assert isSessionEstablished == LoginManager.isLoggedIn() : OBJECT_STATE_ILLEGAL
+				+ "; isSessionEstablished: " + isSessionEstablished + ", LoginManager is logged in: " + LoginManager.isLoggedIn();
 		return isSessionEstablished;
 	}
 
