@@ -1,5 +1,5 @@
 /*-
- * $Id: LineMismatchEvent.java,v 1.24 2006/06/07 09:39:17 arseniy Exp $
+ * $Id: LineMismatchEvent.java,v 1.25 2006/06/08 18:27:25 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,12 +12,14 @@ import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import static java.util.logging.Level.SEVERE;
 
+import java.io.Serializable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.Set;
+import java.util.SortedSet;
 
 import org.omg.CORBA.BAD_PARAM;
 import org.omg.CORBA.ORB;
@@ -35,12 +37,13 @@ import com.syrus.util.transport.idl.IdlTransferableObjectExt;
  * {@link ReflectogramMismatchEvent}.
  * 
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.24 $, $Date: 2006/06/07 09:39:17 $
+ * @author $Author: bass $
+ * @version $Revision: 1.25 $, $Date: 2006/06/08 18:27:25 $
  * @module event
  */
 public interface LineMismatchEvent
-		extends Event<IdlLineMismatchEvent>, Identifiable {
+		extends Event<IdlLineMismatchEvent>, Identifiable,
+		Comparable<LineMismatchEvent> {
 	/**
 	 * <p>Returns identifier of the {@code PathElement} affected. It&apos;s
 	 * guaranteed to be both non-{@code null} and non-void, unless
@@ -151,6 +154,12 @@ public interface LineMismatchEvent
 	Identifier getReflectogramMismatchEventId();
 
 	/**
+	 * @throws ApplicationException
+	 */
+	ReflectogramMismatchEvent getReflectogramMismatchEvent()
+	throws ApplicationException;
+
+	/**
 	 * <p>Updates <em>alarm&nbsp;status</em> of the event itself or its
 	 * <em>event&nbsp;group</em> (if applicable).</p>
 	 *  
@@ -190,6 +199,10 @@ public interface LineMismatchEvent
 	 * and {@link AlarmStatus#getAllowedSuccessors()} methods can be used.</p>
 	 *
 	 * @param alarmStatus the new <em>alarm&nbsp;status</em> to be set.
+	 * @throws ApplicationException if this event itself is not a group
+	 *         leader, and it tries to fish its group leader out of the
+	 *         object pool in order to update the leader&apos;s alarm status,
+	 *         and the pool throws an {@code ApplicationException}.
 	 * @throws IllegalArgumentException if transition from current status to
 	 *         {@code alarmStatus} is disallowed.
 	 * @see AlarmStatus#isAllowedPredecessorOf(LineMismatchEvent.AlarmStatus)
@@ -197,34 +210,73 @@ public interface LineMismatchEvent
 	 * @see #getAlarmStatus()
 	 * @see #setParentLineMismatchEvent(LineMismatchEvent)
 	 * @see #getParentLineMismatchEvent()
-	 * @see #getChildLineMismatchEvents(boolean)
+	 * @see #getChildLineMismatchEvents()
 	 */
-	void setAlarmStatus(final AlarmStatus alarmStatus);
+	void setAlarmStatus(final AlarmStatus alarmStatus) throws ApplicationException;
 
 	/**
 	 * @see #setAlarmStatus(LineMismatchEvent.AlarmStatus)
 	 * @see #setParentLineMismatchEvent(LineMismatchEvent)
 	 * @see #getParentLineMismatchEvent()
-	 * @see #getChildLineMismatchEvents(boolean)
+	 * @see #getChildLineMismatchEvents()
 	 */
 	AlarmStatus getAlarmStatus();
 
 	/**
+	 * @param parentLineMismatchEventId
+	 */
+	void setParentLineMismatchEventId(final Identifier parentLineMismatchEventId);
+
+	/**
+	 * <p>Updates this event&apos;s parent.</p>
+	 *
+	 * <p>Once this event becomes a non-leader member of an event group,
+	 * invocation of this method will result in an {@code
+	 * IllegalStateException}. In other words, it&apos;s impossible to
+	 * &quot;detach&quot; nor &quot;reattach&quot; child events.</p>
+	 *
+	 * <p>If this event itself is a leader of a non-empty group, invocation
+	 * of this method will also fail with an {@code IllegalStateException}.
+	 * In other words, it&apos;is also impossible to &quot;attach&quot;
+	 * group leaders.</p>
+	 *
+	 * <p>Once this event gets added to a group (as a child), its own
+	 * alarm status information is lost, and further calls to {@link
+	 * #getAlarmStatus()} will return the status of its parent. Also,
+	 * parent&apos;s history log gets updated and a closed parent gets
+	 * reopened again.</p>
+	 *
+	 * <p><strong>Note:</strong> this operation must be executed at most
+	 * once per event. That means that if it can be executed on a client
+	 * machine, it must be executed on at most one client machine
+	 * (particularly the one running &quot;Observer&quot; module).</p>
+	 *
 	 * @param parentLineMismatchEvent
+	 * @throws IllegalStateException
 	 * @see #setAlarmStatus(LineMismatchEvent.AlarmStatus)
 	 * @see #getAlarmStatus()
 	 * @see #getParentLineMismatchEvent()
-	 * @see #getChildLineMismatchEvents(boolean)
+	 * @see #getChildLineMismatchEvents()
 	 */
 	void setParentLineMismatchEvent(final LineMismatchEvent parentLineMismatchEvent);
 
 	/**
+	 * @return identifier of the <em>group&nbsp;leader</em>, or {@link
+	 *         Identifier#VOID_IDENTIFIER void identifier} if this event
+	 *         itself is a <em>group&nbsp;leader</em>.
+	 */
+	Identifier getParentLineMismatchEventId();
+
+	/**
+	 * @return this event&apos;s <em>group&nbsp;leader</em>, or {@code null}
+	 *         if this event itself is a <em>group&nbsp;leader</em>.
+	 * @throws ApplicationException
 	 * @see #setAlarmStatus(LineMismatchEvent.AlarmStatus)
 	 * @see #getAlarmStatus()
 	 * @see #setParentLineMismatchEvent(LineMismatchEvent)
-	 * @see #getChildLineMismatchEvents(boolean)
+	 * @see #getChildLineMismatchEvents()
 	 */
-	LineMismatchEvent getParentLineMismatchEvent();
+	LineMismatchEvent getParentLineMismatchEvent() throws ApplicationException;
 
 	/**
 	 * <p>If this event is a group leader, returns all events in the group
@@ -233,30 +285,16 @@ public interface LineMismatchEvent
 	 * child events, they will be returned as an {@link
 	 * java.util.Collections#unmodifiableSet(Set) unmodifiable set}.</p>
 	 *
-	 * <p>If {@code usePool} is {@code true}, {@link
-	 * com.syrus.AMFICOM.general.ObjectLoader#loadStorableObjectsButIdsByCondition(Set,
-	 * com.syrus.AMFICOM.general.StorableObjectCondition) object loader}
-	 * will be bothered
-	 * no matter was local object cache already built or not, and the cache
-	 * will be forced to rebuild itself; otherwise loader will be addressed
-	 * only if there&apos;s still no cache built, and if there <em>is</em>
-	 * one, its contents will be returned.</p>
-	 *
 	 * <p>If the underlying invocation of {@link
 	 * com.syrus.AMFICOM.general.ObjectLoader#loadStorableObjectsButIdsByCondition(Set,
 	 * com.syrus.AMFICOM.general.StorableObjectCondition)} throws an {@link
 	 * ApplicationException}, the exception is rethrown by this method.</p>
 	 *
-	 * @param usePool whether object loader should be bothered on every
-	 *        invocation or only on the first one.
 	 * @return all events in this event&apos;s group (excluding the event
 	 *         itself) if it&apos;s a group leader, or an {@link
 	 *         java.util.Collections#emptySet() empty set} otherwise.
 	 * @throws ApplicationException if object loader throws an {@code
-	 *         ApplicationException} (note that object loader gets bothered
-	 *         only if local cache needs to be rebuilt, i.&nbsp;e. either
-	 *         every invocation with {@code usePool == true} or the very
-	 *         first invocation with {@code usePool == false}).
+	 *         ApplicationException}.
 	 * @see java.util.Collections#emptySet()
 	 * @see java.util.Collections#unmodifiableSet(Set)
 	 * @see com.syrus.AMFICOM.general.ObjectLoader#loadStorableObjectsButIdsByCondition(Set, com.syrus.AMFICOM.general.StorableObjectCondition)
@@ -264,9 +302,9 @@ public interface LineMismatchEvent
 	 * @see #getAlarmStatus()
 	 * @see #setParentLineMismatchEvent(LineMismatchEvent)
 	 * @see #getParentLineMismatchEvent()
-	 * @see #getChildLineMismatchEvents(boolean)
+	 * @see #getChildLineMismatchEvents()
 	 */
-	Set<LineMismatchEvent> getChildLineMismatchEvents(final boolean usePool)
+	SortedSet<LineMismatchEvent> getChildLineMismatchEvents()
 	throws ApplicationException;
 
 	/**
@@ -275,6 +313,9 @@ public interface LineMismatchEvent
 	 * XTRA_}&raquo; prefix.
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
+	 * @author $Author: bass $
+	 * @version $Revision: 1.25 $, $Date: 2006/06/08 18:27:25 $
+	 * @module event
 	 */
 	enum AlarmStatus {
 		/**
@@ -593,7 +634,10 @@ public interface LineMismatchEvent
 		 * XTRA_CLOSED;</pre>
 		 *
 		 * @author Andrew ``Bass'' Shcheglov
+		 * @author $Author: bass $
+		 * @version $Revision: 1.25 $, $Date: 2006/06/08 18:27:25 $
 		 * @see AllowedSuccessors
+		 * @module event
 		 */
 		@Retention(RUNTIME)
 		@Target(FIELD)
@@ -603,7 +647,10 @@ public interface LineMismatchEvent
 
 		/**
 		 * @author Andrew ``Bass'' Shcheglov
+		 * @author $Author: bass $
+		 * @version $Revision: 1.25 $, $Date: 2006/06/08 18:27:25 $
 		 * @see AllowedPredecessors
+		 * @module event
 		 */
 		@Retention(RUNTIME)
 		@Target(FIELD)
@@ -615,9 +662,15 @@ public interface LineMismatchEvent
 		 * A mutable holder for immutable enum instances.
 		 *
 		 * @author Andrew ``Bass'' Shcheglov
+		 * @author $Author: bass $
+		 * @version $Revision: 1.25 $, $Date: 2006/06/08 18:27:25 $
+		 * @module event
 		 */
-		public static final class Proxy
-				implements IdlTransferableObjectExt<IdlAlarmStatus> {
+		static final class Proxy
+				implements IdlTransferableObjectExt<IdlAlarmStatus>,
+				Serializable {
+			private static final long serialVersionUID = -6406170104542231355L;
+
 			private AlarmStatus value;
 
 			/**
