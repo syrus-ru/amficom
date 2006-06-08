@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseIdentifier.java,v 1.18 2006/04/19 13:22:17 bass Exp $
+ * $Id: DatabaseIdentifier.java,v 1.19 2006/06/08 19:04:31 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import java.sql.Types;
  * DB Identifier wrapper.
  * Main purpose is to hide Identifier implementation and DB representation of it.
  *
- * @version $Revision: 1.18 $, $Date: 2006/04/19 13:22:17 $
+ * @version $Revision: 1.19 $, $Date: 2006/06/08 19:04:31 $
  * @author $Author: bass $
  * @module general
  */
@@ -41,6 +41,18 @@ public final class DatabaseIdentifier {
 		}
 	}
 
+	/**
+	 * A helper method similar to {@link PreparedStatement#setNull(int, int)}.
+	 *
+	 * @param preparedStatement
+	 * @param parameterIndex
+	 * @throws SQLException
+	 */
+	public static void setVoid(final PreparedStatement preparedStatement, final int parameterIndex)
+	throws SQLException {
+		setIdentifier(preparedStatement, parameterIndex, VOID_IDENTIFIER);
+	}
+
 	public static Identifier getIdentifier(final ResultSet resultSet, final String columnName) throws SQLException {
 		final long identifierCode = resultSet.getLong(columnName);
 		if (resultSet.wasNull()) {
@@ -55,5 +67,9 @@ public final class DatabaseIdentifier {
 	public static String toSQLString(final Identifier id) {
 		assert id != null : NON_NULL_EXPECTED;
 		return id.isVoid() ? SQL_NULL_TRIMMED : Long.toString(id.getIdentifierCode());
+	}
+
+	public static String voidToSQLString() {
+		return toSQLString(VOID_IDENTIFIER);
 	}
 }
