@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementSetup.java,v 1.100.2.18 2006/04/13 12:48:30 arseniy Exp $
+ * $Id: MeasurementSetup.java,v 1.100.2.19 2006/06/08 14:29:40 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,11 +10,16 @@ package com.syrus.AMFICOM.measurement;
 import static com.syrus.AMFICOM.general.ErrorMessages.ILLEGAL_ENTITY_CODE;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
+import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.ObjectEntities.ACTIONTEMPLATE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.TEST_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTPORT_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTSETUP_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MONITOREDELEMENT_CODE;
 import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
+import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort.OPERATION_EQUALS;
+import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort.AND;
+import static com.syrus.AMFICOM.measurement.TestWrapper.COLUMN_STATUS;
 
 import java.util.Collections;
 import java.util.Date;
@@ -24,14 +29,19 @@ import java.util.Set;
 import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
+import com.syrus.AMFICOM.general.TypicalCondition;
+import com.syrus.AMFICOM.measurement.Test.TestStatus;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementSetup;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementSetupHelper;
 import com.syrus.util.Log;
@@ -65,7 +75,7 @@ import com.syrus.util.transport.idl.IdlTransferableObjectExt;
  * их основе шаблон измерительного задания может быть привязан лишь к тем
  * линиям, к которым привязан каждый из составляющих его шаблонов действия.
  * 
- * @version $Revision: 1.100.2.18 $, $Date: 2006/04/13 12:48:30 $
+ * @version $Revision: 1.100.2.19 $, $Date: 2006/06/08 14:29:40 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -100,9 +110,21 @@ public final class MeasurementSetup extends StorableObject implements IdlTransfe
 
 
 	/**
-	 * Вспомогательное поле. используется в {@link #isValid()}.
+	 * Вспомогательное поле. Используется в {@link #isValid()}.
 	 */
 	private transient Set<Identifier> actionTemplateIds;
+
+	/**
+	 * Вспомогательное поле. Используется в {@link #getTestIds(TestStatus)} и
+	 * {@link #getTests(TestStatus)}.
+	 */
+	private transient LinkedIdsCondition msTestCondition;
+
+	/**
+	 * Вспомогательное поле. Используется в {@link #getTestIds(TestStatus)} и
+	 * {@link #getTests(TestStatus)}.
+	 */
+	private transient TypicalCondition statusTestCondition;
 
 	MeasurementSetup(final Identifier id,
 			final Identifier creatorId,
@@ -377,6 +399,78 @@ public final class MeasurementSetup extends StorableObject implements IdlTransfe
 		}
 	}
 
+	@Override
+	protected MeasurementSetupWrapper getWrapper() {
+		return MeasurementSetupWrapper.getInstance();
+	}
+
+	/**
+	 * Найти все задания по данному шаблону, находящиеся в состоянии
+	 * {@code testStatus}.
+	 * <p>
+	 * Если {@code testStatus == null}, то ищутся все задания по данному
+	 * шаблону без учёта их состояний.
+	 * 
+	 * @param testStatus
+	 *        Состояние заданий.
+	 * @return Набор идентификаторов заданий по данному шаблону и в данном
+	 *         состоянии.
+	 * @throws ApplicationException
+	 */
+	public Set<Identifier> getTestIds(final TestStatus testStatus) throws ApplicationException {
+		if (this.msTestCondition == null) {
+			this.msTestCondition = new LinkedIdsCondition(this, TEST_CODE);
+		}
+
+		final StorableObjectCondition testCondition;
+		if (testStatus == null) {
+			testCondition = this.msTestCondition;
+		} else {
+			if (this.statusTestCondition == null) {
+				this.statusTestCondition = new TypicalCondition(testStatus, OPERATION_EQUALS, TEST_CODE, COLUMN_STATUS);
+			} else {
+				this.statusTestCondition.setValue(testStatus);
+			}
+			testCondition = new CompoundCondition(this.msTestCondition, AND, this.statusTestCondition);
+		}
+
+		final Set<Identifier> testIds = StorableObjectPool.getIdentifiersByCondition(testCondition, true);
+		return testIds;
+	}
+
+	/**
+	 * Найти все задания по данному шаблону, находящиеся в состоянии
+	 * {@code testStatus}.
+	 * <p>
+	 * Если {@code testStatus == null}, то ищутся все задания по данному
+	 * шаблону без учёта их состояний.
+	 * 
+	 * @param testStatus
+	 *        Состояние заданий.
+	 * @return Набор заданий по данному шаблону и в данном состоянии.
+	 * @throws ApplicationException
+	 */
+	public Set<Test> getTests(final TestStatus testStatus) throws ApplicationException {
+		if (this.msTestCondition == null) {
+			this.msTestCondition = new LinkedIdsCondition(this, TEST_CODE);
+		}
+
+		final StorableObjectCondition testCondition;
+		if (testStatus == null) {
+			testCondition = this.msTestCondition;
+		} else {
+			if (this.statusTestCondition == null) {
+				this.statusTestCondition = new TypicalCondition(testStatus, OPERATION_EQUALS, TEST_CODE, COLUMN_STATUS);
+			} else {
+				this.statusTestCondition.setValue(testStatus);
+			}
+			testCondition = new CompoundCondition(this.msTestCondition, AND, this.statusTestCondition);
+		}
+
+		final Set<Test> tests = StorableObjectPool.getStorableObjectsByCondition(testCondition, true);
+		return tests;
+	}
+
 	protected synchronized void setAttributes(final Date created,
 			final Date modified,
 			final Identifier creatorId,
@@ -448,9 +542,18 @@ public final class MeasurementSetup extends StorableObject implements IdlTransfe
 	}
 
 	@Override
-	protected MeasurementSetupWrapper getWrapper() {
-		return MeasurementSetupWrapper.getInstance();
-	}	
+	protected Set<Identifiable> getReverseDependencies(final boolean usePool) throws ApplicationException {
+		final Set<Identifiable> reverseDependencies = new HashSet<Identifiable>();
+		reverseDependencies.addAll(super.getReverseDependencies(usePool));
+
+		for (final Test test : this.getTests(null)) {
+			reverseDependencies.addAll(getReverseDependencies(test, usePool));
+		}
+
+		reverseDependencies.remove(null);
+		reverseDependencies.remove(VOID_IDENTIFIER);
+		return Collections.unmodifiableSet(reverseDependencies);
+	}
 
 	/**
 	 * Вычисляет продолжительность выполнения и обработки одного измерения
