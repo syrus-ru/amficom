@@ -1,5 +1,5 @@
 /*-
- * $Id: LineMismatchEventDatabase.java,v 1.4 2006/06/08 18:57:57 bass Exp $
+ * $Id: LineMismatchEventDatabase.java,v 1.5 2006/06/08 19:04:55 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,7 +45,7 @@ import com.syrus.util.database.DatabaseString;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2006/06/08 18:57:57 $
+ * @version $Revision: 1.5 $, $Date: 2006/06/08 19:04:55 $
  * @module event
  */
 public final class LineMismatchEventDatabase
@@ -130,7 +130,7 @@ public final class LineMismatchEventDatabase
 						? SQL_NULL + COMMA
 								+ DatabaseIdentifier.toSQLString(lineMismatchEvent.getParentLineMismatchEventId())
 						: Integer.toString(alarmStatus.ordinal()) + COMMA
-								+ DatabaseIdentifier.toSQLString(VOID_IDENTIFIER));
+								+ DatabaseIdentifier.voidToSQLString());
 	}
 
 	/**
@@ -167,7 +167,7 @@ public final class LineMismatchEventDatabase
 			DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, lineMismatchEvent.getParentLineMismatchEventId());
 		} else {
 			preparedStatement.setInt(++startParameterNumber, alarmStatus.ordinal());
-			DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, VOID_IDENTIFIER);
+			DatabaseIdentifier.setVoid(preparedStatement, ++startParameterNumber);
 		}
 		return startParameterNumber;
 	}
