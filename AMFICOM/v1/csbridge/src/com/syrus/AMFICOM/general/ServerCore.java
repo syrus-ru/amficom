@@ -1,5 +1,5 @@
 /*-
- * $Id: ServerCore.java,v 1.54 2006/06/05 13:42:20 arseniy Exp $
+ * $Id: ServerCore.java,v 1.55 2006/06/08 08:24:48 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,18 +41,18 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: arseniy $
- * @version $Revision: 1.54 $, $Date: 2006/06/05 13:42:20 $
+ * @version $Revision: 1.55 $, $Date: 2006/06/08 08:24:48 $
  * @module csbridge
  * @todo Refactor ApplicationException descendants to be capable of generating
  *       an AMFICOMRemoteException.
  */
 public abstract class ServerCore implements CommonServerOperations {
 
-	private LoginServerConnectionManager loginServerConnectionManager;
-	private ORB orb;
-	private String hostName;
+	private final LoginServerConnectionManager loginServerConnectionManager;
+	private final ORB orb;
+	private final String hostName;
 
-	private Map<SessionKey, Date> loginValidationComingDates;
+	private final Map<SessionKey, Date> loginValidationComingDates;
 
 	protected ServerCore(final LoginServerConnectionManager loginServerConnectionManager, final ORB orb) {
 		this.loginServerConnectionManager = loginServerConnectionManager;
