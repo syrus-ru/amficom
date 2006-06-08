@@ -1,5 +1,5 @@
 /*-
- * $$Id: SelectionPopupMenu.java,v 1.36 2006/02/15 11:27:13 stas Exp $$
+ * $$Id: SelectionPopupMenu.java,v 1.37 2006/06/08 12:32:53 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,17 +15,13 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 
-import com.syrus.AMFICOM.administration.PermissionAttributes.PermissionCodename;
 import com.syrus.AMFICOM.client.event.MapEvent;
-import com.syrus.AMFICOM.client.event.StatusMessageEvent;
 import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.MapException;
-import com.syrus.AMFICOM.client.map.MapPropertiesManager;
 import com.syrus.AMFICOM.client.map.command.action.DeleteSelectionCommand;
-import com.syrus.AMFICOM.client.model.ApplicationContext;
-import com.syrus.AMFICOM.client.model.MapApplicationModel;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -41,12 +37,13 @@ import com.syrus.AMFICOM.mapview.UnboundNode;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.36 $, $Date: 2006/02/15 11:27:13 $
+ * @version $Revision: 1.37 $, $Date: 2006/06/08 12:32:53 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
 public final class SelectionPopupMenu extends MapPopupMenu {
+	private static final long serialVersionUID = 905543726291925317L;
 	private JMenuItem removeMenuItem = new JMenuItem();
 	private JMenuItem insertSiteMenuItem = new JMenuItem();
 	private JMenuItem generateMenuItem = new JMenuItem();
@@ -55,7 +52,7 @@ public final class SelectionPopupMenu extends MapPopupMenu {
 	private JMenuItem newCollectorMenuItem = new JMenuItem();
 	private JMenuItem removeCollectorMenuItem = new JMenuItem();
 	
-	private static SelectionPopupMenu instance = new SelectionPopupMenu();
+	private static SelectionPopupMenu instance;
 	
 	Selection selection;	
 
@@ -72,15 +69,21 @@ public final class SelectionPopupMenu extends MapPopupMenu {
 	public void setElement(Object me) {
 		this.selection = (Selection)me;
 
-		this.insertSiteMenuItem.setVisible(this.selection.isPhysicalNodeSelection());
-		this.generateMenuItem.setVisible(this.selection.isUnboundSelection());
-		this.newCollectorMenuItem.setVisible(this.selection.isPhysicalLinkSelection());
-		this.addToCollectorMenuItem.setVisible(this.selection.isPhysicalLinkSelection());
-		this.removeCollectorMenuItem.setVisible(this.selection.isPhysicalLinkSelection());
-		this.removeFromCollectorMenuItem.setVisible(this.selection.isPhysicalLinkSelection());
+		final boolean editable = isEditable();		
+		this.removeMenuItem.setVisible(editable);
+		
+		this.insertSiteMenuItem.setVisible(editable && this.selection.isPhysicalNodeSelection());
+		this.generateMenuItem.setVisible(editable && this.selection.isUnboundSelection());
+		this.newCollectorMenuItem.setVisible(editable && this.selection.isPhysicalLinkSelection());
+		this.addToCollectorMenuItem.setVisible(editable && this.selection.isPhysicalLinkSelection());
+		this.removeCollectorMenuItem.setVisible(editable && this.selection.isPhysicalLinkSelection());
+		this.removeFromCollectorMenuItem.setVisible(editable && this.selection.isPhysicalLinkSelection());
 	}
 	
 	public static SelectionPopupMenu getInstance() {
+		if (instance == null) {
+			instance = new SelectionPopupMenu();
+		}
 		return instance;
 	}
 
@@ -110,11 +113,6 @@ public final class SelectionPopupMenu extends MapPopupMenu {
 					newCollector();
 				} catch(MapException e1) {
 					Log.errorMessage(e1);
-					SelectionPopupMenu.this.netMapViewer.getLogicalNetLayer().getContext().getDispatcher().firePropertyChange(
-							new StatusMessageEvent(
-									this, 
-									StatusMessageEvent.STATUS_MESSAGE, 
-									MapException.DEFAULT_STRING));
 				} catch(ApplicationException e1) {
 					Log.errorMessage(e1);
 				}
@@ -127,11 +125,6 @@ public final class SelectionPopupMenu extends MapPopupMenu {
 					removeCollector();
 				} catch(MapException e1) {
 					Log.errorMessage(e1);
-					SelectionPopupMenu.this.netMapViewer.getLogicalNetLayer().getContext().getDispatcher().firePropertyChange(
-							new StatusMessageEvent(
-									this, 
-									StatusMessageEvent.STATUS_MESSAGE, 
-									MapException.DEFAULT_STRING));
 				} catch(ApplicationException e1) {
 					Log.errorMessage(e1);
 				}
@@ -144,34 +137,24 @@ public final class SelectionPopupMenu extends MapPopupMenu {
 					addToCollector();
 				} catch(MapException e1) {
 					Log.errorMessage(e1);
-					SelectionPopupMenu.this.netMapViewer.getLogicalNetLayer().getContext().getDispatcher().firePropertyChange(
-							new StatusMessageEvent(
-									this, 
-									StatusMessageEvent.STATUS_MESSAGE, 
-									MapException.DEFAULT_STRING));
 				} catch(ApplicationException e1) {
 					Log.errorMessage(e1);
 				}
 			}
 		});
 		this.removeFromCollectorMenuItem.setText(I18N.getString(MapEditorResourceKeys.POPUP_REMOVE_FROM_COLLECTOR));
-		this.removeFromCollectorMenuItem
-				.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						try {
-							removeFromCollector();
-						} catch(MapException e1) {
-							Log.errorMessage(e1);
-							SelectionPopupMenu.this.netMapViewer.getLogicalNetLayer().getContext().getDispatcher().firePropertyChange(
-									new StatusMessageEvent(
-											this, 
-											StatusMessageEvent.STATUS_MESSAGE, 
-											MapException.DEFAULT_STRING));
-						} catch(ApplicationException e1) {
-							Log.errorMessage(e1);
-						}
-					}
-				});
+		this.removeFromCollectorMenuItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					removeFromCollector();
+				} catch(MapException e1) {
+					Log.errorMessage(e1);
+				} catch(ApplicationException e1) {
+					Log.errorMessage(e1);
+				}
+			}
+		});
+		
 		this.add(this.removeMenuItem);
 		this.add(this.insertSiteMenuItem);
 		this.add(this.generateMenuItem);
@@ -184,102 +167,53 @@ public final class SelectionPopupMenu extends MapPopupMenu {
 	}
 
 	void removeSelection() {
-		final ApplicationContext aContext = this.netMapViewer.getLogicalNetLayer().getContext();
-		if(!aContext.getApplicationModel().isEnabled(MapApplicationModel.ACTION_EDIT_MAP)) {
-			aContext.getDispatcher().firePropertyChange(
-					new StatusMessageEvent(
-							this,
-							StatusMessageEvent.STATUS_MESSAGE,
-							I18N.getString(MapEditorResourceKeys.ERROR_OPERATION_PROHIBITED_IN_MODULE)));
-			return;
-		}
-		if(!MapPropertiesManager.isPermitted(PermissionCodename.MAP_EDITOR_EDIT_TOPOLOGICAL_SCHEME)) {
-			aContext.getDispatcher().firePropertyChange(
-					new StatusMessageEvent(
-							this,
-							StatusMessageEvent.STATUS_MESSAGE,
-							I18N.getString(MapEditorResourceKeys.ERROR_NO_PERMISSION)));
-			return;
-		}
-		DeleteSelectionCommand command = new DeleteSelectionCommand();
-		command.setNetMapViewer(this.netMapViewer);
-		this.netMapViewer.getLogicalNetLayer().getCommandList().add(command);
-		this.netMapViewer.getLogicalNetLayer().getCommandList().execute();
-		this.netMapViewer.getLogicalNetLayer().sendMapEvent(MapEvent.MAP_CHANGED);
-		if(!command.isUndoable()) {
-			this.netMapViewer.getLogicalNetLayer().getCommandList().flush();
+		if (confirmDelete()) {
+			DeleteSelectionCommand command = new DeleteSelectionCommand();
+			command.setNetMapViewer(this.netMapViewer);
+			this.netMapViewer.getLogicalNetLayer().getCommandList().add(command);
+			this.netMapViewer.getLogicalNetLayer().getCommandList().execute();
+			this.netMapViewer.getLogicalNetLayer().sendMapEvent(MapEvent.MAP_CHANGED);
+			if(!command.isUndoable()) {
+				this.netMapViewer.getLogicalNetLayer().getCommandList().flush();
+			}
 		}
 	}
 
 	void insertSite() {
-		final ApplicationContext aContext = this.netMapViewer.getLogicalNetLayer().getContext();
-		if(!aContext.getApplicationModel().isEnabled(MapApplicationModel.ACTION_EDIT_MAP)) {
-			aContext.getDispatcher().firePropertyChange(
-					new StatusMessageEvent(
-							this,
-							StatusMessageEvent.STATUS_MESSAGE,
-							I18N.getString(MapEditorResourceKeys.ERROR_OPERATION_PROHIBITED_IN_MODULE)));
-			return;
-		}
-		if(!MapPropertiesManager.isPermitted(PermissionCodename.MAP_EDITOR_EDIT_TOPOLOGICAL_SCHEME)) {
-			aContext.getDispatcher().firePropertyChange(
-					new StatusMessageEvent(
-							this,
-							StatusMessageEvent.STATUS_MESSAGE,
-							I18N.getString(MapEditorResourceKeys.ERROR_NO_PERMISSION)));
-			return;
-		}
 		SiteNodeType proto = super.selectSiteNodeType();
 		if(proto != null) {
-			for(Iterator it = new LinkedList(this.selection.getElements()).iterator(); it.hasNext();) {
-				TopologicalNode node = (TopologicalNode )it.next();
-				super.insertSiteInPlaceOfANode(node, proto);
+			for(MapElement me : new LinkedList<MapElement>(this.selection.getElements())) {
+				if (me instanceof TopologicalNode) {
+					TopologicalNode node = (TopologicalNode)me;
+					super.insertSiteInPlaceOfANode(node, proto);
+				}
 			}
 			this.netMapViewer.getLogicalNetLayer().sendMapEvent(MapEvent.MAP_CHANGED);
 		}
 	}
 
 	void generateCabling() {
-		final ApplicationContext aContext = this.netMapViewer.getLogicalNetLayer().getContext();
-		if(!aContext.getApplicationModel().isEnabled(MapApplicationModel.ACTION_EDIT_MAP)) {
-			aContext.getDispatcher().firePropertyChange(
-					new StatusMessageEvent(
-							this,
-							StatusMessageEvent.STATUS_MESSAGE,
-							I18N.getString(MapEditorResourceKeys.ERROR_OPERATION_PROHIBITED_IN_MODULE)));
-			return;
-		}
-		if(!MapPropertiesManager.isPermitted(PermissionCodename.MAP_EDITOR_EDIT_TOPOLOGICAL_SCHEME)) {
-			aContext.getDispatcher().firePropertyChange(
-					new StatusMessageEvent(
-							this,
-							StatusMessageEvent.STATUS_MESSAGE,
-							I18N.getString(MapEditorResourceKeys.ERROR_NO_PERMISSION)));
-			return;
-		}
 		SiteNodeType proto = super.selectSiteNodeType();
 
 		if(proto != null) {
-			List elementsToBind = new LinkedList(this.selection.getElements());
-			List nodesToBind = new LinkedList();
-			for(Iterator it = elementsToBind.iterator(); it.hasNext();) {
-				MapElement me = (MapElement )it.next();
+			List<MapElement> elementsToBind = new LinkedList<MapElement>(this.selection.getElements());
+			List<UnboundNode> nodesToBind = new LinkedList<UnboundNode>();
+			for(Iterator<MapElement> it = elementsToBind.iterator(); it.hasNext();) {
+				MapElement me = it.next();
 				if(me instanceof UnboundNode) {
-					nodesToBind.add(me);
+					nodesToBind.add((UnboundNode)me);
 					it.remove();
 				}
 			}
 
 			if(!nodesToBind.isEmpty()) {
-				for(Iterator it = nodesToBind.iterator(); it.hasNext();) {
-					UnboundNode un = (UnboundNode )it.next();
+				for(UnboundNode un : nodesToBind) {
 					super.convertUnboundNodeToSite(un, proto);
 				}
 			}
 
-			List alreadyBound = new LinkedList();
-			for(Iterator it = elementsToBind.iterator(); it.hasNext();) {
-				MapElement me = (MapElement )it.next();
+			List<MapElement> alreadyBound = new LinkedList<MapElement>();
+			for(MapElement me : elementsToBind) {
 				if(me instanceof CablePath) {
 					CablePath path = (CablePath )me;
 					if(!alreadyBound.contains(path)) {
@@ -300,23 +234,6 @@ public final class SelectionPopupMenu extends MapPopupMenu {
 	}
 
 	void newCollector() throws ApplicationException, MapDataException, MapConnectionException {
-		final ApplicationContext aContext = this.netMapViewer.getLogicalNetLayer().getContext();
-		if(!aContext.getApplicationModel().isEnabled(MapApplicationModel.ACTION_EDIT_MAP)) {
-			aContext.getDispatcher().firePropertyChange(
-					new StatusMessageEvent(
-							this,
-							StatusMessageEvent.STATUS_MESSAGE,
-							I18N.getString(MapEditorResourceKeys.ERROR_OPERATION_PROHIBITED_IN_MODULE)));
-			return;
-		}
-		if(!MapPropertiesManager.isPermitted(PermissionCodename.MAP_EDITOR_EDIT_TOPOLOGICAL_SCHEME)) {
-			aContext.getDispatcher().firePropertyChange(
-					new StatusMessageEvent(
-							this,
-							StatusMessageEvent.STATUS_MESSAGE,
-							I18N.getString(MapEditorResourceKeys.ERROR_NO_PERMISSION)));
-			return;
-		}
 		Collector collector = super.createCollector();
 		if(collector != null) {
 			super.addLinksToCollector(collector, this.selection.getElements());
@@ -328,23 +245,6 @@ public final class SelectionPopupMenu extends MapPopupMenu {
 	}
 
 	void addToCollector() throws ApplicationException, MapConnectionException, MapDataException {
-		final ApplicationContext aContext = this.netMapViewer.getLogicalNetLayer().getContext();
-		if(!aContext.getApplicationModel().isEnabled(MapApplicationModel.ACTION_EDIT_MAP)) {
-			aContext.getDispatcher().firePropertyChange(
-					new StatusMessageEvent(
-							this,
-							StatusMessageEvent.STATUS_MESSAGE,
-							I18N.getString(MapEditorResourceKeys.ERROR_OPERATION_PROHIBITED_IN_MODULE)));
-			return;
-		}
-		if(!MapPropertiesManager.isPermitted(PermissionCodename.MAP_EDITOR_EDIT_TOPOLOGICAL_SCHEME)) {
-			aContext.getDispatcher().firePropertyChange(
-					new StatusMessageEvent(
-							this,
-							StatusMessageEvent.STATUS_MESSAGE,
-							I18N.getString(MapEditorResourceKeys.ERROR_NO_PERMISSION)));
-			return;
-		}
 		Collector collector = super.selectCollector();
 		if(collector != null) {
 			super.addLinksToCollector(collector, this.selection.getElements());
@@ -356,23 +256,6 @@ public final class SelectionPopupMenu extends MapPopupMenu {
 	}
 
 	void removeFromCollector() throws ApplicationException, MapConnectionException, MapDataException {
-		final ApplicationContext aContext = this.netMapViewer.getLogicalNetLayer().getContext();
-		if(!aContext.getApplicationModel().isEnabled(MapApplicationModel.ACTION_EDIT_MAP)) {
-			aContext.getDispatcher().firePropertyChange(
-					new StatusMessageEvent(
-							this,
-							StatusMessageEvent.STATUS_MESSAGE,
-							I18N.getString(MapEditorResourceKeys.ERROR_OPERATION_PROHIBITED_IN_MODULE)));
-			return;
-		}
-		if(!MapPropertiesManager.isPermitted(PermissionCodename.MAP_EDITOR_EDIT_TOPOLOGICAL_SCHEME)) {
-			aContext.getDispatcher().firePropertyChange(
-					new StatusMessageEvent(
-							this,
-							StatusMessageEvent.STATUS_MESSAGE,
-							I18N.getString(MapEditorResourceKeys.ERROR_NO_PERMISSION)));
-			return;
-		}
 		for(Iterator it = this.selection.getElements().iterator(); it.hasNext();) {
 			PhysicalLink link = (PhysicalLink )it.next();
 			Collector collector = 
@@ -383,42 +266,25 @@ public final class SelectionPopupMenu extends MapPopupMenu {
 		}
 
 		this.netMapViewer.repaint(false);
-
 		this.netMapViewer.getLogicalNetLayer().sendMapEvent(MapEvent.MAP_CHANGED);
 	}
 
 	void removeCollector() throws ApplicationException, MapConnectionException, MapDataException {
-		final ApplicationContext aContext = this.netMapViewer.getLogicalNetLayer().getContext();
-		if(!aContext.getApplicationModel().isEnabled(MapApplicationModel.ACTION_EDIT_MAP)) {
-			aContext.getDispatcher().firePropertyChange(
-					new StatusMessageEvent(
-							this,
-							StatusMessageEvent.STATUS_MESSAGE,
-							I18N.getString(MapEditorResourceKeys.ERROR_OPERATION_PROHIBITED_IN_MODULE)));
-			return;
-		}
-		if(!MapPropertiesManager.isPermitted(PermissionCodename.MAP_EDITOR_EDIT_TOPOLOGICAL_SCHEME)) {
-			aContext.getDispatcher().firePropertyChange(
-					new StatusMessageEvent(
-							this,
-							StatusMessageEvent.STATUS_MESSAGE,
-							I18N.getString(MapEditorResourceKeys.ERROR_NO_PERMISSION)));
-			return;
-		}
-		for(Iterator it = this.selection.getElements().iterator(); it.hasNext();) {
-			PhysicalLink link = (PhysicalLink )it.next();
-			Collector collector = 
-				this.netMapViewer.getLogicalNetLayer().getMapView().getMap().getCollector(link);
-			if(collector != null) {
-				super.removeLinksFromCollector(collector, collector
-						.getPhysicalLinks());
-				super.removeCollector(collector);
+		if (confirmDelete()) {
+			for(Iterator it = this.selection.getElements().iterator(); it.hasNext();) {
+				PhysicalLink link = (PhysicalLink )it.next();
+				Collector collector = 
+					this.netMapViewer.getLogicalNetLayer().getMapView().getMap().getCollector(link);
+				if(collector != null) {
+					super.removeLinksFromCollector(collector, collector
+							.getPhysicalLinks());
+					super.removeCollector(collector);
+				}
 			}
+			
+			this.netMapViewer.repaint(false);
+			
+			this.netMapViewer.getLogicalNetLayer().sendMapEvent(MapEvent.MAP_CHANGED);
 		}
-
-		this.netMapViewer.repaint(false);
-
-		this.netMapViewer.getLogicalNetLayer().sendMapEvent(MapEvent.MAP_CHANGED);
 	}
-
 }

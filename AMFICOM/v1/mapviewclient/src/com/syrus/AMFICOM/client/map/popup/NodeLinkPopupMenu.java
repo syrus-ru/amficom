@@ -1,5 +1,5 @@
 /*-
- * $$Id: NodeLinkPopupMenu.java,v 1.21 2006/02/15 11:12:25 stas Exp $$
+ * $$Id: NodeLinkPopupMenu.java,v 1.22 2006/06/08 12:32:53 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,15 +12,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 
-import com.syrus.AMFICOM.administration.PermissionAttributes.PermissionCodename;
 import com.syrus.AMFICOM.client.event.MapEvent;
-import com.syrus.AMFICOM.client.event.StatusMessageEvent;
 import com.syrus.AMFICOM.client.map.LogicalNetLayer;
-import com.syrus.AMFICOM.client.map.MapPropertiesManager;
 import com.syrus.AMFICOM.client.map.command.action.CreatePhysicalNodeCommandBundle;
-import com.syrus.AMFICOM.client.model.ApplicationContext;
-import com.syrus.AMFICOM.client.model.MapApplicationModel;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.map.NodeLink;
@@ -28,18 +24,19 @@ import com.syrus.AMFICOM.map.corba.IdlPhysicalLinkTypePackage.PhysicalLinkTypeSo
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2006/02/15 11:12:25 $
+ * @version $Revision: 1.22 $, $Date: 2006/06/08 12:32:53 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
 public final class NodeLinkPopupMenu extends MapPopupMenu {
+	private static final long serialVersionUID = -5585985644912948567L;
 	private JMenuItem addPointItem = new JMenuItem();
 	private JMenuItem removeMenuItem = new JMenuItem();
 
 	private NodeLink link;
 
-	private static NodeLinkPopupMenu instance = new NodeLinkPopupMenu();
+	private static NodeLinkPopupMenu instance;
 
 	private NodeLinkPopupMenu() {
 		super();
@@ -51,12 +48,19 @@ public final class NodeLinkPopupMenu extends MapPopupMenu {
 	}
 
 	public static NodeLinkPopupMenu getInstance() {
+		if (instance == null) {
+			instance = new NodeLinkPopupMenu();
+		}
 		return instance;
 	}
 
 	@Override
 	public void setElement(Object me) {
 		this.link = (NodeLink )me;
+		
+		final boolean editable = isEditable();		
+		this.addPointItem.setVisible(editable);
+		this.removeMenuItem.setVisible(editable);
 	}
 
 	private void jbInit() {
@@ -92,24 +96,9 @@ public final class NodeLinkPopupMenu extends MapPopupMenu {
 	}
 
 	void removeNodeLink() {
-		final ApplicationContext aContext = this.netMapViewer.getLogicalNetLayer().getContext();
-		if(!aContext.getApplicationModel().isEnabled(MapApplicationModel.ACTION_EDIT_MAP)) {
-			aContext.getDispatcher().firePropertyChange(
-					new StatusMessageEvent(
-							this,
-							StatusMessageEvent.STATUS_MESSAGE,
-							I18N.getString(MapEditorResourceKeys.ERROR_OPERATION_PROHIBITED_IN_MODULE)));
-			return;
+		if (confirmDelete()) {
+			super.removeMapElement(this.link);
+			this.netMapViewer.getLogicalNetLayer().sendMapEvent(MapEvent.MAP_CHANGED);
 		}
-		if(!MapPropertiesManager.isPermitted(PermissionCodename.MAP_EDITOR_EDIT_TOPOLOGICAL_SCHEME)) {
-			aContext.getDispatcher().firePropertyChange(
-					new StatusMessageEvent(
-							this,
-							StatusMessageEvent.STATUS_MESSAGE,
-							I18N.getString(MapEditorResourceKeys.ERROR_NO_PERMISSION)));
-			return;
-		}
-		super.removeMapElement(this.link);
-		this.netMapViewer.getLogicalNetLayer().sendMapEvent(MapEvent.MAP_CHANGED);
 	}
 }

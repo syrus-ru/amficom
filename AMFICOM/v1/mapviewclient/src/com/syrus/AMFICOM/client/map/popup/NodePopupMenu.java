@@ -1,5 +1,5 @@
 /*-
- * $$Id: NodePopupMenu.java,v 1.23 2006/02/15 11:12:25 stas Exp $$
+ * $$Id: NodePopupMenu.java,v 1.24 2006/06/08 12:32:53 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,13 +12,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 
-import com.syrus.AMFICOM.administration.PermissionAttributes.PermissionCodename;
 import com.syrus.AMFICOM.client.event.MapEvent;
-import com.syrus.AMFICOM.client.event.StatusMessageEvent;
-import com.syrus.AMFICOM.client.map.MapPropertiesManager;
-import com.syrus.AMFICOM.client.model.ApplicationContext;
-import com.syrus.AMFICOM.client.model.MapApplicationModel;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.map.SiteNodeType;
@@ -26,19 +22,21 @@ import com.syrus.AMFICOM.map.TopologicalNode;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2006/02/15 11:12:25 $
+ * @version $Revision: 1.24 $, $Date: 2006/06/08 12:32:53 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
 public final class NodePopupMenu extends MapPopupMenu {
+	private static final long serialVersionUID = -1954022729018754016L;
+
 	private JMenuItem placeSiteMenuItem = new JMenuItem();
 
 	private JMenuItem removeMenuItem = new JMenuItem();
 
 	private TopologicalNode node;
 
-	private static NodePopupMenu instance = new NodePopupMenu();
+	private static NodePopupMenu instance;
 
 	private NodePopupMenu() {
 		super();
@@ -50,12 +48,19 @@ public final class NodePopupMenu extends MapPopupMenu {
 	}
 
 	public static NodePopupMenu getInstance() {
+		if(instance == null) {
+			instance = new NodePopupMenu();
+		}
 		return instance;
 	}
 
 	@Override
 	public void setElement(Object me) {
 		this.node = (TopologicalNode )me;
+		
+		final boolean editable = isEditable();		
+		this.placeSiteMenuItem.setVisible(editable);
+		this.removeMenuItem.setVisible(editable);
 	}
 
 	private void jbInit() {
@@ -78,45 +83,13 @@ public final class NodePopupMenu extends MapPopupMenu {
 	}
 
 	void removeNode() {
-		final ApplicationContext aContext = this.netMapViewer.getLogicalNetLayer().getContext();
-		if(!aContext.getApplicationModel().isEnabled(MapApplicationModel.ACTION_EDIT_MAP)) {
-			aContext.getDispatcher().firePropertyChange(
-					new StatusMessageEvent(
-							this,
-							StatusMessageEvent.STATUS_MESSAGE,
-							I18N.getString(MapEditorResourceKeys.ERROR_OPERATION_PROHIBITED_IN_MODULE)));
-			return;
+		if (confirmDelete()) {
+			super.removeMapElement(this.node);
+			this.netMapViewer.getLogicalNetLayer().sendMapEvent(MapEvent.MAP_CHANGED);
 		}
-		if(!MapPropertiesManager.isPermitted(PermissionCodename.MAP_EDITOR_EDIT_TOPOLOGICAL_SCHEME)) {
-			aContext.getDispatcher().firePropertyChange(
-					new StatusMessageEvent(
-							this,
-							StatusMessageEvent.STATUS_MESSAGE,
-							I18N.getString(MapEditorResourceKeys.ERROR_NO_PERMISSION)));
-			return;
-		}
-		super.removeMapElement(this.node);
-		this.netMapViewer.getLogicalNetLayer().sendMapEvent(MapEvent.MAP_CHANGED);
 	}
 
 	void placeSite() {
-		final ApplicationContext aContext = this.netMapViewer.getLogicalNetLayer().getContext();
-		if(!aContext.getApplicationModel().isEnabled(MapApplicationModel.ACTION_EDIT_MAP)) {
-			aContext.getDispatcher().firePropertyChange(
-					new StatusMessageEvent(
-							this,
-							StatusMessageEvent.STATUS_MESSAGE,
-							I18N.getString(MapEditorResourceKeys.ERROR_OPERATION_PROHIBITED_IN_MODULE)));
-			return;
-		}
-		if(!MapPropertiesManager.isPermitted(PermissionCodename.MAP_EDITOR_EDIT_TOPOLOGICAL_SCHEME)) {
-			aContext.getDispatcher().firePropertyChange(
-					new StatusMessageEvent(
-							this,
-							StatusMessageEvent.STATUS_MESSAGE,
-							I18N.getString(MapEditorResourceKeys.ERROR_NO_PERMISSION)));
-			return;
-		}
 		SiteNodeType proto = super.selectSiteNodeType();
 		if(proto != null) {
 			super.insertSiteInPlaceOfANode(this.node, proto);

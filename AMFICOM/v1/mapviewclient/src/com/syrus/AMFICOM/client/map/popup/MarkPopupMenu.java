@@ -1,5 +1,5 @@
 /*-
- * $$Id: MarkPopupMenu.java,v 1.20 2006/02/15 11:12:25 stas Exp $$
+ * $$Id: MarkPopupMenu.java,v 1.21 2006/06/08 12:32:53 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,25 +12,23 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 
-import com.syrus.AMFICOM.administration.PermissionAttributes.PermissionCodename;
 import com.syrus.AMFICOM.client.event.MapEvent;
-import com.syrus.AMFICOM.client.event.StatusMessageEvent;
-import com.syrus.AMFICOM.client.map.MapPropertiesManager;
-import com.syrus.AMFICOM.client.model.ApplicationContext;
-import com.syrus.AMFICOM.client.model.MapApplicationModel;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.map.Mark;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2006/02/15 11:12:25 $
+ * @version $Revision: 1.21 $, $Date: 2006/06/08 12:32:53 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
 public final class MarkPopupMenu extends MapPopupMenu {
+	private static final long serialVersionUID = 5259178384513977950L;
+
 	private JMenuItem removeMenuItem = new JMenuItem();
 
 	private Mark mark;
@@ -53,6 +51,9 @@ public final class MarkPopupMenu extends MapPopupMenu {
 	@Override
 	public void setElement(Object me) {
 		this.mark = (Mark )me;
+		
+		final boolean editable = isEditable();		
+		this.removeMenuItem.setVisible(editable);
 	}
 
 	private void jbInit() {
@@ -66,24 +67,9 @@ public final class MarkPopupMenu extends MapPopupMenu {
 	}
 
 	void removeMark() {
-		final ApplicationContext aContext = this.netMapViewer.getLogicalNetLayer().getContext();
-		if(!aContext.getApplicationModel().isEnabled(MapApplicationModel.ACTION_EDIT_MAP)) {
-			aContext.getDispatcher().firePropertyChange(
-					new StatusMessageEvent(
-							this,
-							StatusMessageEvent.STATUS_MESSAGE,
-							I18N.getString(MapEditorResourceKeys.ERROR_OPERATION_PROHIBITED_IN_MODULE)));
-			return;
+		if (confirmDelete()) {
+			super.removeMapElement(this.mark);
+			this.netMapViewer.getLogicalNetLayer().sendMapEvent(MapEvent.MAP_CHANGED);
 		}
-		if(!MapPropertiesManager.isPermitted(PermissionCodename.MAP_EDITOR_EDIT_TOPOLOGICAL_SCHEME)) {
-			aContext.getDispatcher().firePropertyChange(
-					new StatusMessageEvent(
-							this,
-							StatusMessageEvent.STATUS_MESSAGE,
-							I18N.getString(MapEditorResourceKeys.ERROR_NO_PERMISSION)));
-			return;
-		}
-		super.removeMapElement(this.mark);
-		this.netMapViewer.getLogicalNetLayer().sendMapEvent(MapEvent.MAP_CHANGED);
 	}
 }

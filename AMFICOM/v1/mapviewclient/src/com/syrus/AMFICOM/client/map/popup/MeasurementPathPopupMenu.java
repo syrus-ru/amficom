@@ -1,5 +1,5 @@
 /*-
- * $$Id: MeasurementPathPopupMenu.java,v 1.20 2006/02/15 11:12:25 stas Exp $$
+ * $$Id: MeasurementPathPopupMenu.java,v 1.21 2006/06/08 12:32:53 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,6 +15,7 @@ import javax.swing.JMenuItem;
 
 import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.map.command.action.CreateMarkerCommandAtomic;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.MapApplicationModel;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
@@ -22,18 +23,19 @@ import com.syrus.AMFICOM.mapview.MeasurementPath;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2006/02/15 11:12:25 $
+ * @version $Revision: 1.21 $, $Date: 2006/06/08 12:32:53 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
 public final class MeasurementPathPopupMenu extends MapPopupMenu {
+	private static final long serialVersionUID = -6711101474302904058L;
 
 	private JMenuItem addMarkerMenuItem = new JMenuItem();
 
 	private MeasurementPath path;
 
-	private static MeasurementPathPopupMenu instance = new MeasurementPathPopupMenu();
+	private static MeasurementPathPopupMenu instance;
 
 	private MeasurementPathPopupMenu() {
 		super();
@@ -45,6 +47,9 @@ public final class MeasurementPathPopupMenu extends MapPopupMenu {
 	}
 
 	public static MeasurementPathPopupMenu getInstance() {
+		if (instance == null) {
+			instance = new MeasurementPathPopupMenu();
+		}
 		return instance;
 	}
 
@@ -52,9 +57,9 @@ public final class MeasurementPathPopupMenu extends MapPopupMenu {
 	public void setElement(Object me) {
 		this.path = (MeasurementPath )me;
 
-		this.addMarkerMenuItem.setVisible(this.netMapViewer.getLogicalNetLayer().getContext()
-				.getApplicationModel().isEnabled(
-						MapApplicationModel.ACTION_USE_MARKER));
+		final ApplicationContext aContext = this.netMapViewer.getLogicalNetLayer().getContext();
+		this.addMarkerMenuItem.setVisible(
+				aContext.getApplicationModel().isEnabled(MapApplicationModel.ACTION_USE_MARKER));
 	}
 
 	private void jbInit() {

@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapPopupMenu.java,v 1.60 2005/10/11 08:56:12 krupenn Exp $$
+ * $$Id: MapPopupMenu.java,v 1.61 2006/06/08 12:32:53 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,11 +18,13 @@ import java.util.Set;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 
+import com.syrus.AMFICOM.administration.PermissionAttributes.PermissionCodename;
 import com.syrus.AMFICOM.client.UI.dialogs.WrapperedComboChooserDialog;
 import com.syrus.AMFICOM.client.map.LogicalNetLayer;
 import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapCoordinatesConverter;
 import com.syrus.AMFICOM.client.map.MapDataException;
+import com.syrus.AMFICOM.client.map.MapPropertiesManager;
 import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.client.map.command.action.BindUnboundNodeToSiteCommandBundle;
 import com.syrus.AMFICOM.client.map.command.action.CreateCollectorCommandAtomic;
@@ -37,7 +39,10 @@ import com.syrus.AMFICOM.client.map.command.action.MapElementStateChangeCommand;
 import com.syrus.AMFICOM.client.map.command.action.RemoveCollectorCommandAtomic;
 import com.syrus.AMFICOM.client.map.controllers.LinkTypeController;
 import com.syrus.AMFICOM.client.map.controllers.NodeTypeController;
+import com.syrus.AMFICOM.client.model.AbstractMainFrame;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.AMFICOM.client.model.MapApplicationModel;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -61,8 +66,8 @@ import com.syrus.AMFICOM.resource.DoublePoint;
 /**
  * Контекстное меню элемента карты
  * 
- * @version $Revision: 1.60 $, $Date: 2005/10/11 08:56:12 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.61 $, $Date: 2006/06/08 12:32:53 $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -192,11 +197,9 @@ public abstract class MapPopupMenu extends JPopupMenu {
 		logicalNetLayer.getCommandList().execute();
 	}
 
-	protected void removeLinksFromCollector(Collector collector, Set links) throws ApplicationException {
-		for(Iterator it = links.iterator(); it.hasNext();) {
-			PhysicalLink mple = (PhysicalLink )it.next();
-
-			removeLinkFromCollector(collector, mple);
+	protected void removeLinksFromCollector(Collector collector, Set<PhysicalLink> links) throws ApplicationException {
+		for(PhysicalLink link : links) {
+			removeLinkFromCollector(collector, link);
 		}
 	}
 
@@ -346,5 +349,18 @@ public abstract class MapPopupMenu extends JPopupMenu {
 		logicalNetLayer.getCommandList().add(command);
 		logicalNetLayer.getCommandList().execute();
 		return command.getLink();
+	}
+	
+	protected boolean isEditable() {
+		final ApplicationContext aContext = this.netMapViewer.getLogicalNetLayer().getContext();
+		return aContext.getApplicationModel().isEnabled(MapApplicationModel.ACTION_EDIT_MAP)
+				&& MapPropertiesManager.isPermitted(PermissionCodename.MAP_EDITOR_EDIT_TOPOLOGICAL_SCHEME);
+	}
+	
+	protected boolean confirmDelete() {
+		return JOptionPane.showConfirmDialog(AbstractMainFrame.getActiveMainFrame(),
+				I18N.getString("Message.confirmation.sure_delete"),  //$NON-NLS-1$
+				I18N.getString("Message.confirmation"),  //$NON-NLS-1$
+				JOptionPane.YES_NO_OPTION) == JOptionPane.OK_OPTION;
 	}
 }

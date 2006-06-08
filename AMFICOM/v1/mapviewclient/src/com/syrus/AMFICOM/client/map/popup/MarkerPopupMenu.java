@@ -1,5 +1,5 @@
 /*-
- * $$Id: MarkerPopupMenu.java,v 1.18 2006/02/15 11:12:25 stas Exp $$
+ * $$Id: MarkerPopupMenu.java,v 1.19 2006/06/08 12:32:53 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.mapview.Marker;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2006/02/15 11:12:25 $
+ * @version $Revision: 1.19 $, $Date: 2006/06/08 12:32:53 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -32,7 +32,7 @@ public final class MarkerPopupMenu extends MapPopupMenu {
 
 	private Marker marker;
 
-	private static MarkerPopupMenu instance = new MarkerPopupMenu();
+	private static MarkerPopupMenu instance;
 
 	private MarkerPopupMenu() {
 		super();
@@ -44,6 +44,9 @@ public final class MarkerPopupMenu extends MapPopupMenu {
 	}
 
 	public static MarkerPopupMenu getInstance() {
+		if (instance == null) {
+			instance = new MarkerPopupMenu();
+		}
 		return instance;
 	}
 

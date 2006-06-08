@@ -1,5 +1,5 @@
 /*-
- * $$Id: UnboundLinkPopupMenu.java,v 1.26 2006/02/15 11:12:25 stas Exp $$
+ * $$Id: UnboundLinkPopupMenu.java,v 1.27 2006/06/08 12:32:53 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,13 +13,8 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JMenuItem;
 
-import com.syrus.AMFICOM.administration.PermissionAttributes.PermissionCodename;
 import com.syrus.AMFICOM.client.event.MapEvent;
-import com.syrus.AMFICOM.client.event.StatusMessageEvent;
-import com.syrus.AMFICOM.client.map.MapPropertiesManager;
 import com.syrus.AMFICOM.client.map.command.action.BindUnboundLinkToPhysicalLinkCommandBundle;
-import com.syrus.AMFICOM.client.model.ApplicationContext;
-import com.syrus.AMFICOM.client.model.MapApplicationModel;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.map.AbstractNode;
@@ -29,18 +24,19 @@ import com.syrus.AMFICOM.mapview.UnboundNode;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2006/02/15 11:12:25 $
+ * @version $Revision: 1.27 $, $Date: 2006/06/08 12:32:53 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
 public class UnboundLinkPopupMenu extends MapPopupMenu {
+	private static final long serialVersionUID = 8470223999024380697L;
 	private JMenuItem bindMenuItem = new JMenuItem();
 	private JMenuItem generateMenuItem = new JMenuItem();
 
 	private UnboundLink unbound;
 
-	private static UnboundLinkPopupMenu instance = new UnboundLinkPopupMenu();
+	private static UnboundLinkPopupMenu instance;
 
 	private UnboundLinkPopupMenu() {
 		super();
@@ -52,16 +48,27 @@ public class UnboundLinkPopupMenu extends MapPopupMenu {
 	}
 
 	public static UnboundLinkPopupMenu getInstance() {
+		if (instance == null) {
+			instance = new UnboundLinkPopupMenu();
+		}
 		return instance;
 	}
 
 	@Override
 	public void setElement(Object me) {
 		this.unbound = (UnboundLink)me;
-		final AbstractNode startNode = this.unbound.getStartNode();
-		final AbstractNode endNode = this.unbound.getEndNode();
-		this.generateMenuItem.setVisible(!(startNode instanceof UnboundNode
-				|| endNode instanceof UnboundNode));
+		
+		final boolean editable = isEditable();		
+		this.bindMenuItem.setVisible(editable);
+		
+		boolean generatable = false;
+		if (editable) {
+			final AbstractNode startNode = this.unbound.getStartNode();
+			final AbstractNode endNode = this.unbound.getEndNode();
+			generatable = !(startNode instanceof UnboundNode
+					|| endNode instanceof UnboundNode);
+		}
+		this.generateMenuItem.setVisible(generatable);
 	}
 
 	private void jbInit() {
@@ -83,23 +90,6 @@ public class UnboundLinkPopupMenu extends MapPopupMenu {
 	}
 
 	void bind() {
-		final ApplicationContext aContext = this.netMapViewer.getLogicalNetLayer().getContext();
-		if(!aContext.getApplicationModel().isEnabled(MapApplicationModel.ACTION_EDIT_MAP_VIEW)) {
-			aContext.getDispatcher().firePropertyChange(
-					new StatusMessageEvent(
-							this,
-							StatusMessageEvent.STATUS_MESSAGE,
-							I18N.getString(MapEditorResourceKeys.ERROR_OPERATION_PROHIBITED_IN_MODULE)));
-			return;
-		}
-		if(!MapPropertiesManager.isPermitted(PermissionCodename.MAP_EDITOR_EDIT_BINDING)) {
-			aContext.getDispatcher().firePropertyChange(
-					new StatusMessageEvent(
-							this,
-							StatusMessageEvent.STATUS_MESSAGE,
-							I18N.getString(MapEditorResourceKeys.ERROR_NO_PERMISSION)));
-			return;
-		}
 		PhysicalLink link = super.selectPhysicalLinkAt(this.unbound);
 		if(link != null) {
 			BindUnboundLinkToPhysicalLinkCommandBundle command = new BindUnboundLinkToPhysicalLinkCommandBundle(
@@ -114,23 +104,6 @@ public class UnboundLinkPopupMenu extends MapPopupMenu {
 	}
 
 	void generateCabling() {
-		final ApplicationContext aContext = this.netMapViewer.getLogicalNetLayer().getContext();
-		if(!aContext.getApplicationModel().isEnabled(MapApplicationModel.ACTION_EDIT_MAP_VIEW)) {
-			aContext.getDispatcher().firePropertyChange(
-					new StatusMessageEvent(
-							this,
-							StatusMessageEvent.STATUS_MESSAGE,
-							I18N.getString(MapEditorResourceKeys.ERROR_OPERATION_PROHIBITED_IN_MODULE)));
-			return;
-		}
-		if(!MapPropertiesManager.isPermitted(PermissionCodename.MAP_EDITOR_EDIT_BINDING)) {
-			aContext.getDispatcher().firePropertyChange(
-					new StatusMessageEvent(
-							this,
-							StatusMessageEvent.STATUS_MESSAGE,
-							I18N.getString(MapEditorResourceKeys.ERROR_NO_PERMISSION)));
-			return;
-		}
 		super.convertUnboundLinkToPhysicalLink(this.unbound);
 	}
 }

@@ -1,5 +1,5 @@
 /*-
- * $$Id: UnboundPopupMenu.java,v 1.30 2006/02/15 11:12:25 stas Exp $$
+ * $$Id: UnboundPopupMenu.java,v 1.31 2006/06/08 12:32:53 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,15 +12,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 
-import com.syrus.AMFICOM.administration.PermissionAttributes.PermissionCodename;
 import com.syrus.AMFICOM.client.event.MapEvent;
-import com.syrus.AMFICOM.client.event.StatusMessageEvent;
-import com.syrus.AMFICOM.client.map.MapPropertiesManager;
 import com.syrus.AMFICOM.client.map.command.action.BindUnboundNodeToSiteCommandBundle;
 import com.syrus.AMFICOM.client.map.command.action.DeleteNodeCommandBundle;
-import com.syrus.AMFICOM.client.model.ApplicationContext;
-import com.syrus.AMFICOM.client.model.MapApplicationModel;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.map.SiteNode;
@@ -29,19 +25,20 @@ import com.syrus.AMFICOM.mapview.UnboundNode;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2006/02/15 11:12:25 $
+ * @version $Revision: 1.31 $, $Date: 2006/06/08 12:32:53 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
 public class UnboundPopupMenu extends MapPopupMenu {
+	private static final long serialVersionUID = 6304763844465550703L;
 	private JMenuItem removeMenuItem = new JMenuItem();
 	private JMenuItem bindMenuItem = new JMenuItem();
 	private JMenuItem generateMenuItem = new JMenuItem();
 
 	private UnboundNode unbound;
 
-	private static UnboundPopupMenu instance = new UnboundPopupMenu();
+	private static UnboundPopupMenu instance;
 
 	private UnboundPopupMenu() {
 		super();
@@ -53,12 +50,20 @@ public class UnboundPopupMenu extends MapPopupMenu {
 	}
 
 	public static UnboundPopupMenu getInstance() {
+		if (instance == null) {
+			instance = new UnboundPopupMenu();
+		}
 		return instance;
 	}
 
 	@Override
 	public void setElement(Object me) {
 		this.unbound = (UnboundNode )me;
+		
+		final boolean editable = isEditable();		
+		this.removeMenuItem.setVisible(editable);
+		this.bindMenuItem.setVisible(editable);
+		this.generateMenuItem.setVisible(editable);
 	}
 
 	private void jbInit() {
@@ -86,51 +91,19 @@ public class UnboundPopupMenu extends MapPopupMenu {
 	}
 
 	void removeUnbound() {
-		final ApplicationContext aContext = this.netMapViewer.getLogicalNetLayer().getContext();
-		if(!aContext.getApplicationModel().isEnabled(MapApplicationModel.ACTION_EDIT_MAP_VIEW)) {
-			aContext.getDispatcher().firePropertyChange(
-					new StatusMessageEvent(
-							this,
-							StatusMessageEvent.STATUS_MESSAGE,
-							I18N.getString(MapEditorResourceKeys.ERROR_OPERATION_PROHIBITED_IN_MODULE)));
-			return;
-		}
-		if(!MapPropertiesManager.isPermitted(PermissionCodename.MAP_EDITOR_EDIT_BINDING)) {
-			aContext.getDispatcher().firePropertyChange(
-					new StatusMessageEvent(
-							this,
-							StatusMessageEvent.STATUS_MESSAGE,
-							I18N.getString(MapEditorResourceKeys.ERROR_NO_PERMISSION)));
-			return;
-		}
-		DeleteNodeCommandBundle command = new DeleteNodeCommandBundle(this.unbound);
-		command.setNetMapViewer(this.netMapViewer);
-		this.netMapViewer.getLogicalNetLayer().getCommandList().add(command);
-		this.netMapViewer.getLogicalNetLayer().getCommandList().execute();
-		this.netMapViewer.getLogicalNetLayer().sendMapEvent(MapEvent.MAP_CHANGED);
-		if(!command.isUndoable()) {
-			this.netMapViewer.getLogicalNetLayer().getCommandList().flush();
+		if (confirmDelete()) {
+			DeleteNodeCommandBundle command = new DeleteNodeCommandBundle(this.unbound);
+			command.setNetMapViewer(this.netMapViewer);
+			this.netMapViewer.getLogicalNetLayer().getCommandList().add(command);
+			this.netMapViewer.getLogicalNetLayer().getCommandList().execute();
+			this.netMapViewer.getLogicalNetLayer().sendMapEvent(MapEvent.MAP_CHANGED);
+			if(!command.isUndoable()) {
+				this.netMapViewer.getLogicalNetLayer().getCommandList().flush();
+			}
 		}
 	}
 
 	void bind() {
-		final ApplicationContext aContext = this.netMapViewer.getLogicalNetLayer().getContext();
-		if(!aContext.getApplicationModel().isEnabled(MapApplicationModel.ACTION_EDIT_MAP_VIEW)) {
-			aContext.getDispatcher().firePropertyChange(
-					new StatusMessageEvent(
-							this,
-							StatusMessageEvent.STATUS_MESSAGE,
-							I18N.getString(MapEditorResourceKeys.ERROR_OPERATION_PROHIBITED_IN_MODULE)));
-			return;
-		}
-		if(!MapPropertiesManager.isPermitted(PermissionCodename.MAP_EDITOR_EDIT_BINDING)) {
-			aContext.getDispatcher().firePropertyChange(
-					new StatusMessageEvent(
-							this,
-							StatusMessageEvent.STATUS_MESSAGE,
-							I18N.getString(MapEditorResourceKeys.ERROR_NO_PERMISSION)));
-			return;
-		}
 		SiteNode site = super.selectSiteNode();
 		if(site != null) {
 			BindUnboundNodeToSiteCommandBundle command = 
@@ -146,23 +119,6 @@ public class UnboundPopupMenu extends MapPopupMenu {
 	}
 
 	void generateSite() {
-		final ApplicationContext aContext = this.netMapViewer.getLogicalNetLayer().getContext();
-		if(!aContext.getApplicationModel().isEnabled(MapApplicationModel.ACTION_EDIT_MAP_VIEW)) {
-			aContext.getDispatcher().firePropertyChange(
-					new StatusMessageEvent(
-							this,
-							StatusMessageEvent.STATUS_MESSAGE,
-							I18N.getString(MapEditorResourceKeys.ERROR_OPERATION_PROHIBITED_IN_MODULE)));
-			return;
-		}
-		if(!MapPropertiesManager.isPermitted(PermissionCodename.MAP_EDITOR_EDIT_BINDING)) {
-			aContext.getDispatcher().firePropertyChange(
-					new StatusMessageEvent(
-							this,
-							StatusMessageEvent.STATUS_MESSAGE,
-							I18N.getString(MapEditorResourceKeys.ERROR_NO_PERMISSION)));
-			return;
-		}
 		SiteNodeType proto = super.selectSiteNodeType();
 		if(proto != null) {
 			super.convertUnboundNodeToSite(this.unbound, proto);
