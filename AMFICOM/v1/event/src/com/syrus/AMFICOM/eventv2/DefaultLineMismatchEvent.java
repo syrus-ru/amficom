@@ -1,5 +1,5 @@
 /*-
- * $Id: DefaultLineMismatchEvent.java,v 1.13 2006/06/07 09:31:06 arseniy Exp $
+ * $Id: DefaultLineMismatchEvent.java,v 1.14 2006/06/08 18:38:46 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,7 @@ import static com.syrus.AMFICOM.general.StorableObjectVersion.ILLEGAL_VERSION;
 import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 
 import java.util.Date;
-import java.util.Set;
+import java.util.SortedSet;
 
 import com.syrus.AMFICOM.eventv2.corba.IdlLineMismatchEvent;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -28,8 +28,8 @@ import com.syrus.util.transport.idl.IdlConversionException;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.13 $, $Date: 2006/06/07 09:31:06 $
+ * @author $Author: bass $
+ * @version $Revision: 1.14 $, $Date: 2006/06/08 18:38:46 $
  * @module event
  */
 public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
@@ -81,12 +81,23 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 	private Identifier reflectogramMismatchEventId;
 
 	/**
+	 * @serial include
+	 */
+	private final AlarmStatus.Proxy alarmStatus;
+
+	/**
+	 * @serial include
+	 */
+	private Identifier parentLineMismatchEventId;
+
+	/**
 	 * Ctor used solely by database driver.
 	 *
 	 * @param id
 	 */
 	DefaultLineMismatchEvent(final Identifier id) {
 		super(id, VOID_IDENTIFIER, null, ILLEGAL_VERSION);
+		this.alarmStatus = new AlarmStatus.Proxy();
 	}
 
 	/**
@@ -133,6 +144,8 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 		this.plainTextMessage = plainTextMessage;
 		this.richTextMessage = richTextMessage;
 		this.reflectogramMismatchEventId = reflectogramMismatchEventId;
+		this.alarmStatus = new AlarmStatus.Proxy(AlarmStatus.PENDING);
+		this.parentLineMismatchEventId = VOID_IDENTIFIER;
 	}
 
 	/**
@@ -146,6 +159,7 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 	public DefaultLineMismatchEvent(final IdlLineMismatchEvent lineMismatchEvent)
 	throws CreateObjectException {
 		try {
+			this.alarmStatus = new AlarmStatus.Proxy();
 			this.fromIdlTransferable(lineMismatchEvent);
 		} catch (final IdlConversionException ice) {
 			throw new CreateObjectException(ice);
@@ -175,6 +189,11 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 			this.plainTextMessage = lineMismatchEvent.getPlainTextMessage();
 			this.richTextMessage = lineMismatchEvent.getRichTextMessage();
 			this.reflectogramMismatchEventId = Identifier.valueOf(lineMismatchEvent.getReflectogramMismatchEventId());
+			/**
+			 * @todo Write something meaningful here.
+			 */
+//			this.alarmStatus.fromIdlTransferable(...);
+//			this.parentLineMismatchEventId = ...;
 		}
 	}
 
@@ -191,7 +210,9 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 			final double mismatchPhysicalDistance,
 			final String plainTextMessage,
 			final String richTextMessage,
-			final Identifier reflectogramMismatchEventId) {
+			final Identifier reflectogramMismatchEventId,
+			final AlarmStatus alarmStatus,
+			final Identifier parentLineMismatchEventId) {
 		super.setAttributes(created, modified, creatorId, modifierId, version);
 		
 		this.affectedPathElementId = affectedPathElementId;
@@ -212,6 +233,14 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 		this.plainTextMessage = plainTextMessage;
 		this.richTextMessage = richTextMessage;
 		this.reflectogramMismatchEventId = reflectogramMismatchEventId;
+
+		if (alarmStatus != null ^ parentLineMismatchEventId.isVoid()) {
+			throw new IllegalArgumentException("alarmStatus = " + alarmStatus + "; " +
+					"parentLineMismatchEventId = " + parentLineMismatchEventId); 
+		}
+
+		this.alarmStatus.setValue(alarmStatus);
+		this.parentLineMismatchEventId = parentLineMismatchEventId;
 	}
 
 	/**
@@ -341,35 +370,89 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 	/**
 	 * @see LineMismatchEvent#setAlarmStatus(AlarmStatus)
 	 */
-	public void setAlarmStatus(final AlarmStatus alarmStatus) {
-		throw new UnsupportedOperationException();
+	@SuppressWarnings("null")
+	public void setAlarmStatus(final AlarmStatus alarmStatus)
+	throws ApplicationException {
+		final AlarmStatus oldAlarmStatus = this.alarmStatus.getValue();
+		final boolean parentLineMismatchEventIdVoid = this.parentLineMismatchEventId.isVoid();
+		assert oldAlarmStatus == null ^ parentLineMismatchEventIdVoid :
+				"alarmStatus = " + oldAlarmStatus + "; "
+				+ "parentLineMismatchEventId = " + this.parentLineMismatchEventId;
+		if (!parentLineMismatchEventIdVoid) {
+			this.getParentLineMismatchEvent().setAlarmStatus(alarmStatus);
+		} else if (oldAlarmStatus.isAllowedPredecessorOf(alarmStatus)) {
+			this.alarmStatus.setValue(alarmStatus);
+			this.markAsChanged();
+		} else {
+			throw new IllegalArgumentException(oldAlarmStatus
+					+ " is not an allowed predecessor of "
+					+ alarmStatus);
+		}
 	}
 
 	/**
 	 * @see LineMismatchEvent#getAlarmStatus()
 	 */
 	public AlarmStatus getAlarmStatus() {
-		throw new UnsupportedOperationException();
+		@SuppressWarnings("hiding")
+		final AlarmStatus alarmStatus = this.alarmStatus.getValue();
+		assert alarmStatus == null ^ this.parentLineMismatchEventId.isVoid() :
+				"alarmStatus = " + alarmStatus + "; "
+				+ "parentLineMismatchEventId = " + this.parentLineMismatchEventId;
+		return alarmStatus;
 	}
 
 	/**
-	 * @see LineMismatchEvent#setParentLineMismatchEvent(LineMismatchEvent)
+	 * @see LineMismatchEvent#setParentLineMismatchEventId(Identifier)
 	 */
-	public void setParentLineMismatchEvent(final LineMismatchEvent parentLineMismatchEvent) {
-		throw new UnsupportedOperationException();
+	public void setParentLineMismatchEventId(final Identifier parentLineMismatchEventId) {
+		if (parentLineMismatchEventId.isVoid()) {
+			if (this.parentLineMismatchEventId.isVoid()) {
+				/*-
+				 * Has been having no parent, would have no
+				 * parent - no harm.
+				 */
+				return;
+			}
+			/*-
+			 * Has been having a parent - refuse to detach.
+			 */
+			throw new IllegalStateException("Cowardly refusing to detach the event: "
+					+ "id = " + this.id + "; "
+					+ "oldParentLineMismatchEventId = " + this.parentLineMismatchEventId + "; "
+					+ "newParentLineMismatchEventId = " + parentLineMismatchEventId); 
+		} else if (this.parentLineMismatchEventId.isVoid()) {
+			/*-
+			 * Has been having no parent, would have one - let's see.
+			 */
+			throw new UnsupportedOperationException();
+		} else {
+			/*-
+			 * Has been having a parent - refuse to reattach.
+			 */
+			throw new IllegalStateException("Cowardly refusing to reattach the event: "
+					+ "id = " + this.id + "; "
+					+ "oldParentLineMismatchEventId = " + this.parentLineMismatchEventId + "; "
+					+ "newParentLineMismatchEventId = " + parentLineMismatchEventId); 
+		}
 	}
 
 	/**
-	 * @see LineMismatchEvent#getParentLineMismatchEvent()
+	 * @see LineMismatchEvent#getParentLineMismatchEventId()
 	 */
-	public LineMismatchEvent getParentLineMismatchEvent() {
-		throw new UnsupportedOperationException();
+	public Identifier getParentLineMismatchEventId() {
+		@SuppressWarnings("hiding")
+		final AlarmStatus alarmStatus = this.alarmStatus.getValue();
+		assert alarmStatus == null ^ this.parentLineMismatchEventId.isVoid() :
+				"alarmStatus = " + alarmStatus + "; "
+				+ "parentLineMismatchEventId = " + this.parentLineMismatchEventId;
+		return this.parentLineMismatchEventId;
 	}
 
 	/**
-	 * @see LineMismatchEvent#getChildLineMismatchEvents(boolean)
+	 * @see LineMismatchEvent#getChildLineMismatchEvents()
 	 */
-	public Set<LineMismatchEvent> getChildLineMismatchEvents(final boolean usePool)
+	public SortedSet<LineMismatchEvent> getChildLineMismatchEvents()
 	throws ApplicationException {
 		/**
 		 * @todo query if there's a parent prior to collecting children.  
