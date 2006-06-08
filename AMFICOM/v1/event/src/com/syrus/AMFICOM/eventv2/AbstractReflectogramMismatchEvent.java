@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractReflectogramMismatchEvent.java,v 1.7 2006/03/30 12:10:05 bass Exp $
+ * $Id: AbstractReflectogramMismatchEvent.java,v 1.8 2006/06/08 18:22:18 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.reflectometry.SOAnchor;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.7 $, $Date: 2006/03/30 12:10:05 $
+ * @version $Revision: 1.8 $, $Date: 2006/06/08 18:22:18 $
  * @module event
  */
 public abstract class AbstractReflectogramMismatchEvent extends StorableObject
@@ -52,6 +52,20 @@ public abstract class AbstractReflectogramMismatchEvent extends StorableObject
 
 	public final EventType getType() {
 		return REFLECTORGAM_MISMATCH;
+	}
+
+	/**
+	 * Compares the two reflectogram mismatch events simply by their created
+	 * dates.
+	 *
+	 * @param that
+	 * @see Comparable#compareTo(Object)
+	 */
+	public final int compareTo(final ReflectogramMismatchEvent that) {
+		final long thisCreated = this.getCreated().getTime();
+		final long thatCreated = that.getCreated().getTime();
+
+		return thisCreated <= thatCreated ? thisCreated < thatCreated ? -1 : 0 : 1;
 	}
 
 	protected String paramString() {
@@ -130,7 +144,7 @@ public abstract class AbstractReflectogramMismatchEvent extends StorableObject
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.7 $, $Date: 2006/03/30 12:10:05 $
+	 * @version $Revision: 1.8 $, $Date: 2006/06/08 18:22:18 $
 	 * @module event
 	 */
 	final class SoAnchorImpl implements SOAnchor, Identifiable, Serializable {
