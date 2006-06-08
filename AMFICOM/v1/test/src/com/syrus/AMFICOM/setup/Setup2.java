@@ -1,5 +1,5 @@
 /*-
- * $Id: Setup2.java,v 1.1.2.7 2006/04/18 17:34:36 arseniy Exp $
+ * $Id: Setup2.java,v 1.1.2.8 2006/06/08 15:08:01 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,6 +10,8 @@ package com.syrus.AMFICOM.setup;
 import junit.framework.Test;
 import junit.framework.TestCase;
 
+import com.syrus.AMFICOM.administration.SetupRole;
+import com.syrus.AMFICOM.administration.TestRoleAttributtes;
 import com.syrus.AMFICOM.configuration.SetupEquipmentType;
 import com.syrus.AMFICOM.configuration.SetupPortType;
 import com.syrus.AMFICOM.configuration.SetupTransmissionPathType;
@@ -22,7 +24,7 @@ import com.syrus.AMFICOM.measurement.SetupMeasurementPortType;
 import com.syrus.AMFICOM.reflectometry.SetupParameterType;
 
 /**
- * @version $Revision: 1.1.2.7 $, $Date: 2006/04/18 17:34:36 $
+ * @version $Revision: 1.1.2.8 $, $Date: 2006/06/08 15:08:01 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module test
@@ -35,6 +37,10 @@ public final class Setup2 extends TestCase {
 
 	public static Test suite() {
 		final CORBACommonTest commonTest = new CORBACommonTest();
+
+		// Create roles
+		commonTest.addTest(new SetupRole("testCreate"));
+		commonTest.addTestSuite(TestRoleAttributtes.class);
 
 		// Create configuration objects.
 		commonTest.addTest(new SetupEquipmentType("testCreate"));
