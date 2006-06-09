@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlMCMImpl.java,v 1.8 2006/03/14 10:47:59 bass Exp $
+ * $Id: IdlMCMImpl.java,v 1.9 2006/06/09 15:42:41 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,12 +18,12 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.8 $, $Date: 2006/03/14 10:47:59 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.9 $, $Date: 2006/06/09 15:42:41 $
  * @module administration
  */
 final class IdlMCMImpl extends IdlMCM {
-	private static final long serialVersionUID = 1482992962278587987L;
+	private static final long serialVersionUID = -3577292501514985684L;
 
 	IdlMCMImpl() {
 		// empty
@@ -39,7 +39,7 @@ final class IdlMCMImpl extends IdlMCM {
 			final String name,
 			final String description,
 			final String hostname,
-			final IdlIdentifier userId,
+			final IdlIdentifier systemUserId,
 			final IdlIdentifier serverId) {
 		this.id = id;
 		this.created = created;
@@ -51,7 +51,7 @@ final class IdlMCMImpl extends IdlMCM {
 		this.name = name;
 		this.description = description;
 		this.hostname = hostname;
-		this.userId = userId;
+		this.systemUserId = systemUserId;
 		this.serverId = serverId;
 	}
 
