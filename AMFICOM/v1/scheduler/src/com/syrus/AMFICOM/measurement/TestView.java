@@ -1,5 +1,5 @@
 /*-
-* $Id: TestView.java,v 1.24.4.2 2006/04/12 08:22:24 saa Exp $
+* $Id: TestView.java,v 1.24.4.3 2006/06/09 08:57:10 saa Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -46,7 +46,7 @@ import com.syrus.util.WrapperComparator;
 
 
 /**
- * @version $Revision: 1.24.4.2 $, $Date: 2006/04/12 08:22:24 $
+ * @version $Revision: 1.24.4.3 $, $Date: 2006/06/09 08:57:10 $
  * @author $Author: saa $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
@@ -132,7 +132,8 @@ public final class TestView {
 		
 		this.measurementSetup = 
 			StorableObjectPool.getStorableObject(mainMeasurementSetupId, true);
-		
+		assert this.measurementSetup != null;
+
 		final Identifier groupTestId = this.test.getGroupTestId();
 		if (groupTestId.isVoid()) {
 //			this.lastDate = this.test.getEndTime();
