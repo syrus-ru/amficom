@@ -1,5 +1,5 @@
 /*-
- * $$Id: SiteNodeAddEditor.java,v 1.42 2006/06/06 12:59:52 stas Exp $$
+ * $$Id: SiteNodeAddEditor.java,v 1.43 2006/06/09 13:29:26 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,6 +18,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import javax.swing.Box;
 import javax.swing.ImageIcon;
@@ -53,6 +54,9 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.client_.scheme.graph.UgoTabbedPane;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.SchemeActions;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.PhysicalLink;
@@ -68,7 +72,7 @@ import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.42 $, $Date: 2006/06/06 12:59:52 $
+ * @version $Revision: 1.43 $, $Date: 2006/06/09 13:29:26 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -604,16 +608,8 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor<SiteNod
 		this.cablesBranch.removeAllChildren();
 		if(siteNode != null) {
 			try {
-				DefaultMutableTreeNode elementNode;
-				DefaultMutableTreeNode cableNode;
-
 				MapView mapView = this.logicalNetLayer.getMapView();
 
-				List schemeElements = new LinkedList();
-				for(Iterator it = mapView.getSchemes().iterator(); it.hasNext();) {
-					Scheme scheme = (Scheme )it.next();
-					schemeElements.addAll(scheme.getTopologicalSchemeElementsRecursively(true));
-				}
 				List<CablePath> cableElementsTransit = new LinkedList<CablePath>(mapView.getCablePaths(siteNode));
 				List<CablePath> cableElementsDropped = new LinkedList<CablePath>();
 				for(Iterator it = cableElementsTransit.iterator(); it.hasNext();) {
@@ -625,27 +621,23 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor<SiteNod
 					}
 				}
 
-				if(schemeElements != null) {
-					for(Iterator it = schemeElements.iterator(); it.hasNext();) {
-						SchemeElement se = (SchemeElement )it.next();
-						SiteNode elementSiteNode = se.getSiteNode();
-						if(elementSiteNode != null && elementSiteNode.equals(siteNode)) {
-							elementNode = new DefaultMutableTreeNode(se);
-							this.elementsBranch.add(elementNode);
-							for(CablePath cablePath : cableElementsDropped) {
-								if(startsAt(cablePath.getSchemeCableLink(), se)) {
-									cableNode = new DefaultMutableTreeNode(cablePath.getSchemeCableLink());
-									elementNode.add(cableNode);
-								}
-							}
+				LinkedIdsCondition condition = new LinkedIdsCondition(this.site, ObjectEntities.SCHEMEELEMENT_CODE);
+				Set<SchemeElement> schemeElements = StorableObjectPool.getStorableObjectsByCondition(condition, true);
+				if (!schemeElements.isEmpty()) {
+					SchemeElement se = schemeElements.iterator().next();
+					DefaultMutableTreeNode elementNode = new DefaultMutableTreeNode(se);
+					this.elementsBranch.add(elementNode);
+					for(CablePath cablePath : cableElementsDropped) {
+						if(startsAt(cablePath.getSchemeCableLink(), se)) {
+							DefaultMutableTreeNode cableNode = new DefaultMutableTreeNode(cablePath.getSchemeCableLink());
+							elementNode.add(cableNode);
 						}
 					}
 				}
 				
 				if(cableElementsTransit != null) {
 					for(CablePath cablePath : cableElementsTransit) {
-						cableNode = new DefaultMutableTreeNode(cablePath
-								.getSchemeCableLink());
+						DefaultMutableTreeNode cableNode = new DefaultMutableTreeNode(cablePath.getSchemeCableLink());
 						this.cablesBranch.add(cableNode);
 					}
 				}
