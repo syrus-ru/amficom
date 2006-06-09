@@ -1,5 +1,5 @@
 /*-
- * $Id: MCMBean.java,v 1.3 2005/12/14 15:08:30 bob Exp $
+ * $Id: MCMBean.java,v 1.4 2006/06/09 16:04:04 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,8 +28,8 @@ import com.syrus.AMFICOM.manager.graph.MPort;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/12/14 15:08:30 $
- * @author $Author: bob $
+ * @version $Revision: 1.4 $, $Date: 2006/06/09 16:04:04 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module manager
  */
@@ -126,15 +126,15 @@ public class MCMBean extends Bean implements DomainNetworkItem {
 
 	
 	public final Identifier getUserId() {
-		return this.mcm.getUserId();
+		return this.mcm.getSystemUserId();
 	}
 	
 	public final void setUserId(Identifier userId) {
-		Identifier userId2 = this.mcm.getUserId();
+		Identifier userId2 = this.mcm.getSystemUserId();
 		if (userId2 != userId &&
 				(userId2 != null && !userId2.equals(userId) ||
 				!userId.equals(userId2))) {
-			this.mcm.setUserId(userId);
+			this.mcm.setSystemUserId(userId);
 			this.firePropertyChangeEvent(new PropertyChangeEvent(this, KEY_USER_ID, userId2, userId));
 		}		
 	}
