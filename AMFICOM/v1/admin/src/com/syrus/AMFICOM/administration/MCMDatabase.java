@@ -1,5 +1,5 @@
 /*
- * $Id: MCMDatabase.java,v 1.42 2006/02/28 15:19:58 arseniy Exp $
+ * $Id: MCMDatabase.java,v 1.43 2006/06/09 15:41:12 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,7 +8,20 @@
 
 package com.syrus.AMFICOM.administration;
 
+import static com.syrus.AMFICOM.administration.DomainMember.COLUMN_DOMAIN_ID;
+import static com.syrus.AMFICOM.administration.MCMWrapper.COLUMN_HOSTNAME;
+import static com.syrus.AMFICOM.administration.MCMWrapper.COLUMN_SERVER_ID;
+import static com.syrus.AMFICOM.administration.MCMWrapper.COLUMN_SYSTEM_USER_ID;
 import static com.syrus.AMFICOM.general.ObjectEntities.MCM_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectVersion.ILLEGAL_VERSION;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CREATED;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CREATOR_ID;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_DESCRIPTION;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_ID;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_MODIFIED;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_MODIFIER_ID;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_NAME;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_VERSION;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -21,12 +34,11 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
-import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.42 $, $Date: 2006/02/28 15:19:58 $
+ * @version $Revision: 1.43 $, $Date: 2006/06/09 15:41:12 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module administration
@@ -46,12 +58,12 @@ public final class MCMDatabase extends StorableObjectDatabase<MCM> {
 	@Override
 	protected String getColumnsTmpl() {
 		if (columns == null) {
-    		columns = DomainMember.COLUMN_DOMAIN_ID + COMMA
-				+ StorableObjectWrapper.COLUMN_NAME + COMMA
-				+ StorableObjectWrapper.COLUMN_DESCRIPTION + COMMA
-				+ MCMWrapper.COLUMN_HOSTNAME + COMMA
-				+ MCMWrapper.COLUMN_USER_ID + COMMA
-				+ MCMWrapper.COLUMN_SERVER_ID;
+    		columns = COLUMN_DOMAIN_ID + COMMA
+				+ COLUMN_NAME + COMMA
+				+ COLUMN_DESCRIPTION + COMMA
+				+ COLUMN_HOSTNAME + COMMA
+				+ COLUMN_SYSTEM_USER_ID + COMMA
+				+ COLUMN_SERVER_ID;
 		}
 		return columns;
 	}
@@ -75,7 +87,7 @@ public final class MCMDatabase extends StorableObjectDatabase<MCM> {
 			+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
 			+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
 			+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getHostName(), SIZE_HOSTNAME_COLUMN) + APOSTROPHE + COMMA
-			+ DatabaseIdentifier.toSQLString(storableObject.getUserId()) + COMMA
+			+ DatabaseIdentifier.toSQLString(storableObject.getSystemUserId()) + COMMA
 			+ DatabaseIdentifier.toSQLString(storableObject.getServerId());
 		return sql;
 	}
@@ -87,7 +99,7 @@ public final class MCMDatabase extends StorableObjectDatabase<MCM> {
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getName(), SIZE_NAME_COLUMN);
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN);
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getHostName(), SIZE_HOSTNAME_COLUMN);
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getUserId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getSystemUserId());
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getServerId());
 		return startParameterNumber;
 	}
@@ -96,9 +108,9 @@ public final class MCMDatabase extends StorableObjectDatabase<MCM> {
 	protected MCM updateEntityFromResultSet(final MCM storableObject, final ResultSet resultSet)
 			throws IllegalDataException, SQLException {
 		final MCM mcm = (storableObject == null)
-				? new MCM(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
+				? new MCM(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID),
 						null,
-						StorableObjectVersion.ILLEGAL_VERSION,
+						ILLEGAL_VERSION,
 						null,
 						null,
 						null,
@@ -106,24 +118,24 @@ public final class MCMDatabase extends StorableObjectDatabase<MCM> {
 						null,
 						null)
 					: storableObject;
-		mcm.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
-				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
-				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
-				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
-				StorableObjectVersion.valueOf(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
-				DatabaseIdentifier.getIdentifier(resultSet, DomainMember.COLUMN_DOMAIN_ID),
-				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
-				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)),
-				DatabaseString.fromQuerySubString(resultSet.getString(MCMWrapper.COLUMN_HOSTNAME)),
-				DatabaseIdentifier.getIdentifier(resultSet, MCMWrapper.COLUMN_USER_ID),
-				DatabaseIdentifier.getIdentifier(resultSet, MCMWrapper.COLUMN_SERVER_ID));
+		mcm.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
+				DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
+				DatabaseIdentifier.getIdentifier(resultSet,COLUMN_CREATOR_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
+				StorableObjectVersion.valueOf(resultSet.getLong(COLUMN_VERSION)),
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_DOMAIN_ID),
+				DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME)),
+				DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)),
+				DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_HOSTNAME)),
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_SYSTEM_USER_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_SERVER_ID));
 
 		return mcm;
 	}
 
   public Set<MCM> retrieveForServer(final Identifier serverId) throws RetrieveObjectException, IllegalDataException {
   	final String serverIdStr = DatabaseIdentifier.toSQLString(serverId);
-  	final String condition = MCMWrapper.COLUMN_SERVER_ID + EQUALS + serverIdStr;
+  	final String condition = COLUMN_SERVER_ID + EQUALS + serverIdStr;
 
 		return this.retrieveByCondition(condition);
   }
