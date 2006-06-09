@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseIdentifier.java,v 1.19 2006/06/08 19:04:31 bass Exp $
+ * $Id: DatabaseIdentifier.java,v 1.20 2006/06/09 07:41:13 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,8 +22,8 @@ import java.sql.Types;
  * DB Identifier wrapper.
  * Main purpose is to hide Identifier implementation and DB representation of it.
  *
- * @version $Revision: 1.19 $, $Date: 2006/06/08 19:04:31 $
- * @author $Author: bass $
+ * @version $Revision: 1.20 $, $Date: 2006/06/09 07:41:13 $
+ * @author $Author: arseniy $
  * @module general
  */
 public final class DatabaseIdentifier {
@@ -43,13 +43,12 @@ public final class DatabaseIdentifier {
 
 	/**
 	 * A helper method similar to {@link PreparedStatement#setNull(int, int)}.
-	 *
+	 * 
 	 * @param preparedStatement
 	 * @param parameterIndex
 	 * @throws SQLException
 	 */
-	public static void setVoid(final PreparedStatement preparedStatement, final int parameterIndex)
-	throws SQLException {
+	public static void setVoid(final PreparedStatement preparedStatement, final int parameterIndex) throws SQLException {
 		setIdentifier(preparedStatement, parameterIndex, VOID_IDENTIFIER);
 	}
 
