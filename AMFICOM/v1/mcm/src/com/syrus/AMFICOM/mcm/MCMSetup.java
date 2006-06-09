@@ -1,5 +1,5 @@
 /*
- * $Id: MCMSetup.java,v 1.23.2.2 2006/06/07 10:27:44 arseniy Exp $
+ * $Id: MCMSetup.java,v 1.23.2.3 2006/06/09 16:56:22 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,7 +29,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.23.2.2 $, $Date: 2006/06/07 10:27:44 $
+ * @version $Revision: 1.23.2.3 $, $Date: 2006/06/09 16:56:22 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -108,7 +108,7 @@ final class MCMSetup {
 		id = Identifier.valueOf(idlMCM.serverId);
 		StorableObjectPool.getStorableObject(id, true);
 
-		id = Identifier.valueOf(idlMCM.userId);
+		id = Identifier.valueOf(idlMCM.systemUserId);
 		StorableObjectPool.getStorableObject(id, true);
 
 		id = Identifier.valueOf(idlMCM.id);
