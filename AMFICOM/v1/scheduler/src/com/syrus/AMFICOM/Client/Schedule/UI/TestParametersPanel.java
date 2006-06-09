@@ -48,14 +48,21 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Describable;
 import com.syrus.AMFICOM.general.DescribableWrapper;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.LoginManager;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.AMFICOM.general.TypicalCondition;
+import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort;
+import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.measurement.ActionTemplate;
 import com.syrus.AMFICOM.measurement.AnalysisType;
 import com.syrus.AMFICOM.measurement.Measurement;
@@ -64,6 +71,8 @@ import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.AMFICOM.measurement.MeasurementSetupWrapper;
 import com.syrus.AMFICOM.measurement.MonitoredElement;
 import com.syrus.AMFICOM.measurement.Test;
+import com.syrus.AMFICOM.measurement.TestWrapper;
+import com.syrus.AMFICOM.measurement.Test.TestStatus;
 import com.syrus.util.Log;
 
 /*
@@ -306,20 +315,16 @@ final class TestParametersPanel implements PropertyChangeListener {
 		 * Контекстное меню удаление шаблона (по RMB)
 		 */
 		this.testSetups.addMouseListener(new MouseAdapter() {
-
-			private JPopupMenu createDeleteSetupPopupMenu(String templateName) {
+			private JPopupMenu createDeleteSetupPopupMenu(
+					final MeasurementSetup ms) {
 				final JPopupMenu popupMenu = new JPopupMenu();
 				final JMenuItem deleteSetup = new JMenuItem(
 						I18N.getString("Scheduler.Text.MeasurementParameter.deleteSetup")
-						+ " " + templateName);
+						+ " " + ms.getDescription());
 				popupMenu.add(deleteSetup);
 				deleteSetup.addActionListener(new ActionListener() {
 					public void actionPerformed(final ActionEvent e) {
-						// @todo пока ничего не удаляет, а только выдает окно о том, что удаление не поддерживается
-						JOptionPane.showMessageDialog(TestParametersPanel.this.testSetups,
-								"MeasurementSetup deleting is not available now",
-								"Not implemented",
-								JOptionPane.ERROR_MESSAGE);
+						deleteMeasurementSetup(ms);
 					}
 				});
 				return popupMenu;
@@ -337,14 +342,12 @@ final class TestParametersPanel implements PropertyChangeListener {
 					if (selectedValue != null) {
 						JPopupMenu deleteSetupPopupMenu =
 							createDeleteSetupPopupMenu(
-									((MeasurementSetup)selectedValue).
-										getDescription());
+									(MeasurementSetup)selectedValue);
 						deleteSetupPopupMenu.show(source, e.getX(), e.getY());
 					}
 				}
 			}
-
-			});
+		});
 
 		final JScrollPane scroll = new JScrollPane(this.testSetups);
 		scroll.setAutoscrolls(true);
@@ -361,6 +364,68 @@ final class TestParametersPanel implements PropertyChangeListener {
 		this.patternPanel.add(this.switchPanel, gbc);
 		this.analysisComboBox.setEnabled(false);
 		this.useSetupsCheckBox.doClick();
+	}
+
+	void deleteMeasurementSetup(MeasurementSetup setup) {
+		StorableObjectCondition condition =
+			new CompoundCondition(
+					new LinkedIdsCondition(setup,
+							ObjectEntities.TEST_CODE),
+					CompoundConditionSort.AND,
+					new TypicalCondition(
+							TestStatus.TEST_STATUS_COMPLETED,
+							OperationSort.OPERATION_NOT_EQUALS,
+							ObjectEntities.TEST_CODE,
+							TestWrapper.COLUMN_STATUS));
+
+		final int count; 
+		try {
+			// XXX: На самом деле нам нужно только количество объектов, а не они сами.
+			count = StorableObjectPool.getStorableObjectsByCondition(
+					condition, true).size();
+		} catch (ApplicationException e) {
+			e.printStackTrace();
+			AbstractMainFrame.showErrorMessage(I18N.getString("Error.CannotAcquireObject"));
+			return;
+		}
+
+		if (count > 0) {
+//		if (count > 0 && false) { // FIXME: && false
+			JOptionPane.showMessageDialog(TestParametersPanel.this.testSetups,
+					I18N.getString("Scheduler.Text.MeasurementParameter.deleteSetupImpossible.Text"),
+			I18N.getString("Scheduler.Text.MeasurementParameter.deleteSetupImpossible.Title"),
+			JOptionPane.ERROR_MESSAGE);
+			return;
+		} else {
+			int result = JOptionPane.showConfirmDialog(TestParametersPanel.this.testSetups,
+					I18N.getString("Scheduler.Text.MeasurementParameter.deleteSetupAck.Text")
+						+ " '" + setup.getDescription() + "'?",
+				I18N.getString("Scheduler.Text.MeasurementParameter.deleteSetupAck.Title"),
+					JOptionPane.YES_NO_OPTION,
+					JOptionPane.WARNING_MESSAGE);
+			switch(result) {
+			case JOptionPane.YES_OPTION:
+				try {
+					setup.dispose(LoginManager.getUserId());
+					// бьем в бубен "вызов духа обновления модели"
+					this.schedulerModel.planToolBar.refresh();
+					this.schedulerModel.refreshMeasurementSetups();
+					msListsToTestSetups(null);
+				} catch (ApplicationException e) {
+					Log.errorMessage(e);
+					JOptionPane.showMessageDialog(TestParametersPanel.this.testSetups,
+							I18N.getString("Scheduler.Text.MeasurementParameter.deleteSetupError.Text"),
+							I18N.getString("Scheduler.Text.MeasurementParameter.deleteSetupError.Title"),
+							JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				// шаблон удален
+				break;
+			default:
+				// удаление отменено
+				// do nothing
+			}
+		}
 	}
 
 	void setUseSetup(final boolean useSetup) {
@@ -386,7 +451,7 @@ final class TestParametersPanel implements PropertyChangeListener {
 	 * Если analysisComboBox в неопределенном состоянии, возвращает null
 	 * @return текущее состояние analysisComboBox либо null.
 	 */
-	public final AnalysisType getAnalysisType_orNull() {
+	private final AnalysisType getAnalysisType_orNull() {
 		return (AnalysisType) this.analysisComboBox.getSelectedItem();
 	}
 
@@ -402,7 +467,7 @@ final class TestParametersPanel implements PropertyChangeListener {
 	 *
 	 * @return шаблон либо null
 	 */
-	public MeasurementSetup getMeasurementSetup() {
+	private MeasurementSetup getMeasurementSetup() {
 
 		if (this.useSetupsCheckBox.isSelected()) {
 			final MeasurementSetup measurementSetup = (MeasurementSetup) this.testSetups.getSelectedValue();
@@ -450,19 +515,43 @@ final class TestParametersPanel implements PropertyChangeListener {
 				: description;
 	}
 
-	public void refreshMeasurementSetup(final MeasurementSetup measurementSetup) {
-		final WrapperedListModel<MeasurementSetup> wrapperedListModel =
-			this.testSetups.getModel();
+	// @todo -- saa
+//	private void measurementParametersPanelUpdated() {
+//		//getMeasurementTemplate;
+//		// FIXME
+//		try {
+//			assert this.parametersTestPanel != null;
+//
+//			final ActionTemplate<Measurement> measurementTemplate =
+//				this.parametersTestPanel.getMeasurementTemplate();
+//
+//			MeasurementSetup ms = this.schedulerModel.getMeasurementSetups();
+//			if (ms != null && ms.getVersion() != StorableObjectVersion.INITIAL_VERSION) {
+//				return; // refuse change; XXX: возможно, стоит активно вернуть GUI в исходное состояние?
+//			}
+//			ms.setMeasurementTemplateId(measurementTemplate.getId());
+//			ms.setAnalysisTemplateId(Identifier.VOID_IDENTIFIER);
+//			this.dispatcher.firePropertyChange(
+//					new PropertyChangeEvent(this,
+//						SchedulerModel.COMMAND_SET_MEASUREMENT_SETUP,
+//						null,
+//						ms));
+//		} catch (final CreateObjectException e) {
+//			this.schedulerModel.setBreakData();
+//			AbstractMainFrame.showErrorMessage(I18N.getString("Scheduler.Error.CannotCreateMeasurementSetup"));
+//		}
+//	}
 
-		wrapperedListModel.sort();
-
-		this.setMeasurementSetup(measurementSetup);
-
-	}
-
-	public void setMeasurementSetup(final MeasurementSetup measurementSetup) {
-		this.setMeasurementSetup(measurementSetup, false);
-	}
+//	// unused?
+//	public void refreshMeasurementSetup(final MeasurementSetup measurementSetup) {
+//		final WrapperedListModel<MeasurementSetup> wrapperedListModel =
+//			this.testSetups.getModel();
+//
+//		wrapperedListModel.sort();
+//
+//		this.setMeasurementSetup(measurementSetup, false);
+//
+//	}
 
 	private void setMeasurementSetup(final MeasurementSetup measurementSetup,
 	                                final boolean switchToSetups) {
@@ -482,6 +571,7 @@ final class TestParametersPanel implements PropertyChangeListener {
 		}
 
 		try {
+			// XXX: надо ли обязательно менять?
 			this.changeMonitoredElement(measurementSetup.getMonitoredElementIds().iterator().next());
 		} catch (ApplicationException e) {
 			Log.errorMessage(e);
@@ -528,6 +618,30 @@ final class TestParametersPanel implements PropertyChangeListener {
 		}
 
 		this.descriptionField.setText(null);
+	}
+
+	/**
+	 * Переносит данные из msList/msListAnalysisOnly в this.testSetups.
+	 * @param setup шаблон. Если не null, то в режиме "!allAvailable"
+	 *   будет показан он, иначе в этом режиме будет пусто.
+	 * В режиме "allAvailable" этот параметр игнорируется.
+	 */
+	private void msListsToTestSetups(MeasurementSetup setup) {
+		final WrapperedListModel<MeasurementSetup> wrapperedListModel =
+			this.testSetups.getModel();
+		final boolean analysisSetupsSelected =
+			this.useAnalysisSetupsCheckBox.isSelected();
+
+		if (this.allAvailableCheckBox.isSelected()) {
+			wrapperedListModel.setElements(analysisSetupsSelected
+					? this.msListAnalysisOnly : this.msList);
+		} else {
+			final List<MeasurementSetup> set = new ArrayList<MeasurementSetup>(1);
+			if (setup != null) {
+				set.add(setup);
+			}
+			wrapperedListModel.setElements(set);
+		}
 	}
 
 	boolean isAnalysisEnable(final MeasurementSetup measurementSetup) {
@@ -690,7 +804,7 @@ final class TestParametersPanel implements PropertyChangeListener {
 	}
 
 	/* что это за метод и кто его должен вызывать - не понятно */
-	public void unregisterDispatcher() {
+	private void unregisterDispatcher() {
 		this.dispatcher.removePropertyChangeListener(SchedulerModel.COMMAND_CHANGE_ME_TYPE, this);
 	}
 
