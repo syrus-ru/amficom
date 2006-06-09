@@ -1,5 +1,5 @@
 /*-
- * $$Id: CableBindingController.java,v 1.34 2006/03/13 15:54:27 bass Exp $$
+ * $$Id: CableBindingController.java,v 1.35 2006/06/09 13:28:04 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,8 +24,8 @@ import com.syrus.util.Log;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2006/03/13 15:54:27 $
- * @author $Author: bass $
+ * @version $Revision: 1.35 $, $Date: 2006/06/09 13:28:04 $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -96,7 +96,7 @@ public final class CableBindingController implements Wrapper {
 			try {
 				CableChannelingItem cci = this.cablePath.getFirstCCI(link);
 				if(key.equals(KEY_START_NODE)) {
-					AbstractNode mne = cci.getStartSiteNode();
+					AbstractNode mne = this.cablePath.getStartNode();
 					result = (mne == null) ? "" : mne.getName(); //$NON-NLS-1$
 				} else if(key.equals(KEY_START_SPARE)) {
 					result = (link instanceof UnboundLink) ? "" : String.valueOf(cci.getStartSpare()); //$NON-NLS-1$
@@ -105,7 +105,7 @@ public final class CableBindingController implements Wrapper {
 				} else if(key.equals(KEY_END_SPARE)) {
 					result = (link instanceof UnboundLink) ? "" : String.valueOf(cci.getEndSpare()); //$NON-NLS-1$
 				} else if(key.equals(KEY_END_NODE)) {
-					AbstractNode mne = cci.getEndSiteNode();
+					AbstractNode mne = this.cablePath.getEndNode();
 					result = (mne == null) ? "" : mne.getName(); //$NON-NLS-1$
 				}
 			} catch(Exception e) {
