@@ -1,5 +1,5 @@
 /*-
- * $Id: EventType.java,v 1.9 2006/06/08 18:20:29 bass Exp $
+ * $Id: EventType.java,v 1.10 2006/06/09 07:28:41 arseniy Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,8 +17,8 @@ import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.9 $, $Date: 2006/06/08 18:20:29 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.10 $, $Date: 2006/06/09 07:28:41 $
  * @module event
  */
 public enum EventType {
@@ -63,9 +63,6 @@ public enum EventType {
 	 * A mutable holder for immutable enum instances.
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: bass $
-	 * @version $Revision: 1.9 $, $Date: 2006/06/08 18:20:29 $
-	 * @module event
 	 */
 	public static final class Proxy
 			implements IdlTransferableObjectExt<IdlEventType> {
