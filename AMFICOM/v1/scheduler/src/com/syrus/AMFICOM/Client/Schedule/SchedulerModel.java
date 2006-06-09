@@ -1,5 +1,5 @@
 /*-
- * $Id: SchedulerModel.java,v 1.190.2.2 2006/04/11 07:42:55 saa Exp $
+ * $Id: SchedulerModel.java,v 1.190.2.3 2006/06/09 09:03:53 saa Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -71,7 +71,7 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.190.2.2 $, $Date: 2006/04/11 07:42:55 $
+ * @version $Revision: 1.190.2.3 $, $Date: 2006/06/09 09:03:53 $
  * @author $Author: saa $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -191,7 +191,6 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 	private Map<Identifier, Identifier>				meTestGroup;
 
 	private boolean				groupTest							= false;
-
 
 	public SchedulerModel(final ApplicationContext aContext) {
 		this.dispatcher = aContext.getDispatcher();
@@ -860,32 +859,46 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 
 		StorableObjectCondition measurementTypeCondition = null;
 		Identifier identifier = null;
-		Set<Identifier> idSet = null;
 
 		if (this.measurementType_orNull != null) {
 			measurementTypeCondition = new EquivalentCondition(ObjectEntities.MEASUREMENTSETUP_CODE);
-			Log.errorMessage("not implemented yet");
-// FIXME: awaiting implementation
+////		 FIXME: awaiting implementation, now accepts all measurementTypes
+//			Log.errorMessage("not implemented yet");
 //			measurementTypeCondition = new TypicalCondition(this.measurementType_orNull,
 //				OperationSort.OPERATION_IN,
 //				ObjectEntities.MEASUREMENTSETUP_CODE,
-//				MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_TYPE_CODE); // FIXME: RQ 20060407 #4
+//				MeasurementSetupWrapper.COLUMN_MEASUREMENT_TYPE_IDCODE); // FIXME: RQ 20060407 #4
+
+			// new inplementation from Arseniy
+//			final StorableObjectCondition measurementTemplateCondition = new CompoundCondition(
+//					new LinkedIdsCondition(this.measurementType_orNull,
+//							ObjectEntities.ACTIONTEMPLATE_CODE),
+//					CompoundConditionSort.AND,
+//					new LinkedIdsCondition(this.monitoredElement/* @todo check null */,
+//							ObjectEntities.ACTIONTEMPLATE_CODE));
+//
+//			final Set<ActionTemplate<Measurement>> mts = StorableObjectPool.getStorableObjectsByCondition(measurementTemplateCondition, true);
+//			final ActionTemplate<Measurement> measurementTemplate = mts.iterator().next();//@todo check if !mts.isEmpty()
+//			final StorableObjectCondition measurementSetupCondition = new LinkedIdsCondition(measurementTemplate, ObjectEntities.MEASUREMENTSETUP_CODE);
+//			final Set<MeasurementSetup> measurementSetups = StorableObjectPool.getStorableObjectsByCondition(measurementSetupCondition, true);
 		}
+
+		Set<Identifier> meIds = null;
 
 		if (this.monitoredElement != null) {
 			LinkedIdsCondition monitoredElementCondition =
 				new LinkedIdsCondition(this.monitoredElement.getId(),
 					ObjectEntities.MEASUREMENTSETUP_CODE);
 			if (measurementTypeCondition != null) {
-				idSet = new HashSet<Identifier>(2);
-				idSet.add(identifier);
+				meIds = new HashSet<Identifier>(2);
+				meIds.add(identifier);
 				identifier = this.monitoredElement.getId();
-				idSet.add(identifier);
+				meIds.add(identifier);
 				condition = new CompoundCondition(measurementTypeCondition,
 						CompoundConditionSort.AND,
 						monitoredElementCondition);
 			} else {
-				idSet = Collections.singleton(identifier);
+				meIds = Collections.singleton(identifier);
 				condition = monitoredElementCondition;
 			}
 		} else {
@@ -895,12 +908,11 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 		}
 
 		if (condition != null) {
-			final Set<Identifier> idSet1 = idSet;
 			final StorableObjectCondition condition1 = condition;
 
 			try {
 				Set<Identifier> measurementSetupIds = this.measurementSetupIdMap != null
-						? this.measurementSetupIdMap.get(idSet1)
+						? this.measurementSetupIdMap.get(meIds)
 							: null;
 				Set<MeasurementSetup> measurementSetups = null;
 				if (measurementSetupIds == null) {
@@ -913,7 +925,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 					for (final Identifiable identifiable : measurementSetups) {
 						measurementSetupIds.add(identifiable.getId());
 					}
-					this.measurementSetupIdMap.put(idSet1, measurementSetupIds);
+					this.measurementSetupIdMap.put(meIds, measurementSetupIds);
 				} else {
 					measurementSetups = StorableObjectPool.getStorableObjects(measurementSetupIds, true);
 				}
