@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractReflectogramMismatchEvent.java,v 1.8 2006/06/08 18:22:18 bass Exp $
+ * $Id: AbstractReflectogramMismatchEvent.java,v 1.9 2006/06/09 07:44:33 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,8 +33,8 @@ import com.syrus.AMFICOM.reflectometry.SOAnchor;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.8 $, $Date: 2006/06/08 18:22:18 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.9 $, $Date: 2006/06/09 07:44:33 $
  * @module event
  */
 public abstract class AbstractReflectogramMismatchEvent extends StorableObject
@@ -143,9 +143,6 @@ public abstract class AbstractReflectogramMismatchEvent extends StorableObject
 
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: bass $
-	 * @version $Revision: 1.8 $, $Date: 2006/06/08 18:22:18 $
-	 * @module event
 	 */
 	final class SoAnchorImpl implements SOAnchor, Identifiable, Serializable {
 		private static final long serialVersionUID = -3382445238828239272L;
