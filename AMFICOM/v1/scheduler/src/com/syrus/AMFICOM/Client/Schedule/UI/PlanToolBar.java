@@ -266,16 +266,8 @@ final class PlanToolBar {
 									true));
 							PlanToolBar.this.schedulerModel.commitChanges();
 							
-							Calendar date = Calendar.getInstance();
-							date.setTime((Date) PlanToolBar.this.dateSpinner.getValue());
-							Calendar time = Calendar.getInstance();
-							time.setTime((Date) PlanToolBar.this.timeSpinner.getValue());
+							PlanToolBar.this.refresh();
 
-							date.set(Calendar.HOUR_OF_DAY, time.get(Calendar.HOUR_OF_DAY));
-							date.set(Calendar.MINUTE, time.get(Calendar.MINUTE));
-
-							PlanToolBar.this.panel.update(date.getTime(), 
-								PlanToolBar.this.scaleComboBox.getSelectedIndex());
 							PlanToolBar.this.dispatcher.firePropertyChange(
 								new StatusMessageEvent(PlanToolBar.this, 
 									StatusMessageEvent.STATUS_PROGRESS_BAR, 
@@ -301,6 +293,19 @@ final class PlanToolBar {
 		return apply;
 	}
 	
+	public void refresh() {
+		Calendar date = Calendar.getInstance();
+		date.setTime((Date) this.dateSpinner.getValue());
+		Calendar time = Calendar.getInstance();
+		time.setTime((Date) this.timeSpinner.getValue());
+
+		date.set(Calendar.HOUR_OF_DAY, time.get(Calendar.HOUR_OF_DAY));
+		date.set(Calendar.MINUTE, time.get(Calendar.MINUTE));
+
+		this.panel.update(date.getTime(), 
+			this.scaleComboBox.getSelectedIndex());
+	}
+
 	@SuppressWarnings("serial")
 	private Action[] createZoomActions() {
 		// Zoom actions 		
