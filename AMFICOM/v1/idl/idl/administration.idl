@@ -1,5 +1,5 @@
 /*-
- * $Id: administration.idl,v 1.27 2006/06/09 15:46:37 arseniy Exp $
+ * $Id: administration.idl,v 1.28 2006/06/09 16:16:19 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -179,7 +179,7 @@ module administration {
 			public general::corba::WString128 name;
 			public general::corba::WString256 description;
 			public general::corba::WString64 hostname;
-			public general::corba::IdlIdentifier systemUserId;
+			public general::corba::IdlIdentifier userId;
 			public general::corba::IdlIdentifier serverId;
 
 			factory init(in general::corba::IdlIdentifier id,
@@ -192,7 +192,7 @@ module administration {
 					in general::corba::WString128 name,
 					in general::corba::WString256 description,
 					in general::corba::WString64 hostname,
-					in general::corba::IdlIdentifier systemUserId,
+					in general::corba::IdlIdentifier userId,
 					in general::corba::IdlIdentifier serverId);
 		};
 
