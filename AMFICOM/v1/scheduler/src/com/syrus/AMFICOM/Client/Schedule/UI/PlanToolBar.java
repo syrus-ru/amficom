@@ -58,7 +58,7 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.newFilter.DateSpinner;
 import com.syrus.AMFICOM.newFilter.TimeSpinner;
 
-final class PlanToolBar {
+public final class PlanToolBar {
 
 	private static final long	serialVersionUID	= -1251916980092015668L;
 
@@ -101,13 +101,14 @@ final class PlanToolBar {
 	JSpinner		timeSpinner		= new TimeSpinner();
 
 	JToolBar		toolBar;
-	SchedulerModel	schedulerModel;
+	final SchedulerModel	schedulerModel;
 
 	public PlanToolBar(final ApplicationContext aContext, final PlanPanel panel) {
 		if (aContext != null) {
 			this.dispatcher = aContext.getDispatcher();
 		}
 		this.schedulerModel = (SchedulerModel) aContext.getApplicationModel();
+		this.schedulerModel.planToolBar = this;
 		this.panel = panel;
 
 		this.toolBar = new JToolBar();
@@ -292,7 +293,7 @@ final class PlanToolBar {
 		apply.putValue(Action.SHORT_DESCRIPTION, I18N.getString("Scheduler.Text.Plan.Toolbar.Apply")); 
 		return apply;
 	}
-	
+
 	public void refresh() {
 		Calendar date = Calendar.getInstance();
 		date.setTime((Date) this.dateSpinner.getValue());

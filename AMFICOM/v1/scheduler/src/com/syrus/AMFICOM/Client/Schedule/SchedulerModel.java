@@ -1,5 +1,5 @@
 /*-
- * $Id: SchedulerModel.java,v 1.190.2.3 2006/06/09 09:03:53 saa Exp $
+ * $Id: SchedulerModel.java,v 1.190.2.4 2006/06/09 09:06:18 saa Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,6 +29,7 @@ import java.util.logging.Level;
 
 import javax.swing.UIManager;
 
+import com.syrus.AMFICOM.Client.Schedule.UI.PlanToolBar;
 import com.syrus.AMFICOM.Client.Schedule.general.UIStorage;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.event.StatusMessageEvent;
@@ -71,7 +72,7 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.190.2.3 $, $Date: 2006/06/09 09:03:53 $
+ * @version $Revision: 1.190.2.4 $, $Date: 2006/06/09 09:06:18 $
  * @author $Author: saa $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -191,6 +192,17 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 	private Map<Identifier, Identifier>				meTestGroup;
 
 	private boolean				groupTest							= false;
+
+	/**
+	 * Вы спросите меня, зачем я сделал в модели ссылку на гуйный компонент?
+	 * А потому что Вовка хранит в нем данные модели.
+	 * Зачем я сделал класс PlanToolBar public, хотя он был package visibility?
+	 * Именно для того, чтобы его можно было видеть из модели.
+	 * Надеюсь, после этого уже никто не будет спрашивать,
+	 * почему я сделал поле planToolBar в модели public, а не
+	 * организовал к нему доступ через get/set.
+	 */
+	public PlanToolBar planToolBar = null;
 
 	public SchedulerModel(final ApplicationContext aContext) {
 		this.dispatcher = aContext.getDispatcher();
