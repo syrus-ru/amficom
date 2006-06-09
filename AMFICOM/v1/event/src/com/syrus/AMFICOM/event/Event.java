@@ -1,5 +1,5 @@
 /*-
- * $Id: Event.java,v 1.59 2006/06/07 08:50:09 arseniy Exp $
+ * $Id: Event.java,v 1.60 2006/06/09 07:55:27 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,15 +37,12 @@ import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.59 $, $Date: 2006/06/07 08:50:09 $
+ * @version $Revision: 1.60 $, $Date: 2006/06/09 07:55:27 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module event
  */
-
-public final class Event extends StorableObject
-		implements TypedObject<EventType>,
-		IdlTransferableObjectExt<IdlEvent> {
+public final class Event extends StorableObject implements TypedObject<EventType>, IdlTransferableObjectExt<IdlEvent> {
 	private static final long serialVersionUID = 3977015150102788401L;
 
 	/**
