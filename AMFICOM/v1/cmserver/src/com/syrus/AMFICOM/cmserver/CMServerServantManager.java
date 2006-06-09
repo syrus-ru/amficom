@@ -1,5 +1,5 @@
 /*-
- * $Id: CMServerServantManager.java,v 1.17 2005/10/31 12:30:20 bass Exp $
+ * $Id: CMServerServantManager.java,v 1.18 2006/06/09 16:35:43 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,7 +8,13 @@
 
 package com.syrus.AMFICOM.cmserver;
 
-import com.syrus.AMFICOM.administration.ServerProcessWrapper;
+import static com.syrus.AMFICOM.administration.ServerProcessWrapper.EVENT_PROCESS_CODENAME;
+import static com.syrus.AMFICOM.administration.ServerProcessWrapper.KEY_EVENT_PROCESS_CODENAME;
+import static com.syrus.AMFICOM.administration.ServerProcessWrapper.KEY_LOGIN_PROCESS_CODENAME;
+import static com.syrus.AMFICOM.administration.ServerProcessWrapper.KEY_MSERVER_PROCESS_CODENAME;
+import static com.syrus.AMFICOM.administration.ServerProcessWrapper.LOGIN_PROCESS_CODENAME;
+import static com.syrus.AMFICOM.administration.ServerProcessWrapper.MSERVER_PROCESS_CODENAME;
+
 import com.syrus.AMFICOM.general.BaseConnectionManager;
 import com.syrus.AMFICOM.general.CORBAServer;
 import com.syrus.AMFICOM.general.CommunicationException;
@@ -28,8 +34,8 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/10/31 12:30:20 $
- * @author $Author: bass $
+ * @version $Revision: 1.18 $, $Date: 2006/06/09 16:35:43 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module cmserver
  */
@@ -103,12 +109,9 @@ final class CMServerServantManager extends RunnableVerifiedConnectionManager imp
 		final String contextName = ContextNameFactory.generateContextName(serverHostName);
 		final CORBAServer corbaServer = new CORBAServer(contextName);
 
-		final String loginServerServantName = ApplicationProperties.getString(ServerProcessWrapper.KEY_LOGIN_PROCESS_CODENAME,
-				ServerProcessWrapper.LOGIN_PROCESS_CODENAME);
-		final String eventServerServantName = ApplicationProperties.getString(ServerProcessWrapper.KEY_EVENT_PROCESS_CODENAME,
-				ServerProcessWrapper.EVENT_PROCESS_CODENAME);
-		final String mServerServantName = ApplicationProperties.getString(ServerProcessWrapper.KEY_MSERVER_PROCESS_CODENAME,
-				ServerProcessWrapper.MSERVER_PROCESS_CODENAME);
+		final String loginServerServantName = ApplicationProperties.getString(KEY_LOGIN_PROCESS_CODENAME, LOGIN_PROCESS_CODENAME);
+		final String eventServerServantName = ApplicationProperties.getString(KEY_EVENT_PROCESS_CODENAME, EVENT_PROCESS_CODENAME);
+		final String mServerServantName = ApplicationProperties.getString(KEY_MSERVER_PROCESS_CODENAME, MSERVER_PROCESS_CODENAME);
 
 		final long timeout = ApplicationProperties.getInt(KEY_SERVANT_CHECK_TIMEOUT, SERVANT_CHECK_TIMEOUT) * 60 * 1000;
 

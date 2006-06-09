@@ -1,5 +1,5 @@
 /*-
- * $Id: MServerServantManager.java,v 1.18 2005/10/31 10:48:40 arseniy Exp $
+ * $Id: MServerServantManager.java,v 1.19 2006/06/09 16:33:59 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,9 +8,13 @@
 
 package com.syrus.AMFICOM.mserver;
 
+import static com.syrus.AMFICOM.administration.ServerProcessWrapper.EVENT_PROCESS_CODENAME;
+import static com.syrus.AMFICOM.administration.ServerProcessWrapper.KEY_EVENT_PROCESS_CODENAME;
+import static com.syrus.AMFICOM.administration.ServerProcessWrapper.KEY_LOGIN_PROCESS_CODENAME;
+import static com.syrus.AMFICOM.administration.ServerProcessWrapper.LOGIN_PROCESS_CODENAME;
+
 import java.util.Set;
 
-import com.syrus.AMFICOM.administration.ServerProcessWrapper;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.BaseConnectionManager;
 import com.syrus.AMFICOM.general.CORBAServer;
@@ -30,7 +34,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/10/31 10:48:40 $
+ * @version $Revision: 1.19 $, $Date: 2006/06/09 16:33:59 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mserver
@@ -88,14 +92,13 @@ final class MServerServantManager extends RunnableVerifiedConnectionManager impl
 		//@todo Generate event "Connection with servantName restored"
 	}
 
-	public static MServerServantManager createAndStart(final String serverHostName, final Set<Identifier> mcmIds) throws ApplicationException {
+	public static MServerServantManager createAndStart(final String serverHostName, final Set<Identifier> mcmIds)
+			throws ApplicationException {
 		final String contextName = ContextNameFactory.generateContextName(serverHostName);
 		final CORBAServer corbaServer = new CORBAServer(contextName);
 
-		final String loginServerServantName = ApplicationProperties.getString(ServerProcessWrapper.KEY_LOGIN_PROCESS_CODENAME,
-				ServerProcessWrapper.LOGIN_PROCESS_CODENAME);
-		final String eventServerServantName = ApplicationProperties.getString(ServerProcessWrapper.KEY_EVENT_PROCESS_CODENAME,
-				ServerProcessWrapper.EVENT_PROCESS_CODENAME);
+		final String loginServerServantName = ApplicationProperties.getString(KEY_LOGIN_PROCESS_CODENAME, LOGIN_PROCESS_CODENAME);
+		final String eventServerServantName = ApplicationProperties.getString(KEY_EVENT_PROCESS_CODENAME, EVENT_PROCESS_CODENAME);
 
 		final Set<String> mcmIdStrings = Identifier.createStrings(mcmIds);
 

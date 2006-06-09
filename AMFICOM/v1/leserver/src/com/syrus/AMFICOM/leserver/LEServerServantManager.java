@@ -1,5 +1,5 @@
 /*-
- * $Id: LEServerServantManager.java,v 1.18 2006/03/30 12:57:30 arseniy Exp $
+ * $Id: LEServerServantManager.java,v 1.19 2006/06/09 16:31:17 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,10 +8,11 @@
 
 package com.syrus.AMFICOM.leserver;
 
+import static com.syrus.AMFICOM.administration.ServerProcessWrapper.EVENT_PROCESS_CODENAME;
+import static com.syrus.AMFICOM.administration.ServerProcessWrapper.KEY_EVENT_PROCESS_CODENAME;
+
 import java.util.Collections;
 
-import com.syrus.AMFICOM.administration.ServerProcessWrapper;
-import com.syrus.AMFICOM.general.BaseConnectionManager;
 import com.syrus.AMFICOM.general.CORBAServer;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.ContextNameFactory;
@@ -23,7 +24,7 @@ import com.syrus.AMFICOM.leserver.corba.EventServerHelper;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2006/03/30 12:57:30 $
+ * @version $Revision: 1.19 $, $Date: 2006/06/09 16:31:17 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module leserver
@@ -49,13 +50,11 @@ final class LEServerServantManager extends RunnableVerifiedConnectionManager imp
 		final String contextName = ContextNameFactory.generateContextName(serverHostName);
 		final CORBAServer corbaServer = new CORBAServer(contextName);
 
-		final long timeout = ApplicationProperties.getInt(BaseConnectionManager.KEY_SERVANT_CHECK_TIMEOUT,
-				BaseConnectionManager.SERVANT_CHECK_TIMEOUT) * 60 * 1000;
-		final String eventServerServantName = ApplicationProperties.getString(ServerProcessWrapper.KEY_EVENT_PROCESS_CODENAME,
-				ServerProcessWrapper.EVENT_PROCESS_CODENAME);
+		final String eventServerServantName = ApplicationProperties.getString(KEY_EVENT_PROCESS_CODENAME, EVENT_PROCESS_CODENAME);
 
-		final LEServerServantManager leServerServantManager =  new LEServerServantManager(
-				corbaServer,
+		final long timeout = ApplicationProperties.getInt(KEY_SERVANT_CHECK_TIMEOUT, SERVANT_CHECK_TIMEOUT) * 60 * 1000;
+
+		final LEServerServantManager leServerServantManager = new LEServerServantManager(corbaServer,
 				eventServerServantName,
 				timeout);
 		(new Thread(leServerServantManager, "LEServerServantManager")).start();
