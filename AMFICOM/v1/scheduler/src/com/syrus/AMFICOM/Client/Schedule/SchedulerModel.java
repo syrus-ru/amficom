@@ -1,5 +1,5 @@
 /*-
- * $Id: SchedulerModel.java,v 1.190.2.4 2006/06/09 09:06:18 saa Exp $
+ * $Id: SchedulerModel.java,v 1.190.2.5 2006/06/09 11:19:37 saa Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -72,7 +72,7 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.190.2.4 $, $Date: 2006/06/09 09:06:18 $
+ * @version $Revision: 1.190.2.5 $, $Date: 2006/06/09 11:19:37 $
  * @author $Author: saa $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -854,7 +854,6 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 		return this.monitoredElement;
 	}
 
-	// XXX: may be changed to private
 	public void refreshMeasurementSetups() {
 		this.dispatcher.firePropertyChange(new PropertyChangeEvent(this,
 			COMMAND_SET_MEASUREMENT_SETUPS,
