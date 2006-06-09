@@ -1,5 +1,5 @@
 /*-
-* $Id: MCMXML.java,v 1.4 2006/06/09 15:41:41 arseniy Exp $
+* $Id: MCMXML.java,v 1.5 2006/06/09 16:23:17 arseniy Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -11,7 +11,7 @@ package com.syrus.AMFICOM.administration;
 import static com.syrus.AMFICOM.administration.DomainMember.COLUMN_DOMAIN_ID;
 import static com.syrus.AMFICOM.administration.MCMWrapper.COLUMN_HOSTNAME;
 import static com.syrus.AMFICOM.administration.MCMWrapper.COLUMN_SERVER_ID;
-import static com.syrus.AMFICOM.administration.MCMWrapper.COLUMN_SYSTEM_USER_ID;
+import static com.syrus.AMFICOM.administration.MCMWrapper.COLUMN_USER_ID;
 import static com.syrus.AMFICOM.general.ObjectEntities.MCM_CODE;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CREATOR_ID;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_DESCRIPTION;
@@ -27,7 +27,7 @@ import java.util.Map;
 import com.syrus.AMFICOM.general.AbstractStorableObjectXML;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2006/06/09 15:41:41 $
+ * @version $Revision: 1.5 $, $Date: 2006/06/09 16:23:17 $
  * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module administration
@@ -46,7 +46,7 @@ public class MCMXML extends AbstractStorableObjectXML<MCM> {
 		if (keys == null) {
 			final String[] keysArray = new String[] { COLUMN_NAME,
 					COLUMN_DESCRIPTION,
-					COLUMN_SYSTEM_USER_ID,
+					COLUMN_USER_ID,
 					COLUMN_SERVER_ID,
 					COLUMN_DOMAIN_ID,
 					COLUMN_HOSTNAME };
@@ -64,7 +64,7 @@ public class MCMXML extends AbstractStorableObjectXML<MCM> {
 				this.getString(objectMap, COLUMN_NAME),
 				this.getString(objectMap, COLUMN_DESCRIPTION),
 				this.getString(objectMap, COLUMN_HOSTNAME),
-				this.getIdentifier(objectMap, COLUMN_SYSTEM_USER_ID),
+				this.getIdentifier(objectMap, COLUMN_USER_ID),
 				this.getIdentifier(objectMap, COLUMN_SERVER_ID));
 		return mcm;
 	}

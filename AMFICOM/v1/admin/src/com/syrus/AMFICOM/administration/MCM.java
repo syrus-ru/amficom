@@ -1,5 +1,5 @@
 /*
- * $Id: MCM.java,v 1.68 2006/06/09 15:38:32 arseniy Exp $
+ * $Id: MCM.java,v 1.69 2006/06/09 16:23:17 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,8 +13,6 @@ import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
 import static com.syrus.AMFICOM.general.ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
 import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MCM_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.SYSTEMUSER_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.SERVER_CODE;
 import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 
 import java.util.Collections;
@@ -40,19 +38,21 @@ import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.68 $, $Date: 2006/06/09 15:38:32 $
+ * @version $Revision: 1.69 $, $Date: 2006/06/09 16:23:17 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module administration
  */
 
-public final class MCM extends DomainMember implements Characterizable, Namable, IdlTransferableObjectExt<IdlMCM> {
-	private static final long serialVersionUID = -4315327705189811273L;
+public final class MCM extends DomainMember
+		implements Characterizable, Namable,
+		IdlTransferableObjectExt<IdlMCM> {
+	private static final long serialVersionUID = 8537789017196895900L;
 
 	private String name;
 	private String description;
 	private String hostname;
-	private Identifier systemUserId;
+	private Identifier userId;
 	private Identifier serverId;
 
 	/**
@@ -88,28 +88,27 @@ public final class MCM extends DomainMember implements Characterizable, Namable,
 		this.name = name;
 		this.description = description;
 		this.hostname = hostname;
-		this.systemUserId = userId;
+		this.userId = userId;
 		this.serverId = serverId;
 	}
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public synchronized void fromIdlTransferable(final IdlMCM idlMCM) throws IdlConversionException {
-		super.fromIdlTransferable(idlMCM, Identifier.valueOf(idlMCM.domainId));
-		this.name = idlMCM.name;
-		this.description = idlMCM.description;
-		this.hostname = idlMCM.hostname;
-		this.systemUserId = Identifier.valueOf(idlMCM.systemUserId);
-		this.serverId = Identifier.valueOf(idlMCM.serverId);
-
+	public synchronized void fromIdlTransferable(final IdlMCM mt)
+	throws IdlConversionException {
+		super.fromIdlTransferable(mt, Identifier.valueOf(mt.domainId));
+		this.name = mt.name;
+		this.description = mt.description;
+		this.hostname = mt.hostname;
+		this.userId = Identifier.valueOf(mt.userId);
+		this.serverId = Identifier.valueOf(mt.serverId);
+		
 		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}
-
+	
 	/**
-	 * <p>
-	 * <b>Clients must never explicitly call this method.</b>
-	 * </p>
+	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	@Override
 	public IdlMCM getIdlTransferable(final ORB orb) {
@@ -126,7 +125,7 @@ public final class MCM extends DomainMember implements Characterizable, Namable,
 				this.name,
 				this.description,
 				this.hostname,
-				this.systemUserId.getIdlTransferable(),
+				this.userId.getIdlTransferable(),
 				this.serverId.getIdlTransferable());
 	}
 
@@ -144,8 +143,7 @@ public final class MCM extends DomainMember implements Characterizable, Namable,
 				&& this.name != null && this.name.length() != 0
 				&& this.description != null
 				&& this.hostname != null
-				&& this.systemUserId != null && this.systemUserId.getMajor() == SYSTEMUSER_CODE
-				&& this.serverId != null && this.serverId.getMajor() == SERVER_CODE;
+				&& this.userId != null;
 	}
 
 	public String getName() {
@@ -165,8 +163,8 @@ public final class MCM extends DomainMember implements Characterizable, Namable,
 		super.markAsChanged();
 	}
 
-	public Identifier getSystemUserId() {
-		return this.systemUserId;
+	public Identifier getUserId() {
+		return this.userId;
 	}
 
 	public Identifier getServerId() {
@@ -225,7 +223,7 @@ public final class MCM extends DomainMember implements Characterizable, Namable,
 		this.name = name;
 		this.description = description;
 		this.hostname = hostname;
-		this.systemUserId = userId;
+		this.userId = userId;
 		this.serverId = serverId;
 	}
 	
@@ -235,7 +233,7 @@ public final class MCM extends DomainMember implements Characterizable, Namable,
 	@Override
 	protected Set<Identifiable> getDependenciesTmpl() {
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
-		dependencies.add(this.systemUserId);
+		dependencies.add(this.userId);
 		dependencies.add(this.serverId);
 		return dependencies;
 	}
@@ -255,8 +253,8 @@ public final class MCM extends DomainMember implements Characterizable, Namable,
 		super.markAsChanged();
 	}
 	
-	public void setSystemUserId(final Identifier systemUserId) {
-		this.systemUserId = systemUserId;
+	public void setUserId(final Identifier userId) {
+		this.userId = userId;
 		super.markAsChanged();
 	}
 

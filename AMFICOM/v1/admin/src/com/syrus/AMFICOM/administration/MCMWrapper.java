@@ -1,5 +1,5 @@
 /*
- * $Id: MCMWrapper.java,v 1.21 2006/06/09 15:40:19 arseniy Exp $
+ * $Id: MCMWrapper.java,v 1.22 2006/06/09 16:23:17 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,14 +18,14 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import static com.syrus.AMFICOM.administration.DomainMember.COLUMN_DOMAIN_ID;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2006/06/09 15:40:19 $
+ * @version $Revision: 1.22 $, $Date: 2006/06/09 16:23:17 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module administration
  */
 public final class MCMWrapper extends StorableObjectWrapper<MCM> {
 
-	public static final String COLUMN_SYSTEM_USER_ID = "system_user_id";
+	public static final String COLUMN_USER_ID = "user_id";
 	public static final String COLUMN_SERVER_ID = "server_id";
 	// public static final String COLUMN_LOCATION = "location";
 	public static final String COLUMN_HOSTNAME = "hostname";
@@ -41,7 +41,7 @@ public final class MCMWrapper extends StorableObjectWrapper<MCM> {
 		// empty private constructor
 		final String[] keysArray = new String[] { COLUMN_NAME, 
 				COLUMN_DESCRIPTION, 
-				COLUMN_SYSTEM_USER_ID, 
+				COLUMN_USER_ID, 
 				COLUMN_SERVER_ID, 
 				COLUMN_DOMAIN_ID,
 				COLUMN_HOSTNAME };
@@ -73,8 +73,8 @@ public final class MCMWrapper extends StorableObjectWrapper<MCM> {
 				return mcm.getName();
 			if (key.equals(COLUMN_DESCRIPTION))
 				return mcm.getDescription();
-			if (key.equals(COLUMN_SYSTEM_USER_ID))
-				return mcm.getSystemUserId();
+			if (key.equals(COLUMN_USER_ID))
+				return mcm.getUserId();
 			if (key.equals(COLUMN_SERVER_ID))
 				return mcm.getServerId();
 			else if (key.equals(COLUMN_DOMAIN_ID)) 
@@ -96,8 +96,8 @@ public final class MCMWrapper extends StorableObjectWrapper<MCM> {
 				mcm.setName((String) value);
 			else if (key.equals(COLUMN_DESCRIPTION))
 				mcm.setDescription((String) value);
-			else if (key.equals(COLUMN_SYSTEM_USER_ID))
-				mcm.setSystemUserId((Identifier) value);
+			else if (key.equals(COLUMN_USER_ID))
+				mcm.setUserId((Identifier) value);
 			else if (key.equals(COLUMN_SERVER_ID))
 				mcm.setServerId((Identifier) value);
 			else if (key.equals(COLUMN_DOMAIN_ID)) 
@@ -132,7 +132,7 @@ public final class MCMWrapper extends StorableObjectWrapper<MCM> {
 				|| key.equals(COLUMN_HOSTNAME)) {
 			return String.class;
 		}
-		if (key.equals(COLUMN_SYSTEM_USER_ID)
+		if (key.equals(COLUMN_USER_ID)
 				|| key.equals(COLUMN_SERVER_ID)
 				|| key.equals(COLUMN_DOMAIN_ID)) {
 			return Identifier.class;
