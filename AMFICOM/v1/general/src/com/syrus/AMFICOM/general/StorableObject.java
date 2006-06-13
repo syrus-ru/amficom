@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObject.java,v 1.157 2006/06/07 08:13:52 arseniy Exp $
+ * $Id: StorableObject.java,v 1.158 2006/06/13 07:19:42 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,7 +47,7 @@ import com.syrus.util.LRUMap.Retainable;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.157 $, $Date: 2006/06/07 08:13:52 $
+ * @version $Revision: 1.158 $, $Date: 2006/06/13 07:19:42 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -258,8 +258,7 @@ public abstract class StorableObject implements Identifiable, Retainable, Serial
 	 */
 	public final boolean isNew() {
 		final boolean itIsNew = this.version.equals(INITIAL_VERSION);
-		assert (itIsNew && this.isChanged()) || (!itIsNew && !this.isChanged()) : OBJECT_STATE_ILLEGAL
-				+ "; id: '" + this.id + "' + version: " + this.version;
+		assert !(itIsNew && !this.isChanged()) : OBJECT_STATE_ILLEGAL + "; id: '" + this.id + "' + version: " + this.version;
 		return itIsNew;
 	}
 
