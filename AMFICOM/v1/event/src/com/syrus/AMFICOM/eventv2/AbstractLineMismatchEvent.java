@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractLineMismatchEvent.java,v 1.8 2006/06/13 07:55:32 bass Exp $
+ * $Id: AbstractLineMismatchEvent.java,v 1.9 2006/06/13 07:56:37 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,7 +35,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.8 $, $Date: 2006/06/13 07:55:32 $
+ * @version $Revision: 1.9 $, $Date: 2006/06/13 07:56:37 $
  * @module event
  */
 public abstract class AbstractLineMismatchEvent extends StorableObject
@@ -236,7 +236,7 @@ public abstract class AbstractLineMismatchEvent extends StorableObject
 	 * @see StorableObject#getReverseDependencies(boolean)
 	 */
 	@Override
-	protected Set<Identifiable> getReverseDependencies(boolean usePool)
+	protected final Set<Identifiable> getReverseDependencies(boolean usePool)
 	throws ApplicationException {
 		final Set<Identifiable> reverseDependencies = new HashSet<Identifiable>();
 		reverseDependencies.addAll(super.getReverseDependencies(usePool));
