@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractLineMismatchEvent.java,v 1.9 2006/06/13 07:56:37 bass Exp $
+ * $Id: AbstractLineMismatchEvent.java,v 1.10 2006/06/13 15:12:12 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,15 +10,19 @@ package com.syrus.AMFICOM.eventv2;
 
 import static com.syrus.AMFICOM.eventv2.EventType.LINE_MISMATCH;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
+import static com.syrus.AMFICOM.general.ObjectEntities.LINEMISMATCHEVENT_CODE;
 import static java.util.logging.Level.SEVERE;
 
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import org.omg.CORBA.ORB;
 
+import com.syrus.AMFICOM.bugs.Crutch577;
 import com.syrus.AMFICOM.eventv2.corba.IdlLineMismatchEvent;
 import com.syrus.AMFICOM.eventv2.corba.IdlLineMismatchEventHelper;
 import com.syrus.AMFICOM.eventv2.corba.IdlLineMismatchEventPackage.IdlSpacialData;
@@ -27,6 +31,7 @@ import com.syrus.AMFICOM.eventv2.corba.IdlLineMismatchEventPackage.IdlSpacialDat
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
@@ -35,7 +40,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.9 $, $Date: 2006/06/13 07:56:37 $
+ * @version $Revision: 1.10 $, $Date: 2006/06/13 15:12:12 $
  * @module event
  */
 public abstract class AbstractLineMismatchEvent extends StorableObject
@@ -171,6 +176,29 @@ public abstract class AbstractLineMismatchEvent extends StorableObject
 		return StorableObjectPool.<AbstractLineMismatchEvent>getStorableObject(
 				this.getParentLineMismatchEventId(),
 				true);
+	}
+
+	private final LinkedIdsCondition childLineMismatchEventsCondition
+			= new LinkedIdsCondition(this.id, LINEMISMATCHEVENT_CODE);
+
+	/**
+	 * If there&apos;s a parent, returns an empty sorted set at once,
+	 * without pool querying.
+	 *
+	 * @see LineMismatchEvent#getChildLineMismatchEvents()
+	 */
+	@Crutch577(notes = "Remove #setLinkedIdentifiable(...) invocation.")
+	public final SortedSet<LineMismatchEvent> getChildLineMismatchEvents()
+	throws ApplicationException {
+		this.childLineMismatchEventsCondition.setLinkedIdentifiable(this);
+		final Set<AbstractLineMismatchEvent> unsortedEvents = this.getParentLineMismatchEventId().isVoid()
+				? StorableObjectPool.<AbstractLineMismatchEvent> getStorableObjectsByCondition(
+						this.childLineMismatchEventsCondition,
+						true)
+				: Collections.<AbstractLineMismatchEvent> emptySet();
+		final SortedSet<LineMismatchEvent> childLineMismatchEvents
+				= new TreeSet<LineMismatchEvent>(unsortedEvents);
+		return Collections.unmodifiableSortedSet(childLineMismatchEvents);
 	}
 
 	protected String paramString() {
