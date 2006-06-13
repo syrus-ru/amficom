@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractLineMismatchEvent.java,v 1.7 2006/06/08 18:30:10 bass Exp $
+ * $Id: AbstractLineMismatchEvent.java,v 1.8 2006/06/13 07:55:32 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,8 +9,10 @@
 package com.syrus.AMFICOM.eventv2;
 
 import static com.syrus.AMFICOM.eventv2.EventType.LINE_MISMATCH;
+import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static java.util.logging.Level.SEVERE;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -33,7 +35,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.7 $, $Date: 2006/06/08 18:30:10 $
+ * @version $Revision: 1.8 $, $Date: 2006/06/13 07:55:32 $
  * @module event
  */
 public abstract class AbstractLineMismatchEvent extends StorableObject
@@ -215,12 +217,45 @@ public abstract class AbstractLineMismatchEvent extends StorableObject
 				this.getReflectogramMismatchEventId().getIdlTransferable(orb));
 	}
 
+	/**
+	 * <em>Note:</em> {@link LineMismatchEvent#getParentLineMismatchEventId()}
+	 * may return a void identifier.
+	 *
+	 * @see StorableObject#getDependenciesTmpl()
+	 */
 	@Override
 	protected final Set<Identifiable> getDependenciesTmpl() {
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
 		dependencies.add(this.getAffectedPathElementId());
 		dependencies.add(this.getReflectogramMismatchEventId());
+		dependencies.add(this.getParentLineMismatchEventId());
 		return dependencies;
+	}
+
+	/**
+	 * @see StorableObject#getReverseDependencies(boolean)
+	 */
+	@Override
+	protected Set<Identifiable> getReverseDependencies(boolean usePool)
+	throws ApplicationException {
+		final Set<Identifiable> reverseDependencies = new HashSet<Identifiable>();
+		reverseDependencies.addAll(super.getReverseDependencies(usePool));
+		final ReflectogramMismatchEvent reflectogramMismatchEvent = this.getReflectogramMismatchEvent();
+		if (reflectogramMismatchEvent instanceof StorableObject) {
+			reverseDependencies.addAll(getReverseDependencies(
+					(StorableObject) reflectogramMismatchEvent,
+					usePool));
+		}
+		for (final LineMismatchEvent lineMismatchEvent : this.getChildLineMismatchEvents()) {
+			if (lineMismatchEvent instanceof StorableObject) {
+				reverseDependencies.addAll(getReverseDependencies(
+						(StorableObject) lineMismatchEvent,
+						usePool));
+			}
+		}
+		reverseDependencies.remove(null);
+		reverseDependencies.remove(VOID_IDENTIFIER);
+		return Collections.unmodifiableSet(reverseDependencies);
 	}
 
 	@Override
