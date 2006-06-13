@@ -1,5 +1,5 @@
 /*-
- * $Id: Test.java,v 1.183.2.28 2006/06/08 15:56:44 arseniy Exp $
+ * $Id: Test.java,v 1.183.2.29 2006/06/13 13:18:12 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -69,7 +69,7 @@ import com.syrus.util.transport.idl.IdlTransferableObject;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.183.2.28 $, $Date: 2006/06/08 15:56:44 $
+ * @version $Revision: 1.183.2.29 $, $Date: 2006/06/13 13:18:12 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -485,6 +485,7 @@ public final class Test extends StorableObject implements IdlTransferableObjectE
 				: ILLEGAL_ENTITY_CODE;
 			this.timeStamps.setTemporalPatternId(temporalPatternId);
 			super.markAsChanged();
+			return;
 		}
 		throw new IllegalStateException("Cannot set temporalPatternId to non-periodical test");
 	}
