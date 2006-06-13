@@ -1,5 +1,5 @@
 /*-
- * $Id: MapEditorResourceKeys.java,v 1.12 2006/06/07 07:43:22 stas Exp $
+ * $Id: MapEditorResourceKeys.java,v 1.13 2006/06/13 06:43:54 stas Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.client.resource;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2006/06/07 07:43:22 $
+ * @version $Revision: 1.13 $, $Date: 2006/06/13 06:43:54 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapclient
@@ -167,6 +167,7 @@ public interface MapEditorResourceKeys extends ResourceKeys {
 	String POPUP_ADD_TO_COLLECTOR = "Popup.AddToCollector"; //$NON-NLS-1$
 	String POPUP_PLACE_SITE = "Popup.PlaceSite"; //$NON-NLS-1$
 	String POPUP_COPY = "Popup.Copy"; //$NON-NLS-1$
+	String POPUP_MOVE_SE = "Popup.MoveSE"; //$NON-NLS-1$
 
 	String STATUS_MAP_OPENING = "Status.MapOpening"; //$NON-NLS-1$
 	String STATUS_ADDING_INTERNAL_MAP = "Status.AddingInternalMap"; //$NON-NLS-1$
