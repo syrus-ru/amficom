@@ -1,5 +1,5 @@
 /*-
- * $Id: LineMismatchEvent.java,v 1.25 2006/06/08 18:27:25 bass Exp $
+ * $Id: LineMismatchEvent.java,v 1.26 2006/06/14 12:00:46 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,6 +30,7 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.util.Log;
+import com.syrus.util.transport.idl.IdlTransferableObject;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
@@ -38,7 +39,7 @@ import com.syrus.util.transport.idl.IdlTransferableObjectExt;
  * 
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.25 $, $Date: 2006/06/08 18:27:25 $
+ * @version $Revision: 1.26 $, $Date: 2006/06/14 12:00:46 $
  * @module event
  */
 public interface LineMismatchEvent
@@ -314,10 +315,10 @@ public interface LineMismatchEvent
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.25 $, $Date: 2006/06/08 18:27:25 $
+	 * @version $Revision: 1.26 $, $Date: 2006/06/14 12:00:46 $
 	 * @module event
 	 */
-	enum AlarmStatus {
+	enum AlarmStatus implements IdlTransferableObject<IdlAlarmStatus> {
 		/**
 		 * <p>Pending (NQMS-standard). Initial status an alarm is
 		 * assigned after it is generated.</p>
@@ -501,6 +502,19 @@ public interface LineMismatchEvent
 		}
 
 		/**
+		 * @param orb
+		 * @throws IllegalArgumentException
+		 * @see IdlTransferableObject#getIdlTransferable(ORB)
+		 */
+		public IdlAlarmStatus getIdlTransferable(final ORB orb) {
+			try {
+				return IdlAlarmStatus.from_int(this.ordinal());
+			} catch (final BAD_PARAM bp) {
+				throw new IllegalArgumentException(String.valueOf(this.ordinal()), bp);
+			}
+		}
+
+		/**
 		 * <p>For any two different alarm statii, <em>A</em> and <em>B</em>,
 		 * {@code A.isAllowedPredecessorOf(B) ^ B.isAllowedPredecessorOf(A)}
 		 * is {@code true} <em>only in case</em> <strong>state rollbacks
@@ -635,7 +649,7 @@ public interface LineMismatchEvent
 		 *
 		 * @author Andrew ``Bass'' Shcheglov
 		 * @author $Author: bass $
-		 * @version $Revision: 1.25 $, $Date: 2006/06/08 18:27:25 $
+		 * @version $Revision: 1.26 $, $Date: 2006/06/14 12:00:46 $
 		 * @see AllowedSuccessors
 		 * @module event
 		 */
@@ -648,7 +662,7 @@ public interface LineMismatchEvent
 		/**
 		 * @author Andrew ``Bass'' Shcheglov
 		 * @author $Author: bass $
-		 * @version $Revision: 1.25 $, $Date: 2006/06/08 18:27:25 $
+		 * @version $Revision: 1.26 $, $Date: 2006/06/14 12:00:46 $
 		 * @see AllowedPredecessors
 		 * @module event
 		 */
@@ -663,7 +677,7 @@ public interface LineMismatchEvent
 		 *
 		 * @author Andrew ``Bass'' Shcheglov
 		 * @author $Author: bass $
-		 * @version $Revision: 1.25 $, $Date: 2006/06/08 18:27:25 $
+		 * @version $Revision: 1.26 $, $Date: 2006/06/14 12:00:46 $
 		 * @module event
 		 */
 		static final class Proxy
@@ -695,14 +709,10 @@ public interface LineMismatchEvent
 			/**
 			 * @param orb
 			 * @throws IllegalArgumentException
-			 * @see com.syrus.util.transport.idl.IdlTransferableObject#getIdlTransferable(ORB)
+			 * @see IdlTransferableObject#getIdlTransferable(ORB)
 			 */
 			public IdlAlarmStatus getIdlTransferable(final ORB orb) {
-				try {
-					return IdlAlarmStatus.from_int(this.value.ordinal());
-				} catch (final BAD_PARAM bp) {
-					throw new IllegalArgumentException(String.valueOf(this.value.ordinal()), bp);
-				}
+				return this.value.getIdlTransferable(orb);
 			}
 
 			/**
