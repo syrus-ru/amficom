@@ -17,7 +17,8 @@ DEPENDENCIES = \
 administration \
 general \
 util \
-reflectometry
+reflectometry \
+bugs
 
 EXTCLASSPATH := $(TROVE4JCLASSPATH)
 XMLCLASSPATH := $(LIBDIR)/$(LIBNAME_GENERALXML)
