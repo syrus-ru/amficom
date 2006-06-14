@@ -1,5 +1,5 @@
 /*-
- * $Id: event.idl,v 1.63 2006/05/31 07:45:18 bass Exp $
+ * $Id: event.idl,v 1.64 2006/06/14 12:01:55 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -132,6 +132,8 @@ module eventv2 {
 				XTRA_VERIFIED,
 				XTRA_CLOSED
 			};
+			private IdlAlarmStatus alarmStatus;
+			private general::corba::IdlIdentifier parentLineMismatchEventId;
 
 			general::corba::IdlIdentifier getAffectedPathElementId();
 			boolean isAffectedPathElementSpacious();
@@ -142,6 +144,10 @@ module eventv2 {
 			general::corba::WString4000 getPlainTextMessage();
 			general::corba::WString4000 getRichTextMessage();
 			general::corba::IdlIdentifier getReflectogramMismatchEventId();
+			IdlAlarmStatus getAlarmStatus();
+			void setAlarmStatus(in IdlAlarmStatus alarmStatus);
+			general::corba::IdlIdentifier getParentLineMismatchEventId();
+			void setParentLineMismatchEventId(in general::corba::IdlIdentifier parentLineMismatchEventId);
 
 			factory init(in general::corba::IdlIdentifier id,
 					in long long created,
@@ -155,7 +161,9 @@ module eventv2 {
 					in double mismatchPhysicalDistance,
 					in general::corba::WString4000 plainTextMessage,
 					in general::corba::WString4000 richTextMessage,
-					in general::corba::IdlIdentifier reflectogramMismatchEventId);
+					in general::corba::IdlIdentifier reflectogramMismatchEventId,
+					in IdlAlarmStatus alarmStatus,
+					in general::corba::IdlIdentifier parentLineMismatchEventId);
 		};
 
 		abstract valuetype IdlNotificationEvent : IdlEvent {

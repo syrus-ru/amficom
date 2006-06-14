@@ -1,5 +1,5 @@
 /*-
- * $Id: DefaultLineMismatchEvent.java,v 1.15 2006/06/13 15:12:12 bass Exp $
+ * $Id: DefaultLineMismatchEvent.java,v 1.16 2006/06/14 12:01:55 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,7 +28,7 @@ import com.syrus.util.transport.idl.IdlConversionException;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.15 $, $Date: 2006/06/13 15:12:12 $
+ * @version $Revision: 1.16 $, $Date: 2006/06/14 12:01:55 $
  * @module event
  */
 public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
@@ -188,11 +188,8 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 			this.plainTextMessage = lineMismatchEvent.getPlainTextMessage();
 			this.richTextMessage = lineMismatchEvent.getRichTextMessage();
 			this.reflectogramMismatchEventId = Identifier.valueOf(lineMismatchEvent.getReflectogramMismatchEventId());
-			/**
-			 * @todo Write something meaningful here.
-			 */
-//			this.alarmStatus.fromIdlTransferable(...);
-//			this.parentLineMismatchEventId = ...;
+			this.alarmStatus.fromIdlTransferable(lineMismatchEvent.getAlarmStatus());
+			this.parentLineMismatchEventId = Identifier.valueOf(lineMismatchEvent.getParentLineMismatchEventId());
 		}
 	}
 
