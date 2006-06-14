@@ -1,5 +1,5 @@
 /*-
- * $Id: LineMismatchEvent.java,v 1.26 2006/06/14 12:00:46 bass Exp $
+ * $Id: LineMismatchEvent.java,v 1.27 2006/06/14 16:20:38 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,7 +39,7 @@ import com.syrus.util.transport.idl.IdlTransferableObjectExt;
  * 
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.26 $, $Date: 2006/06/14 12:00:46 $
+ * @version $Revision: 1.27 $, $Date: 2006/06/14 16:20:38 $
  * @module event
  */
 public interface LineMismatchEvent
@@ -225,8 +225,10 @@ public interface LineMismatchEvent
 
 	/**
 	 * @param parentLineMismatchEventId
+	 * @throws ApplicationException
 	 */
-	void setParentLineMismatchEventId(final Identifier parentLineMismatchEventId);
+	void setParentLineMismatchEventId(final Identifier parentLineMismatchEventId)
+	throws ApplicationException;
 
 	/**
 	 * <p>Updates this event&apos;s parent.</p>
@@ -253,13 +255,15 @@ public interface LineMismatchEvent
 	 * (particularly the one running &quot;Observer&quot; module).</p>
 	 *
 	 * @param parentLineMismatchEvent
+	 * @throws ApplicationException
 	 * @throws IllegalStateException
 	 * @see #setAlarmStatus(LineMismatchEvent.AlarmStatus)
 	 * @see #getAlarmStatus()
 	 * @see #getParentLineMismatchEvent()
 	 * @see #getChildLineMismatchEvents()
 	 */
-	void setParentLineMismatchEvent(final LineMismatchEvent parentLineMismatchEvent);
+	void setParentLineMismatchEvent(final LineMismatchEvent parentLineMismatchEvent)
+	throws ApplicationException;
 
 	/**
 	 * @return identifier of the <em>group&nbsp;leader</em>, or {@link
@@ -315,7 +319,7 @@ public interface LineMismatchEvent
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.26 $, $Date: 2006/06/14 12:00:46 $
+	 * @version $Revision: 1.27 $, $Date: 2006/06/14 16:20:38 $
 	 * @module event
 	 */
 	enum AlarmStatus implements IdlTransferableObject<IdlAlarmStatus> {
@@ -649,7 +653,7 @@ public interface LineMismatchEvent
 		 *
 		 * @author Andrew ``Bass'' Shcheglov
 		 * @author $Author: bass $
-		 * @version $Revision: 1.26 $, $Date: 2006/06/14 12:00:46 $
+		 * @version $Revision: 1.27 $, $Date: 2006/06/14 16:20:38 $
 		 * @see AllowedSuccessors
 		 * @module event
 		 */
@@ -662,7 +666,7 @@ public interface LineMismatchEvent
 		/**
 		 * @author Andrew ``Bass'' Shcheglov
 		 * @author $Author: bass $
-		 * @version $Revision: 1.26 $, $Date: 2006/06/14 12:00:46 $
+		 * @version $Revision: 1.27 $, $Date: 2006/06/14 16:20:38 $
 		 * @see AllowedPredecessors
 		 * @module event
 		 */
@@ -677,7 +681,7 @@ public interface LineMismatchEvent
 		 *
 		 * @author Andrew ``Bass'' Shcheglov
 		 * @author $Author: bass $
-		 * @version $Revision: 1.26 $, $Date: 2006/06/14 12:00:46 $
+		 * @version $Revision: 1.27 $, $Date: 2006/06/14 16:20:38 $
 		 * @module event
 		 */
 		static final class Proxy

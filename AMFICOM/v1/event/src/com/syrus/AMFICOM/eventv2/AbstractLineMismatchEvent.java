@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractLineMismatchEvent.java,v 1.11 2006/06/14 12:01:55 bass Exp $
+ * $Id: AbstractLineMismatchEvent.java,v 1.12 2006/06/14 16:20:38 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,7 +40,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.11 $, $Date: 2006/06/14 12:01:55 $
+ * @version $Revision: 1.12 $, $Date: 2006/06/14 16:20:38 $
  * @module event
  */
 public abstract class AbstractLineMismatchEvent extends StorableObject
@@ -161,11 +161,15 @@ public abstract class AbstractLineMismatchEvent extends StorableObject
 	}
 
 	/**
-	 * @see LineMismatchEvent#setParentLineMismatchEvent(LineMismatchEvent)
+	 * @see LineMismatchEvent#setParentLineMismatchEventId(Identifier)
 	 */
-	public final void setParentLineMismatchEvent(
-			final LineMismatchEvent parentLineMismatchEvent) {
-		this.setParentLineMismatchEventId(Identifier.possiblyVoid(parentLineMismatchEvent));
+	public final void setParentLineMismatchEventId(
+			final Identifier parentLineMismatchEvent)
+	throws ApplicationException {
+		this.setParentLineMismatchEvent(
+				StorableObjectPool.<AbstractLineMismatchEvent> getStorableObject(
+						parentLineMismatchEvent,
+						true));
 	}
 
 	/**
@@ -178,7 +182,10 @@ public abstract class AbstractLineMismatchEvent extends StorableObject
 				true);
 	}
 
-	private final LinkedIdsCondition childLineMismatchEventsCondition
+	/**
+	 * @bug Doesn't get restored after deserialization.
+	 */
+	private final transient LinkedIdsCondition childLineMismatchEventsCondition
 			= new LinkedIdsCondition(this.id, LINEMISMATCHEVENT_CODE);
 
 	/**

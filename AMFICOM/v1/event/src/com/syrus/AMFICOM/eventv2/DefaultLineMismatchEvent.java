@@ -1,5 +1,5 @@
 /*-
- * $Id: DefaultLineMismatchEvent.java,v 1.16 2006/06/14 12:01:55 bass Exp $
+ * $Id: DefaultLineMismatchEvent.java,v 1.17 2006/06/14 16:20:38 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,6 +14,7 @@ import static com.syrus.AMFICOM.general.StorableObjectVersion.ILLEGAL_VERSION;
 import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 
 import java.util.Date;
+import java.util.SortedSet;
 
 import com.syrus.AMFICOM.eventv2.corba.IdlLineMismatchEvent;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -28,7 +29,7 @@ import com.syrus.util.transport.idl.IdlConversionException;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.16 $, $Date: 2006/06/14 12:01:55 $
+ * @version $Revision: 1.17 $, $Date: 2006/06/14 16:20:38 $
  * @module event
  */
 public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
@@ -399,38 +400,89 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 	}
 
 	/**
-	 * @see LineMismatchEvent#setParentLineMismatchEventId(Identifier)
+	 * @see LineMismatchEvent#setParentLineMismatchEvent(LineMismatchEvent)
 	 */
-	public void setParentLineMismatchEventId(final Identifier parentLineMismatchEventId) {
-		if (parentLineMismatchEventId.isVoid()) {
-			if (this.parentLineMismatchEventId.isVoid()) {
-				/*-
-				 * Has been having no parent, would have no
-				 * parent - no harm.
-				 */
-				return;
-			}
+	public void setParentLineMismatchEvent(final LineMismatchEvent parentLineMismatchEvent)
+	throws ApplicationException {
+		final Identifier newParentLineMismatchEventId = Identifier.possiblyVoid(parentLineMismatchEvent);
+
+		if (this.parentLineMismatchEventId.equals(newParentLineMismatchEventId)) {
+			return;
+		}
+
+		if (parentLineMismatchEvent == null) {
 			/*-
 			 * Has been having a parent - refuse to detach.
 			 */
-			throw new IllegalStateException("Cowardly refusing to detach the event: "
+			throw new IllegalStateException(
+					"Cowardly refusing to detach the event: "
 					+ "id = " + this.id + "; "
-					+ "oldParentLineMismatchEventId = " + this.parentLineMismatchEventId + "; "
-					+ "newParentLineMismatchEventId = " + parentLineMismatchEventId); 
-		} else if (this.parentLineMismatchEventId.isVoid()) {
-			/*-
-			 * Has been having no parent, would have one - let's see.
-			 */
-			throw new UnsupportedOperationException();
-		} else {
+					+ "oldParentLineMismatchEventId = "
+					+ this.parentLineMismatchEventId + "; "
+					+ "newParentLineMismatchEventId = "
+					+ newParentLineMismatchEventId);
+		} else if (!this.parentLineMismatchEventId.isVoid()) {
 			/*-
 			 * Has been having a parent - refuse to reattach.
 			 */
-			throw new IllegalStateException("Cowardly refusing to reattach the event: "
+			throw new IllegalStateException(
+					"Cowardly refusing to reattach the event: "
 					+ "id = " + this.id + "; "
-					+ "oldParentLineMismatchEventId = " + this.parentLineMismatchEventId + "; "
-					+ "newParentLineMismatchEventId = " + parentLineMismatchEventId); 
+					+ "oldParentLineMismatchEventId = "
+					+ this.parentLineMismatchEventId + "; "
+					+ "newParentLineMismatchEventId = "
+					+ newParentLineMismatchEventId);
 		}
+
+		/*-
+		 * Has been having no parent, would have one - let's see.
+		 * 
+		 * First, check whether parentLineMismatchEvent is a valid group
+		 * leader.
+		 */
+		if (this.equals(newParentLineMismatchEventId)) {
+			throw new IllegalStateException(
+					"Dependency circularity error: can't subject "
+					+ this.id + " to itself.");
+		}
+		final Identifier parentParentId
+				= parentLineMismatchEvent.getParentLineMismatchEventId();
+		if (this.equals(parentParentId)) {
+			throw new IllegalStateException(
+					"Dependency circularity error: "
+					+ newParentLineMismatchEventId
+					+ " is already referencing " + this.id
+					+ " as a parent.");
+		} else if (!parentParentId.isVoid()) {
+			throw new IllegalStateException(
+					newParentLineMismatchEventId
+					+ " is not a valid group leader as it's already referencing "
+					+ parentParentId + " as a parent.");
+		}
+
+		/*-
+		 * Second, check whether "this" is a valid subordinate.
+		 */
+		final SortedSet<LineMismatchEvent> childLineMismatchEvents
+				= this.getChildLineMismatchEvents();
+		if (!childLineMismatchEvents.isEmpty()) {
+			throw new IllegalStateException(this.id
+					+ " is not a valid subordinate as it's already a group leader with "
+					+ childLineMismatchEvents.size()
+					+ " child(ren) ("
+					+ childLineMismatchEvents + ").");
+		}
+
+		/*-
+		 * Third, actually perform the action we've been asked for.
+		 */
+		this.parentLineMismatchEventId = newParentLineMismatchEventId;
+		this.alarmStatus.setValue(null);
+		/**
+		 * @todo If our new parent event is closed, reopen it.
+		 * @todo Update parent event's history (marking it changed as well).
+		 */
+		this.markAsChanged();
 	}
 
 	/**
