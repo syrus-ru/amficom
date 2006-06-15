@@ -1,5 +1,5 @@
 /*-
- * $Id: MapEditorResourceKeys.java,v 1.13 2006/06/13 06:43:54 stas Exp $
+ * $Id: MapEditorResourceKeys.java,v 1.14 2006/06/15 06:32:42 stas Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.client.resource;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2006/06/13 06:43:54 $
+ * @version $Revision: 1.14 $, $Date: 2006/06/15 06:32:42 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapclient
@@ -152,6 +152,7 @@ public interface MapEditorResourceKeys extends ResourceKeys {
 	String LABEL_BUILDING_KURZ = "Label.BuildingKurz"; //$NON-NLS-1$
 	String LABEL_MARKER_INFO = "Label.MarkerInfo"; //$NON-NLS-1$
 	String LABEL_SORT = "Label.Sort"; //$NON-NLS-1$
+	String LABEL_CABLE_ROUTE = "Label.CableRoute"; //$NON-NLS-1$
 
 	String POPUP_GENERATE_CABLING = "Popup.GenerateCabling"; //$NON-NLS-1$
 	String POPUP_BIND = "Popup.Bind"; //$NON-NLS-1$
@@ -168,6 +169,8 @@ public interface MapEditorResourceKeys extends ResourceKeys {
 	String POPUP_PLACE_SITE = "Popup.PlaceSite"; //$NON-NLS-1$
 	String POPUP_COPY = "Popup.Copy"; //$NON-NLS-1$
 	String POPUP_MOVE_SE = "Popup.MoveSE"; //$NON-NLS-1$
+	String POPUP_BIND_CABLE = "Popup.BindCable"; //$NON-NLS-1$
+	String POPUP_CLEAR_BINDING = "Popup.ClearBinding"; //$NON-NLS-1$
 
 	String STATUS_MAP_OPENING = "Status.MapOpening"; //$NON-NLS-1$
 	String STATUS_ADDING_INTERNAL_MAP = "Status.AddingInternalMap"; //$NON-NLS-1$
