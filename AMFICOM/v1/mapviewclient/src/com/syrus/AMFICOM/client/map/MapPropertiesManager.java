@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapPropertiesManager.java,v 1.63 2006/05/03 04:46:59 stas Exp $$
+ * $$Id: MapPropertiesManager.java,v 1.64 2006/06/15 06:34:15 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,6 +35,7 @@ import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Checker;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.resource.AbstractImageResource;
 import com.syrus.AMFICOM.resource.DoublePoint;
@@ -53,7 +54,7 @@ import com.syrus.util.Log;
  * <li>center
  * <li>zoom
  * 
- * @version $Revision: 1.63 $, $Date: 2006/05/03 04:46:59 $
+ * @version $Revision: 1.64 $, $Date: 2006/06/15 06:34:15 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -418,6 +419,10 @@ public final class MapPropertiesManager {
 	}
 
 	public static boolean isPermitted(PermissionCodename code) {
+		if (!LoginManager.isLoggedIn()) {
+			return false;
+		}
+		
 		if (code == null) {
 			// the functionality requested is not defined for this mode
 			return false;
