@@ -1,0 +1,251 @@
+/*-
+ * $Id: EventHierarchyTestCase.java,v 1.1 2006/06/15 17:58:23 bass Exp $
+ *
+ * Copyright ¿ 2004-2006 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
+
+package com.syrus.AMFICOM.eventv2;
+
+import static com.syrus.AMFICOM.general.ObjectEntities.REFLECTOGRAMMISMATCHEVENT_CODE;
+import static com.syrus.AMFICOM.general.ObjectGroupEntities.EVENT_GROUP_CODE;
+import static java.util.logging.Level.SEVERE;
+
+import java.io.File;
+import java.util.EnumSet;
+
+import junit.awtui.TestRunner;
+import junit.extensions.TestSetup;
+import junit.framework.Test;
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
+
+import com.syrus.AMFICOM.eventv2.LineMismatchEvent.AlarmStatus;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CommunicationException;
+import com.syrus.AMFICOM.general.IGSConnectionManager;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.corba.IdentifierGeneratorServer;
+import com.syrus.AMFICOM.general.corba.IdlIdentifier;
+import com.syrus.util.DefaultLogger;
+import com.syrus.util.Log;
+
+/**
+ * @author Andrew ``Bass'' Shcheglov
+ * @author $Author: bass $
+ * @version $Revision: 1.1 $, $Date: 2006/06/15 17:58:23 $
+ * @module event
+ */
+public final class EventHierarchyTestCase extends TestCase {
+	public EventHierarchyTestCase(final String method) {
+		super(method);
+	}
+
+	public static void main(final String args[]) {
+		TestRunner.main(new String[] {EventHierarchyTestCase.class.getName()});
+	}
+
+	public static Test suite() {
+		final TestSuite testSuite = new TestSuite();
+		testSuite.addTest(new EventHierarchyTestCase("testAssertionStatus"));
+		testSuite.addTest(new EventHierarchyTestCase("testAllowedImproperUse"));
+		testSuite.addTest(new EventHierarchyTestCase("testSelfSubmissionFailure"));
+		testSuite.addTest(new EventHierarchyTestCase("testCircularSubmissionFailure"));
+		testSuite.addTest(new EventHierarchyTestCase("testDetachmentFailure"));
+		testSuite.addTest(new EventHierarchyTestCase("testReattachmentFailure"));
+		testSuite.addTest(new EventHierarchyTestCase("testTwoLevelHierarchyFailure"));
+		return new TestSetup(testSuite) {
+			@Override
+			protected void setUp() {
+				oneTimeSetUp();
+			}
+
+			@Override
+			protected void tearDown() {
+				oneTimeTearDown();
+			}
+		};
+	}
+
+	public static void oneTimeSetUp() {
+		final String logDir = System.getProperty("java.io.tmpdir") + File.separatorChar
+				+ ".amficom-" + System.getProperty("user.name");
+		System.setProperty("amficom.logging.LogDebugLevel", "1");
+		System.setProperty("amficom.logging.EchoDebug", Boolean.toString(true));
+		System.setProperty("amficom.logging.LogPath", logDir);
+		System.setProperty("amficom.logging.AllowLevelOutput", Boolean.toString(false));
+		System.setProperty("amficom.logging.AllowAnsiColor", Boolean.toString(false));
+		System.setProperty("amficom.logging.FullSte", Boolean.toString(false));
+		System.setProperty("amficom.logging.StackTraceDataSource", "throwable");
+		Log.setLogger(new DefaultLogger());
+
+		StorableObjectPool.init(new EmptyEventObjectLoader());
+		StorableObjectPool.addObjectPoolGroup(EVENT_GROUP_CODE, 20, 120 * 60 * 1000 * 1000 * 1000);
+		final IdentifierGeneratorServer identifierGeneratorServer = new IdentifierGeneratorServer() {
+			private long l;
+			private static final long serialVersionUID = -9123341768454319489L;
+
+			public IdlIdentifier getGeneratedIdentifier(short entity) {
+				return this.getGeneratedIdentifierRange(entity, 1)[0];
+			}
+
+			public synchronized IdlIdentifier[] getGeneratedIdentifierRange(short entity, int size) {
+				final IdlIdentifier ids[] = new IdlIdentifier[size];
+				for (int i = 0; i < size; i++) {
+					ids[i] = Identifier.valueOf(ObjectEntities.codeToString(entity) + '_' + this.l++).getIdlTransferable();
+				}
+				return ids;
+			}
+		};
+		IdentifierPool.init(new IGSConnectionManager() {
+			public IdentifierGeneratorServer getIGSReference() throws CommunicationException {
+				return identifierGeneratorServer;
+			}
+		});
+	}
+
+	public static void oneTimeTearDown() {
+		// empty
+	}
+
+	private static LineMismatchEvent newLineMismatchEvent() throws ApplicationException {
+		final Identifier userId = Identifier.valueOf("SystemUser_0");
+		final Identifier affectedPathElementId = Identifier.valueOf("PathElement_0");
+		final Identifier reflectogramMismatchEventId = IdentifierPool.getGeneratedIdentifier(REFLECTOGRAMMISMATCHEVENT_CODE);
+
+		final LineMismatchEvent lineMismatchEvent = DefaultLineMismatchEvent.newInstance(userId, affectedPathElementId, false, 0, 0, 0, 0, "foo", "<html>foo</html>", reflectogramMismatchEventId);
+		assertTrue(lineMismatchEvent instanceof StorableObject);
+		/*
+		 * Any new LineMismatchEvent gets saved right after creation.
+		 */
+		assertFalse(((StorableObject) lineMismatchEvent).isChanged());
+		final AlarmStatus alarmStatus = lineMismatchEvent.getAlarmStatus();
+		assertSame(AlarmStatus.PENDING, alarmStatus);
+		final EnumSet<AlarmStatus> allowedSuccessors = alarmStatus.getAllowedSuccessors();
+		assertFalse(allowedSuccessors.isEmpty());
+		lineMismatchEvent.setAlarmStatus(allowedSuccessors.iterator().next());
+		/*
+		 * Ensure the object is changed now, so, despite we're using a
+		 * fake loader, it doesn't get pushed out of the pool
+		 */
+		assertTrue(((StorableObject) lineMismatchEvent).isChanged());
+		return lineMismatchEvent;
+	}
+
+	public void testAssertionStatus() {
+		try {
+			assert false;
+			fail();
+		} catch (final AssertionError ae) {
+			assertTrue(true);
+		}
+	}
+
+	public void testAllowedImproperUse() throws ApplicationException {
+		/*
+		 * 1. Headless to headless, no children.
+		 */
+		final LineMismatchEvent headless = newLineMismatchEvent();
+		headless.setParentLineMismatchEvent(null);
+		assertTrue(true);
+
+		final LineMismatchEvent leader = newLineMismatchEvent();
+		final LineMismatchEvent child = headless;
+		child.setParentLineMismatchEvent(leader);
+
+		/*
+		 * 2. Headless (leader) to headless, 1 child.
+		 */
+		leader.setParentLineMismatchEvent(null);
+		assertTrue(true);
+
+		/*
+		 * 3. Subordinate to subordinate, no change of parent.
+		 */
+		child.setParentLineMismatchEvent(leader);
+		assertTrue(true);
+	}
+
+	public void testSelfSubmissionFailure() throws ApplicationException {
+		final LineMismatchEvent lineMismatchEvent = newLineMismatchEvent();
+		try {
+			lineMismatchEvent.setParentLineMismatchEvent(lineMismatchEvent);
+			fail();
+		} catch (final IllegalArgumentException iae) {
+			Log.debugMessage(iae.getLocalizedMessage(), SEVERE);
+			assertTrue(true);
+		}
+	}
+
+	public void testCircularSubmissionFailure() throws ApplicationException {
+		final LineMismatchEvent leader = newLineMismatchEvent();
+		final LineMismatchEvent child = newLineMismatchEvent();
+		child.setParentLineMismatchEvent(leader);
+
+		try {
+			leader.setParentLineMismatchEvent(child);
+			fail();
+		} catch (final IllegalArgumentException iae) {
+			Log.debugMessage(iae.getLocalizedMessage(), SEVERE);
+			assertTrue(true);
+		}
+	}
+
+	public void testDetachmentFailure() throws ApplicationException {
+		final LineMismatchEvent leader = newLineMismatchEvent();
+		final LineMismatchEvent child = newLineMismatchEvent();
+		child.setParentLineMismatchEvent(leader);
+
+		try {
+			child.setParentLineMismatchEvent(null);
+			fail();
+		} catch (final IllegalStateException ise) {
+			Log.debugMessage(ise.getLocalizedMessage(), SEVERE);
+			assertTrue(true);
+		}
+	}
+
+	public void testReattachmentFailure() throws ApplicationException {
+		final LineMismatchEvent oldLeader = newLineMismatchEvent();
+		final LineMismatchEvent newLeader = newLineMismatchEvent();
+		final LineMismatchEvent child = newLineMismatchEvent();
+		child.setParentLineMismatchEvent(oldLeader);
+
+		try {
+			child.setParentLineMismatchEvent(newLeader);
+			fail();
+		} catch (final IllegalStateException ise) {
+			Log.debugMessage(ise.getLocalizedMessage(), SEVERE);
+			assertTrue(true);
+		}
+	}
+
+	public void testTwoLevelHierarchyFailure() throws ApplicationException {
+		final LineMismatchEvent superLeader = newLineMismatchEvent();
+		final LineMismatchEvent leader = newLineMismatchEvent();
+		final LineMismatchEvent child = newLineMismatchEvent();
+		final LineMismatchEvent subChild = newLineMismatchEvent();
+		child.setParentLineMismatchEvent(leader);
+
+		try {
+			subChild.setParentLineMismatchEvent(child);
+			fail();
+		} catch (final IllegalArgumentException iae) {
+			Log.debugMessage(iae.getLocalizedMessage(), SEVERE);
+			assertTrue(true);
+		}
+
+		try {
+			leader.setParentLineMismatchEvent(superLeader);
+			fail();
+		} catch (final IllegalStateException ise) {
+			Log.debugMessage(ise.getLocalizedMessage(), SEVERE);
+			assertTrue(true);
+		}
+	}
+}
