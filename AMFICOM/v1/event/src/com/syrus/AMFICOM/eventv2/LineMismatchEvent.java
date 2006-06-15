@@ -1,5 +1,5 @@
 /*-
- * $Id: LineMismatchEvent.java,v 1.27 2006/06/14 16:20:38 bass Exp $
+ * $Id: LineMismatchEvent.java,v 1.28 2006/06/15 17:55:40 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,7 +39,7 @@ import com.syrus.util.transport.idl.IdlTransferableObjectExt;
  * 
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.27 $, $Date: 2006/06/14 16:20:38 $
+ * @version $Revision: 1.28 $, $Date: 2006/06/15 17:55:40 $
  * @module event
  */
 public interface LineMismatchEvent
@@ -224,8 +224,13 @@ public interface LineMismatchEvent
 	AlarmStatus getAlarmStatus();
 
 	/**
+	 * <p>Updates this event&apos;s parent.</p>
+	 *
 	 * @param parentLineMismatchEventId
 	 * @throws ApplicationException
+	 * @throws IllegalStateException
+	 * @throws IllegalArgumentException
+	 * @see #setParentLineMismatchEvent(LineMismatchEvent)
 	 */
 	void setParentLineMismatchEventId(final Identifier parentLineMismatchEventId)
 	throws ApplicationException;
@@ -254,13 +259,20 @@ public interface LineMismatchEvent
 	 * machine, it must be executed on at most one client machine
 	 * (particularly the one running &quot;Observer&quot; module).</p>
 	 *
+	 * <p>On order to get a better idea of how this method behaves and what
+	 * its contract is, see {@link EventHierarchyTestCase}.</p>
+	 *
 	 * @param parentLineMismatchEvent
 	 * @throws ApplicationException
-	 * @throws IllegalStateException
+	 * @throws IllegalStateException if {@code this} is not a valid
+	 *         subordinate for {@code parentLineMismatchEvent}.
+	 * @throws IllegalArgumentException if {@code parentLineMismatchEvent}
+	 *         is not a valid leader for {@code this}.
 	 * @see #setAlarmStatus(LineMismatchEvent.AlarmStatus)
 	 * @see #getAlarmStatus()
 	 * @see #getParentLineMismatchEvent()
 	 * @see #getChildLineMismatchEvents()
+	 * @see EventHierarchyTestCase
 	 */
 	void setParentLineMismatchEvent(final LineMismatchEvent parentLineMismatchEvent)
 	throws ApplicationException;
@@ -319,7 +331,7 @@ public interface LineMismatchEvent
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.27 $, $Date: 2006/06/14 16:20:38 $
+	 * @version $Revision: 1.28 $, $Date: 2006/06/15 17:55:40 $
 	 * @module event
 	 */
 	enum AlarmStatus implements IdlTransferableObject<IdlAlarmStatus> {
@@ -653,7 +665,7 @@ public interface LineMismatchEvent
 		 *
 		 * @author Andrew ``Bass'' Shcheglov
 		 * @author $Author: bass $
-		 * @version $Revision: 1.27 $, $Date: 2006/06/14 16:20:38 $
+		 * @version $Revision: 1.28 $, $Date: 2006/06/15 17:55:40 $
 		 * @see AllowedSuccessors
 		 * @module event
 		 */
@@ -666,7 +678,7 @@ public interface LineMismatchEvent
 		/**
 		 * @author Andrew ``Bass'' Shcheglov
 		 * @author $Author: bass $
-		 * @version $Revision: 1.27 $, $Date: 2006/06/14 16:20:38 $
+		 * @version $Revision: 1.28 $, $Date: 2006/06/15 17:55:40 $
 		 * @see AllowedPredecessors
 		 * @module event
 		 */
@@ -681,7 +693,7 @@ public interface LineMismatchEvent
 		 *
 		 * @author Andrew ``Bass'' Shcheglov
 		 * @author $Author: bass $
-		 * @version $Revision: 1.27 $, $Date: 2006/06/14 16:20:38 $
+		 * @version $Revision: 1.28 $, $Date: 2006/06/15 17:55:40 $
 		 * @module event
 		 */
 		static final class Proxy
