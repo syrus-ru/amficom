@@ -1,5 +1,5 @@
 /*-
- * $$Id: CableBindingController.java,v 1.35 2006/06/09 13:28:04 stas Exp $$
+ * $$Id: CableBindingController.java,v 1.36 2006/06/15 06:40:16 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,7 +8,6 @@
 
 package com.syrus.AMFICOM.client.map.props;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -24,12 +23,12 @@ import com.syrus.util.Log;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.35 $, $Date: 2006/06/09 13:28:04 $
+ * @version $Revision: 1.36 $, $Date: 2006/06/15 06:40:16 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
-public final class CableBindingController implements Wrapper {
+public final class CableBindingController implements Wrapper<PhysicalLink> {
 	public static final String KEY_START_NODE = "startnode"; //$NON-NLS-1$
 	public static final String KEY_START_SPARE = "startspare"; //$NON-NLS-1$
 	public static final String KEY_LINK = "link"; //$NON-NLS-1$
@@ -38,7 +37,7 @@ public final class CableBindingController implements Wrapper {
 
 	private static CableBindingController instance;
 
-	private List keys;
+	private List<String> keys;
 	private String[] keysArray;
 	
 	CablePath cablePath;
@@ -52,7 +51,7 @@ public final class CableBindingController implements Wrapper {
 				KEY_END_SPARE, 
 				KEY_END_NODE };
 	
-		this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(this.keysArray)));
+		this.keys = Collections.unmodifiableList(Arrays.asList(this.keysArray));
 	}
 
 	public static CableBindingController getInstance() {
@@ -61,7 +60,7 @@ public final class CableBindingController implements Wrapper {
 		return instance;
 	}
 
-	public List getKeys() {
+	public List<String> getKeys() {
 		return this.keys;
 	}
 
@@ -89,28 +88,25 @@ public final class CableBindingController implements Wrapper {
 		return name;
 	}
 
-	public Object getValue(final Object object, final String key) {
+	public Object getValue(final PhysicalLink link, final String key) {
 		Object result = null;
-		if (object instanceof PhysicalLink) {
-			PhysicalLink link = (PhysicalLink)object;
-			try {
-				CableChannelingItem cci = this.cablePath.getFirstCCI(link);
-				if(key.equals(KEY_START_NODE)) {
-					AbstractNode mne = this.cablePath.getStartNode();
-					result = (mne == null) ? "" : mne.getName(); //$NON-NLS-1$
-				} else if(key.equals(KEY_START_SPARE)) {
-					result = (link instanceof UnboundLink) ? "" : String.valueOf(cci.getStartSpare()); //$NON-NLS-1$
-				} else if(key.equals(KEY_LINK)) {
-					result = (link instanceof UnboundLink) ? "" : link.getName(); //$NON-NLS-1$
-				} else if(key.equals(KEY_END_SPARE)) {
-					result = (link instanceof UnboundLink) ? "" : String.valueOf(cci.getEndSpare()); //$NON-NLS-1$
-				} else if(key.equals(KEY_END_NODE)) {
-					AbstractNode mne = this.cablePath.getEndNode();
-					result = (mne == null) ? "" : mne.getName(); //$NON-NLS-1$
-				}
-			} catch(Exception e) {
-				Log.errorMessage(e);
+		try {
+			CableChannelingItem cci = this.cablePath.getFirstCCI(link);
+			if(key.equals(KEY_START_NODE)) {
+				AbstractNode mne = this.cablePath.getStartNode();
+				result = (mne == null) ? "" : mne.getName(); //$NON-NLS-1$
+			} else if(key.equals(KEY_START_SPARE)) {
+				result = (link instanceof UnboundLink) ? "" : String.valueOf(cci.getStartSpare()); //$NON-NLS-1$
+			} else if(key.equals(KEY_LINK)) {
+				result = (link instanceof UnboundLink) ? "" : link.getName(); //$NON-NLS-1$
+			} else if(key.equals(KEY_END_SPARE)) {
+				result = (link instanceof UnboundLink) ? "" : String.valueOf(cci.getEndSpare()); //$NON-NLS-1$
+			} else if(key.equals(KEY_END_NODE)) {
+				AbstractNode mne = this.cablePath.getEndNode();
+				result = (mne == null) ? "" : mne.getName(); //$NON-NLS-1$
 			}
+		} catch(Exception e) {
+			Log.errorMessage(e);
 		}
 		return result;
 	}
@@ -123,26 +119,23 @@ public final class CableBindingController implements Wrapper {
 		return editable;
 	}
 
-	public void setValue(Object object, final String key, final Object value) {
-		if(object instanceof PhysicalLink) {
-			PhysicalLink link = (PhysicalLink)object;
-			try {
-				CableChannelingItem cci = this.cablePath.getFirstCCI(link);
-				if(key.equals(KEY_START_SPARE)) {
-					if(cci.getPhysicalLink() != null)
-						cci.setStartSpare(Double.parseDouble((String) value));
-				} else if(key.equals(KEY_END_SPARE)) {
-					if(cci.getPhysicalLink() != null)
-						cci.setEndSpare(Double.parseDouble((String) value));
-				}
-			} catch(Exception e) {
-				Log.errorMessage(e);
+	public void setValue(PhysicalLink link, final String key, final Object value) {
+		try {
+			CableChannelingItem cci = this.cablePath.getFirstCCI(link);
+			if(key.equals(KEY_START_SPARE)) {
+				if(cci.getPhysicalLink() != null)
+					cci.setStartSpare(Double.parseDouble((String) value));
+			} else if(key.equals(KEY_END_SPARE)) {
+				if(cci.getPhysicalLink() != null)
+					cci.setEndSpare(Double.parseDouble((String) value));
 			}
+		} catch(Exception e) {
+			Log.errorMessage(e);
 		}
 	}
 
 	public String getKey(final int index) {
-		return (String )this.keys.get(index);
+		return this.keys.get(index);
 	}
 
 	public Object getPropertyValue(final String key) {
@@ -150,10 +143,7 @@ public final class CableBindingController implements Wrapper {
 		return result;
 	}
 
-	public void setPropertyValue(
-			String key,
-			Object objectKey,
-			Object objectValue) {
+	public void setPropertyValue(String key, Object objectKey, Object objectValue) {
 		//empty
 	}
 
