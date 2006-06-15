@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapPropertiesEventHandler.java,v 1.15 2006/06/08 10:23:29 stas Exp $$
+ * $$Id: MapPropertiesEventHandler.java,v 1.16 2006/06/15 06:42:59 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,7 +45,7 @@ import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.mapview.VoidElement;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2006/06/08 10:23:29 $
+ * @version $Revision: 1.16 $, $Date: 2006/06/15 06:42:59 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -150,10 +150,10 @@ public class MapPropertiesEventHandler extends AbstractEventHandler implements C
 					SiteNodeAddEditor siteEditor = (SiteNodeAddEditor )editor;
 					siteEditor.setNetMapViewer(netMapViewer);
 				}
-				else if(editor instanceof CablePathAddEditor) {
-					CablePathAddEditor cableEditor = (CablePathAddEditor )editor;
-					cableEditor.setNetMapViewer(netMapViewer);
-				}
+//				else if(editor instanceof CablePathAddEditor) {
+//					CablePathAddEditor cableEditor = (CablePathAddEditor )editor;
+//					cableEditor.setNetMapViewer(netMapViewer);
+//				}
 				else if(editor instanceof MarkerEditor) {
 					MarkerEditor markerEditor = (MarkerEditor )editor;
 					markerEditor.setNetMapViewer(netMapViewer);
