@@ -1,5 +1,5 @@
 /*-
- * $Id: DefaultLineMismatchEvent.java,v 1.17 2006/06/14 16:20:38 bass Exp $
+ * $Id: DefaultLineMismatchEvent.java,v 1.18 2006/06/15 17:57:00 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,7 +29,7 @@ import com.syrus.util.transport.idl.IdlConversionException;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.17 $, $Date: 2006/06/14 16:20:38 $
+ * @version $Revision: 1.18 $, $Date: 2006/06/15 17:57:00 $
  * @module event
  */
 public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
@@ -417,10 +417,8 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 			throw new IllegalStateException(
 					"Cowardly refusing to detach the event: "
 					+ "id = " + this.id + "; "
-					+ "oldParentLineMismatchEventId = "
-					+ this.parentLineMismatchEventId + "; "
-					+ "newParentLineMismatchEventId = "
-					+ newParentLineMismatchEventId);
+					+ "parentLineMismatchEventId = "
+					+ this.parentLineMismatchEventId + '.');
 		} else if (!this.parentLineMismatchEventId.isVoid()) {
 			/*-
 			 * Has been having a parent - refuse to reattach.
@@ -431,7 +429,7 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 					+ "oldParentLineMismatchEventId = "
 					+ this.parentLineMismatchEventId + "; "
 					+ "newParentLineMismatchEventId = "
-					+ newParentLineMismatchEventId);
+					+ newParentLineMismatchEventId + '.');
 		}
 
 		/*-
@@ -441,23 +439,25 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 		 * leader.
 		 */
 		if (this.equals(newParentLineMismatchEventId)) {
-			throw new IllegalStateException(
+			throw new IllegalArgumentException(
 					"Dependency circularity error: can't subject "
 					+ this.id + " to itself.");
 		}
 		final Identifier parentParentId
 				= parentLineMismatchEvent.getParentLineMismatchEventId();
 		if (this.equals(parentParentId)) {
-			throw new IllegalStateException(
+			throw new IllegalArgumentException(
 					"Dependency circularity error: "
 					+ newParentLineMismatchEventId
 					+ " is already referencing " + this.id
 					+ " as a parent.");
 		} else if (!parentParentId.isVoid()) {
-			throw new IllegalStateException(
-					newParentLineMismatchEventId
-					+ " is not a valid group leader as it's already referencing "
-					+ parentParentId + " as a parent.");
+			throw new IllegalArgumentException("Since "
+					+ newParentLineMismatchEventId
+					+ " is already referencing "
+					+ parentParentId
+					+ " as a parent, it's not a valid group leader for "
+					+ this.id + '.');
 		}
 
 		/*-
@@ -466,11 +466,14 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 		final SortedSet<LineMismatchEvent> childLineMismatchEvents
 				= this.getChildLineMismatchEvents();
 		if (!childLineMismatchEvents.isEmpty()) {
-			throw new IllegalStateException(this.id
-					+ " is not a valid subordinate as it's already a group leader with "
+			throw new IllegalStateException("Since " + this.id
+					+ " is already a group leader with "
 					+ childLineMismatchEvents.size()
-					+ " child(ren) ("
-					+ childLineMismatchEvents + ").");
+					+ " child(ren) "
+					+ Identifier.createIdentifiers(childLineMismatchEvents)
+					+ ", it's not a valid subordinate for "
+					+ newParentLineMismatchEventId
+					+ " and can't be \"attached\".");
 		}
 
 		/*-
