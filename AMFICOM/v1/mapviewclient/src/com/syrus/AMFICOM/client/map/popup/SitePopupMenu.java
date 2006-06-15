@@ -1,5 +1,5 @@
 /*-
- * $$Id: SitePopupMenu.java,v 1.27 2006/06/13 06:45:28 stas Exp $$
+ * $$Id: SitePopupMenu.java,v 1.28 2006/06/15 06:39:17 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,7 +36,7 @@ import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2006/06/13 06:45:28 $
+ * @version $Revision: 1.28 $, $Date: 2006/06/15 06:39:17 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -91,7 +91,7 @@ public final class SitePopupMenu extends MapPopupMenu {
 					if (!schemeElements.isEmpty()) {
 						this.schemeElement = schemeElements.iterator().next();
 						this.moveSEMenuItem.setText(I18N.getString(MapEditorResourceKeys.POPUP_MOVE_SE) 
-								+ " " + this.schemeElement.getName());
+								+ " '" + this.schemeElement.getName() + "'");
 					}
 				} catch (ApplicationException e) {
 					e.printStackTrace();
