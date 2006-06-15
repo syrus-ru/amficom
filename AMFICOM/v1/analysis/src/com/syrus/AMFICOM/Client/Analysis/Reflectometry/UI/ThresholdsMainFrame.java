@@ -257,13 +257,11 @@ implements BsHashChangeListener, EtalonMTMListener,
 				
 				int w = f.desktopPane.getSize().width;
 				int h = f.desktopPane.getSize().height;
-				int minh = Math.min(205, h / 4);
+				int minh = Math.min(207, h / 4);
 				
 				JInternalFrame selectFrame = (JInternalFrame) f.frames.get(FRAME_TRACE_SELECTOR);
 				JInternalFrame paramFrame = (JInternalFrame) f.frames.get(FRAME_PRIMARY_PARAMETERS);
 				JInternalFrame statsFrame = (JInternalFrame) f.frames.get(FRAME_OVERALL_STATS);
-				JInternalFrame noiseFrame = (JInternalFrame) f.frames.get(FRAME_NOISE);
-				JInternalFrame noiseHistoFrame = (JInternalFrame) f.frames.get(FRAME_NOISE_HISTOGRAMM);
 				JInternalFrame eventsFrame = (JInternalFrame) f.frames.get(FRAME_EVENTS);
 				JInternalFrame detailedEvFrame = (JInternalFrame) f.frames.get(FRAME_DETAILED_EVENTS);
 				JInternalFrame analysisFrame = (JInternalFrame) f.frames.get(FRAME_ANALYSIS_MAIN);

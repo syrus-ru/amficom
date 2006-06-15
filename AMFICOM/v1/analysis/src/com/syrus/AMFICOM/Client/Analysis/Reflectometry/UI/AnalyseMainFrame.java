@@ -215,7 +215,7 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 
 						int w = f.desktopPane.getSize().width;
 						int h = f.desktopPane.getSize().height;
-						int minh = Math.min(205, h / 4);
+						int minh = Math.min(207, h / 4);
 
 						JInternalFrame selectFrame = (JInternalFrame) f.frames.get(FRAME_TRACE_SELECTOR);
 						JInternalFrame paramFrame = (JInternalFrame) f.frames.get(FRAME_PRIMARY_PARAMETERS);
