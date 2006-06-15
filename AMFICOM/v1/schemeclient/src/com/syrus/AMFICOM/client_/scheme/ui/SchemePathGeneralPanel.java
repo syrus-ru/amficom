@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePathGeneralPanel.java,v 1.19 2006/06/06 12:41:55 stas Exp $
+ * $Id: SchemePathGeneralPanel.java,v 1.20 2006/06/15 06:32:00 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,13 +15,11 @@ import java.awt.event.ActionListener;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import java.util.Vector;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -38,7 +36,6 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.client_.scheme.SchemePermissionManager;
 import com.syrus.AMFICOM.configuration.TransmissionPath;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.LoginManager;
@@ -73,8 +70,6 @@ public class SchemePathGeneralPanel extends DefaultStorableObjectEditor<SchemePa
 	JTextField tfStartText = new JTextField();
 	JLabel lbEndLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.END_ELEMENT));
 	JTextField tfEndText = new JTextField();
-	JLabel lbPesLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.PATH_ELEMENTS));
-	JList lsPesList = new JList();
 	JLabel lbDescriptionLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.DESCRIPTION));
 	JTextArea taDescriptionArea = new JTextArea(2, 10);
 
@@ -188,29 +183,6 @@ public class SchemePathGeneralPanel extends DefaultStorableObjectEditor<SchemePa
 		gbGeneralPanel.setConstraints(this.tfEndText, gbcGeneralPanel);
 		this.pnGeneralPanel.add(this.tfEndText);
 		
-		gbcGeneralPanel.gridx = 0;
-		gbcGeneralPanel.gridy = 4;
-		gbcGeneralPanel.gridwidth = 7;
-		gbcGeneralPanel.gridheight = 1;
-		gbcGeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcGeneralPanel.weightx = 0;
-		gbcGeneralPanel.weighty = 0;
-		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbGeneralPanel.setConstraints(this.lbPesLabel, gbcGeneralPanel);
-		this.pnGeneralPanel.add(this.lbPesLabel);
-		
-		JScrollPane scpPesList = new JScrollPane(this.lsPesList);
-		gbcGeneralPanel.gridx = 1;
-		gbcGeneralPanel.gridy = 5;
-		gbcGeneralPanel.gridwidth = 9;
-		gbcGeneralPanel.gridheight = 3;
-		gbcGeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcGeneralPanel.weightx = 1;
-		gbcGeneralPanel.weighty = 1;
-		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbGeneralPanel.setConstraints(scpPesList, gbcGeneralPanel);
-		this.pnGeneralPanel.add(scpPesList);
-		
 		gbcPanel0.gridx = 0;
 		gbcPanel0.gridy = 0;
 		gbcPanel0.gridwidth = 10;
@@ -306,7 +278,7 @@ public class SchemePathGeneralPanel extends DefaultStorableObjectEditor<SchemePa
 				Log.errorMessage(e);
 				pathElements = new TreeSet<PathElement>();
 			}
-			if (!updateOnly || this.lsPesList.getModel().getSize() != pathElements.size()) {
+			if (!updateOnly) {
 				if (!pathElements.isEmpty()) {
 					final PathElement startElement = pathElements.first();
 					this.tfStartText.setText(startElement.getName());
@@ -316,12 +288,6 @@ public class SchemePathGeneralPanel extends DefaultStorableObjectEditor<SchemePa
 					this.tfStartText.setText(SchemeResourceKeys.EMPTY);
 					this.tfEndText.setText(SchemeResourceKeys.EMPTY);
 				}
-
-				final Vector<String> peNames = new Vector<String>();
-				for (final PathElement pe : pathElements) {
-					peNames.add(pe.getName());
-				}
-				this.lsPesList.setListData(peNames);
 			}
 		} else {
 			this.tfNameText.setText(SchemeResourceKeys.EMPTY);

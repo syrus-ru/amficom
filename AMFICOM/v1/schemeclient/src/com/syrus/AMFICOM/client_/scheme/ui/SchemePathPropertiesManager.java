@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePathPropertiesManager.java,v 1.1 2005/08/11 07:43:40 stas Exp $
+ * $Id: SchemePathPropertiesManager.java,v 1.2 2006/06/15 06:32:00 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ public class SchemePathPropertiesManager implements VisualManager {
 	private static SchemePathPropertiesManager instance;
 	private SchemePathGeneralPanel generalPanel;
 	private SchemePathCharacteristicsPanel charPanel;
-	private EmptyStorableObjectEditor ugoPanel;
+	private SchemePathAdditionalPanel ugoPanel;
 	
 	private SchemePathPropertiesManager() {
 		// empty
@@ -41,7 +41,7 @@ public class SchemePathPropertiesManager implements VisualManager {
 		}
 		this.charPanel.setContext(aContext);
 		if (this.ugoPanel == null) {
-			this.ugoPanel = new EmptyStorableObjectEditor();
+			this.ugoPanel = new SchemePathAdditionalPanel();
 		}
 	}
 	
