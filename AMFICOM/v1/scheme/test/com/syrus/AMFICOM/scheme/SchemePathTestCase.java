@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePathTestCase.java,v 1.40 2006/06/08 17:03:50 bass Exp $
+ * $Id: SchemePathTestCase.java,v 1.41 2006/06/15 15:42:19 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -53,7 +53,7 @@ import com.syrus.util.Logger;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.40 $, $Date: 2006/06/08 17:03:50 $
+ * @version $Revision: 1.41 $, $Date: 2006/06/15 15:42:19 $
  * @module scheme
  */
 public final class SchemePathTestCase extends TestCase {
@@ -62,7 +62,7 @@ public final class SchemePathTestCase extends TestCase {
 	}
 
 	public static void main(String[] args) {
-		TestRunner.run(SchemePathTestCase.class);
+		TestRunner.main(new String[] {SchemePathTestCase.class.getName()});
 	}
 
 	public static Test suite() {
