@@ -1,7 +1,7 @@
 /*-
- * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.48 2006/03/28 14:11:17 bass Exp $
+ * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.49 2006/06/15 17:11:09 bass Exp $
  *
- * Copyright ¿ 2004-2005 Syrus Systems.
+ * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
@@ -56,7 +56,7 @@ import com.syrus.AMFICOM.general.LinkedIdsCondition;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.48 $, $Date: 2006/03/28 14:11:17 $
+ * @version $Revision: 1.49 $, $Date: 2006/06/15 17:11:09 $
  * @module scheme
  */
 final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCondition {
@@ -69,293 +69,293 @@ final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCond
 	 * @see com.syrus.AMFICOM.general.DatabaseStorableObjectCondition#getSQLQuery()
 	 */
 	public String getSQLQuery() throws IllegalObjectEntityException {
-		switch (super.condition.getEntityCode().shortValue()) {
+		switch (this.condition.getEntityCode().shortValue()) {
+		case SCHEMEPROTOGROUP_CODE:
+			switch (this.condition.getLinkedEntityCode()) {
 			case SCHEMEPROTOGROUP_CODE:
-				switch (super.condition.getLinkedEntityCode()) {
-				case SCHEMEPROTOGROUP_CODE:
-					return super.getQuery(SchemeProtoGroupWrapper.COLUMN_PARENT_SCHEME_PROTO_GROUP_ID);
-				case UPDIKE_CODE:
-					return super.getQuery(SchemeProtoGroupWrapper.COLUMN_PARENT_SCHEME_PROTO_GROUP_ID);
-				default:
-					throw super.newExceptionLinkedEntityIllegal();
-				}
-			case SCHEMEPROTOELEMENT_CODE:
-				switch (super.condition.getLinkedEntityCode()) {
-				case SCHEMEPROTOELEMENT_CODE:
-					return super.getQuery(SchemeProtoElementWrapper.COLUMN_PARENT_SCHEME_PROTO_ELEMENT_ID);
-				case SCHEMEPROTOGROUP_CODE:
-					return super.getQuery(SchemeProtoElementWrapper.COLUMN_PARENT_SCHEME_PROTO_GROUP_ID);
-				case PROTOEQUIPMENT_CODE:
-					return super.getQuery(SchemeProtoElementWrapper.COLUMN_PROTO_EQUIPMENT_ID);
-				default:
-					throw super.newExceptionLinkedEntityIllegal();
-				}
-			case SCHEME_CODE:
-				switch (super.condition.getLinkedEntityCode()) {
-				case DOMAIN_CODE:
-					return super.getQuery(SchemeWrapper.COLUMN_DOMAIN_ID);
-				case SCHEMEELEMENT_CODE:
-					return super.getQuery(SchemeWrapper.COLUMN_PARENT_SCHEME_ELEMENT_ID);
-				case MAP_CODE:
-					return super.getQuery(SchemeWrapper.COLUMN_MAP_ID);
-				default:
-					throw super.newExceptionLinkedEntityIllegal();	
-				}
-			case SCHEMEELEMENT_CODE:
-				switch (super.condition.getLinkedEntityCode()) {
-				case SCHEMEELEMENT_CODE:
-					return super.getQuery(SchemeElementWrapper.COLUMN_PARENT_SCHEME_ELEMENT_ID);
-				case SCHEME_CODE:
-					return super.getQuery(SchemeElementWrapper.COLUMN_PARENT_SCHEME_ID);
-				case SITENODE_CODE:
-					return super.getQuery(SchemeElementWrapper.COLUMN_SITE_NODE_ID);
-				case PROTOEQUIPMENT_CODE:
-					return super.getQuery(SchemeElementWrapper.COLUMN_PROTO_EQUIPMENT_ID);
-				default:
-					throw super.newExceptionLinkedEntityIllegal();
-				}
-			case SCHEMEOPTIMIZEINFO_CODE:
-				switch (super.condition.getLinkedEntityCode()) {
-				case SCHEME_CODE:
-					return super.getQuery(SchemeOptimizeInfoWrapper.COLUMN_PARENT_SCHEME_ID);
-				default:
-					throw super.newExceptionLinkedEntityIllegal();
-				}
-			case SCHEMEOPTIMIZEINFOSWITCH_CODE:
-				switch (super.condition.getLinkedEntityCode()) {
-				case SCHEMEOPTIMIZEINFO_CODE:
-					return super.getQuery(SchemeOptimizeInfoSwitchWrapper.COLUMN_PARENT_SCHEME_OPTIMIZE_INFO_ID);
-				default:
-					throw super.newExceptionLinkedEntityIllegal();
-				}
-			case SCHEMEOPTIMIZEINFORTU_CODE:
-				switch (super.condition.getLinkedEntityCode()) {
-				case SCHEMEOPTIMIZEINFO_CODE:
-					return super.getQuery(SchemeOptimizeInfoRtuWrapper.COLUMN_PARENT_SCHEME_OPTIMIZE_INFO_ID);
-				default:
-					throw super.newExceptionLinkedEntityIllegal();
-				}
-			case SCHEMEMONITORINGSOLUTION_CODE:
-				switch (super.condition.getLinkedEntityCode()) {
-				case SCHEME_CODE:
-					return super.getQuery(SchemeMonitoringSolutionWrapper.COLUMN_PARENT_SCHEME_ID);
-				case SCHEMEOPTIMIZEINFO_CODE:
-					return super.getQuery(SchemeMonitoringSolutionWrapper.COLUMN_PARENT_SCHEME_OPTIMIZE_INFO_ID);
-				default:
-					throw super.newExceptionLinkedEntityIllegal();
-				}
-			case SCHEMEDEVICE_CODE:
-				switch (super.condition.getLinkedEntityCode()) {
-				case SCHEMEELEMENT_CODE:
-					return super.getQuery(SchemeDeviceWrapper.COLUMN_PARENT_SCHEME_ELEMENT_ID);
-				case SCHEMEPROTOELEMENT_CODE:
-					return super.getQuery(SchemeDeviceWrapper.COLUMN_PARENT_SCHEME_PROTO_ELEMENT_ID);
-				default:
-					throw super.newExceptionLinkedEntityIllegal();
-				}
-			case SCHEMEPORT_CODE:
-				switch (super.condition.getLinkedEntityCode()) {
-				case SCHEMEDEVICE_CODE:
-					return super.getQuery(SchemePortWrapper.COLUMN_PARENT_DEVICE_ID);
-				case PORT_TYPE_CODE:
-					return super.getQuery(SchemePortWrapper.COLUMN_PORT_TYPE_ID);
-				default:
-					throw super.newExceptionLinkedEntityIllegal();	
-				}
-			case SCHEMECABLEPORT_CODE:
-				switch (super.condition.getLinkedEntityCode()) {
-				case SCHEMEDEVICE_CODE:
-					return super.getQuery(SchemeCablePortWrapper.COLUMN_PARENT_DEVICE_ID);
-				case PORT_TYPE_CODE:
-					return super.getQuery(SchemeCablePortWrapper.COLUMN_CABLE_PORT_TYPE_ID);
-				default:
-					throw super.newExceptionLinkedEntityIllegal();
-				}
-			case SCHEMELINK_CODE:
-				switch (super.condition.getLinkedEntityCode()) {
-				case SCHEMEPORT_CODE:
-					return OPEN_BRACKET
-							+ super.getQuery(SchemeLinkWrapper.COLUMN_SOURCE_SCHEME_PORT_ID)
-							+ SQL_OR
-							+ super.getQuery(SchemeLinkWrapper.COLUMN_TARGET_SCHEME_PORT_ID)
-							+ CLOSE_BRACKET;
-				case SCHEMEPROTOELEMENT_CODE:
-					return super.getQuery(SchemeLinkWrapper.COLUMN_PARENT_SCHEME_PROTO_ELEMENT_ID);
-				case SCHEME_CODE:
-					return super.getQuery(SchemeLinkWrapper.COLUMN_PARENT_SCHEME_ID);
-				case SCHEMEELEMENT_CODE:
-					return super.getQuery(SchemeLinkWrapper.COLUMN_PARENT_SCHEME_ELEMENT_ID);
-				case LINK_TYPE_CODE:
-					return super.getQuery(SchemeLinkWrapper.COLUMN_LINK_TYPE_ID);
-				default:
-					throw super.newExceptionLinkedEntityIllegal();
-				}
-			case SCHEMECABLELINK_CODE:
-				switch (super.condition.getLinkedEntityCode()) {
-				case SCHEMECABLEPORT_CODE:
-					return OPEN_BRACKET
-							+ super.getQuery(SchemeCableLinkWrapper.COLUMN_SOURCE_SCHEME_CABLE_PORT_ID)
-							+ SQL_OR
-							+ super.getQuery(SchemeCableLinkWrapper.COLUMN_TARGET_SCHEME_CABLE_PORT_ID)
-							+ CLOSE_BRACKET;
-				case SCHEME_CODE:
-					return super.getQuery(SchemeCableLinkWrapper.COLUMN_PARENT_SCHEME_ID);
-				case CABLELINK_TYPE_CODE:
-					return super.getQuery(SchemeCableLinkWrapper.COLUMN_CABLE_LINK_TYPE_ID);
-				default:
-					throw super.newExceptionLinkedEntityIllegal();
-				}
-			case SCHEMECABLETHREAD_CODE:
-				switch (super.condition.getLinkedEntityCode()) {
-				case SCHEMEPORT_CODE:
-					return OPEN_BRACKET
-							+ super.getQuery(SchemeCableThreadWrapper.COLUMN_SOURCE_SCHEME_PORT_ID)
-							+ SQL_OR
-							+ super.getQuery(SchemeCableThreadWrapper.COLUMN_TARGET_SCHEME_PORT_ID)
-							+ CLOSE_BRACKET;
-				case SCHEMECABLELINK_CODE:
-					return super.getQuery(SchemeCableThreadWrapper.COLUMN_PARENT_SCHEME_CABLE_LINK_ID);
-				default:
-					throw super.newExceptionLinkedEntityIllegal();
-				}
-			case CABLECHANNELINGITEM_CODE:
-				switch (super.condition.getLinkedEntityCode()) {
-				case SCHEMECABLELINK_CODE:
-					return super.getQuery(CableChannelingItemWrapper.COLUMN_PARENT_SCHEME_CABLE_LINK_ID);
-				case SITENODE_CODE:
-					return OPEN_BRACKET
-							+ super.getQuery(CableChannelingItemWrapper.COLUMN_START_SITE_NODE_ID)
-							+ SQL_OR
-							+ super.getQuery(CableChannelingItemWrapper.COLUMN_END_SITE_NODE_ID)
-							+ CLOSE_BRACKET;
-				case PHYSICALLINK_CODE:
-					return super.getQuery(CableChannelingItemWrapper.COLUMN_PHYSICAL_LINK_ID);
-				default:
-					throw super.newExceptionLinkedEntityIllegal();
-				}
-			case SCHEMEPATH_CODE:
-				switch (super.condition.getLinkedEntityCode()) {
-				case TRANSMISSIONPATH_CODE:
-					return super.getQuery(SchemePathWrapper.COLUMN_TRANSMISSION_PATH_ID);
-				case SCHEMEMONITORINGSOLUTION_CODE:
-					return super.getQuery(SchemePathWrapper.COLUMN_PARENT_SCHEME_MONITORING_SOLUTION_ID);
-				default:
-					throw super.newExceptionLinkedEntityIllegal();
-				}
-			case PATHELEMENT_CODE:
-				switch (super.condition.getLinkedEntityCode()) {
-				case SCHEMEPATH_CODE:
-					return super.getQuery(PathElementWrapper.COLUMN_PARENT_SCHEME_PATH_ID);
-				case SCHEMELINK_CODE:
-					return super.getQuery(PathElementWrapper.COLUMN_SCHEME_LINK_ID);
-				case SCHEMEELEMENT_CODE:
-					//TODO: simplify this thing
-					final StringBuffer buffer = new StringBuffer();
-					buffer.append(PathElementWrapper.COLUMN_START_ABSTRACT_SCHEME_PORT_ID);
-					buffer.append(SQL_IN);
-					buffer.append(OPEN_BRACKET);
-					buffer.append(SQL_SELECT);
-					buffer.append(COLUMN_ID);
-					buffer.append(SQL_FROM);
-					buffer.append(SCHEMEPORT);
-					buffer.append(SQL_WHERE);
-					
-					buffer.append(SchemePortWrapper.COLUMN_PARENT_DEVICE_ID);
-					buffer.append(SQL_IN);
-					buffer.append(OPEN_BRACKET);
-					buffer.append(SQL_SELECT);
-					buffer.append(COLUMN_ID);
-					buffer.append(SQL_FROM);
-					buffer.append(SCHEMEDEVICE);
-					buffer.append(SQL_WHERE);
-					
-					buffer.append(super.getQuery(SchemeDeviceWrapper.COLUMN_PARENT_SCHEME_ELEMENT_ID));
-					buffer.append(CLOSE_BRACKET);
-					buffer.append(CLOSE_BRACKET);
-					
-					buffer.append(SQL_OR);
-					
-					buffer.append(PathElementWrapper.COLUMN_END_ABSTRACT_SCHEME_PORT_ID);
-					buffer.append(SQL_IN);
-					buffer.append(OPEN_BRACKET);
-					buffer.append(SQL_SELECT);
-					buffer.append(COLUMN_ID);
-					buffer.append(SQL_FROM);
-					buffer.append(SCHEMEPORT);
-					buffer.append(SQL_WHERE);
-					
-					buffer.append(SchemePortWrapper.COLUMN_PARENT_DEVICE_ID);
-					buffer.append(SQL_IN);
-					buffer.append(OPEN_BRACKET);
-					buffer.append(SQL_SELECT);
-					buffer.append(COLUMN_ID);
-					buffer.append(SQL_FROM);
-					buffer.append(SCHEMEDEVICE);
-					buffer.append(SQL_WHERE);
-					buffer.append(super.getQuery(SchemeDeviceWrapper.COLUMN_PARENT_SCHEME_ELEMENT_ID));
-					buffer.append(CLOSE_BRACKET);
-					buffer.append(CLOSE_BRACKET);
-					
-					buffer.append(SQL_OR);
-					
-					buffer.append(PathElementWrapper.COLUMN_START_ABSTRACT_SCHEME_PORT_ID);
-					buffer.append(SQL_IN);
-					buffer.append(OPEN_BRACKET);
-					buffer.append(SQL_SELECT);
-					buffer.append(COLUMN_ID);
-					buffer.append(SQL_FROM);
-					buffer.append(SCHEMECABLEPORT);
-					buffer.append(SQL_WHERE);
-					
-					buffer.append(SchemePortWrapper.COLUMN_PARENT_DEVICE_ID);
-					buffer.append(SQL_IN);
-					buffer.append(OPEN_BRACKET);
-					buffer.append(SQL_SELECT);
-					buffer.append(COLUMN_ID);
-					buffer.append(SQL_FROM);
-					buffer.append(SCHEMEDEVICE);
-					buffer.append(SQL_WHERE);
-					
-					buffer.append(super.getQuery(SchemeDeviceWrapper.COLUMN_PARENT_SCHEME_ELEMENT_ID));
-					buffer.append(CLOSE_BRACKET);
-					buffer.append(CLOSE_BRACKET);
-					
-					buffer.append(SQL_OR);
-					
-					buffer.append(PathElementWrapper.COLUMN_END_ABSTRACT_SCHEME_PORT_ID);
-					buffer.append(SQL_IN);
-					buffer.append(OPEN_BRACKET);
-					buffer.append(SQL_SELECT);
-					buffer.append(COLUMN_ID);
-					buffer.append(SQL_FROM);
-					buffer.append(SCHEMECABLEPORT);
-					buffer.append(SQL_WHERE);
-					
-					buffer.append(SchemePortWrapper.COLUMN_PARENT_DEVICE_ID);
-					buffer.append(SQL_IN);
-					buffer.append(OPEN_BRACKET);
-					buffer.append(SQL_SELECT);
-					buffer.append(COLUMN_ID);
-					buffer.append(SQL_FROM);
-					buffer.append(SCHEMEDEVICE);
-					buffer.append(SQL_WHERE);
-					buffer.append(super.getQuery(SchemeDeviceWrapper.COLUMN_PARENT_SCHEME_ELEMENT_ID));
-					buffer.append(CLOSE_BRACKET);
-					buffer.append(CLOSE_BRACKET);
-					return buffer.toString();
-				case SCHEMECABLELINK_CODE:
-					return super.getLinkedQuery(PathElementWrapper.COLUMN_SCHEME_CABLE_THREAD_ID, COLUMN_ID, SchemeCableThreadWrapper.COLUMN_PARENT_SCHEME_CABLE_LINK_ID, SCHEMECABLETHREAD);
-				case MEASUREMENTPORT_CODE:
-					final StringBuffer buffer3 = new StringBuffer();
-					buffer3.append(super.getLinkedQuery(PathElementWrapper.COLUMN_END_ABSTRACT_SCHEME_PORT_ID, COLUMN_ID, SchemeCablePortWrapper.COLUMN_MEASUREMENT_PORT_ID, SCHEMECABLEPORT));
-					buffer3.append(SQL_OR);
-					buffer3.append(super.getLinkedQuery(PathElementWrapper.COLUMN_END_ABSTRACT_SCHEME_PORT_ID, COLUMN_ID, SchemePortWrapper.COLUMN_MEASUREMENT_PORT_ID, SCHEMEPORT));
-					return buffer3.toString();
-				default:
-					throw super.newExceptionLinkedEntityIllegal();
-				}
+				return this.getQuery(SchemeProtoGroupWrapper.COLUMN_PARENT_SCHEME_PROTO_GROUP_ID);
+			case UPDIKE_CODE:
+				return this.getQuery(SchemeProtoGroupWrapper.COLUMN_PARENT_SCHEME_PROTO_GROUP_ID);
 			default:
-				throw super.newExceptionEntityIllegal();
+				throw this.newExceptionLinkedEntityIllegal();
+			}
+		case SCHEMEPROTOELEMENT_CODE:
+			switch (this.condition.getLinkedEntityCode()) {
+			case SCHEMEPROTOELEMENT_CODE:
+				return this.getQuery(SchemeProtoElementWrapper.COLUMN_PARENT_SCHEME_PROTO_ELEMENT_ID);
+			case SCHEMEPROTOGROUP_CODE:
+				return this.getQuery(SchemeProtoElementWrapper.COLUMN_PARENT_SCHEME_PROTO_GROUP_ID);
+			case PROTOEQUIPMENT_CODE:
+				return this.getQuery(SchemeProtoElementWrapper.COLUMN_PROTO_EQUIPMENT_ID);
+			default:
+				throw this.newExceptionLinkedEntityIllegal();
+			}
+		case SCHEME_CODE:
+			switch (this.condition.getLinkedEntityCode()) {
+			case DOMAIN_CODE:
+				return this.getQuery(SchemeWrapper.COLUMN_DOMAIN_ID);
+			case SCHEMEELEMENT_CODE:
+				return this.getQuery(SchemeWrapper.COLUMN_PARENT_SCHEME_ELEMENT_ID);
+			case MAP_CODE:
+				return this.getQuery(SchemeWrapper.COLUMN_MAP_ID);
+			default:
+				throw this.newExceptionLinkedEntityIllegal();	
+			}
+		case SCHEMEELEMENT_CODE:
+			switch (this.condition.getLinkedEntityCode()) {
+			case SCHEMEELEMENT_CODE:
+				return this.getQuery(SchemeElementWrapper.COLUMN_PARENT_SCHEME_ELEMENT_ID);
+			case SCHEME_CODE:
+				return this.getQuery(SchemeElementWrapper.COLUMN_PARENT_SCHEME_ID);
+			case SITENODE_CODE:
+				return this.getQuery(SchemeElementWrapper.COLUMN_SITE_NODE_ID);
+			case PROTOEQUIPMENT_CODE:
+				return this.getQuery(SchemeElementWrapper.COLUMN_PROTO_EQUIPMENT_ID);
+			default:
+				throw this.newExceptionLinkedEntityIllegal();
+			}
+		case SCHEMEOPTIMIZEINFO_CODE:
+			switch (this.condition.getLinkedEntityCode()) {
+			case SCHEME_CODE:
+				return this.getQuery(SchemeOptimizeInfoWrapper.COLUMN_PARENT_SCHEME_ID);
+			default:
+				throw this.newExceptionLinkedEntityIllegal();
+			}
+		case SCHEMEOPTIMIZEINFOSWITCH_CODE:
+			switch (this.condition.getLinkedEntityCode()) {
+			case SCHEMEOPTIMIZEINFO_CODE:
+				return this.getQuery(SchemeOptimizeInfoSwitchWrapper.COLUMN_PARENT_SCHEME_OPTIMIZE_INFO_ID);
+			default:
+				throw this.newExceptionLinkedEntityIllegal();
+			}
+		case SCHEMEOPTIMIZEINFORTU_CODE:
+			switch (this.condition.getLinkedEntityCode()) {
+			case SCHEMEOPTIMIZEINFO_CODE:
+				return this.getQuery(SchemeOptimizeInfoRtuWrapper.COLUMN_PARENT_SCHEME_OPTIMIZE_INFO_ID);
+			default:
+				throw this.newExceptionLinkedEntityIllegal();
+			}
+		case SCHEMEMONITORINGSOLUTION_CODE:
+			switch (this.condition.getLinkedEntityCode()) {
+			case SCHEME_CODE:
+				return this.getQuery(SchemeMonitoringSolutionWrapper.COLUMN_PARENT_SCHEME_ID);
+			case SCHEMEOPTIMIZEINFO_CODE:
+				return this.getQuery(SchemeMonitoringSolutionWrapper.COLUMN_PARENT_SCHEME_OPTIMIZE_INFO_ID);
+			default:
+				throw this.newExceptionLinkedEntityIllegal();
+			}
+		case SCHEMEDEVICE_CODE:
+			switch (this.condition.getLinkedEntityCode()) {
+			case SCHEMEELEMENT_CODE:
+				return this.getQuery(SchemeDeviceWrapper.COLUMN_PARENT_SCHEME_ELEMENT_ID);
+			case SCHEMEPROTOELEMENT_CODE:
+				return this.getQuery(SchemeDeviceWrapper.COLUMN_PARENT_SCHEME_PROTO_ELEMENT_ID);
+			default:
+				throw this.newExceptionLinkedEntityIllegal();
+			}
+		case SCHEMEPORT_CODE:
+			switch (this.condition.getLinkedEntityCode()) {
+			case SCHEMEDEVICE_CODE:
+				return this.getQuery(SchemePortWrapper.COLUMN_PARENT_DEVICE_ID);
+			case PORT_TYPE_CODE:
+				return this.getQuery(SchemePortWrapper.COLUMN_PORT_TYPE_ID);
+			default:
+				throw this.newExceptionLinkedEntityIllegal();	
+			}
+		case SCHEMECABLEPORT_CODE:
+			switch (this.condition.getLinkedEntityCode()) {
+			case SCHEMEDEVICE_CODE:
+				return this.getQuery(SchemeCablePortWrapper.COLUMN_PARENT_DEVICE_ID);
+			case PORT_TYPE_CODE:
+				return this.getQuery(SchemeCablePortWrapper.COLUMN_CABLE_PORT_TYPE_ID);
+			default:
+				throw this.newExceptionLinkedEntityIllegal();
+			}
+		case SCHEMELINK_CODE:
+			switch (this.condition.getLinkedEntityCode()) {
+			case SCHEMEPORT_CODE:
+				return OPEN_BRACKET
+						+ this.getQuery(SchemeLinkWrapper.COLUMN_SOURCE_SCHEME_PORT_ID)
+						+ SQL_OR
+						+ this.getQuery(SchemeLinkWrapper.COLUMN_TARGET_SCHEME_PORT_ID)
+						+ CLOSE_BRACKET;
+			case SCHEMEPROTOELEMENT_CODE:
+				return this.getQuery(SchemeLinkWrapper.COLUMN_PARENT_SCHEME_PROTO_ELEMENT_ID);
+			case SCHEME_CODE:
+				return this.getQuery(SchemeLinkWrapper.COLUMN_PARENT_SCHEME_ID);
+			case SCHEMEELEMENT_CODE:
+				return this.getQuery(SchemeLinkWrapper.COLUMN_PARENT_SCHEME_ELEMENT_ID);
+			case LINK_TYPE_CODE:
+				return this.getQuery(SchemeLinkWrapper.COLUMN_LINK_TYPE_ID);
+			default:
+				throw this.newExceptionLinkedEntityIllegal();
+			}
+		case SCHEMECABLELINK_CODE:
+			switch (this.condition.getLinkedEntityCode()) {
+			case SCHEMECABLEPORT_CODE:
+				return OPEN_BRACKET
+						+ this.getQuery(SchemeCableLinkWrapper.COLUMN_SOURCE_SCHEME_CABLE_PORT_ID)
+						+ SQL_OR
+						+ this.getQuery(SchemeCableLinkWrapper.COLUMN_TARGET_SCHEME_CABLE_PORT_ID)
+						+ CLOSE_BRACKET;
+			case SCHEME_CODE:
+				return this.getQuery(SchemeCableLinkWrapper.COLUMN_PARENT_SCHEME_ID);
+			case CABLELINK_TYPE_CODE:
+				return this.getQuery(SchemeCableLinkWrapper.COLUMN_CABLE_LINK_TYPE_ID);
+			default:
+				throw this.newExceptionLinkedEntityIllegal();
+			}
+		case SCHEMECABLETHREAD_CODE:
+			switch (this.condition.getLinkedEntityCode()) {
+			case SCHEMEPORT_CODE:
+				return OPEN_BRACKET
+						+ this.getQuery(SchemeCableThreadWrapper.COLUMN_SOURCE_SCHEME_PORT_ID)
+						+ SQL_OR
+						+ this.getQuery(SchemeCableThreadWrapper.COLUMN_TARGET_SCHEME_PORT_ID)
+						+ CLOSE_BRACKET;
+			case SCHEMECABLELINK_CODE:
+				return this.getQuery(SchemeCableThreadWrapper.COLUMN_PARENT_SCHEME_CABLE_LINK_ID);
+			default:
+				throw this.newExceptionLinkedEntityIllegal();
+			}
+		case CABLECHANNELINGITEM_CODE:
+			switch (this.condition.getLinkedEntityCode()) {
+			case SCHEMECABLELINK_CODE:
+				return this.getQuery(CableChannelingItemWrapper.COLUMN_PARENT_SCHEME_CABLE_LINK_ID);
+			case SITENODE_CODE:
+				return OPEN_BRACKET
+						+ this.getQuery(CableChannelingItemWrapper.COLUMN_START_SITE_NODE_ID)
+						+ SQL_OR
+						+ this.getQuery(CableChannelingItemWrapper.COLUMN_END_SITE_NODE_ID)
+						+ CLOSE_BRACKET;
+			case PHYSICALLINK_CODE:
+				return this.getQuery(CableChannelingItemWrapper.COLUMN_PHYSICAL_LINK_ID);
+			default:
+				throw this.newExceptionLinkedEntityIllegal();
+			}
+		case SCHEMEPATH_CODE:
+			switch (this.condition.getLinkedEntityCode()) {
+			case TRANSMISSIONPATH_CODE:
+				return this.getQuery(SchemePathWrapper.COLUMN_TRANSMISSION_PATH_ID);
+			case SCHEMEMONITORINGSOLUTION_CODE:
+				return this.getQuery(SchemePathWrapper.COLUMN_PARENT_SCHEME_MONITORING_SOLUTION_ID);
+			default:
+				throw this.newExceptionLinkedEntityIllegal();
+			}
+		case PATHELEMENT_CODE:
+			switch (this.condition.getLinkedEntityCode()) {
+			case SCHEMEPATH_CODE:
+				return this.getQuery(PathElementWrapper.COLUMN_PARENT_SCHEME_PATH_ID);
+			case SCHEMELINK_CODE:
+				return this.getQuery(PathElementWrapper.COLUMN_SCHEME_LINK_ID);
+			case SCHEMEELEMENT_CODE:
+				//TODO: simplify this thing
+				final StringBuffer buffer = new StringBuffer();
+				buffer.append(PathElementWrapper.COLUMN_START_ABSTRACT_SCHEME_PORT_ID);
+				buffer.append(SQL_IN);
+				buffer.append(OPEN_BRACKET);
+				buffer.append(SQL_SELECT);
+				buffer.append(COLUMN_ID);
+				buffer.append(SQL_FROM);
+				buffer.append(SCHEMEPORT);
+				buffer.append(SQL_WHERE);
+				
+				buffer.append(SchemePortWrapper.COLUMN_PARENT_DEVICE_ID);
+				buffer.append(SQL_IN);
+				buffer.append(OPEN_BRACKET);
+				buffer.append(SQL_SELECT);
+				buffer.append(COLUMN_ID);
+				buffer.append(SQL_FROM);
+				buffer.append(SCHEMEDEVICE);
+				buffer.append(SQL_WHERE);
+				
+				buffer.append(this.getQuery(SchemeDeviceWrapper.COLUMN_PARENT_SCHEME_ELEMENT_ID));
+				buffer.append(CLOSE_BRACKET);
+				buffer.append(CLOSE_BRACKET);
+				
+				buffer.append(SQL_OR);
+				
+				buffer.append(PathElementWrapper.COLUMN_END_ABSTRACT_SCHEME_PORT_ID);
+				buffer.append(SQL_IN);
+				buffer.append(OPEN_BRACKET);
+				buffer.append(SQL_SELECT);
+				buffer.append(COLUMN_ID);
+				buffer.append(SQL_FROM);
+				buffer.append(SCHEMEPORT);
+				buffer.append(SQL_WHERE);
+				
+				buffer.append(SchemePortWrapper.COLUMN_PARENT_DEVICE_ID);
+				buffer.append(SQL_IN);
+				buffer.append(OPEN_BRACKET);
+				buffer.append(SQL_SELECT);
+				buffer.append(COLUMN_ID);
+				buffer.append(SQL_FROM);
+				buffer.append(SCHEMEDEVICE);
+				buffer.append(SQL_WHERE);
+				buffer.append(this.getQuery(SchemeDeviceWrapper.COLUMN_PARENT_SCHEME_ELEMENT_ID));
+				buffer.append(CLOSE_BRACKET);
+				buffer.append(CLOSE_BRACKET);
+				
+				buffer.append(SQL_OR);
+				
+				buffer.append(PathElementWrapper.COLUMN_START_ABSTRACT_SCHEME_PORT_ID);
+				buffer.append(SQL_IN);
+				buffer.append(OPEN_BRACKET);
+				buffer.append(SQL_SELECT);
+				buffer.append(COLUMN_ID);
+				buffer.append(SQL_FROM);
+				buffer.append(SCHEMECABLEPORT);
+				buffer.append(SQL_WHERE);
+				
+				buffer.append(SchemePortWrapper.COLUMN_PARENT_DEVICE_ID);
+				buffer.append(SQL_IN);
+				buffer.append(OPEN_BRACKET);
+				buffer.append(SQL_SELECT);
+				buffer.append(COLUMN_ID);
+				buffer.append(SQL_FROM);
+				buffer.append(SCHEMEDEVICE);
+				buffer.append(SQL_WHERE);
+				
+				buffer.append(this.getQuery(SchemeDeviceWrapper.COLUMN_PARENT_SCHEME_ELEMENT_ID));
+				buffer.append(CLOSE_BRACKET);
+				buffer.append(CLOSE_BRACKET);
+				
+				buffer.append(SQL_OR);
+				
+				buffer.append(PathElementWrapper.COLUMN_END_ABSTRACT_SCHEME_PORT_ID);
+				buffer.append(SQL_IN);
+				buffer.append(OPEN_BRACKET);
+				buffer.append(SQL_SELECT);
+				buffer.append(COLUMN_ID);
+				buffer.append(SQL_FROM);
+				buffer.append(SCHEMECABLEPORT);
+				buffer.append(SQL_WHERE);
+				
+				buffer.append(SchemePortWrapper.COLUMN_PARENT_DEVICE_ID);
+				buffer.append(SQL_IN);
+				buffer.append(OPEN_BRACKET);
+				buffer.append(SQL_SELECT);
+				buffer.append(COLUMN_ID);
+				buffer.append(SQL_FROM);
+				buffer.append(SCHEMEDEVICE);
+				buffer.append(SQL_WHERE);
+				buffer.append(this.getQuery(SchemeDeviceWrapper.COLUMN_PARENT_SCHEME_ELEMENT_ID));
+				buffer.append(CLOSE_BRACKET);
+				buffer.append(CLOSE_BRACKET);
+				return buffer.toString();
+			case SCHEMECABLELINK_CODE:
+				return this.getLinkedQuery(PathElementWrapper.COLUMN_SCHEME_CABLE_THREAD_ID, COLUMN_ID, SchemeCableThreadWrapper.COLUMN_PARENT_SCHEME_CABLE_LINK_ID, SCHEMECABLETHREAD);
+			case MEASUREMENTPORT_CODE:
+				final StringBuffer buffer3 = new StringBuffer();
+				buffer3.append(this.getLinkedQuery(PathElementWrapper.COLUMN_END_ABSTRACT_SCHEME_PORT_ID, COLUMN_ID, SchemeCablePortWrapper.COLUMN_MEASUREMENT_PORT_ID, SCHEMECABLEPORT));
+				buffer3.append(SQL_OR);
+				buffer3.append(this.getLinkedQuery(PathElementWrapper.COLUMN_END_ABSTRACT_SCHEME_PORT_ID, COLUMN_ID, SchemePortWrapper.COLUMN_MEASUREMENT_PORT_ID, SCHEMEPORT));
+				return buffer3.toString();
+			default:
+				throw this.newExceptionLinkedEntityIllegal();
+			}
+		default:
+			throw this.newExceptionEntityIllegal();
 		}
 	}
 }
