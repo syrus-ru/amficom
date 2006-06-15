@@ -1,5 +1,5 @@
 /*-
- * $$Id: NodeTypeController.java,v 1.56 2006/02/15 11:12:33 stas Exp $$
+ * $$Id: NodeTypeController.java,v 1.57 2006/06/15 06:35:36 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,7 +47,7 @@ import com.syrus.util.Log;
 /**
  * контроллер типа сетевого узла.
  * 
- * @version $Revision: 1.56 $, $Date: 2006/02/15 11:12:33 $
+ * @version $Revision: 1.57 $, $Date: 2006/06/15 06:35:36 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -227,8 +227,12 @@ public class NodeTypeController extends AbstractNodeController {
 			StorableObjectPool.flush(type, userId, true);
 		}
 		else {//TODO this is temporal
-			type.setSort(sort);
-			type.setName(I18N.getString(codename));
+			final SiteNodeTypeSort oldSort = type.getSort();
+			final String oldName = type.getName();
+			if (sort != oldSort || !I18N.getString(codename).equals(oldName)) {
+				type.setSort(sort);
+				type.setName(I18N.getString(codename));	
+			}
 		}
 		return type;
 	}
