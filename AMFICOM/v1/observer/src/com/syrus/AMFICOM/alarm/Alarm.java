@@ -1,5 +1,5 @@
 /*-
- * $Id: Alarm.java,v 1.6 2006/06/08 19:21:10 bass Exp $
+ * $Id: Alarm.java,v 1.7 2006/06/16 15:57:47 bass Exp $
  *
  * Copyright ¿ 2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -119,9 +119,14 @@ public class Alarm {
 	}
 
 	public AlarmStatus getState() {
-		return this.leader.getAlarmStatus();
+		try {
+			return this.leader.getAlarmStatus();
+		} catch (final ApplicationException ae) {
+			Log.debugMessage(ae, SEVERE);
+			return null;
+		}
 	}
-	
+
 	public void setState(AlarmStatus alarmStatus) {
 		try {
 			this.leader.setAlarmStatus(alarmStatus);
