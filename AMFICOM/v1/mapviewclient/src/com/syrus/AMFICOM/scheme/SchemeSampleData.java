@@ -1,5 +1,5 @@
 /*-
- * $$Id: SchemeSampleData.java,v 1.36 2006/04/14 12:01:22 arseniy Exp $$
+ * $$Id: SchemeSampleData.java,v 1.37 2006/06/16 10:09:01 bass Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,8 +26,8 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
  * this class is used to create two sample instances
  * of Scheme whithout graphical components
  * 
- * @version $Revision: 1.36 $, $Date: 2006/04/14 12:01:22 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.37 $, $Date: 2006/06/16 10:09:01 $
+ * @author $Author: bass $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -164,26 +164,26 @@ public final class SchemeSampleData {
 		@SuppressWarnings("unused") PathElement scheme1pelstart = PathElement.createInstance(userId, scheme1path0, null, scheme1dev00port00); //$NON-NLS-1$
 
 		PathElement scheme1pel0 = PathElement.createInstance(userId, scheme1path0, scheme1link0);
-		SchemeUtils.setOpticalLength(scheme1pel0, 3.0);
-		SchemeUtils.setPhysicalLength(scheme1pel0, 3.0);
+		scheme1pel0.setOpticalLength(3.0);
+		scheme1pel0.setPhysicalLength(3.0);
 		
 		@SuppressWarnings("unused") PathElement scheme1pel1 = PathElement.createInstance(userId, scheme1path0, scheme1dev00port00, scheme1dev00cport00); //$NON-NLS-1$
 		
 		PathElement scheme1pel2 = PathElement.createInstance(userId, scheme1path0, scheme1clink0th);
-		SchemeUtils.setOpticalLength(scheme1pel2, 1000.0);
-		SchemeUtils.setPhysicalLength(scheme1pel2, 1000.0);
+		scheme1pel2.setOpticalLength(1000.0);
+		scheme1pel2.setPhysicalLength(1000.0);
 		
 		@SuppressWarnings("unused") PathElement scheme1pel3 = PathElement.createInstance(userId, scheme1path0, scheme1dev10cport10, scheme1dev10cport11); //$NON-NLS-1$
 		
 		PathElement scheme1pel4 = PathElement.createInstance(userId, scheme1path0, scheme1clink1th);
-		SchemeUtils.setOpticalLength(scheme1pel4, 1000.0);
-		SchemeUtils.setPhysicalLength(scheme1pel4, 1000.0);
+		scheme1pel4.setOpticalLength(1000.0);
+		scheme1pel4.setPhysicalLength(1000.0);
 		
 		@SuppressWarnings("unused") PathElement scheme1pel5 = PathElement.createInstance(userId, scheme1path0, scheme1dev20cport20, scheme1dev20cport21); //$NON-NLS-1$
 		
 		PathElement scheme1pel6 = PathElement.createInstance(userId, scheme1path0, scheme1clink2th);
-		SchemeUtils.setOpticalLength(scheme1pel6, 1000.0);
-		SchemeUtils.setPhysicalLength(scheme1pel6, 1000.0);
+		scheme1pel6.setOpticalLength(1000.0);
+		scheme1pel6.setPhysicalLength(1000.0);
 
 		@SuppressWarnings("unused") PathElement scheme1pelend = PathElement.createInstance(userId, scheme1path0, scheme1dev30cport30, null); //$NON-NLS-1$
 
