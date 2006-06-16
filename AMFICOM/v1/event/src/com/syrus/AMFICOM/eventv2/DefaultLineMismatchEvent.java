@@ -1,5 +1,5 @@
 /*-
- * $Id: DefaultLineMismatchEvent.java,v 1.18 2006/06/15 17:57:00 bass Exp $
+ * $Id: DefaultLineMismatchEvent.java,v 1.19 2006/06/16 14:52:52 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,13 @@ import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 import java.util.Date;
 import java.util.SortedSet;
 
+import org.omg.CORBA.ORB;
+
 import com.syrus.AMFICOM.eventv2.corba.IdlLineMismatchEvent;
+import com.syrus.AMFICOM.eventv2.corba.IdlLineMismatchEventHelper;
+import com.syrus.AMFICOM.eventv2.corba.IdlLineMismatchEventPackage.IdlSpacialData;
+import com.syrus.AMFICOM.eventv2.corba.IdlLineMismatchEventPackage.IdlSpacialDataPackage.IdlAffectedPathElementSpacious;
+import com.syrus.AMFICOM.eventv2.corba.IdlLineMismatchEventPackage.IdlSpacialDataPackage.IdlPhysicalDistancePair;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -29,7 +35,7 @@ import com.syrus.util.transport.idl.IdlConversionException;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.18 $, $Date: 2006/06/15 17:57:00 $
+ * @version $Revision: 1.19 $, $Date: 2006/06/16 14:52:52 $
  * @module event
  */
 public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
@@ -83,7 +89,7 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 	/**
 	 * @serial include
 	 */
-	private final AlarmStatus.Proxy alarmStatus;
+	final AlarmStatus.Proxy alarmStatus;
 
 	/**
 	 * @serial include
@@ -390,13 +396,16 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 	/**
 	 * @see LineMismatchEvent#getAlarmStatus()
 	 */
-	public AlarmStatus getAlarmStatus() {
+	public AlarmStatus getAlarmStatus() throws ApplicationException {
 		@SuppressWarnings("hiding")
 		final AlarmStatus alarmStatus = this.alarmStatus.getValue();
-		assert alarmStatus == null ^ this.parentLineMismatchEventId.isVoid() :
+		final boolean alarmStatusNull = alarmStatus == null;
+		assert alarmStatusNull ^ this.parentLineMismatchEventId.isVoid() :
 				"alarmStatus = " + alarmStatus + "; "
 				+ "parentLineMismatchEventId = " + this.parentLineMismatchEventId;
-		return alarmStatus;
+		return alarmStatusNull
+				? this.getParentLineMismatchEvent().getAlarmStatus()
+				: alarmStatus;
 	}
 
 	/**
@@ -498,5 +507,39 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 				"alarmStatus = " + alarmStatus + "; "
 				+ "parentLineMismatchEventId = " + this.parentLineMismatchEventId;
 		return this.parentLineMismatchEventId;
+	}
+
+	/**
+	 * @see com.syrus.util.transport.idl.IdlTransferableObject#getIdlTransferable(ORB)
+	 */
+	@Override
+	public IdlLineMismatchEvent getIdlTransferable(final ORB orb) {
+		final IdlSpacialData spacialData = new IdlSpacialData();
+		if (this.isAffectedPathElementSpacious()) {
+			spacialData.physicalDistancePair(
+					IdlAffectedPathElementSpacious._TRUE,
+					new IdlPhysicalDistancePair(
+							this.getPhysicalDistanceToStart(),
+							this.getPhysicalDistanceToEnd()));
+		} else {
+			spacialData._default(IdlAffectedPathElementSpacious._FALSE);
+		}
+
+		return IdlLineMismatchEventHelper.init(orb,
+				this.id.getIdlTransferable(orb),
+				this.created.getTime(),
+				this.modified.getTime(),
+				this.creatorId.getIdlTransferable(orb),
+				this.modifierId.getIdlTransferable(orb),
+				this.version.longValue(),
+				this.getAffectedPathElementId().getIdlTransferable(orb),
+				spacialData,
+				this.getMismatchOpticalDistance(),
+				this.getMismatchPhysicalDistance(),
+				this.getPlainTextMessage(),
+				this.getRichTextMessage(),
+				this.getReflectogramMismatchEventId().getIdlTransferable(orb),
+				this.alarmStatus.getIdlTransferable(orb),
+				this.getParentLineMismatchEventId().getIdlTransferable(orb));
 	}
 }
