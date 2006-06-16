@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeUtils.java,v 1.48 2006/03/15 16:58:21 bass Exp $
+ * $Id: SchemeUtils.java,v 1.49 2006/06/16 10:09:29 bass Exp $
  *
  * Copyright ø 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,7 +11,6 @@ package com.syrus.AMFICOM.scheme;
 import static com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.IdlDataPackage.IdlKind._SCHEME_CABLE_LINK;
 import static com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.IdlDataPackage.IdlKind._SCHEME_LINK;
 
-import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.util.Shitlet;
 
 /**
@@ -19,7 +18,7 @@ import com.syrus.util.Shitlet;
  * removed Œ¡»’ .
  *
  * @author $Author: bass $
- * @version $Revision: 1.48 $, $Date: 2006/03/15 16:58:21 $
+ * @version $Revision: 1.49 $, $Date: 2006/06/16 10:09:29 $
  * @module scheme
  * @deprecated
  */
@@ -47,27 +46,5 @@ public final class SchemeUtils {
 			top = top.getParentSchemeElement();
 		}
 		return top;
-	}
-
-	public static double getOpticalLength(final SchemePath schemePath)
-	throws ApplicationException {
-		return schemePath.getOpticalLength();
-	}
-
-	static void setOpticalLength(final PathElement pathElement, final double d) {
-		pathElement.setOpticalLength(d);
-	}
-
-	public static double getPhysicalLength(final SchemePath schemePath)
-	throws ApplicationException {
-		return schemePath.getPhysicalLength();
-	}
-
-	public static double getPhysicalLength(final PathElement pathElement) {
-		return pathElement.getPhysicalLength();
-	}
-
-	public static void setPhysicalLength(final PathElement pathElement, final double d) {
-		pathElement.setPhysicalLength(d);
 	}
 }
