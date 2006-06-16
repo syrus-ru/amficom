@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractLineMismatchEvent.java,v 1.12 2006/06/14 16:20:38 bass Exp $
+ * $Id: AbstractLineMismatchEvent.java,v 1.13 2006/06/16 14:53:11 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,10 +24,6 @@ import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.bugs.Crutch577;
 import com.syrus.AMFICOM.eventv2.corba.IdlLineMismatchEvent;
-import com.syrus.AMFICOM.eventv2.corba.IdlLineMismatchEventHelper;
-import com.syrus.AMFICOM.eventv2.corba.IdlLineMismatchEventPackage.IdlSpacialData;
-import com.syrus.AMFICOM.eventv2.corba.IdlLineMismatchEventPackage.IdlSpacialDataPackage.IdlAffectedPathElementSpacious;
-import com.syrus.AMFICOM.eventv2.corba.IdlLineMismatchEventPackage.IdlSpacialDataPackage.IdlPhysicalDistancePair;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
@@ -40,7 +36,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.12 $, $Date: 2006/06/14 16:20:38 $
+ * @version $Revision: 1.13 $, $Date: 2006/06/16 14:53:11 $
  * @module event
  */
 public abstract class AbstractLineMismatchEvent extends StorableObject
@@ -220,39 +216,10 @@ public abstract class AbstractLineMismatchEvent extends StorableObject
 	}
 
 	/**
-	 * @param orb
 	 * @see com.syrus.util.transport.idl.IdlTransferableObject#getIdlTransferable(ORB)
 	 */
 	@Override
-	public final IdlLineMismatchEvent getIdlTransferable(final ORB orb) {
-		final IdlSpacialData spacialData = new IdlSpacialData();
-		if (this.isAffectedPathElementSpacious()) {
-			spacialData.physicalDistancePair(
-					IdlAffectedPathElementSpacious._TRUE,
-					new IdlPhysicalDistancePair(
-							this.getPhysicalDistanceToStart(),
-							this.getPhysicalDistanceToEnd()));
-		} else {
-			spacialData._default(IdlAffectedPathElementSpacious._FALSE);
-		}
-
-		return IdlLineMismatchEventHelper.init(orb,
-				this.id.getIdlTransferable(orb),
-				this.created.getTime(),
-				this.modified.getTime(),
-				this.creatorId.getIdlTransferable(orb),
-				this.modifierId.getIdlTransferable(orb),
-				this.version.longValue(),
-				this.getAffectedPathElementId().getIdlTransferable(orb),
-				spacialData,
-				this.getMismatchOpticalDistance(),
-				this.getMismatchPhysicalDistance(),
-				this.getPlainTextMessage(),
-				this.getRichTextMessage(),
-				this.getReflectogramMismatchEventId().getIdlTransferable(orb),
-				this.getAlarmStatus().getIdlTransferable(orb),
-				this.getParentLineMismatchEventId().getIdlTransferable(orb));
-	}
+	public abstract IdlLineMismatchEvent getIdlTransferable(final ORB orb);
 
 	/**
 	 * <em>Note:</em> {@link LineMismatchEvent#getParentLineMismatchEventId()}

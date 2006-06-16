@@ -1,5 +1,5 @@
 /*-
- * $Id: LineMismatchEventDatabase.java,v 1.6 2006/06/08 19:08:30 bass Exp $
+ * $Id: LineMismatchEventDatabase.java,v 1.7 2006/06/16 14:53:11 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,7 +44,7 @@ import com.syrus.util.database.DatabaseString;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2006/06/08 19:08:30 $
+ * @version $Revision: 1.7 $, $Date: 2006/06/16 14:53:11 $
  * @module event
  */
 public final class LineMismatchEventDatabase
@@ -112,7 +112,7 @@ public final class LineMismatchEventDatabase
 	protected String getUpdateSingleSQLValuesTmpl(
 			final DefaultLineMismatchEvent lineMismatchEvent)
 	throws IllegalDataException {
-		final AlarmStatus alarmStatus = lineMismatchEvent.getAlarmStatus();
+		final AlarmStatus alarmStatus = lineMismatchEvent.alarmStatus.getValue();
 
 		return DatabaseIdentifier.toSQLString(lineMismatchEvent.getAffectedPathElementId()) + COMMA
 				+ (lineMismatchEvent.isAffectedPathElementSpacious()
@@ -146,7 +146,7 @@ public final class LineMismatchEventDatabase
 			final PreparedStatement preparedStatement,
 			final int initialStartParameterNumber)
 	throws IllegalDataException, SQLException {
-		final AlarmStatus alarmStatus = lineMismatchEvent.getAlarmStatus();
+		final AlarmStatus alarmStatus = lineMismatchEvent.alarmStatus.getValue();
 
 		int startParameterNumber = initialStartParameterNumber;
 
