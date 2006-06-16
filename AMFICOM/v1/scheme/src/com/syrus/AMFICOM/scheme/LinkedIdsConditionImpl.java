@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.53 2006/06/16 10:39:35 bass Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.54 2006/06/16 11:07:08 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,27 +35,21 @@ import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPROTOGROUP_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEME_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SITENODE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.TRANSMISSIONPATH_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.*;
+import static com.syrus.AMFICOM.general.ObjectEntities.UPDIKE_CODE;
 
 import java.util.Set;
 
-import com.syrus.AMFICOM.administration.Domain;
-import com.syrus.AMFICOM.administration.DomainMember;
-import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifiable;
-import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.IdlDataPackage.IdlKind;
-import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.53 $, $Date: 2006/06/16 10:39:35 $
+ * @version $Revision: 1.54 $, $Date: 2006/06/16 11:07:08 $
  * @module scheme
  */
 final class LinkedIdsConditionImpl extends LinkedIdsCondition {
@@ -64,23 +58,6 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 		this.linkedIdentifiables = linkedIdentifiables;
 		this.linkedEntityCode = linkedEntityCode.shortValue();
 		this.entityCode = entityCode;
-	}
-
-	@SuppressWarnings("unused")
-	private boolean checkDomain(final DomainMember domainMember) {
-		try {
-			final Domain dmDomain = StorableObjectPool.getStorableObject(domainMember.getDomainId(), true);
-			for (final Identifiable identifiable : this.linkedIdentifiables) {
-				final Identifier id = identifiable.getId();
-				if (id.getMajor() == DOMAIN_CODE
-						&& dmDomain.isChild(StorableObjectPool.<Domain>getStorableObject(id, true))) {
-					return true;
-				}
-			}
-		} catch (final ApplicationException ae) {
-			Log.errorMessage(ae);
-		}
-		return false;
 	}
 
 	/**
