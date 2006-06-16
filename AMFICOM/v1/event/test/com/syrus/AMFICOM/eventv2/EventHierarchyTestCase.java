@@ -1,5 +1,5 @@
 /*-
- * $Id: EventHierarchyTestCase.java,v 1.1 2006/06/15 17:58:23 bass Exp $
+ * $Id: EventHierarchyTestCase.java,v 1.2 2006/06/16 13:31:31 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,7 +38,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2006/06/15 17:58:23 $
+ * @version $Revision: 1.2 $, $Date: 2006/06/16 13:31:31 $
  * @module event
  */
 public final class EventHierarchyTestCase extends TestCase {
@@ -113,7 +113,7 @@ public final class EventHierarchyTestCase extends TestCase {
 		// empty
 	}
 
-	private static LineMismatchEvent newLineMismatchEvent() throws ApplicationException {
+	static LineMismatchEvent newLineMismatchEvent() throws ApplicationException {
 		final Identifier userId = Identifier.valueOf("SystemUser_0");
 		final Identifier affectedPathElementId = Identifier.valueOf("PathElement_0");
 		final Identifier reflectogramMismatchEventId = IdentifierPool.getGeneratedIdentifier(REFLECTOGRAMMISMATCHEVENT_CODE);
