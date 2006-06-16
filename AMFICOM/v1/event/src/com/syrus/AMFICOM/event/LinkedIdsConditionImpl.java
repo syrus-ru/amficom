@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.1 2006/06/15 17:43:29 bass Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.2 2006/06/16 11:04:51 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,6 +10,7 @@ package com.syrus.AMFICOM.event;
 
 import static com.syrus.AMFICOM.general.ObjectEntities.DOMAIN_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.LINEMISMATCHEVENT_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.UPDIKE_CODE;
 
 import java.util.Set;
 
@@ -29,7 +30,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2006/06/15 17:43:29 $
+ * @version $Revision: 1.2 $, $Date: 2006/06/16 11:04:51 $
  * @module event
  */
 final class LinkedIdsConditionImpl extends LinkedIdsCondition {
@@ -69,6 +70,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 			final LineMismatchEvent lineMismatchEvent = (LineMismatchEvent) storableObject;
 			switch (this.linkedEntityCode) {
 			case LINEMISMATCHEVENT_CODE:
+			case UPDIKE_CODE:
 				return this.conditionTest(lineMismatchEvent.getParentLineMismatchEventId());
 			default:
 				throw newIllegalObjectEntityException();
