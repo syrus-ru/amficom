@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeUtils.java,v 1.49 2006/06/16 10:09:29 bass Exp $
+ * $Id: SchemeUtils.java,v 1.50 2006/06/16 10:27:31 bass Exp $
  *
  * Copyright ø 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,9 +8,6 @@
 
 package com.syrus.AMFICOM.scheme;
 
-import static com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.IdlDataPackage.IdlKind._SCHEME_CABLE_LINK;
-import static com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.IdlDataPackage.IdlKind._SCHEME_LINK;
-
 import com.syrus.util.Shitlet;
 
 /**
@@ -18,7 +15,7 @@ import com.syrus.util.Shitlet;
  * removed Œ¡»’ .
  *
  * @author $Author: bass $
- * @version $Revision: 1.49 $, $Date: 2006/06/16 10:09:29 $
+ * @version $Revision: 1.50 $, $Date: 2006/06/16 10:27:31 $
  * @module scheme
  * @deprecated
  */
@@ -27,17 +24,6 @@ import com.syrus.util.Shitlet;
 public final class SchemeUtils {
 	private SchemeUtils() {
 		assert false;
-	}
-
-	static double getKu(final PathElement pathElement) {
-		switch (pathElement.getKind().value()) {
-		case _SCHEME_CABLE_LINK:
-		case _SCHEME_LINK:
-			final AbstractSchemeLink link = (AbstractSchemeLink) pathElement.getAbstractSchemeElement();
-			return link.getOpticalLength() / link.getPhysicalLength();
-		default:
-			return 1;
-		}
 	}
 
 	public static SchemeElement getTopLevelSchemeElement(final SchemeElement schemeElement) {

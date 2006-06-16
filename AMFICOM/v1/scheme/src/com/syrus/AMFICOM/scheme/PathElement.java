@@ -1,5 +1,5 @@
 /*-
- * $Id: PathElement.java,v 1.107 2006/06/06 11:31:15 arseniy Exp $
+ * $Id: PathElement.java,v 1.108 2006/06/16 10:27:31 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -59,6 +59,7 @@ import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.IdlDataPackage.IdlKi
 import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.IdlDataPackage.IdlSchemeElementData;
 import com.syrus.AMFICOM.scheme.xml.XmlPathElement;
 import com.syrus.util.Log;
+import com.syrus.util.Shitlet;
 import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 import com.syrus.util.transport.xml.XmlConversionException;
@@ -71,8 +72,8 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * its {@link PathElement#getName() getName()} method actually returns
  * {@link PathElement#getAbstractSchemeElement() getAbstractSchemeElement()}<code>.</code>{@link AbstractSchemeElement#getName() getName()}.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.107 $, $Date: 2006/06/06 11:31:15 $
+ * @author $Author: bass $
+ * @version $Revision: 1.108 $, $Date: 2006/06/16 10:27:31 $
  * @module scheme
  * @todo If Scheme(Cable|)Port ever happens to belong to more than one
  *       SchemeElement
@@ -1401,6 +1402,26 @@ public final class PathElement extends StorableObject
 		case _SCHEME_ELEMENT:
 		default:
 			break;
+		}
+	}
+
+	/*-********************************************************************
+	 * Shitlets.                                                          *
+	 **********************************************************************/
+
+	/**
+	 * @deprecated
+	 */
+	@Shitlet
+	@Deprecated
+	double getKu() {
+		switch (this.getKind().value()) {
+		case _SCHEME_CABLE_LINK:
+		case _SCHEME_LINK:
+			final AbstractSchemeLink abstractSchemeLink = (AbstractSchemeLink) this.getAbstractSchemeElement();
+			return abstractSchemeLink.getOpticalLength() / abstractSchemeLink.getPhysicalLength();
+		default:
+			return 1;
 		}
 	}
 }

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePath.java,v 1.129 2006/06/06 11:31:15 arseniy Exp $
+ * $Id: SchemePath.java,v 1.130 2006/06/16 10:27:31 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -72,8 +72,8 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
 /**
  * #16 in hierarchy.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.129 $, $Date: 2006/06/06 11:31:15 $
+ * @author $Author: bass $
+ * @version $Revision: 1.130 $, $Date: 2006/06/16 10:27:31 $
  * @module scheme
  */
 public final class SchemePath extends StorableObject
@@ -820,7 +820,7 @@ public final class SchemePath extends StorableObject
 				d += physicalLength;
 				opticalDistance += pathElement.getOpticalLength();
 			} else {
-				opticalDistance += (physicalDistance - d) * SchemeUtils.getKu(pathElement);
+				opticalDistance += (physicalDistance - d) * pathElement.getKu();
 				break;
 			}
 			
@@ -895,7 +895,7 @@ public final class SchemePath extends StorableObject
 				d += opticalLength;
 				physicalDistance += pathElement.getPhysicalLength();
 			} else {
-				physicalDistance += (opticalDistance - d) / SchemeUtils.getKu(pathElement);
+				physicalDistance += (opticalDistance - d) / pathElement.getKu();
 				break;
 			}
 		}
