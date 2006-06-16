@@ -1,5 +1,5 @@
 /**
- * $Id: GenerateUnboundLinkCablingCommandBundleTestCase.java,v 1.8 2005/10/25 08:02:45 krupenn Exp $
+ * $Id: GenerateUnboundLinkCablingCommandBundleTestCase.java,v 1.9 2006/06/16 10:19:56 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -25,7 +25,6 @@ import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.mapview.CablePath;
 import com.syrus.AMFICOM.mapview.UnboundLink;
 import com.syrus.AMFICOM.scheme.CableChannelingItem;
-import com.syrus.AMFICOM.scheme.SchemeSampleData;
 
 public class GenerateUnboundLinkCablingCommandBundleTestCase extends SchemeBindingTestCase {
 

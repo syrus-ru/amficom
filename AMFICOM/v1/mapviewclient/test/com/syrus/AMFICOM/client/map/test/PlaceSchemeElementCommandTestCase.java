@@ -1,5 +1,5 @@
 /**
- * $Id: PlaceSchemeElementCommandTestCase.java,v 1.2 2005/07/03 13:56:51 krupenn Exp $
+ * $Id: PlaceSchemeElementCommandTestCase.java,v 1.3 2006/06/16 10:19:56 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -14,7 +14,6 @@ import java.util.Collection;
 import com.syrus.AMFICOM.client.map.command.action.PlaceSchemeElementCommand;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.mapview.UnboundNode;
-import com.syrus.AMFICOM.scheme.SchemeSampleData;
 
 public class PlaceSchemeElementCommandTestCase extends SchemeBindingTestCase {
 

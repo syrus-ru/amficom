@@ -1,5 +1,5 @@
 /**
- * $Id: METS.java,v 1.15 2005/10/17 07:00:21 krupenn Exp $
+ * $Id: METS.java,v 1.16 2006/06/16 10:19:56 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -45,11 +45,10 @@ import com.syrus.AMFICOM.scheme.CableChannelingItem;
 import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
 import com.syrus.AMFICOM.scheme.SchemeElement;
-import com.syrus.AMFICOM.scheme.SchemeSampleData;
  
 /**
- * @version $Revision: 1.15 $, $Date: 2005/10/17 07:00:21 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.16 $, $Date: 2006/06/16 10:19:56 $
+ * @author $Author: bass $
  * @module mapviewclient
  */
 public class METS {

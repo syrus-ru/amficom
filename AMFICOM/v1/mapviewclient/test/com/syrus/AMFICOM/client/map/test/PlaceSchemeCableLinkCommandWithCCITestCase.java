@@ -1,5 +1,5 @@
 /**
- * $Id: PlaceSchemeCableLinkCommandWithCCITestCase.java,v 1.7 2005/08/10 09:27:21 krupenn Exp $
+ * $Id: PlaceSchemeCableLinkCommandWithCCITestCase.java,v 1.8 2006/06/16 10:19:56 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -20,7 +20,6 @@ import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.mapview.CablePath;
 import com.syrus.AMFICOM.mapview.UnboundLink;
 import com.syrus.AMFICOM.scheme.CableChannelingItem;
-import com.syrus.AMFICOM.scheme.SchemeSampleData;
 
 /**
  * building(start) ----- well1 ........... building(end)

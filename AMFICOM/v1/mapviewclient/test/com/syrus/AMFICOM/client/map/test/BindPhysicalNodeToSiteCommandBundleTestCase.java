@@ -1,5 +1,5 @@
 /**
- * $Id: BindPhysicalNodeToSiteCommandBundleTestCase.java,v 1.6 2005/10/18 07:07:41 krupenn Exp $
+ * $Id: BindPhysicalNodeToSiteCommandBundleTestCase.java,v 1.7 2006/06/16 10:19:56 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -24,7 +24,6 @@ import com.syrus.AMFICOM.map.TopologicalNode;
 import com.syrus.AMFICOM.mapview.CablePath;
 import com.syrus.AMFICOM.mapview.UnboundLink;
 import com.syrus.AMFICOM.scheme.CableChannelingItem;
-import com.syrus.AMFICOM.scheme.SchemeSampleData;
 
 public class BindPhysicalNodeToSiteCommandBundleTestCase extends SchemeBindingTestCase {
 

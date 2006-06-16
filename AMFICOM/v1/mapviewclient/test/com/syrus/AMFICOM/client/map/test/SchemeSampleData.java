@@ -1,12 +1,12 @@
 /*-
- * $$Id: SchemeSampleData.java,v 1.1 2006/06/16 10:17:43 bass Exp $$
+ * $$Id: SchemeSampleData.java,v 1.1 2006/06/16 10:19:56 bass Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
 
-package com.syrus.AMFICOM.scheme;
+package com.syrus.AMFICOM.client.map.test;
 
 import com.syrus.AMFICOM.configuration.CableLinkType;
 import com.syrus.AMFICOM.configuration.CableThreadType;
@@ -37,7 +37,7 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
  * this class is used to create two sample instances
  * of Scheme whithout graphical components
  * 
- * @version $Revision: 1.1 $, $Date: 2006/06/16 10:17:43 $
+ * @version $Revision: 1.1 $, $Date: 2006/06/16 10:19:56 $
  * @author $Author: bass $
  * @author Andrei Kroupennikov
  * @module mapviewclient

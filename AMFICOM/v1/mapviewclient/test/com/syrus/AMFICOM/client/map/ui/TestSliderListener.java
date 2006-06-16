@@ -1,5 +1,5 @@
 /*-
- * $Id: TestSliderListener.java,v 1.1 2006/06/16 10:13:29 bass Exp $
+ * $Id: TestSliderListener.java,v 1.2 2006/06/16 10:19:56 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,17 +22,17 @@ import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.event.MarkerEvent;
 import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.client.map.command.action.PlaceSchemeElementCommand;
+import com.syrus.AMFICOM.client.map.test.SchemeSampleData;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.scheme.SchemeSampleData;
 import com.syrus.util.Log;
 
 /**
  * @author Andrey Kroupennikov
  * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2006/06/16 10:13:29 $
+ * @version $Revision: 1.2 $, $Date: 2006/06/16 10:19:56 $
  * @module mapviewclient
  */
 final class TestSliderListener implements ChangeListener, PropertyChangeListener {

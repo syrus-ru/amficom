@@ -1,5 +1,5 @@
 /**
- * $Id: PlaceSchemePathCommandTestCase.java,v 1.3 2005/09/14 10:18:01 krupenn Exp $
+ * $Id: PlaceSchemePathCommandTestCase.java,v 1.4 2006/06/16 10:19:56 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -16,7 +16,6 @@ import com.syrus.AMFICOM.client.map.command.action.PlaceSchemePathCommand;
 import com.syrus.AMFICOM.client.map.command.action.UnPlaceSchemeElementCommand;
 import com.syrus.AMFICOM.mapview.CablePath;
 import com.syrus.AMFICOM.mapview.MeasurementPath;
-import com.syrus.AMFICOM.scheme.SchemeSampleData;
 
 
 public class PlaceSchemePathCommandTestCase extends SchemeBindingTestCase {
