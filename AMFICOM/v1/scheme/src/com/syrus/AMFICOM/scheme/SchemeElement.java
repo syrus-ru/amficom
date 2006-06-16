@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.162 2006/06/06 11:31:15 arseniy Exp $
+ * $Id: SchemeElement.java,v 1.163 2006/06/16 10:32:04 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -98,8 +98,8 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
 /**
  * #04 in hierarchy.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.162 $, $Date: 2006/06/06 11:31:15 $
+ * @author $Author: bass $
+ * @version $Revision: 1.163 $, $Date: 2006/06/16 10:32:04 $
  * @module scheme
  */
 public final class SchemeElement extends AbstractSchemeElement
@@ -2361,5 +2361,18 @@ public final class SchemeElement extends AbstractSchemeElement
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * @deprecated
+	 */
+	@Shitlet
+	@Deprecated
+	public SchemeElement getTopLevelSchemeElement() {
+		SchemeElement schemeElement = this;
+		while (schemeElement.getParentSchemeElement() != null) {
+			schemeElement = schemeElement.getParentSchemeElement();
+		}
+		return schemeElement;
 	}
 }

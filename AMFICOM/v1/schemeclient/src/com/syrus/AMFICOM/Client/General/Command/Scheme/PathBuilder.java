@@ -26,7 +26,6 @@ import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.AMFICOM.scheme.SchemeLink;
 import com.syrus.AMFICOM.scheme.SchemePath;
 import com.syrus.AMFICOM.scheme.SchemePort;
-import com.syrus.AMFICOM.scheme.SchemeUtils;
 import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionType;
 import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.IdlDataPackage.IdlKind;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeElementPackage.IdlSchemeElementKind;
@@ -58,7 +57,7 @@ public class PathBuilder {
 		
 			if (lastPE.getKind() == IdlKind.SCHEME_ELEMENT) {
 				SchemeElement se = lastPE.getSchemeElement();
-				SchemeElement top = SchemeUtils.getTopLevelSchemeElement(se);
+				SchemeElement top = se.getTopLevelSchemeElement();
 				if (!top.equals(scheme_element)) {
 					path.removePathMember(lastPE, false);
 					return true;
