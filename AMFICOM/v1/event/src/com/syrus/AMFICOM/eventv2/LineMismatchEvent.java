@@ -1,5 +1,5 @@
 /*-
- * $Id: LineMismatchEvent.java,v 1.28 2006/06/15 17:55:40 bass Exp $
+ * $Id: LineMismatchEvent.java,v 1.29 2006/06/16 14:51:46 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,7 +39,7 @@ import com.syrus.util.transport.idl.IdlTransferableObjectExt;
  * 
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.28 $, $Date: 2006/06/15 17:55:40 $
+ * @version $Revision: 1.29 $, $Date: 2006/06/16 14:51:46 $
  * @module event
  */
 public interface LineMismatchEvent
@@ -216,12 +216,13 @@ public interface LineMismatchEvent
 	void setAlarmStatus(final AlarmStatus alarmStatus) throws ApplicationException;
 
 	/**
+	 * @throws ApplicationException
 	 * @see #setAlarmStatus(LineMismatchEvent.AlarmStatus)
 	 * @see #setParentLineMismatchEvent(LineMismatchEvent)
 	 * @see #getParentLineMismatchEvent()
 	 * @see #getChildLineMismatchEvents()
 	 */
-	AlarmStatus getAlarmStatus();
+	AlarmStatus getAlarmStatus() throws ApplicationException;
 
 	/**
 	 * <p>Updates this event&apos;s parent.</p>
@@ -331,7 +332,7 @@ public interface LineMismatchEvent
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.28 $, $Date: 2006/06/15 17:55:40 $
+	 * @version $Revision: 1.29 $, $Date: 2006/06/16 14:51:46 $
 	 * @module event
 	 */
 	enum AlarmStatus implements IdlTransferableObject<IdlAlarmStatus> {
@@ -665,7 +666,7 @@ public interface LineMismatchEvent
 		 *
 		 * @author Andrew ``Bass'' Shcheglov
 		 * @author $Author: bass $
-		 * @version $Revision: 1.28 $, $Date: 2006/06/15 17:55:40 $
+		 * @version $Revision: 1.29 $, $Date: 2006/06/16 14:51:46 $
 		 * @see AllowedSuccessors
 		 * @module event
 		 */
@@ -678,7 +679,7 @@ public interface LineMismatchEvent
 		/**
 		 * @author Andrew ``Bass'' Shcheglov
 		 * @author $Author: bass $
-		 * @version $Revision: 1.28 $, $Date: 2006/06/15 17:55:40 $
+		 * @version $Revision: 1.29 $, $Date: 2006/06/16 14:51:46 $
 		 * @see AllowedPredecessors
 		 * @module event
 		 */
@@ -693,7 +694,7 @@ public interface LineMismatchEvent
 		 *
 		 * @author Andrew ``Bass'' Shcheglov
 		 * @author $Author: bass $
-		 * @version $Revision: 1.28 $, $Date: 2006/06/15 17:55:40 $
+		 * @version $Revision: 1.29 $, $Date: 2006/06/16 14:51:46 $
 		 * @module event
 		 */
 		static final class Proxy
