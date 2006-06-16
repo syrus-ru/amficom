@@ -1,5 +1,5 @@
 /*-
- * $Id: Test.java,v 1.183.2.29 2006/06/13 13:18:12 arseniy Exp $
+ * $Id: Test.java,v 1.183.2.30 2006/06/16 11:03:13 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -19,8 +19,8 @@ import static com.syrus.AMFICOM.general.ObjectEntities.ANALYSIS_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.CRONTEMPORALPATTERN_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.INTERVALSTEMPORALPATTERN_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTSETUP_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENT_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENT_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENT_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MONITOREDELEMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PERIODICALTEMPORALPATTERN_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.TEST_CODE;
@@ -62,6 +62,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestStatus;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestStops;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTemporalType;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTimeStamps;
+import com.syrus.AMFICOM.reflectometry.Qable;
 import com.syrus.util.EasyDateFormatter;
 import com.syrus.util.Log;
 import com.syrus.util.transport.idl.IdlConversionException;
@@ -69,7 +70,7 @@ import com.syrus.util.transport.idl.IdlTransferableObject;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.183.2.29 $, $Date: 2006/06/13 13:18:12 $
+ * @version $Revision: 1.183.2.30 $, $Date: 2006/06/16 11:03:13 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -459,6 +460,21 @@ public final class Test extends StorableObject implements IdlTransferableObjectE
 
 	public Identifier getTemporalPatternId() {
 		return this.timeStamps.getTemporalPatternId();
+	}
+
+	/**
+	 * @todo Implement
+	 * @return Качество линии.
+	 */
+	public Qable getQuality() {
+		return new Qable() {
+			public double getQ() {
+				throw new IllegalStateException();
+			}
+			public boolean hasQ() {
+				return false;
+			}
+		};
 	}
 
 	/**
