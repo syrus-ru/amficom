@@ -1,5 +1,5 @@
  /*-
- * $$Id: MarkerController.java,v 1.53 2006/05/24 14:42:32 stas Exp $$
+ * $$Id: MarkerController.java,v 1.54 2006/06/16 11:26:23 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,14 +41,13 @@ import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.AMFICOM.scheme.SchemeLink;
 import com.syrus.AMFICOM.scheme.SchemePath;
 import com.syrus.AMFICOM.scheme.SchemePort;
-import com.syrus.AMFICOM.scheme.SchemeUtils;
 import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.IdlDataPackage.IdlKind;
 import com.syrus.util.Log;
 
 /**
  * Контроллер маркера.
  * 
- * @version $Revision: 1.53 $, $Date: 2006/05/24 14:42:32 $
+ * @version $Revision: 1.54 $, $Date: 2006/06/16 11:26:23 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
