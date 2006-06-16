@@ -1,5 +1,5 @@
 /*-
- * $$Id: SchemeSampleData.java,v 1.37 2006/06/16 10:09:01 bass Exp $$
+ * $$Id: SchemeSampleData.java,v 1.1 2006/06/16 10:17:43 bass Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,6 +19,17 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.scheme.PathElement;
+import com.syrus.AMFICOM.scheme.Scheme;
+import com.syrus.AMFICOM.scheme.SchemeCableLink;
+import com.syrus.AMFICOM.scheme.SchemeCablePort;
+import com.syrus.AMFICOM.scheme.SchemeCableThread;
+import com.syrus.AMFICOM.scheme.SchemeDevice;
+import com.syrus.AMFICOM.scheme.SchemeElement;
+import com.syrus.AMFICOM.scheme.SchemeLink;
+import com.syrus.AMFICOM.scheme.SchemeMonitoringSolution;
+import com.syrus.AMFICOM.scheme.SchemePath;
+import com.syrus.AMFICOM.scheme.SchemePort;
 import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionType;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
 
@@ -26,7 +37,7 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
  * this class is used to create two sample instances
  * of Scheme whithout graphical components
  * 
- * @version $Revision: 1.37 $, $Date: 2006/06/16 10:09:01 $
+ * @version $Revision: 1.1 $, $Date: 2006/06/16 10:17:43 $
  * @author $Author: bass $
  * @author Andrei Kroupennikov
  * @module mapviewclient
