@@ -1,5 +1,5 @@
 /*-
- * $Id: ProtoElementsExportCommand.java,v 1.8 2006/02/15 12:19:50 stas Exp $
+ * $Id: ProtoElementsExportCommand.java,v 1.9 2006/06/16 10:56:55 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,7 +10,6 @@ package com.syrus.AMFICOM.Client.General.Command.Scheme;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
@@ -20,13 +19,9 @@ import org.apache.xmlbeans.XmlOptions;
 
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeTabbedPane;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.LinkedIdsCondition;
-import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.StorableObjectCondition;
-import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.resource.LangModelScheme;
 import com.syrus.AMFICOM.scheme.SchemeProtoGroup;
+import com.syrus.AMFICOM.scheme.SchemeUtilities;
 import com.syrus.AMFICOM.scheme.xml.SchemeProtoGroupsDocument;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemeProtoGroup;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemeProtoGroupSeq;
@@ -50,10 +45,8 @@ public class ProtoElementsExportCommand extends ImportExportCommand {
 			return;
 
 		try {
-			StorableObjectCondition condition1 = new LinkedIdsCondition(Identifier.VOID_IDENTIFIER, ObjectEntities.SCHEMEPROTOGROUP_CODE); 
-			Collection<SchemeProtoGroup> groups = StorableObjectPool.getStorableObjectsByCondition(condition1, true);
 			Set<XmlSchemeProtoGroup> xmlProtoGroups = new HashSet<XmlSchemeProtoGroup>();
-			for (SchemeProtoGroup protoGroup : groups) {
+			for (final SchemeProtoGroup protoGroup : SchemeUtilities.getRootSchemeProtoGroups()) {
 				XmlSchemeProtoGroup xmlProto = XmlSchemeProtoGroup.Factory.newInstance();
 				protoGroup.getXmlTransferable(xmlProto, AMFICOM_IMPORT, false);
 				xmlProtoGroups.add(xmlProto);

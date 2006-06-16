@@ -1,10 +1,11 @@
 /*-
- * $Id: TestSchemeProtoGroup.java,v 1.5 2006/06/06 15:52:38 arseniy Exp $
+ * $Id: TestSchemeProtoGroup.java,v 1.6 2006/06/16 10:56:55 bass Exp $
  *
- * Copyright ¿ 2004-2005 Syrus Systems.
+ * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
+
 package com.syrus.AMFICOM.scheme;
 
 import java.util.HashSet;
@@ -16,13 +17,10 @@ import junit.framework.TestCase;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.DatabaseCommonTest;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.LinkedIdsCondition;
-import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.StorableObjectPool;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2006/06/06 15:52:38 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.6 $, $Date: 2006/06/16 10:56:55 $
+ * @author $Author: bass $
  * @module test
  */
 public final class TestSchemeProtoGroup extends TestCase {
@@ -39,14 +37,13 @@ public final class TestSchemeProtoGroup extends TestCase {
 
 	public void testRetrieve() throws ApplicationException {
 		//final EquivalentCondition ec = new EquivalentCondition(ObjectEntities.SCHEMEPROTOGROUP_CODE);
-		final LinkedIdsCondition lic = new LinkedIdsCondition(Identifier.VOID_IDENTIFIER,ObjectEntities.SCHEMEPROTOGROUP_CODE);
 		final Set<Identifier> butIds = new HashSet<Identifier>();
 		butIds.add(Identifier.valueOf("SchemeProtoGroup_91"));
 		//butIds.add(Identifier.valueOf("SchemeProtoGroup_93"));
 		butIds.add(Identifier.VOID_IDENTIFIER);
-		//final Set<SchemeProtoGroup> set = StorableObjectPool.getStorableObjectsByCondition(lic, true);
-		final Set<SchemeProtoGroup> set = StorableObjectPool.getStorableObjectsButIdsByCondition(butIds, lic, true);
-		for (SchemeProtoGroup schemeProtoGroup : set) {
+//		final Set<SchemeProtoGroup> schemeProtoGroups = SchemeUtilities.getRootSchemeProtoGroups();
+		final Set<SchemeProtoGroup> schemeProtoGroups = SchemeUtilities.getRootSchemeProtoGroupsButIds(butIds);
+		for (final SchemeProtoGroup schemeProtoGroup : schemeProtoGroups) {
 			System.out.println("group: " + schemeProtoGroup.getName());
 		}
 	}
