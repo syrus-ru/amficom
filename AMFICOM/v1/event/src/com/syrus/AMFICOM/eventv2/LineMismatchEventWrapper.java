@@ -1,5 +1,5 @@
 /*-
- * $Id: LineMismatchEventWrapper.java,v 1.5 2006/06/08 18:39:24 bass Exp $
+ * $Id: LineMismatchEventWrapper.java,v 1.6 2006/06/16 13:30:35 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.util.Wrapper;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2006/06/08 18:39:24 $
+ * @version $Revision: 1.6 $, $Date: 2006/06/16 13:30:35 $
  * @module event
  */
 public final class LineMismatchEventWrapper
@@ -39,6 +39,7 @@ public final class LineMismatchEventWrapper
 	public static final String COLUMN_REFLECTOGRAM_MISMATCH_EVENT_ID = "reflectogram_mismatch_event_id";
 	public static final String COLUMN_REFLECTOGRAM_MISMATCH_EVENT = "reflectogram_mismatch_event";
 	public static final String COLUMN_ALARM_STATUS = "alarm_status";
+	public static final String COLUMN_ALARM_STATUS_INT = "alarm_status_int";
 	public static final String COLUMN_PARENT_LINE_MISMATCH_EVENT_ID = "parent_line_mismatch_event_id";
 	public static final String COLUMN_PARENT_LINE_MISMATCH_EVENT = "parent_line_mismatch_event";
 
@@ -60,6 +61,7 @@ public final class LineMismatchEventWrapper
 				COLUMN_REFLECTOGRAM_MISMATCH_EVENT_ID,
 				COLUMN_REFLECTOGRAM_MISMATCH_EVENT,
 				COLUMN_ALARM_STATUS,
+				COLUMN_ALARM_STATUS_INT,
 				COLUMN_PARENT_LINE_MISMATCH_EVENT_ID,
 				COLUMN_PARENT_LINE_MISMATCH_EVENT));
 	}
@@ -106,6 +108,8 @@ public final class LineMismatchEventWrapper
 			return ReflectogramMismatchEvent.class;
 		} else if (internedKey == COLUMN_ALARM_STATUS) {
 			return AlarmStatus.class;
+		} else if (internedKey == COLUMN_ALARM_STATUS_INT) {
+			return Integer.class;
 		} else if (internedKey == COLUMN_PARENT_LINE_MISMATCH_EVENT) {
 			return LineMismatchEvent.class;
 		}
@@ -171,6 +175,8 @@ public final class LineMismatchEventWrapper
 				return lineMismatchEvent.getReflectogramMismatchEvent();
 			} else if (internedKey == COLUMN_ALARM_STATUS) {
 				return lineMismatchEvent.getAlarmStatus();
+			} else if (internedKey == COLUMN_ALARM_STATUS_INT) {
+				return Integer.valueOf(lineMismatchEvent.getAlarmStatus().ordinal());
 			} else if (internedKey == COLUMN_PARENT_LINE_MISMATCH_EVENT_ID) {
 				return lineMismatchEvent.getParentLineMismatchEventId();
 			} else if (internedKey == COLUMN_PARENT_LINE_MISMATCH_EVENT) {
@@ -210,6 +216,8 @@ public final class LineMismatchEventWrapper
 		try {
 			if (internedKey == COLUMN_ALARM_STATUS) {
 				lineMismatchEvent.setAlarmStatus((AlarmStatus) value);
+			} else if (internedKey == COLUMN_ALARM_STATUS_INT) {
+				lineMismatchEvent.setAlarmStatus(AlarmStatus.valueOf(((Integer) value).intValue()));
 			} else if (internedKey == COLUMN_PARENT_LINE_MISMATCH_EVENT_ID) {
 				lineMismatchEvent.setParentLineMismatchEventId((Identifier) value);
 			} else if (internedKey == COLUMN_PARENT_LINE_MISMATCH_EVENT) {
