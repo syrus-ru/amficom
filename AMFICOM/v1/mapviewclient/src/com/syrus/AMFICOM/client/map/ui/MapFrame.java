@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapFrame.java,v 1.93 2006/03/27 14:48:57 stas Exp $$
+ * $$Id: MapFrame.java,v 1.94 2006/06/16 10:13:29 bass Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,7 +11,6 @@ package com.syrus.AMFICOM.client.map.ui;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
-import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ComponentEvent;
 import java.beans.PropertyChangeEvent;
@@ -23,18 +22,13 @@ import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
-import javax.swing.JSlider;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.event.InternalFrameEvent;
 
 import com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent;
 import com.syrus.AMFICOM.administration.PermissionAttributes.PermissionCodename;
-import com.syrus.AMFICOM.client.UI.ProcessingDialog;
 import com.syrus.AMFICOM.client.event.ContextChangeEvent;
-import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.event.MarkerEvent;
 import com.syrus.AMFICOM.client.map.LogicalNetLayer;
@@ -49,7 +43,6 @@ import com.syrus.AMFICOM.client.map.MapImageRendererFactory;
 import com.syrus.AMFICOM.client.map.MapPropertiesManager;
 import com.syrus.AMFICOM.client.map.MapState;
 import com.syrus.AMFICOM.client.map.NetMapViewer;
-import com.syrus.AMFICOM.client.map.command.action.PlaceSchemeElementCommand;
 import com.syrus.AMFICOM.client.map.command.editor.ViewMapChooserCommand;
 import com.syrus.AMFICOM.client.map.command.navigate.CenterSelectionCommand;
 import com.syrus.AMFICOM.client.map.command.navigate.HandPanCommand;
@@ -72,131 +65,12 @@ import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IdentifierGenerationException;
-import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.resource.DoublePoint;
-import com.syrus.AMFICOM.scheme.SchemeSampleData;
 import com.syrus.util.Log;
-
-class TestSliderListener implements ChangeListener, PropertyChangeListener {
-	
-	Identifier markerId = null;
-	final MapFrame mapFrame;
-	private final JSlider slider;
-	boolean notInitialized = true;
-	
-	public TestSliderListener(MapFrame mapFrame, JSlider slider) {
-		this.mapFrame = mapFrame;
-		this.slider = slider;
-		this.mapFrame.getContext().getDispatcher().addPropertyChangeListener(MarkerEvent.MARKER_EVENT_TYPE, this);
-		this.mapFrame.getContext().getDispatcher().addPropertyChangeListener(MapEvent.MAP_EVENT_TYPE, this);
-	}
-
-	public void stateChanged(ChangeEvent e) {
-		try {
-			Dispatcher dispatcher = this.mapFrame.aContext.getDispatcher();
-			if(this.markerId == null) {
-				this.markerId = IdentifierPool.getGeneratedIdentifier(ObjectEntities.MARK_CODE);
-				dispatcher.firePropertyChange(new MarkerEvent(
-						this, 
-						MarkerEvent.MARKER_CREATED_EVENT, 
-						this.markerId,
-						this.slider.getValue(),
-						null,
-						SchemeSampleData.scheme1path0.getId(),
-						null), false);
-			}
-			dispatcher.firePropertyChange(new MarkerEvent(
-					this, 
-					MarkerEvent.MARKER_SELECTED_EVENT, 
-					this.markerId), false);
-			dispatcher.firePropertyChange(new MarkerEvent(
-					this, 
-					MarkerEvent.MARKER_MOVED_EVENT, 
-					this.markerId,
-					((JSlider)(e.getSource())).getValue(),
-					null,
-					SchemeSampleData.scheme1path0.getId(),
-					null), false);
-		} catch(IdentifierGenerationException e1) {
-			Log.errorMessage(e1);
-		}
-	}
-
-	public void propertyChange(PropertyChangeEvent evt) {
-		if(evt.getPropertyName().equals(MapEvent.MAP_EVENT_TYPE)) {
-			MapEvent mapEvent = (MapEvent) evt;
-			if(mapEvent.getMapEventType().equals(MapEvent.MAP_FRAME_SHOWN)
-					&& false
-					&& this.notInitialized) {
-				new ProcessingDialog(new Runnable() {
-				
-					public void run() {
-						Log.debugMessage("waiting for SchemeSampleData...", Log.DEBUGLEVEL09); //$NON-NLS-1$
-						while(!SchemeSampleData.loaded) {
-							try {
-								Thread.sleep(100);
-							} catch(InterruptedException e) {
-								//nothing
-							}
-						}
-						Log.debugMessage(" placing elements...", Log.DEBUGLEVEL09); //$NON-NLS-1$
-						TestSliderListener.this.notInitialized = false;
-						NetMapViewer netMapViewer = TestSliderListener.this.mapFrame.getMapViewer();
-
-						TestSliderListener.this.mapFrame.getMapView().addScheme(SchemeSampleData.scheme1);
-
-						PlaceSchemeElementCommand startcommand = new PlaceSchemeElementCommand(SchemeSampleData.scheme1element0, new Point(50, 200));
-						startcommand.setNetMapViewer(netMapViewer);
-						startcommand.execute();
-				
-						PlaceSchemeElementCommand intercommand1 = new PlaceSchemeElementCommand(SchemeSampleData.scheme1element1, new Point(200, 50));
-						intercommand1.setNetMapViewer(netMapViewer);
-						intercommand1.execute();
-				
-						PlaceSchemeElementCommand intercommand2 = new PlaceSchemeElementCommand(SchemeSampleData.scheme1element2, new Point(400, 50));
-						intercommand2.setNetMapViewer(netMapViewer);
-						intercommand2.execute();
-				
-						PlaceSchemeElementCommand endcommand = new PlaceSchemeElementCommand(SchemeSampleData.scheme1element3, new Point(300, 250));
-						endcommand.setNetMapViewer(netMapViewer);
-						endcommand.execute();
-						Log.debugMessage("OK!", Log.DEBUGLEVEL09); //$NON-NLS-1$
-					}
-				
-				}, "ўа наху€рю ху€риков..."); //$NON-NLS-1$
-			}
-		}
-		else if(evt.getPropertyName().equals(MarkerEvent.MARKER_EVENT_TYPE)) {
-			MarkerEvent markerEvent = (MarkerEvent) evt;
-//			if(markerEvent.getMarkerId() != this.markerId) {
-//				return;
-//			}
-			Dispatcher dispatcher = this.mapFrame.aContext.getDispatcher();
-			switch(markerEvent.getMarkerEventType()) {
-				case MarkerEvent.MARKER_DELETED_EVENT:
-					this.markerId = null;
-					break;
-				case MarkerEvent.MARKER_CREATED_EVENT:
-					dispatcher.firePropertyChange(new MarkerEvent(
-							this, 
-							MarkerEvent.MARKER_DELETED_EVENT, 
-							this.markerId), false);
-					this.markerId = markerEvent.getMarkerId();
-					break;
-				case MarkerEvent.MARKER_MOVED_EVENT:
-					this.slider.setValue((int) markerEvent.getOpticalDistance());
-					break;
-			}
-		}
-		
-	}
-}
 
 /**
  *  ласс $RCSfile: MapFrame.java,v $ используетс€ дл€ управлени€ отображеним топологический схемы.
@@ -207,8 +81,8 @@ class TestSliderListener implements ChangeListener, PropertyChangeListener {
  * окна карты хранитс€ в пуле с ключом "environment", идентификатор 
  * "mapmainframe". существует только один объект 
  * 
- * @version $Revision: 1.93 $, $Date: 2006/03/27 14:48:57 $
- * @author $Author: stas $
+ * @version $Revision: 1.94 $, $Date: 2006/06/16 10:13:29 $
+ * @author $Author: bass $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
