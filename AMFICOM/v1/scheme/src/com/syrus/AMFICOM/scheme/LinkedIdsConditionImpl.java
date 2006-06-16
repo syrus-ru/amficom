@@ -1,7 +1,7 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.52 2006/03/28 13:50:45 bass Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.53 2006/06/16 10:39:35 bass Exp $
  *
- * Copyright ¿ 2004-2005 Syrus Systems.
+ * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
@@ -55,7 +55,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.52 $, $Date: 2006/03/28 13:50:45 $
+ * @version $Revision: 1.53 $, $Date: 2006/06/16 10:39:35 $
  * @module scheme
  */
 final class LinkedIdsConditionImpl extends LinkedIdsCondition {
@@ -95,7 +95,6 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 				final SchemeProtoGroup protoGroup = (SchemeProtoGroup) storableObject;
 				switch (super.linkedEntityCode) {
 				case SCHEMEPROTOGROUP_CODE:
-					return super.conditionTest(protoGroup.parentSchemeProtoGroupId);
 				case UPDIKE_CODE:
 					return super.conditionTest(protoGroup.parentSchemeProtoGroupId);
 				default:
@@ -116,10 +115,11 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 			case SCHEME_CODE:
 				final Scheme scheme = (Scheme) storableObject;
 				switch (super.linkedEntityCode) {
+				case SCHEMEELEMENT_CODE:
+				case UPDIKE_CODE:
+					return super.conditionTest(scheme.parentSchemeElementId);
 				case DOMAIN_CODE:
 					return super.conditionTest(scheme.getDomainId());
-				case SCHEMEELEMENT_CODE:
-					return super.conditionTest(scheme.parentSchemeElementId);
 				case MAP_CODE:
 					return super.conditionTest(scheme.getMapId());
 				default:

@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.49 2006/06/15 17:11:09 bass Exp $
+ * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.50 2006/06/16 10:39:35 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -56,7 +56,7 @@ import com.syrus.AMFICOM.general.LinkedIdsCondition;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.49 $, $Date: 2006/06/15 17:11:09 $
+ * @version $Revision: 1.50 $, $Date: 2006/06/16 10:39:35 $
  * @module scheme
  */
 final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCondition {
@@ -73,7 +73,6 @@ final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCond
 		case SCHEMEPROTOGROUP_CODE:
 			switch (this.condition.getLinkedEntityCode()) {
 			case SCHEMEPROTOGROUP_CODE:
-				return this.getQuery(SchemeProtoGroupWrapper.COLUMN_PARENT_SCHEME_PROTO_GROUP_ID);
 			case UPDIKE_CODE:
 				return this.getQuery(SchemeProtoGroupWrapper.COLUMN_PARENT_SCHEME_PROTO_GROUP_ID);
 			default:
@@ -92,10 +91,11 @@ final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCond
 			}
 		case SCHEME_CODE:
 			switch (this.condition.getLinkedEntityCode()) {
+			case SCHEMEELEMENT_CODE:
+			case UPDIKE_CODE:
+				return this.getQuery(SchemeWrapper.COLUMN_PARENT_SCHEME_ELEMENT_ID);
 			case DOMAIN_CODE:
 				return this.getQuery(SchemeWrapper.COLUMN_DOMAIN_ID);
-			case SCHEMEELEMENT_CODE:
-				return this.getQuery(SchemeWrapper.COLUMN_PARENT_SCHEME_ELEMENT_ID);
 			case MAP_CODE:
 				return this.getQuery(SchemeWrapper.COLUMN_MAP_ID);
 			default:
