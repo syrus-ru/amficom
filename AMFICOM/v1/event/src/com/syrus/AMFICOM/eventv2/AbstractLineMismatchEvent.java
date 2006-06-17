@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractLineMismatchEvent.java,v 1.13 2006/06/16 14:53:11 bass Exp $
+ * $Id: AbstractLineMismatchEvent.java,v 1.14 2006/06/17 17:26:15 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,6 +13,8 @@ import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.ObjectEntities.LINEMISMATCHEVENT_CODE;
 import static java.util.logging.Level.SEVERE;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
@@ -36,7 +38,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.13 $, $Date: 2006/06/16 14:53:11 $
+ * @version $Revision: 1.14 $, $Date: 2006/06/17 17:26:15 $
  * @module event
  */
 public abstract class AbstractLineMismatchEvent extends StorableObject
@@ -178,10 +180,7 @@ public abstract class AbstractLineMismatchEvent extends StorableObject
 				true);
 	}
 
-	/**
-	 * @bug Doesn't get restored after deserialization.
-	 */
-	private final transient LinkedIdsCondition childLineMismatchEventsCondition
+	private transient LinkedIdsCondition childLineMismatchEventsCondition
 			= new LinkedIdsCondition(this.id, LINEMISMATCHEVENT_CODE);
 
 	/**
@@ -265,5 +264,11 @@ public abstract class AbstractLineMismatchEvent extends StorableObject
 	@Override
 	protected final AbstractLineMismatchEventWrapper getWrapper() {
 		return AbstractLineMismatchEventWrapper.getInstance();
+	}
+
+	private void readObject(final ObjectInputStream in)
+	throws IOException, ClassNotFoundException {
+		in.defaultReadObject();
+		this.childLineMismatchEventsCondition = new LinkedIdsCondition(this.id, LINEMISMATCHEVENT_CODE);
 	}
 }
