@@ -1,5 +1,5 @@
 /*-
- * $Id: EventHierarchyTestCase.java,v 1.2 2006/06/16 13:31:31 bass Exp $
+ * $Id: EventHierarchyTestCase.java,v 1.3 2006/06/19 15:54:01 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,11 +8,14 @@
 
 package com.syrus.AMFICOM.eventv2;
 
-import static com.syrus.AMFICOM.general.ObjectEntities.REFLECTOGRAMMISMATCHEVENT_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENT_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.PATHELEMENT_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SYSTEMUSER_CODE;
 import static com.syrus.AMFICOM.general.ObjectGroupEntities.EVENT_GROUP_CODE;
 import static java.util.logging.Level.SEVERE;
 
 import java.io.File;
+import java.lang.reflect.Method;
 import java.util.EnumSet;
 
 import junit.awtui.TestRunner;
@@ -26,22 +29,89 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.IGSConnectionManager;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.IdentifierGeneratorServer;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
+import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch;
+import com.syrus.AMFICOM.reflectometry.SOAnchor;
 import com.syrus.util.DefaultLogger;
 import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2006/06/16 13:31:31 $
+ * @version $Revision: 1.3 $, $Date: 2006/06/19 15:54:01 $
  * @module event
  */
 public final class EventHierarchyTestCase extends TestCase {
+	private static Identifier systemUserId;
+
+	private static Identifier pathElementId;
+
+	private static Identifier measurementId;
+
+	private static final ReflectogramMismatch REFLECTOGRAM_MISMATCH = new ReflectogramMismatch() {
+		public AlarmType getAlarmType() {
+			return AlarmType.TYPE_UNDEFINED;
+		}
+
+		public int getAnchor1Coord() {
+			throw new IllegalStateException();
+		}
+
+		public SOAnchor getAnchor1Id() {
+			throw new IllegalStateException();
+		}
+
+		public int getAnchor2Coord() {
+			throw new IllegalStateException();
+		}
+
+		public SOAnchor getAnchor2Id() {
+			throw new IllegalStateException();
+		}
+
+		public int getCoord() {
+			return 0;
+		}
+
+		public double getDeltaX() {
+			return 0;
+		}
+
+		public double getDistance() {
+			return 0;
+		}
+
+		public int getEndCoord() {
+			return 0;
+		}
+
+		public double getMaxMismatch() {
+			throw new IllegalStateException();
+		}
+
+		public double getMinMismatch() {
+			throw new IllegalStateException();
+		}
+
+		public Severity getSeverity() {
+			return Severity.SEVERITY_NONE;
+		}
+
+		public boolean hasAnchors() {
+			return false;
+		}
+
+		public boolean hasMismatch() {
+			return false;
+		}
+	};
+
 	public EventHierarchyTestCase(final String method) {
 		super(method);
 	}
@@ -85,7 +155,8 @@ public final class EventHierarchyTestCase extends TestCase {
 		Log.setLogger(new DefaultLogger());
 
 		StorableObjectPool.init(new EmptyEventObjectLoader());
-		StorableObjectPool.addObjectPoolGroup(EVENT_GROUP_CODE, 20, 120 * 60 * 1000 * 1000 * 1000);
+		StorableObjectPool.addObjectPoolGroup(EVENT_GROUP_CODE, Integer.MAX_VALUE, Long.MAX_VALUE);
+
 		final IdentifierGeneratorServer identifierGeneratorServer = new IdentifierGeneratorServer() {
 			private long l;
 			private static final long serialVersionUID = -9123341768454319489L;
@@ -102,39 +173,70 @@ public final class EventHierarchyTestCase extends TestCase {
 				return ids;
 			}
 		};
+
 		IdentifierPool.init(new IGSConnectionManager() {
 			public IdentifierGeneratorServer getIGSReference() throws CommunicationException {
 				return identifierGeneratorServer;
 			}
 		});
+		systemUserId = newIdentifier(SYSTEMUSER_CODE);
+		pathElementId = newIdentifier(PATHELEMENT_CODE);
+		measurementId = newIdentifier(MEASUREMENT_CODE);
 	}
 
 	public static void oneTimeTearDown() {
 		// empty
 	}
 
-	static LineMismatchEvent newLineMismatchEvent() throws ApplicationException {
-		final Identifier userId = Identifier.valueOf("SystemUser_0");
-		final Identifier affectedPathElementId = Identifier.valueOf("PathElement_0");
-		final Identifier reflectogramMismatchEventId = IdentifierPool.getGeneratedIdentifier(REFLECTOGRAMMISMATCHEVENT_CODE);
+	private static Identifier newIdentifier(final short entityCode) {
+		try {
+			return IdentifierPool.getGeneratedIdentifier(entityCode);
+		} catch (final IdentifierGenerationException ige) {
+			return Identifier.valueOf(ObjectEntities.codeToString(entityCode) + "_0");
+		}
+	}
 
-		final LineMismatchEvent lineMismatchEvent = DefaultLineMismatchEvent.newInstance(userId, affectedPathElementId, false, 0, 0, 0, 0, "foo", "<html>foo</html>", reflectogramMismatchEventId);
-		assertTrue(lineMismatchEvent instanceof StorableObject);
-		/*
-		 * Any new LineMismatchEvent gets saved right after creation.
-		 */
-		assertFalse(((StorableObject) lineMismatchEvent).isChanged());
-		final AlarmStatus alarmStatus = lineMismatchEvent.getAlarmStatus();
-		assertSame(AlarmStatus.PENDING, alarmStatus);
-		final EnumSet<AlarmStatus> allowedSuccessors = alarmStatus.getAllowedSuccessors();
-		assertFalse(allowedSuccessors.isEmpty());
-		lineMismatchEvent.setAlarmStatus(allowedSuccessors.iterator().next());
-		/*
-		 * Ensure the object is changed now, so, despite we're using a
-		 * fake loader, it doesn't get pushed out of the pool
-		 */
-		assertTrue(((StorableObject) lineMismatchEvent).isChanged());
-		return lineMismatchEvent;
+	private static ReflectogramMismatchEvent newReflectogramMismatchEvent() {
+		try {
+			final ReflectogramMismatchEvent reflectogramMismatchEvent = DefaultReflectogramMismatchEvent.newInstance(systemUserId, REFLECTOGRAM_MISMATCH, measurementId);
+			assertTrue(reflectogramMismatchEvent instanceof StorableObject);
+			assertFalse(((StorableObject) reflectogramMismatchEvent).isChanged());
+			final Method method = StorableObject.class.getDeclaredMethod("markAsChanged");
+			method.setAccessible(true);
+			method.invoke(reflectogramMismatchEvent);
+			assertTrue(((StorableObject) reflectogramMismatchEvent).isChanged());
+			return reflectogramMismatchEvent;
+		} catch (final RuntimeException re) {
+			throw re;
+		} catch (final Error e) {
+			throw e;
+		} catch (final Exception e) {
+			throw new Error(e);
+		}
+	}
+
+	static LineMismatchEvent newLineMismatchEvent() {
+		try {
+			final LineMismatchEvent lineMismatchEvent = DefaultLineMismatchEvent.newInstance(systemUserId, pathElementId, false, 0, 0, 0, 0, "foo", "<html>foo</html>", newReflectogramMismatchEvent().getId());
+			assertTrue(lineMismatchEvent instanceof StorableObject);
+			/*
+			 * Any new LineMismatchEvent gets saved right after creation.
+			 */
+			assertFalse(((StorableObject) lineMismatchEvent).isChanged());
+			final AlarmStatus alarmStatus = lineMismatchEvent.getAlarmStatus();
+			assertSame(AlarmStatus.PENDING, alarmStatus);
+			final EnumSet<AlarmStatus> allowedSuccessors = alarmStatus.getAllowedSuccessors();
+			assertFalse(allowedSuccessors.isEmpty());
+			lineMismatchEvent.setAlarmStatus(allowedSuccessors.iterator().next());
+			/*
+			 * Ensure the object is changed now, so, despite we're using a
+			 * fake loader, it doesn't get pushed out of the pool
+			 */
+			assertTrue(((StorableObject) lineMismatchEvent).isChanged());
+			return lineMismatchEvent;
+		} catch (final ApplicationException ae) {
+			throw new Error(ae);
+		}
 	}
 
 	public void testAssertionStatus() {
