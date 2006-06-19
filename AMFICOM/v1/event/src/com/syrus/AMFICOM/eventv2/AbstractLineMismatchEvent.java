@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractLineMismatchEvent.java,v 1.15 2006/06/19 15:52:02 bass Exp $
+ * $Id: AbstractLineMismatchEvent.java,v 1.16 2006/06/19 16:27:14 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,7 +39,7 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.15 $, $Date: 2006/06/19 15:52:02 $
+ * @version $Revision: 1.16 $, $Date: 2006/06/19 16:27:14 $
  * @module event
  */
 public abstract class AbstractLineMismatchEvent extends StorableObject
@@ -79,6 +79,32 @@ public abstract class AbstractLineMismatchEvent extends StorableObject
 	 *         belong to different <em>event&nbsp;groups</em>.
 	 */
 	public final int compareTo(final LineMismatchEvent that) {
+		/*
+		 * The same algorithm implemented by Saa:
+		 */
+//		final Identifier pThis = this.getParentLineMismatchEventId().isVoid()
+//				? this.getId()
+//				: this.getParentLineMismatchEventId();
+//		final Identifier pThat = that.getParentLineMismatchEventId().isVoid()
+//				? that.getId()
+//				: that.getParentLineMismatchEventId();
+//		if (!pThis.equals(pThat)) {
+//			throw new IllegalArgumentException();
+//		}
+//		if (this.equals(that)) {
+//			return 0;
+//		}
+//		if (this.equals(pThat)) {
+//			return -1;
+//		}
+//		if (that.equals(pThis)) {
+//			return 1;
+//		}
+//		try {
+//			return this.getReflectogramMismatchEvent().compareTo(that.getReflectogramMismatchEvent());
+//		} catch (final ApplicationException ae) {
+//			throw new Error(ae);
+//		}
 		final Identifier thisParentId = this.getParentLineMismatchEventId();
 		final Identifier thatParentId = that.getParentLineMismatchEventId();
 		if (thisParentId.isVoid()) {
