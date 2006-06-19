@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractLineMismatchEvent.java,v 1.14 2006/06/17 17:26:15 bass Exp $
+ * $Id: AbstractLineMismatchEvent.java,v 1.15 2006/06/19 15:52:02 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,13 +11,15 @@ package com.syrus.AMFICOM.eventv2;
 import static com.syrus.AMFICOM.eventv2.EventType.LINE_MISMATCH;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.ObjectEntities.LINEMISMATCHEVENT_CODE;
-import static java.util.logging.Level.SEVERE;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -33,16 +35,19 @@ import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
-import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.14 $, $Date: 2006/06/17 17:26:15 $
+ * @version $Revision: 1.15 $, $Date: 2006/06/19 15:52:02 $
  * @module event
  */
 public abstract class AbstractLineMismatchEvent extends StorableObject
 		implements LineMismatchEvent {
+	static DateFormat DATE_FORMAT = new SimpleDateFormat(
+			"EEE MMM dd HH:mm:ss.SSS zzz yyyy",
+			Locale.US);
+
 	AbstractLineMismatchEvent(/*IdlLineMismatchEvent*/) {
 		// super();
 	}
@@ -96,32 +101,24 @@ public abstract class AbstractLineMismatchEvent extends StorableObject
 				throw new IllegalArgumentException("Group leaders "
 						+ this.getId() + " and " + that.getId()
 						+ " should not be compared.");
-			} else if (thatParentId.equals(this)) {
+			} else if (this.equals(thatParentId)) {
 				/*-
 				 * b.
 				 *
 				 * "that" references "this".
 				 * Ensure "this" < "that" and return -1.
 				 */
-				final Identifier thisReflectogramMismatchEventId = this.getReflectogramMismatchEventId();
-				final Identifier thatReflectogramMismatchEventId = that.getReflectogramMismatchEventId();
 				try {
-					final ReflectogramMismatchEvent thisReflectogramMismatchEvent = this.getReflectogramMismatchEvent();
-					final ReflectogramMismatchEvent thatReflectogramMismatchEvent = that.getReflectogramMismatchEvent();
-					assert thisReflectogramMismatchEvent.compareTo(thatReflectogramMismatchEvent) < 0 :
-							thisReflectogramMismatchEventId
-							+ " (" + thisReflectogramMismatchEvent.getCreated() + ')'
+					assert this.getReflectogramMismatchEvent().compareTo(that.getReflectogramMismatchEvent()) < 0 :
+							this.getReflectogramMismatchEventId()
+							+ " (" + DATE_FORMAT.format(this.getReflectogramMismatchEvent().getCreated()) + ')'
 							+ " < "
-							+ thatReflectogramMismatchEventId
-							+ " (" + thatReflectogramMismatchEvent.getCreated() + ')';
+							+ that.getReflectogramMismatchEventId()
+							+ " (" + DATE_FORMAT.format(that.getReflectogramMismatchEvent().getCreated()) + ')';
+					return -1;
 				} catch (final ApplicationException ae) {
-					Log.debugMessage(ae, SEVERE);
-					assert thisReflectogramMismatchEventId.compareTo(thatReflectogramMismatchEventId) < 0 :
-							thisReflectogramMismatchEventId
-							+ " < "
-							+ thatReflectogramMismatchEventId;
+					throw new Error(ae);
 				}
-				return -1;
 			} else {
 				/*-
 				 * c.
@@ -137,14 +134,66 @@ public abstract class AbstractLineMismatchEvent extends StorableObject
 			}
 		} else if (thisParentId.equals(that)) {
 			/*-
-			 * 2. "this" references "that".
+			 * 2.
+			 *
+			 * "this" references "that".
+			 * See 1.b.: return -that.compareTo(this)
 			 */
-			throw new UnsupportedOperationException();
+			return -that.compareTo(this);
 		} else {
 			/*-
-			 * 3. "this" references some other event.
+			 * 3.
+			 *
+			 * "this" references some other event.
+			 * Ensure it doesn't reference itself.
 			 */
-			throw new UnsupportedOperationException();
+			assert !this.equals(thisParentId);
+			if (thatParentId.isVoid()) {
+				/*-
+				 * a.
+				 *
+				 * "that" references no event.
+				 * See 1.c.: return -that.compareTo(this)
+				 */
+				return -that.compareTo(this);
+			} else if (thatParentId.equals(thisParentId)) {
+				/*-
+				 * b.
+				 *
+				 * "that" references the same event as "this".
+				 * Check whether they're the same,
+				 * perform the comparison
+				 * and return the result.
+				 */
+				if (this.equals(that)) {
+					return 0;
+				}
+				try {
+					final int returnValue = this.getReflectogramMismatchEvent().compareTo(that.getReflectogramMismatchEvent());
+					assert returnValue != 0 :
+							this.getReflectogramMismatchEventId()
+							+ " (" + DATE_FORMAT.format(this.getReflectogramMismatchEvent().getCreated()) + ')'
+							+ " != "
+							+ that.getReflectogramMismatchEventId()
+							+ " (" + DATE_FORMAT.format(that.getReflectogramMismatchEvent().getCreated()) + ')';
+					return returnValue;
+				} catch (final ApplicationException ae) {
+					throw new Error(ae);
+				}
+			} else {
+				/*-
+				 * c.
+				 *
+				 * "that" references some other event.
+				 */
+				assert !thatParentId.equals(that) : that.getId();
+				assert !thatParentId.equals(this) : "Bad hierarchy: "
+						+ that.getId() + " --> " + this.id + " --> " + thisParentId;
+				throw new IllegalArgumentException(
+						"Child events from different groups should not be compared: "
+						+ this.id + " --> " + thisParentId + "; "
+						+ that.getId() + " --> " + thatParentId);
+			}
 		}
 	}
 
