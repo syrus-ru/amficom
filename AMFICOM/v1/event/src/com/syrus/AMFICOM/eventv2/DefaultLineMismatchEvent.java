@@ -1,5 +1,5 @@
 /*-
- * $Id: DefaultLineMismatchEvent.java,v 1.19 2006/06/16 14:52:52 bass Exp $
+ * $Id: DefaultLineMismatchEvent.java,v 1.20 2006/06/19 15:53:23 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,7 +35,7 @@ import com.syrus.util.transport.idl.IdlConversionException;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.19 $, $Date: 2006/06/16 14:52:52 $
+ * @version $Revision: 1.20 $, $Date: 2006/06/19 15:53:23 $
  * @module event
  */
 public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
@@ -486,7 +486,21 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 		}
 
 		/*-
-		 * Third, actually perform the action we've been asked for.
+		 * Third, check whether parentLineMismatchEvent < "this"
+		 */
+		final ReflectogramMismatchEvent parentReflectogramMismatchEvent = parentLineMismatchEvent.getReflectogramMismatchEvent();
+		final ReflectogramMismatchEvent thisReflectogramMismatchEvent = this.getReflectogramMismatchEvent();
+		if (parentReflectogramMismatchEvent.compareTo(thisReflectogramMismatchEvent) >= 0) {
+			throw new IllegalArgumentException(""
+					+ parentReflectogramMismatchEvent.getId() + ' '
+					+ '(' + DATE_FORMAT.format(parentReflectogramMismatchEvent.getCreated()) + ')'
+					+ " >= "
+					+ thisReflectogramMismatchEvent.getId() + ' '
+					+ '(' + DATE_FORMAT.format(thisReflectogramMismatchEvent.getCreated()) + ')');
+		}
+
+		/*-
+		 * Fourth, actually perform the action we've been asked for.
 		 */
 		this.parentLineMismatchEventId = newParentLineMismatchEventId;
 		this.alarmStatus.setValue(null);
