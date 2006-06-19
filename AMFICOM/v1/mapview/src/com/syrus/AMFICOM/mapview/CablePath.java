@@ -1,5 +1,5 @@
 /*-
- * $Id: CablePath.java,v 1.43 2006/02/15 12:01:52 stas Exp $
+ * $Id: CablePath.java,v 1.44 2006/06/19 06:21:17 stas Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 import java.util.SortedSet;
-import java.util.logging.Level;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characterizable;
@@ -37,7 +36,7 @@ import com.syrus.util.Log;
  * 
  * @author $Author: stas $
  * @author Andrei Kroupennikov
- * @version $Revision: 1.43 $, $Date: 2006/02/15 12:01:52 $
+ * @version $Revision: 1.44 $, $Date: 2006/06/19 06:21:17 $
  * @module mapview
  */
 public final class CablePath implements MapElement {
@@ -634,16 +633,13 @@ public final class CablePath implements MapElement {
 	 */
 	public AbstractNode getStartUnboundNode() throws ApplicationException {
 		AbstractNode bufferSite = getStartNode();
-		for(Iterator it = getLinks().iterator(); it.hasNext();) {
-			PhysicalLink link = (PhysicalLink) it.next();
-			if(link instanceof UnboundLink)
-				break;
+		for(PhysicalLink link : getLinks()) {
+			if(link instanceof UnboundLink) {
+				return bufferSite;
+			}
 			bufferSite = link.getOtherNode(bufferSite);
 		}
-		if (bufferSite == null) {
-			Log.debugMessage("CablePath | getStartUnboundNode() : bufferSite is null. return getStartNode() = " + getStartNode(), Level.FINER);
-		}
-		return  bufferSite != null ? bufferSite : getStartNode();
+		return null;
 	}
 
 	/**
@@ -655,18 +651,15 @@ public final class CablePath implements MapElement {
 	 */
 	public AbstractNode getEndUnboundNode() throws ApplicationException {
 		AbstractNode bufferSite = getEndNode();
-		List<PhysicalLink> thislinks = this.getLinks();
-		for(ListIterator it = thislinks.listIterator(thislinks.size()); 
-				it.hasPrevious();) {
-			PhysicalLink link = (PhysicalLink) it.previous();
-			if(link instanceof UnboundLink)
-				break;
+		final List<PhysicalLink> links2 = getLinks();
+		for(ListIterator it = links2.listIterator(links2.size()); it.hasPrevious();) {
+			PhysicalLink link = (PhysicalLink)it.previous();
+			if(link instanceof UnboundLink) {
+				return bufferSite;
+			}
 			bufferSite = link.getOtherNode(bufferSite);
 		}
-		if (bufferSite == null) {
-			Log.debugMessage("CablePath | getEndUnboundNode() : bufferSite is null. return getEndNode() = " + getEndNode(), Level.FINER);
-		}
-		return  bufferSite != null ? bufferSite : getEndNode();
+		return null;
 	}
 
 	public CableChannelingItem getFirstCCI(PhysicalLink physicalLink) throws ApplicationException {
