@@ -1,5 +1,5 @@
 /*-
- * $Id: EventUtilities.java,v 1.1 2006/06/16 14:53:33 bass Exp $
+ * $Id: EventUtilities.java,v 1.2 2006/06/20 11:29:21 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,6 +19,7 @@ import java.util.EnumMap;
 import java.util.Map;
 import java.util.Set;
 
+import com.syrus.AMFICOM.bugs.Crutch581;
 import com.syrus.AMFICOM.eventv2.LineMismatchEvent.AlarmStatus;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CompoundCondition;
@@ -31,7 +32,7 @@ import com.syrus.AMFICOM.general.TypicalCondition;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2006/06/16 14:53:33 $
+ * @version $Revision: 1.2 $, $Date: 2006/06/20 11:29:21 $
  * @module event
  */
 public final class EventUtilities {
@@ -67,6 +68,7 @@ public final class EventUtilities {
 				true);
 	}
 
+	@Crutch581(notes = "This method doesn't work properly yet.")
 	public static Set<? extends LineMismatchEvent> getRootLineMismatchEvents(
 			final AlarmStatus alarmStatus)
 	throws ApplicationException {
@@ -84,6 +86,7 @@ public final class EventUtilities {
 				true);
 	}
 
+	@Crutch581(notes = "This method doesn't work properly yet.")
 	public static Set<? extends LineMismatchEvent> getRootLineMismatchEventsButIds(
 			final AlarmStatus alarmStatus,
 			final Set<Identifier> ids)
