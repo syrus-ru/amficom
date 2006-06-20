@@ -1,5 +1,5 @@
 /*-
-* $Id: WrapperedList.java,v 1.16 2005/10/31 12:30:01 bass Exp $
+* $Id: WrapperedList.java,v 1.17 2006/06/20 08:10:53 saa Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -18,8 +18,8 @@ import com.syrus.util.Log;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/10/31 12:30:01 $
- * @author $Author: bass $
+ * @version $Revision: 1.17 $, $Date: 2006/06/20 08:10:53 $
+ * @author $Author: saa $
  * @author Vladimir Dolzhenko
  * @module commonclient
  */
@@ -101,12 +101,11 @@ public final class WrapperedList<T> extends JList {
 						return;
 					}
 				}
+				Log.debugMessage("index -1" , Log.DEBUGLEVEL10);
+				final int selectedIndex = super.getSelectedIndex();
+				super.removeSelectionInterval(selectedIndex, selectedIndex);
+				super.repaint();
 			}
-
-			Log.debugMessage("index -1" , Log.DEBUGLEVEL10);
-			final int selectedIndex = super.getSelectedIndex();
-			super.removeSelectionInterval(selectedIndex, selectedIndex);
-			super.repaint();
 		}
 
 	}
