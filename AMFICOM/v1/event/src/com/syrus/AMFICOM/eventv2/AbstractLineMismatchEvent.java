@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractLineMismatchEvent.java,v 1.16 2006/06/19 16:27:14 bass Exp $
+ * $Id: AbstractLineMismatchEvent.java,v 1.17 2006/06/20 11:16:48 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,7 +39,7 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.16 $, $Date: 2006/06/19 16:27:14 $
+ * @version $Revision: 1.17 $, $Date: 2006/06/20 11:16:48 $
  * @module event
  */
 public abstract class AbstractLineMismatchEvent extends StorableObject
@@ -105,31 +105,29 @@ public abstract class AbstractLineMismatchEvent extends StorableObject
 //		} catch (final ApplicationException ae) {
 //			throw new Error(ae);
 //		}
+
 		final Identifier thisParentId = this.getParentLineMismatchEventId();
 		final Identifier thatParentId = that.getParentLineMismatchEventId();
+
+		/*-
+		 * Ensure any event doesn't reference itself. 
+		 */
+		assert !this.equals(thisParentId) : thisParentId;
+		assert !that.equals(thatParentId) : thatParentId;
+
+		if (this.equals(that)) {
+			return 0;
+		}
+
 		if (thisParentId.isVoid()) {
 			/*-
 			 * 1.
 			 *
 			 * "this" references no event.
 			 */
-			if (thatParentId.isVoid()) {
+			if (this.equals(thatParentId)) {
 				/*-
 				 * a.
-				 *
-				 * Unless "this" and "that" are the same event,
-				 * they are leaders of different groups and
-				 * hence should not be compared.
-				 */
-				if (this.equals(that)) {
-					return 0;
-				}
-				throw new IllegalArgumentException("Group leaders "
-						+ this.getId() + " and " + that.getId()
-						+ " should not be compared.");
-			} else if (this.equals(thatParentId)) {
-				/*-
-				 * b.
 				 *
 				 * "that" references "this".
 				 * Ensure "this" < "that" and return -1.
@@ -145,81 +143,78 @@ public abstract class AbstractLineMismatchEvent extends StorableObject
 				} catch (final ApplicationException ae) {
 					throw new Error(ae);
 				}
-			} else {
-				/*-
-				 * c.
-				 *
-				 * "that" references some other event. Ensure it
-				 * doesn't reference itself and, if not, throw
-				 * an IAE.
-				 */
-				assert !thatParentId.equals(that) : that.getId();
-				throw new IllegalArgumentException(that.getId()
-						+ " doesn't belong to the group lead by "
-						+ this.getId());
-			}
-		} else if (thisParentId.equals(that)) {
-			/*-
-			 * 2.
-			 *
-			 * "this" references "that".
-			 * See 1.b.: return -that.compareTo(this)
-			 */
-			return -that.compareTo(this);
-		} else {
-			/*-
-			 * 3.
-			 *
-			 * "this" references some other event.
-			 * Ensure it doesn't reference itself.
-			 */
-			assert !this.equals(thisParentId);
-			if (thatParentId.isVoid()) {
-				/*-
-				 * a.
-				 *
-				 * "that" references no event.
-				 * See 1.c.: return -that.compareTo(this)
-				 */
-				return -that.compareTo(this);
-			} else if (thatParentId.equals(thisParentId)) {
+			} else if (thatParentId.isVoid()) {
 				/*-
 				 * b.
 				 *
-				 * "that" references the same event as "this".
-				 * Check whether they're the same,
-				 * perform the comparison
-				 * and return the result.
+				 * Unless "this" and "that" are the same event,
+				 * they are leaders of different groups and
+				 * hence should not be compared.
 				 */
-				if (this.equals(that)) {
-					return 0;
-				}
-				try {
-					final int returnValue = this.getReflectogramMismatchEvent().compareTo(that.getReflectogramMismatchEvent());
-					assert returnValue != 0 :
-							this.getReflectogramMismatchEventId()
-							+ " (" + DATE_FORMAT.format(this.getReflectogramMismatchEvent().getCreated()) + ')'
-							+ " != "
-							+ that.getReflectogramMismatchEventId()
-							+ " (" + DATE_FORMAT.format(that.getReflectogramMismatchEvent().getCreated()) + ')';
-					return returnValue;
-				} catch (final ApplicationException ae) {
-					throw new Error(ae);
-				}
+				throw new IllegalArgumentException("Group leaders "
+						+ this.getId() + " and " + that.getId()
+						+ " should not be compared.");
 			} else {
 				/*-
 				 * c.
 				 *
 				 * "that" references some other event.
+				 * Throw an IAE.
 				 */
-				assert !thatParentId.equals(that) : that.getId();
-				assert !thatParentId.equals(this) : "Bad hierarchy: "
-						+ that.getId() + " --> " + this.id + " --> " + thisParentId;
-				throw new IllegalArgumentException(
-						"Child events from different groups should not be compared: "
-						+ this.id + " --> " + thisParentId + "; "
-						+ that.getId() + " --> " + thatParentId);
+				throw new IllegalArgumentException(that.getId()
+						+ " doesn't belong to the group lead by "
+						+ this.getId());
 			}
+		} else if (thisParentId.equals(that) || thatParentId.isVoid()) {
+			/*-
+			 * 2.
+			 *
+			 * Either a.
+			 *
+			 * "this" references "that" (then see 1.a.)
+			 *
+			 * or b.
+			 *
+			 * "this" references some other event
+			 * and "that" references no event (then see 1.c.).
+			 *
+			 * Return -that.compareTo(this)
+			 */
+			return -that.compareTo(this);
+		} else if (thatParentId.equals(thisParentId)) {
+			/*-
+			 * 3.
+			 *
+			 * "this" references some other event.
+			 * "that" references the same event as "this".
+			 * Perform the comparison
+			 * and return the result.
+			 */
+			try {
+				final int returnValue = this.getReflectogramMismatchEvent().compareTo(that.getReflectogramMismatchEvent());
+				assert returnValue != 0 :
+						this.getReflectogramMismatchEventId()
+						+ " (" + DATE_FORMAT.format(this.getReflectogramMismatchEvent().getCreated()) + ')'
+						+ " != "
+						+ that.getReflectogramMismatchEventId()
+						+ " (" + DATE_FORMAT.format(that.getReflectogramMismatchEvent().getCreated()) + ')';
+				return returnValue;
+			} catch (final ApplicationException ae) {
+				throw new Error(ae);
+			}
+		} else {
+			/*-
+			 * 4.
+			 *
+			 * "this" references some other event.
+			 * "that" references some other event.
+			 */
+			assert !thatParentId.equals(this) : "Bad hierarchy: "
+					+ that.getId() + " --> " + this.id + " --> " + thisParentId;
+			throw new IllegalArgumentException(
+					"Child events from different groups should not be compared: "
+					+ this.id + " --> " + thisParentId + "; "
+					+ that.getId() + " --> " + thatParentId);
 		}
 	}
 
