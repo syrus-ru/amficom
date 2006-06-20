@@ -1,5 +1,5 @@
 /*-
- * $Id: EventHierarchyTestCase.java,v 1.3 2006/06/19 15:54:01 bass Exp $
+ * $Id: EventHierarchyTestCase.java,v 1.4 2006/06/20 12:01:16 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,7 +44,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2006/06/19 15:54:01 $
+ * @version $Revision: 1.4 $, $Date: 2006/06/20 12:01:16 $
  * @module event
  */
 public final class EventHierarchyTestCase extends TestCase {
@@ -257,7 +257,7 @@ public final class EventHierarchyTestCase extends TestCase {
 		assertTrue(true);
 
 		final LineMismatchEvent leader = newLineMismatchEvent();
-		final LineMismatchEvent child = headless;
+		final LineMismatchEvent child = newLineMismatchEvent();
 		child.setParentLineMismatchEvent(leader);
 
 		/*
