@@ -1,5 +1,5 @@
 /*-
- * $Id: ObjectEntities.java,v 1.96.2.7 2006/04/03 15:18:20 arseniy Exp $
+ * $Id: ObjectEntities.java,v 1.96.2.8 2006/06/20 10:22:43 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,6 +8,8 @@
 
 package com.syrus.AMFICOM.general;
 
+import static com.syrus.AMFICOM.general.ErrorMessages.ILLEGAL_ENTITY_CODE;
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 import static java.util.logging.Level.FINEST;
 import static java.util.logging.Level.SEVERE;
 import gnu.trove.TObjectShortHashMap;
@@ -16,7 +18,7 @@ import gnu.trove.TShortObjectHashMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.96.2.7 $, $Date: 2006/04/03 15:18:20 $
+ * @version $Revision: 1.96.2.8 $, $Date: 2006/06/20 10:22:43 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -74,7 +76,6 @@ public final class ObjectEntities {
 	public static final String MEASUREMENTPORT_TYPE = "MeasurementPortType";
 
 	/*	Object */
-	public static final String PARAMETERSET = "ParameterSet";
 	public static final String ACTIONPARAMETER = "ActionParameter";
 	public static final String ACTIONTEMPLATE = "ActionTemplate";
 	public static final String MEASUREMENT = "Measurement";
@@ -255,7 +256,6 @@ public final class ObjectEntities {
 	 */
 	public static final short MEASUREMENT_MIN_CODE = 0x0201;
 
-	public static final short PARAMETERSET_CODE = MEASUREMENT_MIN_CODE;
 	public static final short ACTIONPARAMETER_CODE = 0x0202;
 	public static final short ACTIONTEMPLATE_CODE = 0x0203;
 	public static final short MEASUREMENT_CODE = 0x0204;
@@ -447,7 +447,6 @@ public final class ObjectEntities {
 		registerEntity(CABLETHREAD_CODE, CABLETHREAD);
 		registerEntity(CABLELINK_CODE, CABLELINK);
 
-		registerEntity(PARAMETERSET_CODE, PARAMETERSET);
 		registerEntity(ACTIONPARAMETER_CODE, ACTIONPARAMETER);
 		registerEntity(ACTIONTEMPLATE_CODE, ACTIONTEMPLATE);
 		registerEntity(MEASUREMENT_CODE, MEASUREMENT);
@@ -524,40 +523,33 @@ public final class ObjectEntities {
 	}
 
 	private static void registerEntity(final short entityCode, final String entity) {
-		assert CODE_NAME_MAP.get(entityCode) == null;
+		assert CODE_NAME_MAP.get(entityCode) == null : "Object already registered";
 		CODE_NAME_MAP.put(entityCode, entity);
-		assert NAME_CODE_MAP.get(entity) == 0;
+		assert NAME_CODE_MAP.get(entity) == 0 : "Object already registered";
 		NAME_CODE_MAP.put(entity, entityCode);
 	}
 
 	public static short stringToCode(final String entity) {
 		final short returnValue = NAME_CODE_MAP.get(entity);
-		if (returnValue == 0) {
-			throw new IllegalArgumentException(entity);
-		}
+		assert returnValue != 0 : ILLEGAL_ENTITY_CODE;
 		return returnValue;
 	}
 
 	public static String codeToString(final short entityCode) {
 		final String returnValue = (String) CODE_NAME_MAP.get(entityCode);
-		if (returnValue == null) {
-			throw new IllegalArgumentException(String.valueOf(entityCode));
-		}
+		assert returnValue != null : ILLEGAL_ENTITY_CODE + ": " + entityCode;
 		return returnValue;
 	}
 
 	public static String codeToString(final Short code) {
-		assert code != null;
+		assert code != null : NON_NULL_EXPECTED;
 		return codeToString(code.shortValue());
 	}
 
 	public static boolean isEntityCodeValid(final short entityCode) {
-		try {
-			codeToString(entityCode);
-			return true;
-		} catch (final IllegalArgumentException iae) {
-			Log.debugMessage(iae, SEVERE);
-			return false;
-		}
+		final boolean isEntityCodeValid = CODE_NAME_MAP.containsKey(entityCode);
+		assert !(isEntityCodeValid && !NAME_CODE_MAP.containsValue(entityCode)) : "CODE_NAME_MAP contains key " + entityCode
+				+ ", but NAME_CODE_MAP do not contain value " + entityCode;
+		return CODE_NAME_MAP.containsKey(entityCode);
 	}
 }
