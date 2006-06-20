@@ -1,5 +1,5 @@
 /*-
- * $Id: EventHierarchyTestCase.java,v 1.4 2006/06/20 12:01:16 bass Exp $
+ * $Id: EventHierarchyTestCase.java,v 1.5 2006/06/20 12:13:35 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,7 +44,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2006/06/20 12:01:16 $
+ * @version $Revision: 1.5 $, $Date: 2006/06/20 12:13:35 $
  * @module event
  */
 public final class EventHierarchyTestCase extends TestCase {
@@ -53,6 +53,8 @@ public final class EventHierarchyTestCase extends TestCase {
 	private static Identifier pathElementId;
 
 	private static Identifier measurementId;
+
+	private static final Object LOCK = new Object();
 
 	private static final ReflectogramMismatch REFLECTOGRAM_MISMATCH = new ReflectogramMismatch() {
 		public AlarmType getAlarmType() {
@@ -205,6 +207,15 @@ public final class EventHierarchyTestCase extends TestCase {
 			method.setAccessible(true);
 			method.invoke(reflectogramMismatchEvent);
 			assertTrue(((StorableObject) reflectogramMismatchEvent).isChanged());
+
+			synchronized (LOCK) {
+				/*
+				 * This guarantees that any new RME is strictly
+				 * greater than any of its predecessors.
+				 */
+				Thread.sleep(1);
+			}
+
 			return reflectogramMismatchEvent;
 		} catch (final RuntimeException re) {
 			throw re;
