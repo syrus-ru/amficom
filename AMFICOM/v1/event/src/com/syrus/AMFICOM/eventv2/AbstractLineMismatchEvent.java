@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractLineMismatchEvent.java,v 1.17 2006/06/20 11:16:48 bass Exp $
+ * $Id: AbstractLineMismatchEvent.java,v 1.18 2006/06/20 11:22:43 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,7 +39,7 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.17 $, $Date: 2006/06/20 11:16:48 $
+ * @version $Revision: 1.18 $, $Date: 2006/06/20 11:22:43 $
  * @module event
  */
 public abstract class AbstractLineMismatchEvent extends StorableObject
@@ -79,33 +79,36 @@ public abstract class AbstractLineMismatchEvent extends StorableObject
 	 *         belong to different <em>event&nbsp;groups</em>.
 	 */
 	public final int compareTo(final LineMismatchEvent that) {
-		/*
-		 * The same algorithm implemented by Saa:
-		 */
-//		final Identifier pThis = this.getParentLineMismatchEventId().isVoid()
-//				? this.getId()
-//				: this.getParentLineMismatchEventId();
-//		final Identifier pThat = that.getParentLineMismatchEventId().isVoid()
-//				? that.getId()
-//				: that.getParentLineMismatchEventId();
-//		if (!pThis.equals(pThat)) {
-//			throw new IllegalArgumentException();
-//		}
-//		if (this.equals(that)) {
-//			return 0;
-//		}
-//		if (this.equals(pThat)) {
-//			return -1;
-//		}
-//		if (that.equals(pThis)) {
-//			return 1;
-//		}
-//		try {
-//			return this.getReflectogramMismatchEvent().compareTo(that.getReflectogramMismatchEvent());
-//		} catch (final ApplicationException ae) {
-//			throw new Error(ae);
-//		}
+		return true ? this.compareToBass(that) : this.compareToSaa(that);
+	}
 
+	private int compareToSaa(final LineMismatchEvent that) {
+		final Identifier pThis = this.getParentLineMismatchEventId().isVoid()
+				? this.getId()
+				: this.getParentLineMismatchEventId();
+		final Identifier pThat = that.getParentLineMismatchEventId().isVoid()
+				? that.getId()
+				: that.getParentLineMismatchEventId();
+		if (!pThis.equals(pThat)) {
+			throw new IllegalArgumentException();
+		}
+		if (this.equals(that)) {
+			return 0;
+		}
+		if (this.equals(pThat)) {
+			return -1;
+		}
+		if (that.equals(pThis)) {
+			return 1;
+		}
+		try {
+			return this.getReflectogramMismatchEvent().compareTo(that.getReflectogramMismatchEvent());
+		} catch (final ApplicationException ae) {
+			throw new Error(ae);
+		}
+	}
+
+	private int compareToBass(final LineMismatchEvent that) {
 		final Identifier thisParentId = this.getParentLineMismatchEventId();
 		final Identifier thatParentId = that.getParentLineMismatchEventId();
 
