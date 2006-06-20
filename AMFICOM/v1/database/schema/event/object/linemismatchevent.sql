@@ -1,4 +1,4 @@
--- $Id: linemismatchevent.sql,v 1.4 2006/05/21 16:00:12 bass Exp $
+-- $Id: linemismatchevent.sql,v 1.5 2006/06/20 13:16:06 bass Exp $
 
 CREATE TABLE LineMismatchEvent (
 	id NUMBER(19) NOT NULL,
@@ -19,6 +19,8 @@ CREATE TABLE LineMismatchEvent (
 	plain_text_message VARCHAR2(4000 char),
 	rich_text_message VARCHAR2(4000 char),
 	reflectogram_mismatch_event_id NUMBER(19) NOT NULL,
+	alarm_status NUMBER(2),
+	parent_line_mismatch_event_id NUMBER(19),
 --
 	CONSTRAINT lm_event_pk PRIMARY KEY(id),
 --
@@ -34,9 +36,18 @@ CREATE TABLE LineMismatchEvent (
 		AND physical_distance_to_end IS NOT NULL)),
 --
 	CONSTRAINT lm_event_rm_event_fk FOREIGN KEY(reflectogram_mismatch_event_id)
-		REFERENCES ReflectogramMismatchEvent(id) ON DELETE CASCADE
+		REFERENCES ReflectogramMismatchEvent(id) ON DELETE CASCADE,
+	CONSTRAINT lm_event_alarm_status_chk CHECK
+		(alarm_status >= 0),
+	constraint lm_event_parent_lm_event_fk FOREIGN KEY(parent_line_mismatch_event_id)
+		REFERENCES LineMismatchEvent(id) ON DELETE CASCADE,
+	CONSTRAINT lm_event_parent_lm_event_chk CHECK
+		((alarm_status IS NULL
+		AND parent_line_mismatch_event_id IS NOT NULL)
+		OR (alarm_status IS NOT NULL
+		AND parent_line_mismatch_event_id IS NULL))
 );
 
-COMMENT ON TABLE LineMismatchEvent IS '$Id: linemismatchevent.sql,v 1.4 2006/05/21 16:00:12 bass Exp $';
+COMMENT ON TABLE LineMismatchEvent IS '$Id: linemismatchevent.sql,v 1.5 2006/06/20 13:16:06 bass Exp $';
 
 CREATE SEQUENCE LineMismatchEvent_Seq ORDER;
