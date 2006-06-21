@@ -1,7 +1,7 @@
 /*-
- * $Id: SchemeElement.java,v 1.163 2006/06/16 10:32:04 bass Exp $
+ * $Id: SchemeElement.java,v 1.164 2006/06/21 14:07:25 bass Exp $
  *
- * Copyright ¿ 2004-2005 Syrus Systems.
+ * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
@@ -42,7 +42,6 @@ import static com.syrus.AMFICOM.scheme.corba.IdlSchemeElementPackage.IdlSchemeEl
 import static com.syrus.AMFICOM.scheme.corba.IdlSchemeElementPackage.IdlSchemeElementKind._SCHEME_ELEMENT_CONTAINER;
 import static com.syrus.AMFICOM.scheme.xml.XmlSchemeElement.Kind.INT_SCHEME_CONTAINER;
 import static com.syrus.AMFICOM.scheme.xml.XmlSchemeElement.Kind.INT_SCHEME_ELEMENT_CONTAINER;
-import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Level.WARNING;
@@ -99,7 +98,7 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * #04 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.163 $, $Date: 2006/06/16 10:32:04 $
+ * @version $Revision: 1.164 $, $Date: 2006/06/21 14:07:25 $
  * @module scheme
  */
 public final class SchemeElement extends AbstractSchemeElement
@@ -842,24 +841,14 @@ public final class SchemeElement extends AbstractSchemeElement
 	public Identifier getParentSchemeId() {
 		final Identifier parentSchemeId1 = super.getParentSchemeId();
 		assert this.parentSchemeElementId != null : OBJECT_NOT_INITIALIZED;
-		final boolean parentSchemeIdVoid = parentSchemeId1.isVoid();
-		assert parentSchemeIdVoid ^ this.parentSchemeElementId.isVoid() : EXACTLY_ONE_PARENT_REQUIRED;
-		if (parentSchemeIdVoid) {
-			Log.debugMessage("Parent Scheme was requested, while parent is a SchemeElement; returning null",
-					FINE);
-		}
+		assert parentSchemeId1.isVoid() ^ this.parentSchemeElementId.isVoid() : EXACTLY_ONE_PARENT_REQUIRED;
 		return parentSchemeId1;
 	}
 
 	public Identifier getParentSchemeElementId() {
 		assert super.parentSchemeId != null && this.parentSchemeElementId != null: OBJECT_NOT_INITIALIZED;
 		assert super.parentSchemeId.isVoid() ^ this.parentSchemeElementId.isVoid(): EXACTLY_ONE_PARENT_REQUIRED;
-		final boolean parentSchemeElementIdVoid = this.parentSchemeElementId.isVoid(); 
-		assert parentSchemeElementIdVoid || this.parentSchemeElementId.getMajor() == SCHEMEELEMENT_CODE;
-		if (parentSchemeElementIdVoid) {
-			Log.debugMessage("Parent SchemeElement was requested, while parent is a Scheme; returnung null",
-					FINE);
-		}
+		assert this.parentSchemeElementId.isVoid() || this.parentSchemeElementId.getMajor() == SCHEMEELEMENT_CODE;
 		return this.parentSchemeElementId;
 	}
 
@@ -2221,7 +2210,7 @@ public final class SchemeElement extends AbstractSchemeElement
 	}
 
 	void setEquipmentId(Identifier equipmentId) {
-//		TODO: inroduce additional sanity checks
+//		TODO: introduce additional sanity checks
 		assert equipmentId != null : NON_NULL_EXPECTED;
 		assert equipmentId.isVoid() || equipmentId.getMajor() == EQUIPMENT_CODE;
 		this.equipmentId = equipmentId;
@@ -2229,7 +2218,7 @@ public final class SchemeElement extends AbstractSchemeElement
 	}
 
 	void setProtoEquipmentId(Identifier protoEquipmentId) {
-//		TODO: inroduce additional sanity checks
+//		TODO: introduce additional sanity checks
 		assert protoEquipmentId != null : NON_NULL_EXPECTED;
 		assert protoEquipmentId.isVoid() || protoEquipmentId.getMajor() == PROTOEQUIPMENT_CODE;
 		this.protoEquipmentId = protoEquipmentId;
@@ -2237,7 +2226,7 @@ public final class SchemeElement extends AbstractSchemeElement
 	}
 
 	void setSiteNodeId(Identifier siteNodeId) {
-//		TODO: inroduce additional sanity checks
+//		TODO: introduce additional sanity checks
 		assert siteNodeId != null : NON_NULL_EXPECTED;
 		assert siteNodeId.isVoid() || siteNodeId.getMajor() == SITENODE_CODE;
 		this.siteNodeId = siteNodeId;
@@ -2245,7 +2234,7 @@ public final class SchemeElement extends AbstractSchemeElement
 	}
 
 	void setKisId(Identifier kisId) {
-//		TODO: inroduce additional sanity checks
+//		TODO: introduce additional sanity checks
 		assert kisId != null : NON_NULL_EXPECTED;
 		assert kisId.isVoid() || kisId.getMajor() == KIS_CODE;
 		this.kisId = kisId;
