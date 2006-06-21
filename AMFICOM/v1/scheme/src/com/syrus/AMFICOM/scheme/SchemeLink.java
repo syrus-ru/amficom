@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeLink.java,v 1.115 2006/06/06 11:31:15 arseniy Exp $
+ * $Id: SchemeLink.java,v 1.116 2006/06/21 14:10:54 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,7 +33,6 @@ import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.EXPORT;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.POST_IMPORT;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.PRE_IMPORT;
-import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Level.WARNING;
@@ -76,8 +75,8 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
 /**
  * #12 in hierarchy.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.115 $, $Date: 2006/06/06 11:31:15 $
+ * @author $Author: bass $
+ * @version $Revision: 1.116 $, $Date: 2006/06/21 14:10:54 $
  * @module scheme
  */
 public final class SchemeLink extends AbstractSchemeLink
@@ -620,12 +619,7 @@ public final class SchemeLink extends AbstractSchemeLink
 						+ (this.parentSchemeElementId.isVoid() ? 0 : 1)
 						+ (this.parentSchemeProtoElementId.isVoid() ? 0 : 1) == 1) : OBJECT_BADLY_INITIALIZED;
 
-		final Identifier parentSchemeId1 = super.getParentSchemeId();
-		if (parentSchemeId1.isVoid()) {
-			Log.debugMessage("Parent Scheme was requested, while parent is either a SchemeElement or a SchemeProtoElement; returning null",
-					FINE);
-		}
-		return parentSchemeId1;
+		return super.getParentSchemeId();
 	}
 
 	Identifier getParentSchemeElementId() {
@@ -636,12 +630,7 @@ public final class SchemeLink extends AbstractSchemeLink
 						+ (this.parentSchemeElementId.isVoid() ? 0 : 1)
 						+ (this.parentSchemeProtoElementId.isVoid() ? 0 : 1) == 1) : OBJECT_BADLY_INITIALIZED;
 
-		final boolean parentSchemeElementIdVoid = this.parentSchemeElementId.isVoid();
-		assert parentSchemeElementIdVoid || this.parentSchemeElementId.getMajor() == SCHEMEELEMENT_CODE;
-		if (parentSchemeElementIdVoid) {
-			Log.debugMessage("Parent SchemeElement was requested, while parent is either a Scheme or a SchemeProtoElement; returning null",
-					FINE);
-		}
+		assert this.parentSchemeElementId.isVoid() || this.parentSchemeElementId.getMajor() == SCHEMEELEMENT_CODE;
 		return this.parentSchemeElementId;
 	}
 
@@ -667,10 +656,6 @@ public final class SchemeLink extends AbstractSchemeLink
 
 		final boolean parentSchemeProtoElementIdVoid = this.parentSchemeProtoElementId.isVoid();
 		assert parentSchemeProtoElementIdVoid || this.parentSchemeProtoElementId.getMajor() == SCHEMEPROTOELEMENT_CODE;
-		if (this.parentSchemeProtoElementId.isVoid()) {
-			Log.debugMessage("Parent SchemeProtoElement was requested, while parent is either a Scheme or a SchemeElement; returning null",
-					FINE);
-		}
 		return this.parentSchemeProtoElementId;
 	}
 
@@ -1370,7 +1355,7 @@ public final class SchemeLink extends AbstractSchemeLink
 	 **********************************************************************/
 
 	void setSiteNodeId(Identifier siteNodeId) {
-//		 TODO: inroduce additional sanity checks
+//		 TODO: introduce additional sanity checks
 		assert siteNodeId != null : NON_NULL_EXPECTED;
 		assert siteNodeId.isVoid() || siteNodeId.getMajor() == SITENODE_CODE;
 		this.siteNodeId = siteNodeId;

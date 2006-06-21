@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElement.java,v 1.139 2006/06/06 11:31:15 arseniy Exp $
+ * $Id: SchemeProtoElement.java,v 1.140 2006/06/21 14:13:04 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,7 +34,6 @@ import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.EXPORT;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.POST_IMPORT;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.PRE_IMPORT;
-import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Level.WARNING;
@@ -85,8 +84,8 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
 /**
  * #02 in hierarchy.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.139 $, $Date: 2006/06/06 11:31:15 $
+ * @author $Author: bass $
+ * @version $Revision: 1.140 $, $Date: 2006/06/21 14:13:04 $
  * @module scheme
  */
 public final class SchemeProtoElement
@@ -566,12 +565,7 @@ public final class SchemeProtoElement
 				&& this.parentSchemeProtoElementId != null
 				&& (this.parentSchemeProtoGroupId.isVoid() ^ this.parentSchemeProtoElementId.isVoid()) : OBJECT_BADLY_INITIALIZED;
 
-		final boolean parentSchemeProtoElementIdVoid = this.parentSchemeProtoElementId.isVoid();
-		assert parentSchemeProtoElementIdVoid || this.parentSchemeProtoElementId.getMajor() == SCHEMEPROTOELEMENT_CODE;
-		if (parentSchemeProtoElementIdVoid) {
-			Log.debugMessage("Parent SchemeProtoElement was requested, while parent is a SchemeProtoGroup; returning null.",
-					FINE);
-		}
+		assert this.parentSchemeProtoElementId.isVoid() || this.parentSchemeProtoElementId.getMajor() == SCHEMEPROTOELEMENT_CODE;
 		return this.parentSchemeProtoElementId;
 	}
 
@@ -595,12 +589,7 @@ public final class SchemeProtoElement
 				&& this.parentSchemeProtoElementId != null
 				&& (this.parentSchemeProtoGroupId.isVoid() ^ this.parentSchemeProtoElementId.isVoid()) : OBJECT_BADLY_INITIALIZED;
 
-		final boolean parentSchemeProtoGroupIdVoid = this.parentSchemeProtoGroupId.isVoid();
-		assert parentSchemeProtoGroupIdVoid || this.parentSchemeProtoGroupId.getMajor() == SCHEMEPROTOGROUP_CODE;
-		if (parentSchemeProtoGroupIdVoid) {
-			Log.debugMessage("Parent SchemeProtoGroup was requested, while parent is a SchemeProtoElement; returnning null",
-					FINE);
-		}
+		assert this.parentSchemeProtoGroupId.isVoid() || this.parentSchemeProtoGroupId.getMajor() == SCHEMEPROTOGROUP_CODE;
 		return this.parentSchemeProtoGroupId;
 	}
 
