@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractLineMismatchEvent.java,v 1.18 2006/06/20 11:22:43 bass Exp $
+ * $Id: AbstractLineMismatchEvent.java,v 1.19 2006/06/21 10:57:12 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,6 +27,7 @@ import java.util.TreeSet;
 import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.bugs.Crutch577;
+import com.syrus.AMFICOM.bugs.Crutch582;
 import com.syrus.AMFICOM.eventv2.corba.IdlLineMismatchEvent;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifiable;
@@ -39,7 +40,7 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.18 $, $Date: 2006/06/20 11:22:43 $
+ * @version $Revision: 1.19 $, $Date: 2006/06/21 10:57:12 $
  * @module event
  */
 public abstract class AbstractLineMismatchEvent extends StorableObject
@@ -48,8 +49,14 @@ public abstract class AbstractLineMismatchEvent extends StorableObject
 			"EEE MMM dd HH:mm:ss.SSS zzz yyyy",
 			Locale.US);
 
-	AbstractLineMismatchEvent(/*IdlLineMismatchEvent*/) {
-		// super();
+	@Crutch582(notes = "Use StorableObject.<init>(IdlStorableObject) as son as one is available.")
+	AbstractLineMismatchEvent(final IdlLineMismatchEvent lineMismatchEvent) {
+		super(Identifier.valueOf(lineMismatchEvent.id),
+				new Date(lineMismatchEvent.created),
+				new Date(lineMismatchEvent.modified),
+				Identifier.valueOf(lineMismatchEvent.creatorId),
+				Identifier.valueOf(lineMismatchEvent.modifierId),
+				StorableObjectVersion.valueOf(lineMismatchEvent.version));
 	}
 
 	AbstractLineMismatchEvent(final Identifier id,
