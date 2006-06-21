@@ -1,5 +1,5 @@
 /*-
- * $Id: CableChannelingItem.java,v 1.95 2006/06/06 11:31:15 arseniy Exp $
+ * $Id: CableChannelingItem.java,v 1.96 2006/06/21 08:00:42 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -66,8 +66,8 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
 /**
  * #15 in hierarchy.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.95 $, $Date: 2006/06/06 11:31:15 $
+ * @author $Author: bass $
+ * @version $Revision: 1.96 $, $Date: 2006/06/21 08:00:42 $
  * @module scheme
  */
 public final class CableChannelingItem
@@ -330,7 +330,7 @@ public final class CableChannelingItem
 		return dependencies;
 	}
 
-	Identifier getEndSiteNodeId() {
+	public Identifier getEndSiteNodeId() {
 		assert this.startSiteNodeId != null
 				&& !this.startSiteNodeId.isVoid()
 				&& this.endSiteNodeId != null
