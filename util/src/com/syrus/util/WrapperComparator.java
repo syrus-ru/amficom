@@ -1,5 +1,5 @@
 /*-
-* $Id: WrapperComparator.java,v 1.7 2006/03/01 11:05:08 arseniy Exp $
+* $Id: WrapperComparator.java,v 1.8 2006/06/21 08:14:16 saa Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -13,14 +13,14 @@ import java.util.Comparator;
 
 /**
  * Wrapper comparator
- * @version $Revision: 1.7 $, $Date: 2006/03/01 11:05:08 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.8 $, $Date: 2006/06/21 08:14:16 $
+ * @author $Author: saa $
  * @author Vladimir Dolzhenko
  * @module util
  */
 public final class WrapperComparator<T> implements Comparator<T> {
 	
-	private final Wrapper<T> wrapper;	
+	private final Wrapper<? super T> wrapper;
 	private final String key;
 	private final boolean ascend;
 	
@@ -29,7 +29,7 @@ public final class WrapperComparator<T> implements Comparator<T> {
 	 * @param key key for wrapper
 	 * @param ascend ascend compare
 	 */
-	public WrapperComparator(final Wrapper<T> wrapper, final String key, final boolean ascend) {
+	public WrapperComparator(final Wrapper<? super T> wrapper, final String key, final boolean ascend) {
 		if (!wrapper.getKeys().contains(key)) {
 			throw new IllegalArgumentException("Key '" + key + "' is not supported by wrapper");
 		}

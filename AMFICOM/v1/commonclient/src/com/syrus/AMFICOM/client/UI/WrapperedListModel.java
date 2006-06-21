@@ -18,8 +18,8 @@ import com.syrus.util.Wrapper;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/10/31 12:30:01 $
- * @author $Author: bass $
+ * @version $Revision: 1.13 $, $Date: 2006/06/21 08:15:42 $
+ * @author $Author: saa $
  * @module commonclient
  */
 public final class WrapperedListModel<T> extends AbstractListModel implements MutableComboBoxModel, Serializable {
@@ -34,7 +34,7 @@ public final class WrapperedListModel<T> extends AbstractListModel implements Mu
 	 * Wrapper of Model (ObjectResource) will be used for sorting. see
 	 * {@link Wrapper}
 	 */
-	protected Wrapper<T> wrapper;
+	protected Wrapper<? super T> wrapper;
 
 	protected String key;
 
@@ -44,12 +44,12 @@ public final class WrapperedListModel<T> extends AbstractListModel implements Mu
 	 * @param wrapper
 	 *        see {@link #wrapper}
 	 */
-	public WrapperedListModel(final Wrapper<T> wrapper, final String key, final String compareKey) {
+	public WrapperedListModel(final Wrapper<? super T> wrapper, final String key, final String compareKey) {
 		this(wrapper, new LinkedList<T>(), key, compareKey);
 
 	}
 	
-	public WrapperedListModel(Wrapper<T> wrapper, List<T> objects, String key, String compareKey) {
+	public WrapperedListModel(Wrapper<? super T> wrapper, List<T> objects, String key, String compareKey) {
 		assert wrapper != null : ErrorMessages.NON_NULL_EXPECTED;
 		this.wrapper = wrapper;
 		

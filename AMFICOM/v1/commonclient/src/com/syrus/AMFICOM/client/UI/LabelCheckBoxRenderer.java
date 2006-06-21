@@ -1,5 +1,5 @@
 /*-
-* $Id: LabelCheckBoxRenderer.java,v 1.8 2005/10/27 14:22:35 bob Exp $
+* $Id: LabelCheckBoxRenderer.java,v 1.9 2006/06/21 08:15:42 saa Exp $
 *
 * Copyright © 2004-2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -25,8 +25,8 @@ import com.syrus.util.Wrapper;
 
 /**
  * Renderer for JCheckBox items 
- * @version $Revision: 1.8 $, $Date: 2005/10/27 14:22:35 $
- * @author $Author: bob $
+ * @version $Revision: 1.9 $, $Date: 2006/06/21 08:15:42 $
+ * @author $Author: saa $
  * @module commonclient
  */
 public class LabelCheckBoxRenderer<T> implements ListCellRenderer {
@@ -41,11 +41,11 @@ public class LabelCheckBoxRenderer<T> implements ListCellRenderer {
 
 	private JComponent component;
 
-	private Wrapper<T> wrapper;
+	private Wrapper<? super T> wrapper;
 
 	private String key;
 
-	protected LabelCheckBoxRenderer(final Wrapper<T> wrapper, final String key) {
+	protected LabelCheckBoxRenderer(final Wrapper<? super T> wrapper, final String key) {
 		this();
 		this.wrapper = wrapper;
 		this.key = key;

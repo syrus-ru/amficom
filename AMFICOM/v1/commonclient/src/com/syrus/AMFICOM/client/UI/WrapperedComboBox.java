@@ -1,5 +1,5 @@
 /*-
-* $Id: WrapperedComboBox.java,v 1.10 2005/10/31 12:30:01 bass Exp $
+* $Id: WrapperedComboBox.java,v 1.11 2006/06/21 08:15:42 saa Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -15,8 +15,8 @@ import java.util.List;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/10/31 12:30:01 $
- * @author $Author: bass $
+ * @version $Revision: 1.11 $, $Date: 2006/06/21 08:15:42 $
+ * @author $Author: saa $
  * @author Vladimir Dolzhenko
  * @module commonclient
  */
@@ -36,7 +36,7 @@ public class WrapperedComboBox<T> extends AComboBox {
 		this(new WrapperedListModel<T>(wrapper, objects, key, compareKey));
 	}
 
-	public WrapperedComboBox(final Wrapper<T> wrapper, final String key, final String compareKey) {
+	public WrapperedComboBox(final Wrapper<? super T> wrapper, final String key, final String compareKey) {
 		this(new WrapperedListModel<T>(wrapper, new LinkedList<T>(), key, compareKey));
 	}	
 
