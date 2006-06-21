@@ -9,10 +9,14 @@ then
 	print_usage
 	exit
 fi
-if [ $1 = "-?" -o $1 = "-h" -o $1 = "--help" ];
+
+if [ $# -gt 0 ];
 then
-	print_usage
-	exit
+	if [ $1 = "-?" -o $1 = "-h" -o $1 = "--help" ];
+	then
+		print_usage
+		exit
+	fi
 fi
 
 DEST_HOST=aldan
