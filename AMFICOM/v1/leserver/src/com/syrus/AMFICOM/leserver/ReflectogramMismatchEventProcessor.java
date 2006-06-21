@@ -1,19 +1,17 @@
 /*-
- * $Id: ReflectogramMismatchEventProcessor.java,v 1.24 2006/05/18 19:47:18 bass Exp $
+ * $Id: ReflectogramMismatchEventProcessor.java,v 1.25 2006/06/21 14:59:41 bass Exp $
  *
- * Copyright ¿ 2004-2005 Syrus Systems.
+ * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.leserver;
 
-import static com.syrus.AMFICOM.configuration.EquipmentTypeCodename.MUFF;
 import static com.syrus.AMFICOM.eventv2.EventType.REFLECTORGAM_MISMATCH;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPATH_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.TRANSMISSIONPATH_CODE;
 import static java.util.logging.Level.FINEST;
-import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Level.WARNING;
 
@@ -51,7 +49,7 @@ import com.syrus.util.Log;
  * @author Andrew ``Bass'' Shcheglov
  * @author Old Wise Saa
  * @author $Author: bass $
- * @version $Revision: 1.24 $, $Date: 2006/05/18 19:47:18 $
+ * @version $Revision: 1.25 $, $Date: 2006/06/21 14:59:41 $
  * @module leserver
  */
 final class ReflectogramMismatchEventProcessor extends AbstractEventProcessor {
@@ -319,10 +317,6 @@ final class ReflectogramMismatchEventProcessor extends AbstractEventProcessor {
 		String rightNonSpaciousName = null;
 
 		if (affectedPathElement.isSpacious()) {
-			if (false) {
-				printDebugInfo(affectedPathElement);
-			}
-
 			try {
 				final SchemePath parentPathOwner = affectedPathElement.getParentPathOwner();
 				final ArrayList<PathElement> pathMembers = new ArrayList<PathElement>(parentPathOwner.getPathMembers());
@@ -481,141 +475,5 @@ final class ReflectogramMismatchEventProcessor extends AbstractEventProcessor {
 			Log.debugMessage(ae, SEVERE);
 			return "";
 		}
-	}
-
-	/**
-	 * Currently, just logs names of the nodes nearest to
-	 * {@code affectedPathElement}. Later on, will be used to form a message
-	 * to deliver to clients. Search mechanism to be transformed into a more
-	 * intelligent one.
-	 *  
-	 * @param affectedPathElement
-	 */
-	private static void printDebugInfo(final PathElement affectedPathElement) {
-		final long t0 = System.nanoTime();
-
-		String leftNonSpaciosName = null;
-		String leftNonMuffName = null;
-		String leftMuffName = null;
-
-		String rightNonSpaciosName = null;
-		String rightNonMuffName = null;
-		String rightMuffName = null;
-		try {
-			final SchemePath parentPathOwner = affectedPathElement.getParentPathOwner();
-			final ArrayList<PathElement> pathMembers = new ArrayList<PathElement>(parentPathOwner.getPathMembers());
-			final int sequentialNumber = affectedPathElement.getSequentialNumber();
-
-
-			for (int i = sequentialNumber - 1, n = 0; i >= n; i--) {
-				final PathElement pathElement = pathMembers.get(i);
-				if (pathElement.isSpacious()) {
-					continue;
-				}
-				final SchemeElement schemeElement = (SchemeElement) pathElement.getAbstractSchemeElement();
-				if (leftNonSpaciosName == null) {
-					leftNonSpaciosName = schemeElement.getName();
-					assert leftNonSpaciosName != null;
-				}
-				final ProtoEquipment protoEquipment = schemeElement.getProtoEquipment();
-				if (protoEquipment == null) {
-					Log.debugMessage("For SchemeElement: "
-							+ schemeElement.getId()
-							+ ", ProtoEquipment is null",
-							WARNING);
-					continue;
-				}
-				final EquipmentType equipmentType = protoEquipment.getType();
-				final String equipmentTypeCodename = equipmentType.getCodename();
-				final String muffCodename = MUFF.stringValue();
-				if (equipmentTypeCodename.equals(muffCodename) && leftMuffName == null) {
-					leftMuffName = equipmentType.getDescription() + ' ' + schemeElement.getName();
-					assert leftMuffName != null;
-				} else if (!equipmentTypeCodename.equals(muffCodename) && leftNonMuffName == null) {
-					leftNonMuffName = equipmentType.getDescription() + ' ' + schemeElement.getName();
-					assert leftNonMuffName != null;
-				}
-
-				if (leftNonMuffName != null && leftMuffName != null) {
-					break;
-				}
-			}
-
-
-			for (int i = sequentialNumber + 1, n = pathMembers.size(); i < n; i++) {
-				final PathElement pathElement = pathMembers.get(i);
-				if (pathElement.isSpacious()) {
-					continue;
-				}
-				final SchemeElement schemeElement = (SchemeElement) pathElement.getAbstractSchemeElement();
-				if (rightNonSpaciosName == null) {
-					rightNonSpaciosName = schemeElement.getName();
-					assert rightNonSpaciosName != null;
-				}
-				final ProtoEquipment protoEquipment = schemeElement.getProtoEquipment();
-				if (protoEquipment == null) {
-					Log.debugMessage("For SchemeElement: "
-							+ schemeElement.getId()
-							+ ", ProtoEquipment is null",
-							WARNING);
-					continue;
-				}
-				final EquipmentType equipmentType = protoEquipment.getType();
-				final String equipmentTypeCodename = equipmentType.getCodename();
-				final String muffCodename = MUFF.stringValue();
-				if (equipmentTypeCodename.equals(muffCodename) && rightMuffName == null) {
-					rightMuffName = equipmentType.getDescription() + ' ' + schemeElement.getName();
-					assert rightMuffName != null;
-				} else if (!equipmentTypeCodename.equals(muffCodename) && rightNonMuffName == null) {
-					rightNonMuffName = equipmentType.getDescription() + ' ' + schemeElement.getName();
-					assert rightNonMuffName != null;
-				}
-
-				if (rightNonMuffName != null && rightMuffName != null) {
-					break;
-				}
-			}
-		} catch (final ApplicationException ae) {
-			Log.debugMessage(ae, SEVERE);
-			final String fallbackName = '<' + ae.getLocalizedMessage() + '>';
-
-			leftNonSpaciosName = fallbackName;
-			leftNonMuffName = fallbackName;
-			leftMuffName = fallbackName;
-
-			rightNonSpaciosName = fallbackName;
-			rightNonMuffName = fallbackName;
-			rightMuffName = fallbackName;
-		}
-
-		if (leftNonSpaciosName == null) {
-			leftNonSpaciosName = "N/A";
-		}
-		if (leftNonMuffName == null) {
-			leftNonMuffName = "N/A";
-		}
-		if (leftMuffName == null) {
-			leftMuffName = "N/A";
-		}
-
-		if (rightNonSpaciosName == null) {
-			rightNonSpaciosName = "N/A";
-		}
-		if (rightNonMuffName == null) {
-			rightNonMuffName = "N/A";
-		}
-		if (rightMuffName == null) {
-			rightMuffName = "N/A";
-		}
-
-		Log.debugMessage("*** Nearest left node: " + leftNonSpaciosName, INFO);
-		Log.debugMessage("*** Nearest left non-muff node: " + leftNonMuffName, INFO);
-		Log.debugMessage("*** Nearest left muff: " + leftMuffName, INFO);
-		Log.debugMessage("*** Nearest right node: " + rightNonSpaciosName, INFO);
-		Log.debugMessage("*** Nearest right non-muff node: " + rightNonMuffName, INFO);
-		Log.debugMessage("*** Nearest right muff: " + rightMuffName, INFO);
-
-		final long t1 = System.nanoTime();
-		Log.debugMessage(((t1 - t0) / 1e9) + " second(s)", FINEST);
 	}
 }
