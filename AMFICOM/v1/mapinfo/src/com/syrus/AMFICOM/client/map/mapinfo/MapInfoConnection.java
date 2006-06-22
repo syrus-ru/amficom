@@ -1,5 +1,5 @@
 /*
- * $Id: MapInfoConnection.java,v 1.16 2005/10/31 12:30:11 bass Exp $
+ * $Id: MapInfoConnection.java,v 1.17 2006/06/22 11:47:14 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,13 +21,12 @@ import com.syrus.AMFICOM.client.map.MapConnection;
 import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapContext;
 import com.syrus.AMFICOM.client.map.MapCoordinatesConverter;
-import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.SpatialLayer;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/10/31 12:30:11 $
- * @author $Author: bass $
+ * @version $Revision: 1.17 $, $Date: 2006/06/22 11:47:14 $
+ * @author $Author: stas $
  * @module mapinfo
  */
 public abstract class MapInfoConnection extends MapConnection {
@@ -63,7 +62,7 @@ public abstract class MapInfoConnection extends MapConnection {
 			throw new MapConnectionException(e);
 		}
 
-		System.out.println("Units " + this.localMapJ.getDistanceUnits().toString());
+		Log.debugMessage("Units " + this.localMapJ.getDistanceUnits().toString(), Level.FINEST);
 		this.localMapJ.setDistanceUnits(LinearUnit.meter);
 
 		fireMapConnectionChanged();
@@ -72,7 +71,7 @@ public abstract class MapInfoConnection extends MapConnection {
 	}
 
 	@Override
-	public boolean release() throws MapConnectionException {
+	public boolean release() {
 		Log.debugMessage("method call", Level.FINEST);
 
 		return true;
@@ -132,7 +131,7 @@ public abstract class MapInfoConnection extends MapConnection {
 	 * @see com.syrus.AMFICOM.client.map.MapContext#getLayers()
 	 */
 	@Override
-	public List<SpatialLayer> getLayers() throws MapDataException {
+	public List<SpatialLayer> getLayers() {
 		if (this.layersList == null) {
 			this.layersList = new ArrayList<SpatialLayer>();
 
@@ -146,5 +145,4 @@ public abstract class MapInfoConnection extends MapConnection {
 
 		return this.layersList;
 	}
-
 }

@@ -1,5 +1,5 @@
 /*-
- * $Id: MapInfoCorbaImageLoader.java,v 1.17 2006/02/17 12:47:16 arseniy Exp $
+ * $Id: MapInfoCorbaImageLoader.java,v 1.18 2006/06/22 11:47:14 stas Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -52,8 +52,8 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2006/02/17 12:47:16 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.18 $, $Date: 2006/06/22 11:47:14 $
+ * @author $Author: stas $
  * @module mapinfo
  */
 
@@ -107,7 +107,7 @@ public class MapInfoCorbaImageLoader implements MapImageLoader {
 		Log.debugMessage((t1 - t0) + " (creating transf and session key)"
 				+ (t2 - t1) + " (getting session ref)"
 				+ (t3 - t2) + "rendering"
-				+ (t4 - t3) + "creating image", Level.FINE);
+				+ (t4 - t3) + "creating image", Log.DEBUGLEVEL09);
 
 		return bufferedImage;
 	}
@@ -208,12 +208,12 @@ public class MapInfoCorbaImageLoader implements MapImageLoader {
 		String cacheDir = ApplicationProperties.getString(CACHE_DIR, "cache");
 		File cacheDirFile = new File(cacheDir);
 		if(!cacheDirFile.isDirectory()) {
-			Log.debugMessage("Cache dir + " + "\"" + cacheDirFile.getAbsolutePath() + "\"" + "does not exist, tryin to create", Log.DEBUGLEVEL05);
+			Log.debugMessage("Cache dir + " + "\"" + cacheDirFile.getAbsolutePath() + "\"" + "does not exist, tryin to create", Level.FINEST);
 			cacheDirFile.mkdirs();
 		}
 		File localMapDir = new File(cacheDirFile, mapDescriptor.getMapName());
 		if(!localMapDir.exists()) {
-			Log.debugMessage("Cache dir + " + "\"" + localMapDir.getAbsolutePath() + "\"" + "does not exist, tryin to create", Log.DEBUGLEVEL05);
+			Log.debugMessage("Cache dir + " + "\"" + localMapDir.getAbsolutePath() + "\"" + "does not exist, tryin to create", Level.FINEST);
 			cacheDirFile.mkdir();
 		}
 		File localMDF = new File(localMapDir, mapDescriptor.getFileName());
@@ -233,7 +233,7 @@ public class MapInfoCorbaImageLoader implements MapImageLoader {
 		long offset = 0;
 		File tempFile = new File(localFile.getPath() + ".swp");
 		if(tempFile.exists()) {
-			Log.debugMessage("Warning: swp file\" " + tempFile.getAbsolutePath() +  " \" exsists. Removing it...", Log.DEBUGLEVEL05);
+			Log.debugMessage("Warning: swp file\" " + tempFile.getAbsolutePath() +  " \" exsists. Removing it...", Level.FINEST);
 			tempFile.delete();
 		}
 		try {
@@ -260,10 +260,10 @@ public class MapInfoCorbaImageLoader implements MapImageLoader {
 			localFile.setLastModified(mapFileDescriptor.getLastModified());
 			return localFile;
 		} catch (AMFICOMRemoteException e) {
-			Log.errorMessage("AMFICOMRemoteException " + e.getMessage());
+			Log.errorMessage(e);
 			return null;
 		} catch (IOException e) {
-			Log.errorMessage("IOException" + e.getMessage());
+			Log.errorMessage(e);
 			return null;
 		}		
 	}

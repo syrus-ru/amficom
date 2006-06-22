@@ -1,5 +1,5 @@
 /**
- * $Id: MapInfoServletImageLoader.java,v 1.8 2005/08/29 12:13:34 peskovsky Exp $
+ * $Id: MapInfoServletImageLoader.java,v 1.9 2006/06/22 11:47:14 stas Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
 
 import com.syrus.AMFICOM.client.map.MapConnection;
 import com.syrus.AMFICOM.client.map.MapConnectionException;
@@ -34,6 +35,7 @@ import com.syrus.AMFICOM.client.map.SpatialLayer;
 import com.syrus.AMFICOM.client.map.SpatialObject;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.map.TopologicalImageQuery;
+import com.syrus.util.Log;
 
 public class MapInfoServletImageLoader implements MapImageLoader {
 	private String uriString = null;
@@ -50,24 +52,24 @@ public class MapInfoServletImageLoader implements MapImageLoader {
 		final Dimension maximumImageSize = Toolkit.getDefaultToolkit().getScreenSize();
 		final int dataSize = maximumImageSize.width * maximumImageSize.height * 2;
 
-		System.out.println(MapPropertiesManager.getLogDateFormat().format(new Date(System.currentTimeMillis()))
-				+ " TIC - loadingthread - setImage - allocating for image buffer " + dataSize + " bytes of memory");
+		Log.debugMessage(MapPropertiesManager.getLogDateFormat().format(new Date(System.currentTimeMillis()))
+				+ " TIC - loadingthread - setImage - allocating for image buffer " + dataSize + " bytes of memory", Log.DEBUGLEVEL09);
 
 		this.imageBuffer = new byte[dataSize];
 
-		System.out.println(MapPropertiesManager.getLogDateFormat().format(new Date(System.currentTimeMillis()))
-				+ " TIC - loadingthread - setImage - memory allocated");
+		Log.debugMessage(MapPropertiesManager.getLogDateFormat().format(new Date(System.currentTimeMillis()))
+				+ " TIC - loadingthread - setImage - memory allocated", Log.DEBUGLEVEL09);
 	}
 
 	/**
 	 * Посылает запрос на сервер на остановку рендеринга.
 	 */
-	public void stopRendering() {
+	public void stopRendering() throws MapConnectionException {
 		final String requestString = new String(this.uriString + "?" + ServletCommandNames.COMMAND_NAME + "="
 				+ ServletCommandNames.CN_CANCEL_RENDERING + "&" + ServletCommandNames.USER_ID + LoginManager.getSessionKey().hashCode());
 
-		System.out.println(MapPropertiesManager.getLogDateFormat().format(new Date(System.currentTimeMillis()))
-				+ " TIC - loadingthread - stopping rendering at server");
+		Log.debugMessage(MapPropertiesManager.getLogDateFormat().format(new Date(System.currentTimeMillis()))
+				+ " TIC - loadingthread - stopping rendering at server", Log.DEBUGLEVEL09);
 
 		try {
 			final URI mapServerURI = new URI(requestString);
@@ -80,28 +82,23 @@ public class MapInfoServletImageLoader implements MapImageLoader {
 				try {
 					Thread.sleep(10);
 				} catch (InterruptedException e) {
-					e.printStackTrace();
+					Log.errorMessage(e);
 				}
 			}
 
 			if (!connectionResult.equals(ServletCommandNames.STATUS_SUCCESS)) {
-				System.out.println(MapPropertiesManager.getLogDateFormat().format(new Date(System.currentTimeMillis()))
-						+ " Server returned: " + connectionResult);
-
-				return;
+				Log.debugMessage(MapPropertiesManager.getLogDateFormat().format(new Date(System.currentTimeMillis()))
+						+ " Server returned: " + connectionResult, Level.FINER);
 			}
 			// if(connection.getInputStream() == null)
 			// return;
 
 		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new MapConnectionException(e);
 		} catch (URISyntaxException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new MapConnectionException(e);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new MapConnectionException(e);
 		}
 	}
 
@@ -111,8 +108,8 @@ public class MapInfoServletImageLoader implements MapImageLoader {
 	 * @throws MapConnectionException
 	 */
 	public Image renderMapImage(final TopologicalImageQuery query) throws MapConnectionException {
-		System.out.println(MapPropertiesManager.getLogDateFormat().format(new Date(System.currentTimeMillis()))
-				+ " TIC - loadingthread - starting rendering at server");
+		Log.debugMessage(MapPropertiesManager.getLogDateFormat().format(new Date(System.currentTimeMillis()))
+				+ " TIC - loadingthread - starting rendering at server", Log.DEBUGLEVEL09);
 
 		try {
 			final String requestString = this.uriString + this.createRenderCommandString(query);
@@ -126,8 +123,8 @@ public class MapInfoServletImageLoader implements MapImageLoader {
 
 			final ObjectInputStream ois = new ObjectInputStream(urlConnection.getInputStream());
 
-			System.out.println(MapPropertiesManager.getLogDateFormat().format(new Date(System.currentTimeMillis()))
-					+ " TIC - loadingthread - getServerMapImage - got data at ObjectInputStream");
+			Log.debugMessage(MapPropertiesManager.getLogDateFormat().format(new Date(System.currentTimeMillis()))
+					+ " TIC - loadingthread - getServerMapImage - got data at ObjectInputStream", Log.DEBUGLEVEL09);
 
 			try {
 				ois.readFully(this.imageBuffer);
@@ -135,13 +132,13 @@ public class MapInfoServletImageLoader implements MapImageLoader {
 				//Nothing
 			}
 
-			System.out.println(MapPropertiesManager.getLogDateFormat().format(new Date(System.currentTimeMillis()))
-					+ " TIC - loadingthread - getServerMapImage - Read array from stream");
+			Log.debugMessage(MapPropertiesManager.getLogDateFormat().format(new Date(System.currentTimeMillis()))
+					+ " TIC - loadingthread - getServerMapImage - Read array from stream", Log.DEBUGLEVEL09);
 
 			final String connectionResult = urlConnection.getHeaderField(ServletCommandNames.STATUS_FIELD_NAME);
 			if (!connectionResult.equals(ServletCommandNames.STATUS_SUCCESS)) {
-				System.out.println(MapPropertiesManager.getLogDateFormat().format(new Date(System.currentTimeMillis()))
-						+ " Server returned: " + connectionResult);
+				Log.debugMessage(MapPropertiesManager.getLogDateFormat().format(new Date(System.currentTimeMillis()))
+						+ " Server returned: " + connectionResult, Log.DEBUGLEVEL09);
 
 				return null;
 			}
@@ -150,26 +147,20 @@ public class MapInfoServletImageLoader implements MapImageLoader {
 
 			final Image imageReceived = Toolkit.getDefaultToolkit().createImage(this.imageBuffer);
 
-			System.out.println(MapPropertiesManager.getLogDateFormat().format(new Date(System.currentTimeMillis()))
-					+ " TIC - loadingthread - getServerMapImage - Image created");
+			Log.debugMessage(MapPropertiesManager.getLogDateFormat().format(new Date(System.currentTimeMillis()))
+					+ " TIC - loadingthread - getServerMapImage - Image created", Log.DEBUGLEVEL09);
 
 			return imageReceived;
 
 		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new MapConnectionException(e);
 		} catch (URISyntaxException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new MapConnectionException(e);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new MapConnectionException(e);
 		} catch (MapDataException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new MapConnectionException(e);
 		}
-
-		return null;
 	}
 
 	/**
@@ -219,17 +210,17 @@ public class MapInfoServletImageLoader implements MapImageLoader {
 	 * 
 	 * @see com.syrus.AMFICOM.client.map.MapImageLoader#getMapConnection()
 	 */
-	public MapConnection getMapConnection() throws MapConnectionException {
+	public MapConnection getMapConnection() {
 		return this.connection;
 	}
 
-	public List<SpatialObject> findSpatialObjects(SpatialLayer layer, String searchText) throws MapConnectionException, MapDataException {
+	public List<SpatialObject> findSpatialObjects(SpatialLayer layer, String searchText) {
 		// TODO Требуется реализация на сервере
 		final List<SpatialObject> searchResultsList = new ArrayList<SpatialObject>();
 		return searchResultsList;
 	}
 
-	public List<SpatialObject> findSpatialObjects(SpatialLayer layer, Double bounds) throws MapConnectionException, MapDataException {
+	public List<SpatialObject> findSpatialObjects(SpatialLayer layer, Double bounds) {
 		// TODO Требуется реализация на сервере
 		final List<SpatialObject> searchResultsList = new ArrayList<SpatialObject>();
 		return searchResultsList;

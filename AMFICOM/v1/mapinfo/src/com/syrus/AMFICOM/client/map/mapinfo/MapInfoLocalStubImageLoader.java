@@ -1,5 +1,5 @@
 /*
- * $Id: MapInfoLocalStubImageLoader.java,v 1.24 2005/10/31 12:30:11 bass Exp $
+ * $Id: MapInfoLocalStubImageLoader.java,v 1.25 2006/06/22 11:47:14 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,8 +31,8 @@ import com.syrus.AMFICOM.resource.DoublePoint;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.24 $, $Date: 2005/10/31 12:30:11 $
+ * @author $Author: stas $
+ * @version $Revision: 1.25 $, $Date: 2006/06/22 11:47:14 $
  * @module mapinfo
  */
 public class MapInfoLocalStubImageLoader implements MapImageLoader, MapConnectionListener {
@@ -66,7 +66,7 @@ public class MapInfoLocalStubImageLoader implements MapImageLoader, MapConnectio
 		if(!this.alreadyPerformed ) {
 			//Осуществляется ПЕРВЫЙ поиск по всем слоям с надписями - тот, который сильно тормозит из-за
 			//MapJшного кэширования таблиц.
-			Log.debugMessage("Starting first search.", Level.FINE);
+			Log.debugMessage("Starting first search.", Level.FINEST);
 			long t1 = System.currentTimeMillis();
 			this.alreadyPerformed = true;
 			for (SpatialLayer spatialLayer : this.connection.getLayers()){
@@ -78,7 +78,7 @@ public class MapInfoLocalStubImageLoader implements MapImageLoader, MapConnectio
 					this.findSpatialObjects(miSpatialLayer,FIRST_SEARCH_STRING);
 			}
 			long t2 = System.currentTimeMillis();			
-			Log.debugMessage("First search completed ( "+ (t2 - t1) + " ms).", Level.FINE);
+			Log.debugMessage("First search completed ( "+ (t2 - t1) + " ms).", Level.FINEST);
 		}
 	}
 
@@ -109,7 +109,7 @@ public class MapInfoLocalStubImageLoader implements MapImageLoader, MapConnectio
 	 * 
 	 * @see com.syrus.AMFICOM.Client.Map.MapImageLoader#renderMapImageAtServer(com.syrus.AMFICOM.Client.Map.TopologicalRequest)
 	 */
-	public Image renderMapImage(final TopologicalImageQuery query) throws MapConnectionException, MapDataException {
+	public Image renderMapImage(final TopologicalImageQuery query) throws MapDataException {
 		// Здесь должен формироваться запрос serverQuery к пулу
 		try {
 			return this.renderer.renderImage(query);
@@ -123,7 +123,7 @@ public class MapInfoLocalStubImageLoader implements MapImageLoader, MapConnectio
 	 * 
 	 * @see com.syrus.AMFICOM.client.map.MapImageLoader#getMapConnection()
 	 */
-	public MapConnection getMapConnection() throws MapConnectionException {
+	public MapConnection getMapConnection() {
 		return this.connection;
 	}
 
@@ -240,7 +240,7 @@ public class MapInfoLocalStubImageLoader implements MapImageLoader, MapConnectio
 		return searchResultsList;
 	}
 
-	public List<SpatialObject> findSpatialObjects(SpatialLayer layer, Double bounds) throws MapConnectionException, MapDataException {
+	public List<SpatialObject> findSpatialObjects(SpatialLayer layer, Double bounds) throws MapDataException {
 		final com.mapinfo.util.DoubleRect areaBounds = new com.mapinfo.util.DoubleRect(
 				bounds.getMinX(),
 				bounds.getMinY(),

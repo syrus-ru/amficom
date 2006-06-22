@@ -7,19 +7,18 @@ import java.awt.dnd.DropTarget;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.Rectangle2D.Double;
-import java.util.logging.Level;
 
 import javax.swing.JComponent;
 
 import com.mapinfo.util.DoubleRect;
 import com.syrus.AMFICOM.client.event.MapEvent;
+import com.syrus.AMFICOM.client.map.LogicalNetLayer;
 import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapContext;
 import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.MapImageRenderer;
 import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.client.map.SpatialObject;
-import com.syrus.AMFICOM.client.map.LogicalNetLayer;
 import com.syrus.util.Log;
 
 public class MapInfoNetMapViewer extends NetMapViewer {
@@ -77,7 +76,7 @@ public class MapInfoNetMapViewer extends NetMapViewer {
 	 * @see com.syrus.AMFICOM.client.map.NetMapViewer#getVisibleBounds()
 	 */
 	@Override
-	public Double getVisibleBounds() throws MapConnectionException, MapDataException {
+	public Double getVisibleBounds() throws MapConnectionException {
 		try {
 			final DoubleRect rect = this.mapConnection.getLocalMapJ().getBounds();
 			final Rectangle2D.Double vb = new Rectangle2D.Double(rect.xmin, rect.ymin, rect.width(), rect.height());
@@ -108,9 +107,9 @@ public class MapInfoNetMapViewer extends NetMapViewer {
 	public void repaint(final boolean fullRepaint) throws MapConnectionException, MapDataException {
 		final long t1 = System.currentTimeMillis();
 		if (fullRepaint) {
-			Log.debugMessage(" MIFLNL - repaint - Entered full repaint", Level.FINEST);
+			Log.debugMessage(" MIFLNL - repaint - Entered full repaint", Log.DEBUGLEVEL09);
 			this.visualComponent.setMapImage(this.renderer.getImage());
-			Log.debugMessage(" MIFLNL - repaint - Exiting full repaint", Level.FINEST);
+			Log.debugMessage(" MIFLNL - repaint - Exiting full repaint", Log.DEBUGLEVEL09);
 			this.logicalNetLayer.getContext().getDispatcher().firePropertyChange(new MapEvent(this, MapEvent.MAP_REPAINTED));
 		}
 
@@ -123,7 +122,7 @@ public class MapInfoNetMapViewer extends NetMapViewer {
 		Log.debugMessage("finished in " + (t3 - t1) + " ms \n"
 				+ "		" + (t2 - t1) + " ms (image loaded)\n"
 				+ "		" + (t3 - t2) + " ms (LogicalNetLayer image painted to the buffer)\n"				
-				+ "		" + (t4 - t3) + " ms (visual component repainted).", Level.FINE);
+				+ "		" + (t4 - t3) + " ms (visual component repainted).", Log.DEBUGLEVEL09);
 	}
 
 	/*
@@ -152,7 +151,7 @@ public class MapInfoNetMapViewer extends NetMapViewer {
 	 * @see com.syrus.AMFICOM.client.map.NetMapViewer#handDragged(java.awt.event.MouseEvent)
 	 */
 	@Override
-	public void handDragged(final MouseEvent me) throws MapConnectionException, MapDataException {
+	public void handDragged(final MouseEvent me) {
 		Point startPoint = this.logicalNetLayer.getStartPoint();
 		int shiftX = (int )(me.getX() - startPoint.getX());
 		int shiftY = (int )(me.getY() - startPoint.getY());
@@ -170,7 +169,7 @@ public class MapInfoNetMapViewer extends NetMapViewer {
 	 * @see com.syrus.AMFICOM.client.map.NetMapViewer#handMoved(java.awt.event.MouseEvent)
 	 */
 	@Override
-	public void handMoved(final MouseEvent me) throws MapConnectionException, MapDataException {
+	public void handMoved(final MouseEvent me) {
 		// empty
 	}
 

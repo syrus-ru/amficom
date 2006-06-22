@@ -1,5 +1,5 @@
 /*
- * $Id: MapImagePanel.java,v 1.20 2005/10/31 12:30:11 bass Exp $
+ * $Id: MapImagePanel.java,v 1.21 2006/06/22 11:47:14 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,8 +27,8 @@ import com.syrus.AMFICOM.client.map.ui.MapFrame;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/10/31 12:30:11 $
- * @author $Author: bass $
+ * @version $Revision: 1.21 $, $Date: 2006/06/22 11:47:14 $
+ * @author $Author: stas $
  * @module mapinfo
  */
 public class MapImagePanel extends JPanel {
@@ -98,7 +98,7 @@ public class MapImagePanel extends JPanel {
 		
 		final long t2 = System.currentTimeMillis();
 
-		Log.debugMessage("total " + (t2 - t1) + " ms.", Level.FINE); 
+		Log.debugMessage("total " + (t2 - t1) + " ms.", Log.DEBUGLEVEL09); 
 	}
 
 	public void paintComponent(final Graphics g, int shiftX, int shiftY) {
@@ -132,7 +132,7 @@ public class MapImagePanel extends JPanel {
 
 		Log.debugMessage("with Shift | total " + (t3 - t1) + " (ms)\n" + "		"
 				+ (t2 - t1) + " ms (painting background)\n" + "		"
-				+ (t3 - t2) + " ms (result image paint)\n", Level.FINE);
+				+ (t3 - t2) + " ms (result image paint)\n", Log.DEBUGLEVEL09);
 	}
 	
 	public void refreshLayerImage() throws MapConnectionException, MapDataException {
@@ -156,6 +156,6 @@ public class MapImagePanel extends JPanel {
 		final long t3 = System.currentTimeMillis();
 		Log.debugMessage("total " + (t3 - t1) + "\n		"
 				+ (t2 - t1) + " ms (painted mapImage to resultImage) " + "\n		"
-				+ (t3 - t2) + " ms (painted LogicalNetLayer), ms.", Level.FINE);
+				+ (t3 - t2) + " ms (painted LogicalNetLayer), ms.", Log.DEBUGLEVEL09);
 	}
 }
