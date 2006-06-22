@@ -1,5 +1,5 @@
 /*
- * $Id: MapJLocalRenderer.java,v 1.11 2005/10/31 12:30:11 bass Exp $
+ * $Id: MapJLocalRenderer.java,v 1.12 2006/06/22 11:46:37 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,8 +25,8 @@ import com.syrus.AMFICOM.map.TopologicalImageQuery;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.11 $, $Date: 2005/10/31 12:30:11 $
+ * @author $Author: stas $
+ * @version $Revision: 1.12 $, $Date: 2006/06/22 11:46:37 $
  * @module mapinfo
  */
 public class MapJLocalRenderer {
@@ -50,6 +50,11 @@ public class MapJLocalRenderer {
 	private MapJ mapJObject = null;
 
 	private boolean stopRendering = false;
+	
+	private boolean[] cachedLayerVisibilities;
+	private boolean[] cachedLabelVisibilities;
+	private DoublePoint center;
+	private double scale;
 
 	public MapJLocalRenderer(final String fileToLoad) throws IOException {
 		Log.debugMessage("RunningThread - Constructor - Initializing MapJ.", Level.FINEST);
@@ -89,21 +94,39 @@ public class MapJLocalRenderer {
 		// Setting size, zoom and center point
 		if ((this.imageBuffer == null) || (this.imageBuffer.getWidth() != miWidth) || (this.imageBuffer.getHeight() != miHeight)) {
 			this.imageBuffer = new BufferedImage(miWidth, miHeight, BufferedImage.TYPE_USHORT_565_RGB);
-			Log.debugMessage("RunningThread - Constructor - Creating MapXtreme renderer.", Level.FINEST);
+			Log.debugMessage("RunningThread - Constructor - Creating MapXtreme renderer.", Log.DEBUGLEVEL09);
 			
 			this.renderer = new LocalRenderer(this.imageBuffer);
-			Log.debugMessage("RunningThread - Constructor - MapXtreme renderer created.", Level.FINEST);
+			Log.debugMessage("RunningThread - Constructor - MapXtreme renderer created.", Log.DEBUGLEVEL09);
+			
+			this.setSize(miWidth, miHeight);
 		}
-
-		this.setSize(miWidth, miHeight);
-		this.setCenter(new DoublePoint(query.getTopoCenterX(), query.getTopoCenterY()));
-		this.setScale(query.getTopoScale());
+		
+		final double y = query.getTopoCenterY();
+		final double x = query.getTopoCenterX();
+		if (this.center == null || this.center.x != x || this.center.y != y) {
+			this.center = new DoublePoint(x, y);
+			setCenter(this.center);	
+		}
+		final double topoScale = query.getTopoScale();
+		if (this.scale != topoScale) {
+			this.scale = topoScale;
+			this.setScale(this.scale);
+		}
 
 		final boolean[] layerVisibilities = query.getLayerVisibilities();
 		final boolean[] labelVisibilities = query.getLabelVisibilities();
-
-		for (int i = 0; i < query.getLayerVisibilities().length; i++) {
-			this.setLayerVisibility(i, layerVisibilities[i], labelVisibilities[i]);
+		
+		if (this.cachedLabelVisibilities == null) {
+			this.cachedLayerVisibilities = layerVisibilities;
+			this.cachedLabelVisibilities = labelVisibilities;
+		}
+		
+		for (int i = 0; i < layerVisibilities.length; i++) {
+			if (this.cachedLabelVisibilities[i] != labelVisibilities[i] 
+			   || this.cachedLayerVisibilities[i] != layerVisibilities[i]) {
+				this.setLayerVisibility(i, layerVisibilities[i], labelVisibilities[i]);	
+			}
 		}
 
 		final long time1 = System.currentTimeMillis();
@@ -122,18 +145,18 @@ public class MapJLocalRenderer {
 
 		Log.debugMessage("total " + (time3 - time1) + "\n		"
 				+ (time2 - time1) + " (rendered image)\n"
-				+ "\n		" + (time3 - time2) + " created new BufferedImage.", Level.FINE);
+				+ "\n		" + (time3 - time2) + " created new BufferedImage.", Log.DEBUGLEVEL09);
 
 		return imageToReturn;
 	}
 
 	public void cancelRendering() throws Exception {
 		this.stopRendering = true;
-		Log.debugMessage("MapJRenderer - cancelRendering - Stopping the rendering of map.", Level.FINEST);
+		Log.debugMessage("MapJRenderer - cancelRendering - Stopping the rendering of map.", Log.DEBUGLEVEL09);
 		if (this.renderer != null) {
 			this.renderer.interrupt();
 		}
-		Log.debugMessage("MapJRenderer - cancelRendering - Rendering stopped.", Level.FINEST);
+		Log.debugMessage("MapJRenderer - cancelRendering - Rendering stopped.", Log.DEBUGLEVEL09);
 	}
 
 	// ---------------------------------------Функции, работающие с MapJ
@@ -145,7 +168,7 @@ public class MapJLocalRenderer {
 	 */
 	public void setSize(final int width, final int height) {
 		synchronized (this.mapJObject) {
-			Log.debugMessage("RunningThread - Setting size", Level.FINEST);
+			Log.debugMessage("RunningThread - Setting size", Log.DEBUGLEVEL09);
 			this.mapJObject.setDeviceBounds(new DoubleRect(0, 0, width, height));
 		}
 	}
@@ -158,7 +181,7 @@ public class MapJLocalRenderer {
 	 */
 	public void setCenter(final DoublePoint center) {
 		synchronized (this.mapJObject) {
-			Log.debugMessage("RunningThread - Setting center", Level.FINEST);
+			Log.debugMessage("RunningThread - Setting center", Log.DEBUGLEVEL09);
 			try {
 				this.mapJObject.setCenter(new com.mapinfo.util.DoublePoint(center.x, center.y));
 			} catch (Exception e) {
@@ -175,7 +198,7 @@ public class MapJLocalRenderer {
 	 */
 	public void setScale(final double scale) {
 		synchronized (this.mapJObject) {
-			Log.debugMessage("RunningThread - Setting scale", Level.FINEST);
+			Log.debugMessage("RunningThread - Setting scale", Log.DEBUGLEVEL09);
 			try {
 				if (scale != 0.0D) {
 					this.mapJObject.setZoom(scale);
@@ -199,7 +222,7 @@ public class MapJLocalRenderer {
 			try {
 				final FeatureLayer layer = (FeatureLayer) this.mapJObject.getLayers().get(layerIndex, LayerType.FEATURE);
 
-				Log.debugMessage("RunningThread - Setting visibility for layer " + layer.getName(), Level.FINEST);
+				Log.debugMessage("RunningThread - Setting visibility for layer " + layer.getName(), Log.DEBUGLEVEL09);
 
 				layer.setEnabled(layerVisible);
 				layer.setAutoLabel(layerLabelsVisible);
