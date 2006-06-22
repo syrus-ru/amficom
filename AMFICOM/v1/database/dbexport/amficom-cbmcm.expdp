@@ -1,6 +1,0 @@
-userid=amficom/amficom@agidel
-directory=amficom_dp
-dumpfile=amficom-cbmcm.dmp
-logfile=amficom-cbmcm-export.log
-content=all
-exclude=DB_LINK
