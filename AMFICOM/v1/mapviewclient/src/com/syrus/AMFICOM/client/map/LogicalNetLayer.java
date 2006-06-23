@@ -1,5 +1,5 @@
 /*-
- * $$Id: LogicalNetLayer.java,v 1.144 2006/03/19 14:43:58 stas Exp $$
+ * $$Id: LogicalNetLayer.java,v 1.145 2006/06/23 14:20:40 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,6 +16,7 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Stroke;
 import java.awt.geom.Rectangle2D;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -75,7 +76,7 @@ import com.syrus.util.Log;
 /**
  * Управляет отображением логической структуры сети.
  * 
- * @version $Revision: 1.144 $, $Date: 2006/03/19 14:43:58 $
+ * @version $Revision: 1.145 $, $Date: 2006/06/23 14:20:40 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -695,10 +696,20 @@ public final class LogicalNetLayer {
 	 * @param point
 	 *        экранная координата
 	 * @return элемент в точке
+	 * @throws MapDataException 
+	 * @throws MapConnectionException 
 	 */
+
 	public MapElement getVisibleMapElementAtPoint(
 			final Point point, 
-			final Rectangle2D.Double visibleBounds)
+			final Rectangle2D.Double visibleBounds) throws MapConnectionException, MapDataException {
+		return getVisibleMapElementAtPoint(point, visibleBounds, true);
+	}
+	
+	private List<MapElement> lastSelected = new ArrayList<MapElement>();
+	public MapElement getVisibleMapElementAtPoint(
+			final Point point, 
+			final Rectangle2D.Double visibleBounds, final boolean rotateElements)
 			throws MapConnectionException, MapDataException {
 		Log.debugMessage(point + " | " + "method call", Log.DEBUGLEVEL09); //$NON-NLS-1$ //$NON-NLS-2$
 
@@ -731,12 +742,27 @@ public final class LogicalNetLayer {
 						if(physicalLink instanceof UnboundLink) {
 							return ((UnboundLink)physicalLink).getCablePath();
 						}
-						List<Object> bindObjects = physicalLink.getBinding()
-								.getBindObjects();
+						final Set<MapElement> bindObjects = physicalLink.getBinding().getBindObjects();
 						if(bindObjects.isEmpty()) {
 							curME = physicalLink;
 						} else {
-							return (MapElement)bindObjects.iterator().next();
+							MapElement mapElement = bindObjects.iterator().next();
+							if (this.lastSelected.contains(mapElement) 
+									&& this.lastSelected.size() == bindObjects.size()) {
+								if (rotateElements) {
+									mapElement = this.lastSelected.get(this.lastSelected.size() - 1);
+									this.lastSelected.remove(mapElement);
+									this.lastSelected.add(0, mapElement);
+								} else {
+									mapElement = this.lastSelected.get(0);
+								}
+							} else {
+								this.lastSelected.clear();
+								this.lastSelected.addAll(bindObjects);
+								this.lastSelected.remove(mapElement);
+								this.lastSelected.add(0, mapElement);
+							}
+							return mapElement;
 						}
 						break;
 					}
@@ -834,12 +860,11 @@ public final class LogicalNetLayer {
 						if(physicalLink instanceof UnboundLink) {
 							return ((UnboundLink)physicalLink).getCablePath();
 						}
-						List<Object> bindObjects = physicalLink.getBinding()
-								.getBindObjects();
+						final Set<MapElement> bindObjects = physicalLink.getBinding().getBindObjects();
 						if(bindObjects.isEmpty()) {
 							curME = physicalLink;
 						} else {
-							return (MapElement)bindObjects.iterator().next();
+							return bindObjects.iterator().next();
 						}
 						break;
 					}
@@ -1088,7 +1113,7 @@ public final class LogicalNetLayer {
 	 * Объект, замещающий при отображении несколько NodeLink'ов
 	 * 
 	 * @author $Author: stas $
-	 * @version $Revision: 1.144 $, $Date: 2006/03/19 14:43:58 $
+	 * @version $Revision: 1.145 $, $Date: 2006/06/23 14:20:40 $
 	 * @module mapviewclient_modifying
 	 */
 	private class VisualMapElement {
@@ -1104,14 +1129,13 @@ public final class LogicalNetLayer {
 		}
 
 		public VisualMapElement(final AbstractNode startNode, final AbstractNode endNode, final Color color, final Stroke stroke) {
-			this.startNode = startNode;
-			this.endNode = endNode;
+			this(startNode, endNode);
 			this.color = color;
 			this.stroke = stroke;
 		}
 
 		public VisualMapElement(final MapElement mapElement, final Color color, final Stroke stroke) {
-			this.mapElement = mapElement;
+			this(mapElement);
 			this.color = color;
 			this.stroke = stroke;
 		}
@@ -1119,6 +1143,10 @@ public final class LogicalNetLayer {
 		public VisualMapElement(final MapElement mapElement) {
 			this.mapElement = mapElement;
 		}
+		
+//		setColor(Color defaultColor) {
+//			
+//		}
 	}
 
 	/**
@@ -1380,7 +1408,6 @@ public final class LogicalNetLayer {
 		}
 
 		if(nodeProcessed == null){
-			int a = 0;
 			nodeProcessed = incomingLink.getOtherNode(lastNode);
 		}
 
@@ -1408,9 +1435,6 @@ public final class LogicalNetLayer {
 			return;
 		}
 
-		if(nodesCalculated.get(nodeProcessed) == null) {
-			@SuppressWarnings("unused") int a = 0;
-		}
 		if (nodesCalculated.get(nodeProcessed).booleanValue()
 				|| (allLinksForNodeProcessed.size() == 1 && allLinksForNodeProcessed.contains(incomingLink))
 				|| !hasUncalculatedLinks) {
