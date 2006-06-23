@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapActionCommandBundle.java,v 1.37 2005/10/12 13:07:08 krupenn Exp $$
+ * $$Id: MapActionCommandBundle.java,v 1.38 2006/06/23 13:58:39 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,8 +37,8 @@ import com.syrus.AMFICOM.scheme.SchemePath;
 
 /**
  * 
- * @version $Revision: 1.37 $, $Date: 2005/10/12 13:07:08 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.38 $, $Date: 2006/06/23 13:58:39 $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -313,10 +313,8 @@ public class MapActionCommandBundle extends CommandBundle {
 	protected void removeUnboundLink(UnboundLink link)
 			throws Throwable {
 		link.sortNodes();
-		List sortedNodes = new LinkedList();
-		sortedNodes.addAll(link.getSortedNodes());
-		for(Iterator it2 = sortedNodes.iterator(); it2.hasNext();) {
-			AbstractNode node = (AbstractNode)it2.next();
+		List<AbstractNode> allNodes = new LinkedList<AbstractNode>(link.getSortedNodes());
+		for(AbstractNode node : allNodes) {
 			if(node instanceof TopologicalNode) {
 				this.removeNode(node);
 			}
