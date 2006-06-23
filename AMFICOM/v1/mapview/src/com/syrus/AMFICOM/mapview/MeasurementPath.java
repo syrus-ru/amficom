@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementPath.java,v 1.59 2005/10/31 12:30:20 bass Exp $
+ * $Id: MeasurementPath.java,v 1.60 2006/06/23 13:45:33 stas Exp $
  *
  * Copyright њ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,10 +10,10 @@ package com.syrus.AMFICOM.mapview;
 
 import static java.util.logging.Level.SEVERE;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characterizable;
@@ -22,14 +22,9 @@ import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.MapElementState;
 import com.syrus.AMFICOM.map.NodeLink;
-import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.resource.DoublePoint;
-import com.syrus.AMFICOM.scheme.AbstractSchemeElement;
 import com.syrus.AMFICOM.scheme.PathElement;
-import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
-import com.syrus.AMFICOM.scheme.SchemeElement;
-import com.syrus.AMFICOM.scheme.SchemeLink;
 import com.syrus.AMFICOM.scheme.SchemePath;
 import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.IdlDataPackage.IdlKind;
 import com.syrus.util.Log;
@@ -37,9 +32,9 @@ import com.syrus.util.Log;
 /**
  * Ёлемент пути.
  *
- * @author $Author: bass $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
- * @version $Revision: 1.59 $, $Date: 2005/10/31 12:30:20 $
+ * @version $Revision: 1.60 $, $Date: 2006/06/23 13:45:33 $
  * @module mapview
  */
 public final class MeasurementPath implements MapElement {
@@ -207,23 +202,16 @@ public final class MeasurementPath implements MapElement {
 		double x = 0.0D; 
 		double y = 0.0D;
 
-		try {
-			List<CablePath> cablePaths = this.getCablePaths();
-			int count = cablePaths.size();
-			if(count > 0) {
-				for (final CablePath cablePath : cablePaths) {
-					final DoublePoint an = cablePath.getLocation();
-					x += an.getX();
-					y += an.getY();
-				}
-				this.location.setLocation(x /= count, y /= count);
+		int count = this.sortedCablePaths.size();
+		if(count > 0) {
+			for (final CablePath cablePath : this.sortedCablePaths) {
+				final DoublePoint an = cablePath.getLocation();
+				x += an.getX();
+				y += an.getY();
 			}
-			// else leave intact
-		} catch (final ApplicationException ae) {
-			Log.debugMessage(ae, SEVERE);
-			// leave intact
+			this.location.setLocation(x /= count, y /= count);
 		}
-
+		// else leave intact
 		return this.location;
 	}
 
@@ -337,52 +325,48 @@ public final class MeasurementPath implements MapElement {
 	 * измерительный путь.
 	 * to avoid instantiation of multiple objects.
 	 */
-	private List<CablePath> unsortedCablePaths = new LinkedList<CablePath>();
+//	private List<CablePath> unsortedCablePaths = new LinkedList<CablePath>();
 
 	/**
-	 * ѕолучить список топологических кабелей, которые вход€т в состав пути.
+	 * ќтсортировать список топологических кабелей, которые вход€т в состав пути.
 	 * —писок строитс€ динамически.
-	 * @return список кабельных путей
 	 */
-	private List<CablePath> getCablePaths() throws ApplicationException {
-		synchronized (this.unsortedCablePaths) {
-			final Scheme scheme = this.schemePath.getParentSchemeMonitoringSolution().getParentScheme();
-
-			this.unsortedCablePaths.clear();
+	private void sortCablePaths() throws ApplicationException {
+			this.sortedCablePaths.clear();
 			for (final PathElement pathElement : this.schemePath.getPathMembers()) {
-				final AbstractSchemeElement abstractSchemeElement = pathElement.getAbstractSchemeElement();
 				switch (pathElement.getKind().value()) {
 					case IdlKind._SCHEME_ELEMENT:
-						final SchemeElement schemeElement = (SchemeElement) abstractSchemeElement;
-						final SiteNode site = this.mapView.findElement(schemeElement);
-						if (site != null) {
+//						final SchemeElement schemeElement = (SchemeElement) abstractSchemeElement;
+//						final SiteNode site = this.mapView.findElement(schemeElement);
+//						if (site != null) {
 							// TODO think if link to 'site' is needed for mPath
 							// mPath.addCablePath(site);
-						}
+						
+//						}
 						break;
 					case IdlKind._SCHEME_LINK:
-						final SchemeLink schemeLink = (SchemeLink) abstractSchemeElement;
-
-						SchemeElement innerSourceElement = schemeLink.getSourceAbstractSchemePort().getParentSchemeDevice().getParentSchemeElement();
-						SchemeElement topSourceElement = MapView.getTopLevelSchemeElement(innerSourceElement);
-						final SchemeElement startSchemeElement = MapView.getTopologicalSchemeElement(scheme, topSourceElement);
-
-						SchemeElement innerTargetElement = schemeLink.getTargetAbstractSchemePort().getParentSchemeDevice().getParentSchemeElement();
-						SchemeElement topTargetElement = MapView.getTopLevelSchemeElement(innerTargetElement);
-						final SchemeElement endSchemeElement = MapView.getTopologicalSchemeElement(scheme, topTargetElement);
-
-						final SiteNode startSiteNode = this.mapView.findElement(startSchemeElement);
-						final SiteNode endSiteNode = this.mapView.findElement(endSchemeElement);
-						if (startSiteNode == endSiteNode) {
+//						final SchemeLink schemeLink = pathElement.getSchemeLink();
+//
+//						SchemeElement innerSourceElement = schemeLink.getSourceAbstractSchemePort().getParentSchemeDevice().getParentSchemeElement();
+//						SchemeElement topSourceElement = MapView.getTopLevelSchemeElement(innerSourceElement);
+//						final SchemeElement startSchemeElement = MapView.getTopologicalSchemeElement(scheme, topSourceElement);
+//
+//						SchemeElement innerTargetElement = schemeLink.getTargetAbstractSchemePort().getParentSchemeDevice().getParentSchemeElement();
+//						SchemeElement topTargetElement = MapView.getTopLevelSchemeElement(innerTargetElement);
+//						final SchemeElement endSchemeElement = MapView.getTopologicalSchemeElement(scheme, topTargetElement);
+//
+//						final SiteNode startSiteNode = this.mapView.findElement(startSchemeElement);
+//						final SiteNode endSiteNode = this.mapView.findElement(endSchemeElement);
+//						if (startSiteNode == endSiteNode) {
 							// TODO think if link to 'link' is needed for mPath
 							// mPath.addCablePath(startSiteNode);
-						}
+//						}
 						break;
 					case IdlKind._SCHEME_CABLE_LINK:
-						final SchemeCableLink schemeCableLink = (SchemeCableLink) abstractSchemeElement;
+						final SchemeCableLink schemeCableLink = pathElement.getSchemeCableLink();
 						final CablePath cablePath = this.mapView.findCablePath(schemeCableLink);
 						if (cablePath != null) {
-							this.unsortedCablePaths.add(cablePath);
+							this.sortedCablePaths.add(cablePath);
 						}
 						break;
 					default:
@@ -390,8 +374,6 @@ public final class MeasurementPath implements MapElement {
 								+ pathElement.getKind());
 				}
 			}
-		}
-		return Collections.unmodifiableList(this.unsortedCablePaths);
 	}
 
 	/**
@@ -431,22 +413,23 @@ public final class MeasurementPath implements MapElement {
 
 		AbstractNode node = getStartNode();
 
-		this.sortedCablePaths.addAll(getCablePaths());
+		sortCablePaths();
 
 		for (final CablePath cablePath : this.sortedCablePaths) {
 			cablePath.sortNodeLinks();
+			final List<NodeLink> sortedNodeLinks2 = cablePath.getSortedNodeLinks();
+			final List<AbstractNode> sortedNodes2 = cablePath.getSortedNodes();
+			
 			if (cablePath.getStartNode().equals(node)) {
-				this.sortedNodeLinks.addAll(cablePath.getSortedNodeLinks());
-				this.sortedNodes.addAll(cablePath.getSortedNodes());
+				this.sortedNodeLinks.addAll(sortedNodeLinks2);
+				this.sortedNodes.addAll(sortedNodes2);
 			} else {
-				final List<NodeLink> reversedSortedNodeLinks = new ArrayList<NodeLink>(cablePath.getSortedNodeLinks());
-				Collections.reverse(reversedSortedNodeLinks);
-				for (int i = 0; i < reversedSortedNodeLinks.size(); i++)
-					this.sortedNodeLinks.add(reversedSortedNodeLinks.get(i));
-				final List<AbstractNode> reversedSortedNodes = new ArrayList<AbstractNode>(cablePath.getSortedNodes());
-				Collections.reverse(reversedSortedNodes);
-				for (int i = 0; i < reversedSortedNodes.size(); i++)
-					this.sortedNodes.add(reversedSortedNodes.get(i));
+				for (final ListIterator<NodeLink> it = sortedNodeLinks2.listIterator(sortedNodeLinks2.size()); it.hasPrevious();) {
+					this.sortedNodeLinks.add(it.previous());
+				}
+				for (final ListIterator<AbstractNode> it = sortedNodes2.listIterator(sortedNodes2.size()); it.hasPrevious();) {
+					this.sortedNodes.add(it.previous());
+				}
 			}
 			node = cablePath.getOtherNode(node);
 
