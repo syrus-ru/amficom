@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLink.java,v 1.156 2006/06/06 11:33:48 arseniy Exp $
+ * $Id: PhysicalLink.java,v 1.157 2006/06/23 13:38:06 stas Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -78,8 +78,8 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * Предуствновленными являются  два типа -
  * тоннель (<code>{@link PhysicalLinkType#DEFAULT_TUNNEL}</code>)
  * и коллектор (<code>{@link PhysicalLinkType#DEFAULT_COLLECTOR}</code>).
- * @author $Author: arseniy $
- * @version $Revision: 1.156 $, $Date: 2006/06/06 11:33:48 $
+ * @author $Author: stas $
+ * @version $Revision: 1.157 $, $Date: 2006/06/23 13:38:06 $
  * @module map
  */
 public class PhysicalLink extends StorableObject
@@ -112,6 +112,21 @@ public class PhysicalLink extends StorableObject
 	protected transient boolean nodeLinksSorted = false;
 
 	private transient boolean transientFieldsInitialized = false;
+	
+	void init(Set<NodeLink> nodeLinks1) { 
+		if(!this.transientFieldsInitialized) {
+			this.nodeLinks = new LinkedList<NodeLink>();
+			for (Iterator<NodeLink> it = nodeLinks1.iterator(); it.hasNext();) {
+				NodeLink nlink = it.next();
+				if (nlink.getPhysicalLinkId().equals(this.id)) {
+					this.nodeLinks.add(nlink);
+					it.remove();
+				}
+			}
+			this.sortedNodes = new LinkedList<AbstractNode>();
+			this.transientFieldsInitialized = true;
+		}
+	}
 	
 	private void initialize() {
 		if(!this.transientFieldsInitialized) {
@@ -680,36 +695,38 @@ public class PhysicalLink extends StorableObject
 	public void sortNodeLinks() {
 		this.initialize();
 		if (!this.nodeLinksSorted) {
-			AbstractNode smne = this.getStartNode();
-			NodeLink currentNodeLink = null;
+			final List<NodeLink> nodeLinks2 = getNodeLinks();
 			final LinkedList<NodeLink> list = new LinkedList<NodeLink>();
 			final List<AbstractNode> nodeList = new LinkedList<AbstractNode>();
+			
+			if (nodeLinks2.size() == 1) {
+				nodeList.add(getStartNode());
+				list.add(nodeLinks2.iterator().next());
+			} else {
+				AbstractNode smne = this.getStartNode();
+				NodeLink currentNodeLink = null;
 
-			final List<NodeLink> origNodeLinks = new LinkedList<NodeLink>();
-			origNodeLinks.addAll(this.getNodeLinks());
-
-			int count = origNodeLinks.size();
-			for (int i = 0; i < count; i++) {
-				nodeList.add(smne);
-
-				for (final Iterator<NodeLink> it = origNodeLinks.iterator(); it.hasNext();) {
-					final NodeLink nodeLink = it.next();
-
-					if (!nodeLink.equals(currentNodeLink)) {
-						if (nodeLink.getStartNode().equals(smne)) {
-							list.add(nodeLink);
-							it.remove();
-							smne = nodeLink.getEndNode();
-							currentNodeLink = nodeLink;
-							break;
-						} else
-							if (nodeLink.getEndNode().equals(smne)) {
+				int count = nodeLinks2.size();
+				for (int i = 0; i < count; i++) {
+					nodeList.add(smne);
+					
+					for (final NodeLink nodeLink : nodeLinks2) {
+						if (!nodeLink.equals(currentNodeLink)) {
+							if (nodeLink.getStartNode().equals(smne)) {
 								list.add(nodeLink);
-								it.remove();
-								smne = nodeLink.getStartNode();
+//								it.remove();
+								smne = nodeLink.getEndNode();
 								currentNodeLink = nodeLink;
 								break;
-							}
+							} else
+								if (nodeLink.getEndNode().equals(smne)) {
+									list.add(nodeLink);
+//									it.remove();
+									smne = nodeLink.getStartNode();
+									currentNodeLink = nodeLink;
+									break;
+								}
+						}
 					}
 				}
 			}
