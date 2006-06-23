@@ -1,5 +1,5 @@
 /*-
- * $$Id: SimpleMapElementController.java,v 1.19 2006/03/13 15:54:27 bass Exp $$
+ * $$Id: SimpleMapElementController.java,v 1.20 2006/06/23 14:29:00 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,13 +10,13 @@ package com.syrus.AMFICOM.client.map.ui;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
+import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.PhysicalLinkType;
@@ -25,8 +25,8 @@ import com.syrus.AMFICOM.map.SiteNodeType;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2006/03/13 15:54:27 $
- * @author $Author: bass $
+ * @version $Revision: 1.20 $, $Date: 2006/06/23 14:29:00 $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -37,15 +37,12 @@ public final class SimpleMapElementController implements Wrapper {
 
 	private static SimpleMapElementController instance;
 
-	private List keys;
-	private String[] keysArray;
+	private List<String> keys;
 
 	private SimpleMapElementController() {
-		// empty private constructor
-		this.keysArray = new String[] { KEY_NAME, KEY_TYPE };
-
-		this.keys = Collections.unmodifiableList(new ArrayList(Arrays
-				.asList(this.keysArray)));
+		this.keys = Collections.unmodifiableList(Arrays.asList(
+				new String[] { KEY_NAME, KEY_TYPE 
+		}));
 	}
 
 	public static SimpleMapElementController getInstance() {
@@ -54,12 +51,8 @@ public final class SimpleMapElementController implements Wrapper {
 		return instance;
 	}
 
-	public List getKeys() {
+	public List<String> getKeys() {
 		return this.keys;
-	}
-
-	public String[] getKeysArray() {
-		return this.keysArray;
 	}
 
 	public String getName(final String key) {
@@ -77,23 +70,12 @@ public final class SimpleMapElementController implements Wrapper {
 		if(object == null) {
 			result = " "; //$NON-NLS-1$
 		} else if(key.equals(KEY_NAME)) {
-			Class clazz = object.getClass();
-			String methodName = "getName"; //$NON-NLS-1$
-			String name = ""; //$NON-NLS-1$
-			try {
-				Method method = clazz.getMethod(methodName, new Class[0]);
-				name = (String) (method.invoke(object, new Object[0]));
-				result = name;
-			} catch(InvocationTargetException iae) {
-				result = " "; //$NON-NLS-1$
-			} catch(IllegalAccessException iae) {
-				result = " "; //$NON-NLS-1$
-			} catch(NoSuchMethodException nsme) {
-				result = " "; //$NON-NLS-1$
-			}
-
-			if(result == null) {
-				methodName = "name"; //$NON-NLS-1$
+			if (object instanceof Namable) {
+				result = ((Namable)object).getName();
+			} else {
+				Class clazz = object.getClass();
+				String methodName = "getName"; //$NON-NLS-1$
+				String name = ""; //$NON-NLS-1$
 				try {
 					Method method = clazz.getMethod(methodName, new Class[0]);
 					name = (String) (method.invoke(object, new Object[0]));
@@ -104,6 +86,21 @@ public final class SimpleMapElementController implements Wrapper {
 					result = " "; //$NON-NLS-1$
 				} catch(NoSuchMethodException nsme) {
 					result = " "; //$NON-NLS-1$
+				}
+
+				if(result == null) {
+					methodName = "name"; //$NON-NLS-1$
+					try {
+						Method method = clazz.getMethod(methodName, new Class[0]);
+						name = (String) (method.invoke(object, new Object[0]));
+						result = name;
+					} catch(InvocationTargetException iae) {
+						result = " "; //$NON-NLS-1$
+					} catch(IllegalAccessException iae) {
+						result = " "; //$NON-NLS-1$
+					} catch(NoSuchMethodException nsme) {
+						result = " "; //$NON-NLS-1$
+					}
 				}
 			}
 		} else if(object instanceof MapElement) {
