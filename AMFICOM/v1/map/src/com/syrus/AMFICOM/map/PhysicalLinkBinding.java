@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLinkBinding.java,v 1.21 2005/12/17 12:09:00 arseniy Exp $
+ * $Id: PhysicalLinkBinding.java,v 1.22 2006/06/23 13:39:17 stas Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,12 +9,9 @@
 package com.syrus.AMFICOM.map;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -28,8 +25,8 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
  * включает всебя список кабелей, которые проходят по данному тоннелю,
  * и матрицу пролегания кабелей по трубам тоннеля.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.21 $, $Date: 2005/12/17 12:09:00 $
+ * @author $Author: stas $
+ * @version $Revision: 1.22 $, $Date: 2006/06/23 13:39:17 $
  * @module map
  */
 public final class PhysicalLinkBinding implements Serializable {
@@ -40,12 +37,13 @@ public final class PhysicalLinkBinding implements Serializable {
 	private transient SortedSet<PipeBlock> pipeBlocks;
 
 	/** список кабелей, проложенных по данному тоннелю */
-	private transient ArrayList<Object> bindObjects = new ArrayList<Object>();
+	private transient Set<MapElement> bindObjects;
 
 	private void initialize() {
-		if(this.bindObjects == null) {
-			this.bindObjects = new ArrayList<Object>();
+		if (this.bindObjects == null) {
+			this.bindObjects  = new HashSet<MapElement>();
 		}
+		
 		if(this.pipeBlocks == null) {
 			this.pipeBlocks = new TreeSet<PipeBlock>();
 			final Set<PipeBlock> pipeBlocksFromPool;
@@ -74,14 +72,11 @@ public final class PhysicalLinkBinding implements Serializable {
 	/**
 	 * Добавить кабель в тоннель.
 	 * 
-	 * @param object
-	 *        кабель (com.syrus.AMFICOM.scheme.corba.SchemeCableLink)
+	 * @param object кабель (CablePath)
 	 */
-	public void add(final Object object) {
+	public void add(final MapElement object) {
 		this.initialize();
-		final int index = this.bindObjects.indexOf(object);
-		if (index == -1)
-			this.bindObjects.add(object);
+		this.bindObjects.add(object);
 	}
 	
 	/**
@@ -115,42 +110,36 @@ public final class PhysicalLinkBinding implements Serializable {
 	 * 
 	 * @return список кабелей
 	 */
-	public List<Object> getBindObjects() {
-		this.initialize();
-		return new LinkedList(this.bindObjects);
+	public Set<MapElement> getBindObjects() {
+		return Collections.unmodifiableSet(this.bindObjects);
 	}
 	
 	/**
 	 * Проверить, определено ли место прохождения кабеля в тоннеле.
 	 * 
-	 * @param object
+	 * @param mapElement
 	 *        кабель
 	 * @return <code>true</code>, если место кабеля определено,
 	 *         <code>false</code> иначе
 	 */
-	public boolean isBound(final Object object) {
-		this.initialize();
-		final int index = this.bindObjects.indexOf(object);
-		return (index >= 0);
+	public boolean isBound(final MapElement mapElement) {
+		return this.bindObjects.contains(mapElement);
 	}
 
 	/**
 	 * Gолучить координаты трубы, по которой проходит кабель.
 	 * 
-	 * @param object
-	 *        кабель
+	 * @param mapElement кабель
 	 * @return координаты прохождения кабеля, или <code>null</code>, если место
 	 *         кабеля не задано
 	 */
-	public PipeBlock getPipeBlock(final Object object) {
+	public PipeBlock getPipeBlock(final MapElement mapElement) {
 		this.initialize();
-		final int index = this.bindObjects.indexOf(object);
-		if (index == -1) {
-			return null;
-		}
-		for(PipeBlock pipeBlock : this.pipeBlocks) {
-			if(pipeBlock.isBound(object)) {
-				return pipeBlock;
+		if (this.bindObjects.contains(mapElement)) {
+			for(PipeBlock pipeBlock : this.pipeBlocks) {
+				if(pipeBlock.isBound(mapElement)) {
+					return pipeBlock;
+				}
 			}
 		}
 		return null;
