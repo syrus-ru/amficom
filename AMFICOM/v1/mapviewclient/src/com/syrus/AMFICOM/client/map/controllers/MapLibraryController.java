@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapLibraryController.java,v 1.14 2006/04/14 12:04:07 arseniy Exp $$
+ * $$Id: MapLibraryController.java,v 1.15 2006/06/23 14:05:04 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,8 +30,8 @@ import com.syrus.AMFICOM.map.corba.IdlSiteNodeTypePackage.SiteNodeTypeSort;
 /**
  * контроллер типа сетевого узла.
  * 
- * @version $Revision: 1.14 $, $Date: 2006/04/14 12:04:07 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.15 $, $Date: 2006/06/23 14:05:04 $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -103,45 +103,71 @@ public class MapLibraryController {
 		SiteNodeType siteNodeType;
 		// make sure SiteNodeType.ATS is created
 		siteNodeType = NodeTypeController.getSiteNodeType(defaultLibrary, SiteNodeTypeSort.ATS, SiteNodeType.DEFAULT_ATS, true);
-		siteNodeType.setMapLibrary(defaultLibrary);
+		if (!siteNodeType.getMapLibraryId().equals(defaultLibrary)) {
+			siteNodeType.setMapLibrary(defaultLibrary);
+		}
 		// make sure SiteNodeType.BUILDING is created
 		siteNodeType = NodeTypeController.getSiteNodeType(defaultLibrary, SiteNodeTypeSort.BUILDING, SiteNodeType.DEFAULT_BUILDING, true);
-		siteNodeType.setMapLibrary(defaultLibrary);
+		if (!siteNodeType.getMapLibraryId().equals(defaultLibrary)) {
+			siteNodeType.setMapLibrary(defaultLibrary);
+		}
 		// make sure SiteNodeType.PIQUET is created
 		siteNodeType = NodeTypeController.getSiteNodeType(defaultLibrary, SiteNodeTypeSort.PIQUET, SiteNodeType.DEFAULT_PIQUET, true);
-		siteNodeType.setMapLibrary(defaultLibrary);
+		if (!siteNodeType.getMapLibraryId().equals(defaultLibrary)) {
+			siteNodeType.setMapLibrary(defaultLibrary);
+		}
 		// make sure SiteNodeType.WELL is created
 		siteNodeType = NodeTypeController.getSiteNodeType(defaultLibrary, SiteNodeTypeSort.WELL, SiteNodeType.DEFAULT_WELL, true);
-		siteNodeType.setMapLibrary(defaultLibrary);
+		if (!siteNodeType.getMapLibraryId().equals(defaultLibrary)) {
+			siteNodeType.setMapLibrary(defaultLibrary);
+		}
 		// make sure SiteNodeType.CABLE_INLET is created
 		siteNodeType = NodeTypeController.getSiteNodeType(defaultLibrary, SiteNodeTypeSort.CABLE_INLET, SiteNodeType.DEFAULT_CABLE_INLET, false);
-		siteNodeType.setMapLibrary(defaultLibrary);
+		if (!siteNodeType.getMapLibraryId().equals(defaultLibrary)) {
+			siteNodeType.setMapLibrary(defaultLibrary);
+		}
 		// make sure SiteNodeType.UNBOUND is created
 		siteNodeType = NodeTypeController.getSiteNodeType(defaultLibrary, SiteNodeTypeSort.UNBOUND, SiteNodeType.DEFAULT_UNBOUND, false);
-		siteNodeType.setMapLibrary(defaultLibrary);
+		if (!siteNodeType.getMapLibraryId().equals(defaultLibrary)) {
+			siteNodeType.setMapLibrary(defaultLibrary);
+		}
 		// make sure SiteNodeType.CABLE_INLET is created
 		siteNodeType = NodeTypeController.getSiteNodeType(defaultLibrary, SiteNodeTypeSort.TOWER, SiteNodeType.DEFAULT_TOWER, true);
-		siteNodeType.setMapLibrary(defaultLibrary);
+		if (!siteNodeType.getMapLibraryId().equals(defaultLibrary)) {
+			siteNodeType.setMapLibrary(defaultLibrary);
+		}
 
 		PhysicalLinkType physicalLinkType;
 		// make sure PhysicalLinkType.TUNNEL is created
 		physicalLinkType = LinkTypeController.getPhysicalLinkType(defaultLibrary, PhysicalLinkTypeSort.TUNNEL, PhysicalLinkType.DEFAULT_TUNNEL, true);
-		physicalLinkType.setMapLibrary(defaultLibrary); 
+		if (!physicalLinkType.getMapLibraryId().equals(defaultLibrary)) {
+			physicalLinkType.setMapLibrary(defaultLibrary);
+		} 
 		// make sure PhysicalLinkType.COLLECTOR is created
 		physicalLinkType = LinkTypeController.getPhysicalLinkType(defaultLibrary, PhysicalLinkTypeSort.COLLECTOR, PhysicalLinkType.DEFAULT_COLLECTOR, true);
-		physicalLinkType.setMapLibrary(defaultLibrary); 
+		if (!physicalLinkType.getMapLibraryId().equals(defaultLibrary)) {
+			physicalLinkType.setMapLibrary(defaultLibrary);
+		} 
 		// make sure PhysicalLinkType.INDOOR is created
 		physicalLinkType = LinkTypeController.getPhysicalLinkType(defaultLibrary, PhysicalLinkTypeSort.INDOOR, PhysicalLinkType.DEFAULT_INDOOR, false);
-		physicalLinkType.setMapLibrary(defaultLibrary); 
+		if (!physicalLinkType.getMapLibraryId().equals(defaultLibrary)) {
+			physicalLinkType.setMapLibrary(defaultLibrary);
+		} 
 		// make sure PhysicalLinkType.SUBMARINE is created
 		physicalLinkType = LinkTypeController.getPhysicalLinkType(defaultLibrary, PhysicalLinkTypeSort.SUBMARINE, PhysicalLinkType.DEFAULT_SUBMARINE, true);
-		physicalLinkType.setMapLibrary(defaultLibrary); 
+		if (!physicalLinkType.getMapLibraryId().equals(defaultLibrary)) {
+			physicalLinkType.setMapLibrary(defaultLibrary);
+		} 
 		// make sure PhysicalLinkType.OVERHEAD is created
 		physicalLinkType = LinkTypeController.getPhysicalLinkType(defaultLibrary, PhysicalLinkTypeSort.OVERHEAD, PhysicalLinkType.DEFAULT_OVERHEAD, true);
-		physicalLinkType.setMapLibrary(defaultLibrary); 
+		if (!physicalLinkType.getMapLibraryId().equals(defaultLibrary)) {
+			physicalLinkType.setMapLibrary(defaultLibrary);
+		} 
 		// make sure PhysicalLinkType.UNBOUND is created
 		physicalLinkType = LinkTypeController.getPhysicalLinkType(defaultLibrary, PhysicalLinkTypeSort.UNBOUND, PhysicalLinkType.DEFAULT_UNBOUND, false);
-		physicalLinkType.setMapLibrary(defaultLibrary); 
+		if (!physicalLinkType.getMapLibraryId().equals(defaultLibrary)) {
+			physicalLinkType.setMapLibrary(defaultLibrary);
+		} 
 	}
 
 	/**
