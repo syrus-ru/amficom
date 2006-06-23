@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapDropTargetListener.java,v 1.50 2006/02/15 12:54:38 stas Exp $$
+ * $$Id: MapDropTargetListener.java,v 1.51 2006/06/23 14:21:55 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -56,7 +56,7 @@ import com.syrus.util.Log;
 /**
  * Обработчик событий drag/drop в окне карты
  * 
- * @version $Revision: 1.50 $, $Date: 2006/02/15 12:54:38 $
+ * @version $Revision: 1.51 $, $Date: 2006/06/23 14:21:55 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -224,17 +224,16 @@ public final class MapDropTargetListener implements DropTargetListener {
 						map.getSelectedElements()));
 			}
 		} else {
-			PlaceSchemeElementCommand cmd = new PlaceSchemeElementCommand(
-					schemeElement,
-					point);
+			PlaceSchemeElementCommand cmd = new PlaceSchemeElementCommand(schemeElement, point);
 			cmd.setNetMapViewer(this.netMapViewer);
 			logicalNetLayer.getCommandList().add(cmd);
 			logicalNetLayer.getCommandList().execute();
 			logicalNetLayer.getCommandList().flush();
 			logicalNetLayer.sendMapEvent(MapEvent.MAP_CHANGED);
 
-			logicalNetLayer.getMapViewController().scanCables(
-					schemeElement.getParentScheme());
+			
+//			logicalNetLayer.getMapViewController().scanCables(
+//					schemeElement.getParentScheme());
 		}
 	}
 
