@@ -1,5 +1,5 @@
 /*-
- * $$Id: LinkTypeController.java,v 1.65 2006/02/15 11:12:33 stas Exp $$
+ * $$Id: LinkTypeController.java,v 1.66 2006/06/23 14:04:19 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -46,7 +46,7 @@ import com.syrus.util.Log;
 /**
  * Контроллер типа линейного элемента карты.
  * 
- * @version $Revision: 1.65 $, $Date: 2006/02/15 11:12:33 $
+ * @version $Revision: 1.66 $, $Date: 2006/06/23 14:04:19 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -344,8 +344,10 @@ public final class LinkTypeController extends AbstractLinkController {
 			StorableObjectPool.flush(type, userId, true);
 		}
 		else {
-			type.setSort(sort);
-			type.setTopological(topological);
+			if (!type.getSort().equals(sort) || type.isTopological() != topological) {
+				type.setSort(sort);
+				type.setTopological(topological);
+			}
 		}
 		return type;
 	}
