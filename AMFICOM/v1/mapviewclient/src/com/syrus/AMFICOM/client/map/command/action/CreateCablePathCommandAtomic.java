@@ -1,5 +1,5 @@
 /*-
- * $$Id: CreateCablePathCommandAtomic.java,v 1.26 2005/10/31 12:30:08 bass Exp $$
+ * $$Id: CreateCablePathCommandAtomic.java,v 1.27 2006/06/23 14:01:13 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,8 +20,8 @@ import com.syrus.util.Log;
  * создание пути рпокладки кабеля, внесение его в пул и на карту - атомарное
  * действие
  * 
- * @version $Revision: 1.26 $, $Date: 2005/10/31 12:30:08 $
- * @author $Author: bass $
+ * @version $Revision: 1.27 $, $Date: 2006/06/23 14:01:13 $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -54,14 +54,14 @@ public class CreateCablePathCommandAtomic extends MapActionCommand {
 
 	@Override
 	public void execute() {
-		Log.debugMessage("create CablePath for SchemeCableLink "  //$NON-NLS-1$
-				+ this.schemeCableLink.getName() 
-				+ " (" + this.schemeCableLink.getId()  //$NON-NLS-1$
-				+ ") with start at node " + this.startNode.getName()  //$NON-NLS-1$
-				+ " (" + this.startNode.getId()  //$NON-NLS-1$
-				+ ") and end at node " + this.endNode.getName()  //$NON-NLS-1$
-				+ " (" + this.endNode.getId() + ")",  //$NON-NLS-1$ //$NON-NLS-2$
-			Level.FINEST);
+//		Log.debugMessage("create CablePath for SchemeCableLink "  //$NON-NLS-1$
+//				+ this.schemeCableLink.getName() 
+//				+ " (" + this.schemeCableLink.getId()  //$NON-NLS-1$
+//				+ ") with start at node " + this.startNode.getName()  //$NON-NLS-1$
+//				+ " (" + this.startNode.getId()  //$NON-NLS-1$
+//				+ ") and end at node " + this.endNode.getName()  //$NON-NLS-1$
+//				+ " (" + this.endNode.getId() + ")",  //$NON-NLS-1$ //$NON-NLS-2$
+//			Level.FINEST);
 		
 		this.cablePath = com.syrus.AMFICOM.mapview.CablePath.createInstance(
 				this.schemeCableLink,
