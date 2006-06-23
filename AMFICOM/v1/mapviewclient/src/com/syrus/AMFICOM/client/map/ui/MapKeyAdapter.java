@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapKeyAdapter.java,v 1.21 2006/02/15 12:54:38 stas Exp $$
+ * $$Id: MapKeyAdapter.java,v 1.22 2006/06/23 14:27:22 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,7 +29,7 @@ import com.syrus.util.Log;
  * обработки действий (SHIFT, ALT, CTRL) и для удаления выбранных элементов
  * (DEL)
  * 
- * @version $Revision: 1.21 $, $Date: 2006/02/15 12:54:38 $
+ * @version $Revision: 1.22 $, $Date: 2006/06/23 14:27:22 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -108,24 +108,13 @@ public final class MapKeyAdapter extends KeyAdapter {
 			if(ke.isControlDown() && code == KeyEvent.VK_1) {
 				Rectangle2D.Double visibleBounds = this.viewer
 						.getVisibleBounds();
-				long f;
-				long d;
-				f = System.currentTimeMillis();
-				java.util.Collection nodeLinks = logicalNetLayer.getMapView()
-						.getMap().getNodeLinks();
-				d = System.currentTimeMillis();
-				System.out
-						.println("get node links in " + String.valueOf(d - f) + " ms"); //$NON-NLS-1$ //$NON-NLS-2$
-				f = System.currentTimeMillis();
+				java.util.Collection nodeLinks = logicalNetLayer.getMapView().getMap().getNodeLinks();
 
 				for(Iterator iter = nodeLinks.iterator(); iter.hasNext();) {
 					NodeLink nodeLink = (NodeLink) iter.next();
 					logicalNetLayer.getMapViewController().getController(
 							nodeLink).isElementVisible(nodeLink, visibleBounds);
 				}
-				d = System.currentTimeMillis();
-				System.out
-						.println("node links::isVisible performed in " + String.valueOf(d - f) + " ms (total) with average of " + String.valueOf((d - f) / nodeLinks.size() + " ms")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			}
 		} catch(MapConnectionException e) {
 			Log.errorMessage(e);
