@@ -1,5 +1,5 @@
 /*-
- * $$Id: LinkPopupMenu.java,v 1.34 2006/06/15 06:39:17 stas Exp $$
+ * $$Id: LinkPopupMenu.java,v 1.35 2006/06/23 14:13:38 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -43,7 +43,7 @@ import com.syrus.AMFICOM.scheme.CableChannelingItem;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2006/06/15 06:39:17 $
+ * @version $Revision: 1.35 $, $Date: 2006/06/23 14:13:38 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -96,12 +96,13 @@ public final class LinkPopupMenu extends MapPopupMenu {
 			collector = mapView.getMap().getCollector(this.link);
 			
 			final ApplicationModel aModel = this.netMapViewer.getLogicalNetLayer().getContext().getApplicationModel();
-			boolean schemeActionsEnabled = aModel.isSelected(MapApplicationModel.MODE_CABLE_PATH);
+			boolean schemeActionsEnabled = aModel.isSelected(MapApplicationModel.MODE_CABLE_PATH)
+					|| aModel.isSelected(MapApplicationModel.MODE_LINK);
 			
 			if (schemeActionsEnabled) { 
 				final AbstractNode startNode = this.link.getStartNode();
 				final AbstractNode endNode = this.link.getEndNode();
-				
+								
 				Set<CablePath> paths = new HashSet<CablePath>();
 				paths.addAll(mapView.getCablePaths(startNode));		
 				paths.addAll(mapView.getCablePaths(endNode));
@@ -281,14 +282,20 @@ public final class LinkPopupMenu extends MapPopupMenu {
 	
 	void bindCable(CablePath cablePath) {
 		try {
-			if (cablePath.getStartNode().equals(this.link.getStartNode())) {
+			final AbstractNode startUnboundNode = cablePath.getStartUnboundNode();
+			final AbstractNode endUnboundNode = cablePath.getEndUnboundNode();
+			if (startUnboundNode.equals(this.link.getStartNode())
+					|| startUnboundNode.equals(this.link.getEndNode())) {
 				addChainBinding(this.link, null, cablePath);
-			} else {
+			} else if (endUnboundNode.equals(this.link.getStartNode())
+					|| endUnboundNode.equals(this.link.getEndNode())) {
 				addChainBinding(null, this.link, cablePath);
+			} else {
+				Log.debugMessage("Can't bind cable ", Level.FINEST);
 			}
 		} catch (ApplicationException e) {
 			Log.errorMessage(e);
-		}
+		}		
 	}
 	
 	void addChainBinding(PhysicalLink selectedStartLink, PhysicalLink selectedEndLink, CablePath cablePath) throws ApplicationException {
