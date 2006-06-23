@@ -1,5 +1,5 @@
 /*-
- * $Id: Map.java,v 1.132 2006/06/06 11:33:48 arseniy Exp $
+ * $Id: Map.java,v 1.133 2006/06/23 13:36:42 stas Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -68,8 +68,8 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * узлов (сетевых и топологических), линий (состоящих из фрагментов), меток на
  * линиях, коллекторов (объединяющих в себе линии).
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.132 $, $Date: 2006/06/06 11:33:48 $
+ * @author $Author: stas $
+ * @version $Revision: 1.133 $, $Date: 2006/06/23 13:36:42 $
  * @module map
  */
 public final class Map extends DomainMember
@@ -137,15 +137,21 @@ public final class Map extends DomainMember
 				this.topologicalNodes.addAll(StorableObjectPool.<TopologicalNode>getStorableObjects(this.topologicalNodeIds, true));
 				this.physicalLinks.addAll(StorableObjectPool.<PhysicalLink>getStorableObjects(this.physicalLinkIds, true));
 				this.nodeLinks.addAll(StorableObjectPool.<NodeLink>getStorableObjects(this.nodeLinkIds, true));
+				
+				final HashSet<NodeLink> temp = new HashSet<NodeLink>(this.nodeLinks);
+				for (PhysicalLink link : this.physicalLinks) {
+					link.init(temp);
+				}
+				
 				this.marks.addAll(StorableObjectPool.<Mark>getStorableObjects(this.markIds, true));
 				this.collectors.addAll(StorableObjectPool.<Collector>getStorableObjects(this.collectorIds, true));
 				this.maps.addAll(StorableObjectPool.<Map>getStorableObjects(this.mapIds, true));
 				this.externalNodes.addAll(StorableObjectPool.<SiteNode>getStorableObjects(this.externalNodeIds, true));
 				this.mapLibrarys.addAll(StorableObjectPool.<MapLibrary>getStorableObjects(this.mapLibraryIds, true));
 
-				for(NodeLink nodeLink : this.nodeLinks) {
-					nodeLink.getPhysicalLink().addNodeLink(nodeLink);
-				}
+//				for(NodeLink nodeLink : this.nodeLinks) {
+//					nodeLink.getPhysicalLink().addNodeLink(nodeLink);
+//				}
 				
 				this.transientFieldsInitialized = true;
 			} catch(ApplicationException e) {
