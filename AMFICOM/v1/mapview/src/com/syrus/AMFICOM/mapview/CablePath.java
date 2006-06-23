@@ -1,5 +1,5 @@
 /*-
- * $Id: CablePath.java,v 1.44 2006/06/19 06:21:17 stas Exp $
+ * $Id: CablePath.java,v 1.45 2006/06/23 13:42:53 stas Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,7 +8,6 @@
 
 package com.syrus.AMFICOM.mapview;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -36,7 +35,7 @@ import com.syrus.util.Log;
  * 
  * @author $Author: stas $
  * @author Andrei Kroupennikov
- * @version $Revision: 1.44 $, $Date: 2006/06/19 06:21:17 $
+ * @version $Revision: 1.45 $, $Date: 2006/06/23 13:42:53 $
  * @module mapview
  */
 public final class CablePath implements MapElement {
@@ -173,6 +172,7 @@ public final class CablePath implements MapElement {
 	public void setStartNode(AbstractNode startNode) {
 		assert startNode != null;
 		this.startNode = startNode;
+		this.cacheBuild = false;
 		this.nodeLinksSorted = false;
 	}
 
@@ -318,6 +318,7 @@ public final class CablePath implements MapElement {
 	 */
 	public void setSchemeCableLink(SchemeCableLink schemeCableLink) {
 		this.schemeCableLink = schemeCableLink;
+		this.nodeLinksSorted = false;
 	}
 
 	/**
@@ -336,6 +337,7 @@ public final class CablePath implements MapElement {
 	
 	public void invalidateCache() {
 		this.cacheBuild = false;
+		this.nodeLinksSorted = false;
 	}
 
 	/**
@@ -437,6 +439,7 @@ public final class CablePath implements MapElement {
 		this.links.clear();
 		this.binding.clear();
 		this.cacheBuild = false;
+		this.nodeLinksSorted = false;
 	}
 
 	/**
@@ -567,40 +570,30 @@ public final class CablePath implements MapElement {
 	 * @throws ApplicationException
 	 */
 	public void sortNodeLinks() throws ApplicationException {
-		// if(!nodeLinksSorted)
-		{
+		if(!this.nodeLinksSorted) {
 			List<NodeLink> list = new LinkedList<NodeLink>();
 			List<AbstractNode> nodeList = new LinkedList<AbstractNode>();
 
 			AbstractNode node = getStartNode();
 
-			for(Iterator it = this.getLinks().iterator(); it.hasNext();) {
-				PhysicalLink link = (PhysicalLink) it.next();
-
+			for(PhysicalLink link : this.getLinks()) {
 				link.sortNodeLinks();
-
-				if(link.getStartNode().equals(node)) {
-					list.addAll(link.getNodeLinks());
-					nodeList.addAll(link.getSortedNodes());
+				final List<NodeLink> nodeLinks2 = link.getNodeLinks();
+				List<AbstractNode> sortedNodes2 = link.getSortedNodes();
+				
+				if(link.getStartNodeId().equals(node.getId())) {
+					list.addAll(nodeLinks2);
+					nodeList.addAll(sortedNodes2);
 				}
 				else {
-					final List<NodeLink> nodeLinks = link.getNodeLinks();
-					final List<NodeLink> nodeLinksList = 
-						new ArrayList<NodeLink>(nodeLinks);
-					for(final ListIterator<NodeLink> listIterator = 
-							nodeLinksList.listIterator(nodeLinksList.size()); 
-							listIterator.hasPrevious();) {
-						list.add(listIterator.previous());
+					for(final ListIterator<NodeLink> it = nodeLinks2.listIterator(nodeLinks2.size()); it.hasPrevious();) {
+						list.add(it.previous());
 					}
-					List<AbstractNode> sortedNodes2 = link.getSortedNodes();
-					for(final ListIterator<AbstractNode> listIterator = 
-							sortedNodes2.listIterator(sortedNodes2.size()); 
-							listIterator.hasPrevious();) {
-						nodeList.add(listIterator.previous());
+					for(final ListIterator<AbstractNode> it = sortedNodes2.listIterator(sortedNodes2.size()); it.hasPrevious();) {
+						nodeList.add(it.previous());
 					}
 				}
 				node = link.getOtherNode(node);
-
 				// to avoid duplicate entry
 				nodeList.remove(node);
 			}
