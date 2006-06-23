@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapEditorApplicationModel.java,v 1.20 2005/10/21 14:22:28 krupenn Exp $$
+ * $$Id: MapEditorApplicationModel.java,v 1.21 2006/06/23 14:09:32 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,8 +20,8 @@ import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 /**
  * содержит список функциональных элементов, доступных пользователю 
  * 
- * @version $Revision: 1.20 $, $Date: 2005/10/21 14:22:28 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.21 $, $Date: 2006/06/23 14:09:32 $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -49,7 +49,8 @@ public class MapEditorApplicationModel extends ApplicationModel {
 	public static final String ITEM_MAP_VIEW_SAVE_AS = "Menu.MapView.SaveAs"; //$NON-NLS-1$
 	public static final String ITEM_MAP_VIEW_ADD_SCHEME = "Menu.MapView.AddScheme"; //$NON-NLS-1$
 	public static final String ITEM_MAP_VIEW_REMOVE_SCHEME = "Menu.MapView.RemoveScheme"; //$NON-NLS-1$
-
+	public static final String ITEM_MAP_VIEW_VALIDATE = "Menu.MapView.Validate"; //$NON-NLS-1$
+	
 	public static final String ITEM_MAP_LIBRARY = "Menu.MapLibrary"; //$NON-NLS-1$
 	public static final String ITEM_MAP_LIBRARY_NEW = "Menu.MapLibrary.New"; //$NON-NLS-1$
 	public static final String ITEM_MAP_LIBRARY_OPEN = "Menu.MapLibrary.Open"; //$NON-NLS-1$
@@ -112,6 +113,7 @@ public class MapEditorApplicationModel extends ApplicationModel {
 		add(MapEditorApplicationModel.ITEM_MAP_VIEW_SAVE_AS);
 		add(MapEditorApplicationModel.ITEM_MAP_VIEW_ADD_SCHEME);
 		add(MapEditorApplicationModel.ITEM_MAP_VIEW_REMOVE_SCHEME);
+		add(MapEditorApplicationModel.ITEM_MAP_VIEW_VALIDATE);
 
 		add(MapEditorApplicationModel.ITEM_MAP_LIBRARY);
 		add(MapEditorApplicationModel.ITEM_MAP_LIBRARY_NEW);

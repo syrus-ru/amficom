@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapEditorMainFrame.java,v 1.70 2006/02/15 11:16:31 stas Exp $$
+ * $$Id: MapEditorMainFrame.java,v 1.71 2006/06/23 14:09:12 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -61,6 +61,7 @@ import com.syrus.AMFICOM.client.map.command.map.MapLibraryImportCommand;
 import com.syrus.AMFICOM.client.map.command.map.MapRemoveMapCommand;
 import com.syrus.AMFICOM.client.map.command.map.MapViewAddSchemeCommand;
 import com.syrus.AMFICOM.client.map.command.map.MapViewRemoveSchemeCommand;
+import com.syrus.AMFICOM.client.map.command.map.ValidateMapCommand;
 import com.syrus.AMFICOM.client.map.ui.MapFrame;
 import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
@@ -75,7 +76,7 @@ import com.syrus.AMFICOM.mapview.MapView;
 /**
  * Основное окно модуля Редактор топологической схемы
  * 
- * @version $Revision: 1.70 $, $Date: 2006/02/15 11:16:31 $
+ * @version $Revision: 1.71 $, $Date: 2006/06/23 14:09:12 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -203,6 +204,8 @@ public final class MapEditorMainFrame extends AbstractMainFrame {
 				new MapViewRemoveSchemeCommand(
 						this.desktopPane, 
 						this.aContext));
+		aModel.setCommand(MapEditorApplicationModel.ITEM_MAP_VIEW_VALIDATE,
+				new ValidateMapCommand(this.desktopPane, this.aContext));
 
 		aModel.setCommand(MapEditorApplicationModel.ITEM_MAP_LIBRARY_NEW, 
 				new MapEditorNewLibraryCommand(
@@ -347,6 +350,7 @@ public final class MapEditorMainFrame extends AbstractMainFrame {
 				aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW_CLOSE, true);
 				aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW_ADD_SCHEME, true);
 				aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW_REMOVE_SCHEME, true);
+				aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW_VALIDATE, true);
 
 				aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_LIBRARY_EXPORT, true);
 				aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_LIBRARY_IMPORT, true);
@@ -394,6 +398,7 @@ public final class MapEditorMainFrame extends AbstractMainFrame {
 				aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW_CLOSE, false);
 				aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW_ADD_SCHEME, false);
 				aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW_REMOVE_SCHEME, false);
+				aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW_VALIDATE, false);
 	
 				aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_LIBRARY_EXPORT, false);
 				aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_LIBRARY_IMPORT, false);
