@@ -1,5 +1,5 @@
 /*-
- * $$Id: PhysicalLinkAddEditor.java,v 1.47 2006/06/06 12:59:52 stas Exp $$
+ * $$Id: PhysicalLinkAddEditor.java,v 1.48 2006/06/23 14:17:27 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,6 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -58,6 +57,7 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.LoginManager;
+import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.PhysicalLinkBinding;
 import com.syrus.AMFICOM.map.PipeBlock;
@@ -71,7 +71,7 @@ import com.syrus.util.PropertyChangeException;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.47 $, $Date: 2006/06/06 12:59:52 $
+ * @version $Revision: 1.48 $, $Date: 2006/06/23 14:17:27 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -80,12 +80,12 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor<Phy
 	private GridBagLayout gridBagLayout1 = new GridBagLayout();
 
 	private JPanel jPanel = new JPanel();
-	WrapperedList cableList = null;
+	WrapperedList<MapElement> cableList = null;
 	JScrollPane cablesScrollPane = new JScrollPane();
 
 	private JLabel pipeBlockLabel = new JLabel();
 	private JPanel pipeBlockPanel = new JPanel();
-	WrapperedComboBox pipeBlockComboBox = null;
+	WrapperedComboBox<PipeBlock> pipeBlockComboBox = null;
 	JButton addBlockButton = new JButton();
 	JButton removeBlockButton = new JButton();
 
@@ -157,10 +157,10 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor<Phy
 		SimpleMapElementController controller = 
 				SimpleMapElementController.getInstance();
 
-		this.cableList = new WrapperedList(controller, SimpleMapElementController.KEY_NAME, SimpleMapElementController.KEY_NAME);
+		this.cableList = new WrapperedList<MapElement>(controller, SimpleMapElementController.KEY_NAME, SimpleMapElementController.KEY_NAME);
 		PipeBlockWrapper pipeBlockWrapper = PipeBlockWrapper.getInstance();
 
-		this.pipeBlockComboBox = new WrapperedComboBox(pipeBlockWrapper, PipeBlockWrapper.KEY_NUMBER, PipeBlockWrapper.KEY_NUMBER);
+		this.pipeBlockComboBox = new WrapperedComboBox<PipeBlock>(pipeBlockWrapper, PipeBlockWrapper.KEY_NUMBER, PipeBlockWrapper.KEY_NUMBER);
 
 		this.jPanel.setLayout(this.gridBagLayout1);
 		this.jPanel.setName(I18N.getString(MapEditorResourceKeys.LABEL_CABLES_BINDING));
@@ -168,7 +168,7 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor<Phy
 			public void valueChanged(ListSelectionEvent e) {
 				if(PhysicalLinkAddEditor.this.processSelection) {
 					PhysicalLinkAddEditor.this.processSelection = false;
-					Object or = PhysicalLinkAddEditor.this.cableList.getSelectedValue();
+					MapElement or = (MapElement)PhysicalLinkAddEditor.this.cableList.getSelectedValue();
 					cableSelected(or);
 					PhysicalLinkAddEditor.this.bindButton.setEnabled(isEditable() && or != null);
 					PhysicalLinkAddEditor.this.unbindButton.setEnabled(isEditable() && or != null);
@@ -228,11 +228,8 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor<Phy
 		this.pipeBlockComboBox.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				if(e.getStateChange() == ItemEvent.SELECTED) {
-					Object or = PhysicalLinkAddEditor.this.pipeBlockComboBox.getSelectedItem();
-					selectBlock(or);
-				}
-				else {
-					selectBlock(null);
+					PipeBlock block = (PipeBlock)PhysicalLinkAddEditor.this.pipeBlockComboBox.getSelectedItem();
+					selectBlock(block);
 				}
 			}
 		});
@@ -265,7 +262,7 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor<Phy
 			public void actionPerformed(ActionEvent e) {
 				PhysicalLinkAddEditor.this.physicalLink.getBinding().removePipeBlock(PhysicalLinkAddEditor.this.pipeBlock);
 				PhysicalLinkAddEditor.this.pipeBlockComboBox.removeItem(PhysicalLinkAddEditor.this.pipeBlock);
-				selectBlock(PhysicalLinkAddEditor.this.pipeBlockComboBox.getSelectedItem());
+				selectBlock((PipeBlock)PhysicalLinkAddEditor.this.pipeBlockComboBox.getSelectedItem());
 			}
 		});
 
@@ -577,14 +574,10 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor<Phy
 		this.selectButton.setEnabled(false);
 	}
 
-	protected void selectBlock(Object or) {
+	protected void selectBlock(PipeBlock or) {
 		this.removeBlockButton.setEnabled(isEditable() && this.pipeBlockComboBox.getModel().getSize() > 1);
-		if(!(or instanceof PipeBlock)) {
-			this.pipeBlock = null;
-			this.tunnelLayout.setPipeBlock(null);
-			return;
-		}
-		this.pipeBlock = (PipeBlock)or;
+
+		this.pipeBlock = or;
 		this.mTextField.setText(String.valueOf(this.pipeBlock.getDimension().getWidth()));
 		this.nTextField.setText(String.valueOf(this.pipeBlock.getDimension().getHeight()));
 
@@ -602,7 +595,7 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor<Phy
 
 		this.tunnelLayout.setPipeBlock(this.pipeBlock);
 		
-		Object cable = PhysicalLinkAddEditor.this.cableList.getSelectedValue();
+		MapElement cable = (MapElement)PhysicalLinkAddEditor.this.cableList.getSelectedValue();
 		cableSelected(cable);
 	}
 
@@ -641,22 +634,18 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor<Phy
 			this.pipeBlockComboBox.setEnabled(true);
 			PhysicalLinkBinding binding = this.physicalLink.getBinding();
 			final Set<PipeBlock> pipeBlocks = binding.getPipeBlocks();
-			if(pipeBlocks != null) {
+
+			if(pipeBlocks.size() > 0) {
 				this.pipeBlockComboBox.addElements(pipeBlocks);
-				if(pipeBlocks.size() > 0) {
-					this.pipeBlockComboBox.setSelectedItem(pipeBlocks.iterator().next());
-				}
+				this.pipeBlockComboBox.setSelectedItem(pipeBlocks.iterator().next());
 			}
 
-			List list = binding.getBindObjects();
-			if(list != null) {
-				this.cableList.addElements(list);
-			}
-
+			final Set<MapElement> bindObjects = binding.getBindObjects();
+			this.cableList.addElements(bindObjects);
 		}
 	}
 
-	public void cableSelected(Object or) {
+	public void cableSelected(MapElement or) {
 		PipeBlock currentBlock = this.physicalLink.getBinding().getPipeBlock(or);
 		
 		if(currentBlock != null) {
@@ -686,10 +675,10 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor<Phy
 				try {
 					PhysicalLinkBinding binding = this.physicalLink
 							.getBinding();
-					List list = binding.getBindObjects();
-					if(list != null) {
+					final Set<MapElement> bindObjects = binding.getBindObjects();
+					if(bindObjects != null) {
 						this.cableList.getSelectionModel().clearSelection();
-						for(Iterator it = list.iterator(); it.hasNext();) {
+						for(Iterator it = bindObjects.iterator(); it.hasNext();) {
 							CablePath cablePath = (CablePath) it.next();
 							CableChannelingItem cableChannelingItem = cablePath
 									.getFirstCCI(this.physicalLink);
@@ -828,10 +817,9 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor<Phy
 	}
 }
 
-class PipeBlockWrapper implements Wrapper {
+class PipeBlockWrapper implements Wrapper<PipeBlock> {
 	public static final String KEY_NUMBER = MapEditorResourceKeys.LABEL_NUMBER;
-	private List keys = Collections.unmodifiableList(Arrays
-			.asList(new String[] { KEY_NUMBER }));
+	private List keys = Collections.singletonList(KEY_NUMBER);
 
 	static PipeBlockWrapper instance;
 	
@@ -839,7 +827,7 @@ class PipeBlockWrapper implements Wrapper {
 		// nothing
 	}
 	
-	public void setValue(Object object, String key, Object value)
+	public void setValue(PipeBlock object, String key, Object value)
 			throws PropertyChangeException {
 		//nothing
 	}
@@ -855,12 +843,11 @@ class PipeBlockWrapper implements Wrapper {
 		return false;
 	}
 
-	public Object getValue(Object object, String key) {
-		if(! (object instanceof PipeBlock)) {
-			return " "; //$NON-NLS-1$
-		}
-		PipeBlock pipeBlock = (PipeBlock) object;
-		return String.valueOf(pipeBlock.getNumber());
+	public Object getValue(PipeBlock pipeBlock, String key) {
+		if (pipeBlock != null) {
+			return String.valueOf(pipeBlock.getNumber());
+		} 
+		return null;
 	}
 
 	public void setPropertyValue(
