@@ -1,5 +1,5 @@
 /*-
- * $$Id: CreateMarkerCommandAtomic.java,v 1.46 2006/03/31 05:45:34 stas Exp $$
+ * $$Id: CreateMarkerCommandAtomic.java,v 1.47 2006/06/23 13:56:59 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,7 +37,7 @@ import com.syrus.util.Log;
 /**
  * Команда создания метки на линии
  * 
- * @version $Revision: 1.46 $, $Date: 2006/03/31 05:45:34 $
+ * @version $Revision: 1.47 $, $Date: 2006/06/23 13:56:59 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -131,7 +131,7 @@ public class CreateMarkerCommandAtomic extends MapActionCommand {
 							this.aContext.getDispatcher().firePropertyChange(
 									new MarkerEvent(this, MarkerEvent.MARKER_CREATED_EVENT, this.marker.getId(), 
 											schemePath.getOpticalDistance(marker.getPhysicalDistance()), 
-											null, monitoredElementId, schemePath.getId()));
+											null, schemePath.getId(), monitoredElementId));
 							
 							setResult(Command.RESULT_OK);
 							found = true;
