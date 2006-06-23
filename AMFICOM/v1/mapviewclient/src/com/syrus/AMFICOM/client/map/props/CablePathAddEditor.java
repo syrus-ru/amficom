@@ -1,5 +1,5 @@
 /*-
- * $$Id: CablePathAddEditor.java,v 1.41 2006/06/15 06:40:46 stas Exp $$
+ * $$Id: CablePathAddEditor.java,v 1.42 2006/06/23 14:15:00 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,12 +24,14 @@ import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.PhysicalLink;
+import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.mapview.CablePath;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.41 $, $Date: 2006/06/15 06:40:46 $
+ * @version $Revision: 1.42 $, $Date: 2006/06/23 14:15:00 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -84,9 +86,22 @@ public class CablePathAddEditor extends DefaultStorableObjectEditor<CablePath> {
 			Log.errorMessage(e);
 			pathElements = new LinkedList<PhysicalLink>();
 		}
+		
+		
+		SiteNode startUnboundNode = null;
+		try {
+			startUnboundNode = (SiteNode)this.cablePath.getStartUnboundNode();
+		} catch (ApplicationException e) {
+			Log.errorMessage(e);
+		}
+
 		final Vector<String> peNames = new Vector<String>();
 		for (final PhysicalLink pe : pathElements) {
-			peNames.add(pe.getStartNode().getName());
+			final AbstractNode startNode = pe.getStartNode();
+			peNames.add(startNode.getName());
+			if (startNode.equals(startUnboundNode)) {
+				peNames.add("<ÐÀÇÐÛÂ ÏÐÎÊËÀÄÊÈ>");
+			}
 		}
 		if (!pathElements.isEmpty()) {
 			peNames.add(pathElements.listIterator(pathElements.size()).previous().getEndNode().getName());
