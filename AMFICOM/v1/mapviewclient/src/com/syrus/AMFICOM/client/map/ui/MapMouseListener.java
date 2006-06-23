@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapMouseListener.java,v 1.80 2006/03/30 15:42:11 stas Exp $$
+ * $$Id: MapMouseListener.java,v 1.81 2006/06/23 14:26:34 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,6 @@ import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.MapPropertiesManager;
 import com.syrus.AMFICOM.client.map.MapState;
 import com.syrus.AMFICOM.client.map.NetMapViewer;
-import com.syrus.AMFICOM.client.map.controllers.MapElementController;
 import com.syrus.AMFICOM.client.map.controllers.NodeLinkController;
 import com.syrus.AMFICOM.client.map.popup.MapPopupMenu;
 import com.syrus.AMFICOM.client.map.popup.MapPopupMenuManager;
@@ -57,7 +56,7 @@ import com.syrus.util.Log;
  * события передается текущему активному элементу карты (посредством объекта
  * MapStrategy)
  * 
- * @version $Revision: 1.80 $, $Date: 2006/03/30 15:42:11 $
+ * @version $Revision: 1.81 $, $Date: 2006/06/23 14:26:34 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -315,15 +314,15 @@ public final class MapMouseListener implements MouseListener {
 		this.netMapViewer.getVisualComponent().grabFocus();
 		MapElement mapElement = logicalNetLayer.getVisibleMapElementAtPoint(
 				point,
-				this.netMapViewer.getVisibleBounds());
+				this.netMapViewer.getVisibleBounds(), SwingUtilities.isLeftMouseButton(me));
 		MapElement curElement = logicalNetLayer.getCurrentMapElement();
-		MapElementController mec = logicalNetLayer.getMapViewController()
-				.getController(curElement);
+//		MapElementController mec = logicalNetLayer.getMapViewController().getController(curElement);
 		if(curElement instanceof Selection) {
 			mapElement = curElement;
-		} else if(!(curElement instanceof VoidElement)
-				&& mec.isMouseOnElement(curElement, point)) {
-			mapElement = curElement;
+//		} else if(!(curElement instanceof VoidElement)
+//				&& mec.isMouseOnElement(curElement, point)) {
+//			mapElement = curElement;
+//			logicalNetLayer.setCurrentMapElement(mapElement);
 		} else {
 			logicalNetLayer.setCurrentMapElement(mapElement);
 		}
