@@ -1,5 +1,5 @@
 /*-
- * $$Id: PlaceSchemeElementCommand.java,v 1.44 2006/02/14 10:20:06 stas Exp $$
+ * $$Id: PlaceSchemeElementCommand.java,v 1.45 2006/06/23 14:00:26 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,16 +9,22 @@
 package com.syrus.AMFICOM.client.map.command.action;
 
 import java.awt.Point;
+import java.util.Set;
 import java.util.logging.Level;
 
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.model.MapApplicationModel;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.mapview.UnboundNode;
 import com.syrus.AMFICOM.resource.DoublePoint;
+import com.syrus.AMFICOM.scheme.SchemeCableLink;
+import com.syrus.AMFICOM.scheme.SchemeCablePort;
 import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.util.Log;
 
@@ -26,7 +32,7 @@ import com.syrus.util.Log;
  * –азместить c[tvysq элемент на карте в соответствии с прив€зкой или по
  * координатам
  * 
- * @version $Revision: 1.44 $, $Date: 2006/02/14 10:20:06 $
+ * @version $Revision: 1.45 $, $Date: 2006/06/23 14:00:26 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -102,10 +108,19 @@ public class PlaceSchemeElementCommand extends MapActionCommandBundle {
 				MapElement mapElement = this.logicalNetLayer.getMapElementAtPoint(this.point, this.netMapViewer.getVisibleBounds());
 				t4 = System.currentTimeMillis();
 				
-				if(mapElement instanceof SiteNode
-						&& !(mapElement instanceof UnboundNode)) {
+				if(mapElement instanceof SiteNode && !(mapElement instanceof UnboundNode)) {
 					this.site = (SiteNode )mapElement;
 					this.schemeElement.setSiteNode(this.site);
+					
+					// и пытаемс€ добавить св€занные с элементом кабели
+					final Set<SchemeCablePort> schemeCablePorts = this.schemeElement.getSchemeCablePortsRecursively(true);
+					final LinkedIdsCondition condition = new LinkedIdsCondition(schemeCablePorts, ObjectEntities.SCHEMECABLELINK_CODE);
+					final Set<SchemeCableLink> cableLinks = StorableObjectPool.getStorableObjectsByCondition(condition, true);
+					for (SchemeCableLink link : cableLinks) {
+						PlaceSchemeCableLinkCommand command = new PlaceSchemeCableLinkCommand(link);
+						command.setNetMapViewer(this.netMapViewer);
+						command.execute();
+					}
 				}
 				else {
 					this.unbound = super.createUnboundNode(this.coordinatePoint, this.schemeElement);
