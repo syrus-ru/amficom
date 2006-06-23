@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapEditor.java,v 1.24 2006/06/06 12:59:52 stas Exp $$
+ * $$Id: MapEditor.java,v 1.25 2006/06/23 14:15:37 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,21 +25,22 @@ import javax.swing.JTextField;
 import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.administration.Domain;
+import com.syrus.AMFICOM.administration.DomainWrapper;
 import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
 import com.syrus.AMFICOM.client.UI.WrapperedComboBox;
 import com.syrus.AMFICOM.client.map.editor.MapPermissionManager;
-import com.syrus.AMFICOM.client.map.ui.SimpleMapElementController;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.client.resource.MiscUtil;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2006/06/06 12:59:52 $
+ * @version $Revision: 1.25 $, $Date: 2006/06/23 14:15:37 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -53,7 +54,7 @@ public class MapEditor extends DefaultStorableObjectEditor<Map> {
 	private JLabel nameLabel = new JLabel();
 	private JTextField nameTextField = new JTextField();
 	private JLabel domainLabel = new JLabel();
-	private WrapperedComboBox domainComboBox = null;
+	private WrapperedComboBox<Domain> domainComboBox = null;
 	private JLabel descLabel = new JLabel();
 	private JTextArea descTextArea = new JTextArea();
 
@@ -69,10 +70,7 @@ public class MapEditor extends DefaultStorableObjectEditor<Map> {
 	}
 
 	private void jbInit() {
-		SimpleMapElementController controller = 
-				SimpleMapElementController.getInstance();
-
-		this.domainComboBox = new WrapperedComboBox(controller, SimpleMapElementController.KEY_NAME, SimpleMapElementController.KEY_NAME);
+		this.domainComboBox = new WrapperedComboBox<Domain>(DomainWrapper.getInstance(), StorableObjectWrapper.COLUMN_NAME, StorableObjectWrapper.COLUMN_ID);
 
 		this.jPanel.setLayout(this.gridBagLayout1);
 //		this.jPanel.setName(I18N.getString(MapEditorResourceKeys.TITLE_PROPERTIES));
@@ -221,7 +219,7 @@ public class MapEditor extends DefaultStorableObjectEditor<Map> {
 			this.nameTextField.setText(this.map.getName());
 
 			Domain domain = null;
-			Collection domains = null;
+			Collection<Domain> domains = null;
 
 //			StorableObjectCondition condition = 
 //				new EquivalentCondition(ObjectEntities.DOMAIN_CODE);
