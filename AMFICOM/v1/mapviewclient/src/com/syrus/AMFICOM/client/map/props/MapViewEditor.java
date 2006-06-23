@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapViewEditor.java,v 1.27 2006/06/06 12:59:52 stas Exp $$
+ * $$Id: MapViewEditor.java,v 1.28 2006/06/23 14:16:14 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,12 +26,12 @@ import javax.swing.JTextField;
 import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.administration.Domain;
+import com.syrus.AMFICOM.administration.DomainWrapper;
 import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
 import com.syrus.AMFICOM.client.UI.WrapperedComboBox;
 import com.syrus.AMFICOM.client.UI.WrapperedList;
 import com.syrus.AMFICOM.client.map.MapPropertiesManager;
 import com.syrus.AMFICOM.client.map.editor.MapPermissionManager;
-import com.syrus.AMFICOM.client.map.ui.SimpleMapElementController;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.client.resource.MiscUtil;
@@ -41,12 +41,17 @@ import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.AMFICOM.map.Map;
+import com.syrus.AMFICOM.map.MapWrapper;
 import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.resource.DoublePoint;
+import com.syrus.AMFICOM.scheme.Scheme;
+import com.syrus.AMFICOM.scheme.SchemeWrapper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2006/06/06 12:59:52 $
+ * @version $Revision: 1.28 $, $Date: 2006/06/23 14:16:14 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -58,9 +63,9 @@ public class MapViewEditor extends DefaultStorableObjectEditor<MapView> {
 	private JLabel nameLabel = new JLabel();
 	private JTextField nameTextField = new JTextField();
 	private JLabel mapLabel = new JLabel();
-	private WrapperedComboBox mapComboBox = null;
+	private WrapperedComboBox<Map> mapComboBox = null;
 	private JLabel domainLabel = new JLabel();
-	private WrapperedComboBox domainComboBox = null;
+	private WrapperedComboBox<Domain> domainComboBox = null;
 
 	private JLabel longLabel = new JLabel();
 	private JTextField longTextField = new JTextField();
@@ -71,7 +76,7 @@ public class MapViewEditor extends DefaultStorableObjectEditor<MapView> {
 
 	private JLabel schemesLabel = new JLabel();
 	private JScrollPane schemesScrollPane = new JScrollPane();
-	private WrapperedList schemesList = null;
+	private WrapperedList<Scheme> schemesList = null;
 
 	private JLabel descLabel = new JLabel();
 	private JTextArea descTextArea = new JTextArea();
@@ -89,11 +94,9 @@ public class MapViewEditor extends DefaultStorableObjectEditor<MapView> {
 	}
 
 	private void jbInit() {
-		SimpleMapElementController controller = SimpleMapElementController.getInstance();
-
-		this.domainComboBox = new WrapperedComboBox(controller, SimpleMapElementController.KEY_NAME, SimpleMapElementController.KEY_NAME);
-		this.mapComboBox = new WrapperedComboBox(controller, SimpleMapElementController.KEY_NAME, SimpleMapElementController.KEY_NAME);
-		this.schemesList = new WrapperedList(controller, SimpleMapElementController.KEY_NAME, SimpleMapElementController.KEY_NAME);
+		this.domainComboBox = new WrapperedComboBox<Domain>(DomainWrapper.getInstance(), StorableObjectWrapper.COLUMN_NAME, StorableObjectWrapper.COLUMN_ID);
+		this.mapComboBox = new WrapperedComboBox<Map>(MapWrapper.getInstance(), StorableObjectWrapper.COLUMN_NAME, StorableObjectWrapper.COLUMN_ID);
+		this.schemesList = new WrapperedList<Scheme>(SchemeWrapper.getInstance(), StorableObjectWrapper.COLUMN_NAME, StorableObjectWrapper.COLUMN_ID);
 
 		this.jPanel.setLayout(this.gridBagLayout1);
 //		this.jPanel.setName(I18N.getString(MapEditorResourceKeys.TITLE_PROPERTIES));
@@ -409,7 +412,7 @@ public class MapViewEditor extends DefaultStorableObjectEditor<MapView> {
 			this.nameTextField.setText(this.mapView.getName());
 
 			Domain domain = null;
-			Collection domains = null;
+			Collection<Domain> domains = null;
 
 			StorableObjectCondition condition = new EquivalentCondition(
 					ObjectEntities.DOMAIN_CODE);
