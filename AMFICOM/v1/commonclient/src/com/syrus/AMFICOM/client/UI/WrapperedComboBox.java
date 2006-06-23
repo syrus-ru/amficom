@@ -1,5 +1,5 @@
 /*-
-* $Id: WrapperedComboBox.java,v 1.11 2006/06/21 08:15:42 saa Exp $
+* $Id: WrapperedComboBox.java,v 1.12 2006/06/23 08:26:59 stas Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -15,8 +15,8 @@ import java.util.List;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2006/06/21 08:15:42 $
- * @author $Author: saa $
+ * @version $Revision: 1.12 $, $Date: 2006/06/23 08:26:59 $
+ * @author $Author: stas $
  * @author Vladimir Dolzhenko
  * @module commonclient
  */
@@ -55,7 +55,7 @@ public class WrapperedComboBox<T> extends AComboBox {
 		final Object anObjectValue = this.model.compareKey != null ? 
 				this.model.wrapper.getValue((T) anObject, this.model.compareKey) :
 				anObject;
-		Object oldSelection = this.model.compareKey != null ? 
+		Object oldSelection = this.model.compareKey != null && this.selectedItemReminder != null ? 
 				this.model.wrapper.getValue((T) this.selectedItemReminder, this.model.compareKey) : 
 				this.selectedItemReminder;
 //		Log.debugMessage("anObjectValue " + anObjectValue, Log.FINEST);
