@@ -1,5 +1,5 @@
 /*-
- * $$Id: PlaceSchemeCableLinkCommand.java,v 1.66 2006/05/30 14:15:08 stas Exp $$
+ * $$Id: PlaceSchemeCableLinkCommand.java,v 1.67 2006/06/23 14:00:51 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,8 +8,6 @@
 
 package com.syrus.AMFICOM.client.map.command.action;
 
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.logging.Level;
@@ -32,7 +30,7 @@ import com.syrus.util.Log;
 /**
  * Разместить кабель на карте.
  * 
- * @version $Revision: 1.66 $, $Date: 2006/05/30 14:15:08 $
+ * @version $Revision: 1.67 $, $Date: 2006/06/23 14:00:51 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -107,8 +105,7 @@ public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle {
 			final Set<AbstractNode> siteNodesPresent = this.mapView.getAllNodes();
 			final SortedSet<CableChannelingItem> pathMembers = this.schemeCableLink.getPathMembers();
 //			Log.debugMessage("SchemeCableLink " + xmlId1.getStringValue() + " has " + pathMembers.size() + " cci's");
-			for(Iterator iter = new LinkedList(pathMembers).iterator(); iter.hasNext();) {
-				CableChannelingItem cci = (CableChannelingItem )iter.next();
+			for(CableChannelingItem cci : pathMembers) {
 				SiteNode currentStartNode = cci.getStartSiteNode();
 				SiteNode currentEndNode = cci.getEndSiteNode();
 
@@ -252,6 +249,8 @@ public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle {
 			Log.debugMessage("PlaceSchemeCableLinkCommand :: create cable path " + (t5 - t4) + " ms", Level.FINEST); //$NON-NLS-1$ //$NON-NLS-2$
 			Log.debugMessage("PlaceSchemeCableLinkCommand :: walk through CCIs " + (t6 - t5) + " ms", Level.FINEST); //$NON-NLS-1$ //$NON-NLS-2$
 			Log.debugMessage("PlaceSchemeCableLinkCommand :: create final unbound node " + (t7 - t6) + " ms", Level.FINEST); //$NON-NLS-1$ //$NON-NLS-2$
+			Log.debugMessage("PlaceSchemeCableLinkCommand :: Total " + (t7 - t1) + " ms", Level.FINER); //$NON-NLS-1$ //$NON-NLS-2$
+			System.err.println();
 		} catch(Throwable e) {
 			setResult(Command.RESULT_NO);
 			setException(e);
