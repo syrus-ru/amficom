@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseConnection.java,v 1.25 2006/04/18 17:30:48 arseniy Exp $
+ * $Id: DatabaseConnection.java,v 1.26 2006/06/26 17:22:34 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,8 +19,8 @@ import oracle.jdbc.pool.OracleDataSource;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.25 $, $Date: 2006/04/18 17:30:48 $
+ * @author $Author: bass $
+ * @version $Revision: 1.26 $, $Date: 2006/06/26 17:22:34 $
  * @author Tashoyan Arseniy Feliksovich
  * @module util
  */
@@ -28,7 +28,7 @@ public class DatabaseConnection {
 	private static final String JDBCDRIVER = OracleDriver.class.getName();
 	private static final String URLPREFIX = "jdbc:oracle:thin:@";
 	private static final int DBPORT = 1521;
-	private static final String USERNAME = "amficom";
+	public static final String USERNAME = "amficom";
 	private static final String PASSWORD = "amficom";
 
 	private static volatile int openConnections = 0;
