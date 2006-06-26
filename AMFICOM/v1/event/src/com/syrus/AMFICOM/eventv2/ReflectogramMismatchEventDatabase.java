@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectogramMismatchEventDatabase.java,v 1.4 2006/06/08 19:08:30 bass Exp $
+ * $Id: ReflectogramMismatchEventDatabase.java,v 1.5 2006/06/26 17:23:13 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,8 +38,8 @@ import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
+import com.syrus.AMFICOM.general.VersionableDatabase;
 import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.AlarmType;
 import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.Severity;
 import com.syrus.util.database.DatabaseDate;
@@ -47,17 +47,17 @@ import com.syrus.util.database.DatabaseDate;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2006/06/08 19:08:30 $
- * @module event
+ * @version $Revision: 1.5 $, $Date: 2006/06/26 17:23:13 $
+ * @module eventabstract 
  */
 public final class ReflectogramMismatchEventDatabase
-		extends StorableObjectDatabase<DefaultReflectogramMismatchEvent> {
+		extends VersionableDatabase<DefaultReflectogramMismatchEvent> {
 	private static String columns;
 
 	private static String updateMultipleSQLValues;
 
 	/**
-	 * @see StorableObjectDatabase#getEntityCode()
+	 * @see com.syrus.AMFICOM.general.StorableObjectDatabase#getEntityCode()
 	 */
 	@Override
 	protected short getEntityCode() {
@@ -65,7 +65,15 @@ public final class ReflectogramMismatchEventDatabase
 	}
 
 	/**
-	 * @see StorableObjectDatabase#getColumnsTmpl()
+	 * @see VersionableDatabase#getExpectedVersion()
+	 */
+	@Override
+	protected String getExpectedVersion() {
+		return "1.6";
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.general.StorableObjectDatabase#getColumnsTmpl()
 	 */
 	@Override
 	protected String getColumnsTmpl() {
@@ -86,7 +94,7 @@ public final class ReflectogramMismatchEventDatabase
 	}
 
 	/**
-	 * @see StorableObjectDatabase#getUpdateMultipleSQLValuesTmpl()
+	 * @see com.syrus.AMFICOM.general.StorableObjectDatabase#getUpdateMultipleSQLValuesTmpl()
 	 */
 	@Override
 	protected String getUpdateMultipleSQLValuesTmpl() {
@@ -109,7 +117,7 @@ public final class ReflectogramMismatchEventDatabase
 	/**
 	 * @param reflectogramMismatchEvent
 	 * @throws IllegalDataException
-	 * @see StorableObjectDatabase#getUpdateSingleSQLValuesTmpl(com.syrus.AMFICOM.general.StorableObject)
+	 * @see com.syrus.AMFICOM.general.StorableObjectDatabase#getUpdateSingleSQLValuesTmpl(com.syrus.AMFICOM.general.StorableObject)
 	 */
 	@Override
 	protected String getUpdateSingleSQLValuesTmpl(
@@ -143,7 +151,7 @@ public final class ReflectogramMismatchEventDatabase
 	 * @param initialStartParameterNumber
 	 * @throws IllegalDataException
 	 * @throws SQLException
-	 * @see StorableObjectDatabase#setEntityForPreparedStatementTmpl(com.syrus.AMFICOM.general.StorableObject, PreparedStatement, int)
+	 * @see com.syrus.AMFICOM.general.StorableObjectDatabase#setEntityForPreparedStatementTmpl(com.syrus.AMFICOM.general.StorableObject, PreparedStatement, int)
 	 */
 	@Override
 	protected int setEntityForPreparedStatementTmpl(
@@ -186,7 +194,7 @@ public final class ReflectogramMismatchEventDatabase
 	 * @throws IllegalDataException
 	 * @throws RetrieveObjectException
 	 * @throws SQLException
-	 * @see StorableObjectDatabase#updateEntityFromResultSet(com.syrus.AMFICOM.general.StorableObject, ResultSet)
+	 * @see com.syrus.AMFICOM.general.StorableObjectDatabase#updateEntityFromResultSet(com.syrus.AMFICOM.general.StorableObject, ResultSet)
 	 */
 	@Override
 	protected DefaultReflectogramMismatchEvent updateEntityFromResultSet(

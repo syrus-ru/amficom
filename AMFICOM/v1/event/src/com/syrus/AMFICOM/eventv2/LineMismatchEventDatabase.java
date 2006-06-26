@@ -1,5 +1,5 @@
 /*-
- * $Id: LineMismatchEventDatabase.java,v 1.7 2006/06/16 14:53:11 bass Exp $
+ * $Id: LineMismatchEventDatabase.java,v 1.8 2006/06/26 17:23:13 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,19 +36,19 @@ import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
+import com.syrus.AMFICOM.general.VersionableDatabase;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.7 $, $Date: 2006/06/16 14:53:11 $
+ * @version $Revision: 1.8 $, $Date: 2006/06/26 17:23:13 $
  * @module event
  */
 public final class LineMismatchEventDatabase
-		extends StorableObjectDatabase<DefaultLineMismatchEvent> {
+		extends VersionableDatabase<DefaultLineMismatchEvent> {
 	private static final int SIZE_PLAIN_TEXT_MESSAGE_COLUMN = 4000;
 
 	private static final int SIZE_RICH_TEXT_MESSAGE_COLUMN = 4000;
@@ -58,7 +58,7 @@ public final class LineMismatchEventDatabase
 	private static String updateMultipleSQLValues;
 
 	/**
-	 * @see StorableObjectDatabase#getEntityCode()
+	 * @see com.syrus.AMFICOM.general.StorableObjectDatabase#getEntityCode()
 	 */
 	@Override
 	protected short getEntityCode() {
@@ -66,7 +66,15 @@ public final class LineMismatchEventDatabase
 	}
 
 	/**
-	 * @see StorableObjectDatabase#getColumnsTmpl()
+	 * @see VersionableDatabase#getExpectedVersion()
+	 */
+	@Override
+	protected String getExpectedVersion() {
+		return "1.6";
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.general.StorableObjectDatabase#getColumnsTmpl()
 	 */
 	@Override
 	protected String getColumnsTmpl() {
@@ -85,7 +93,7 @@ public final class LineMismatchEventDatabase
 	}
 
 	/**
-	 * @see StorableObjectDatabase#getUpdateMultipleSQLValuesTmpl()
+	 * @see com.syrus.AMFICOM.general.StorableObjectDatabase#getUpdateMultipleSQLValuesTmpl()
 	 */
 	@Override
 	protected String getUpdateMultipleSQLValuesTmpl() {
@@ -106,7 +114,7 @@ public final class LineMismatchEventDatabase
 	/**
 	 * @param lineMismatchEvent
 	 * @throws IllegalDataException
-	 * @see StorableObjectDatabase#getUpdateSingleSQLValuesTmpl(com.syrus.AMFICOM.general.StorableObject)
+	 * @see com.syrus.AMFICOM.general.StorableObjectDatabase#getUpdateSingleSQLValuesTmpl(com.syrus.AMFICOM.general.StorableObject)
 	 */
 	@Override
 	protected String getUpdateSingleSQLValuesTmpl(
@@ -138,7 +146,7 @@ public final class LineMismatchEventDatabase
 	 * @param initialStartParameterNumber
 	 * @throws IllegalDataException
 	 * @throws SQLException
-	 * @see StorableObjectDatabase#setEntityForPreparedStatementTmpl(com.syrus.AMFICOM.general.StorableObject, java.sql.PreparedStatement, int)
+	 * @see com.syrus.AMFICOM.general.StorableObjectDatabase#setEntityForPreparedStatementTmpl(com.syrus.AMFICOM.general.StorableObject, java.sql.PreparedStatement, int)
 	 */
 	@Override
 	protected int setEntityForPreparedStatementTmpl(
@@ -179,7 +187,7 @@ public final class LineMismatchEventDatabase
 	 * @throws IllegalDataException
 	 * @throws RetrieveObjectException
 	 * @throws SQLException
-	 * @see StorableObjectDatabase#updateEntityFromResultSet(com.syrus.AMFICOM.general.StorableObject, java.sql.ResultSet)
+	 * @see com.syrus.AMFICOM.general.StorableObjectDatabase#updateEntityFromResultSet(com.syrus.AMFICOM.general.StorableObject, java.sql.ResultSet)
 	 */
 	@Override
 	protected DefaultLineMismatchEvent updateEntityFromResultSet(

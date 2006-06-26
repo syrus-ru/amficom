@@ -25,12 +25,14 @@ XMLCLASSPATH := $(LIBDIR)/$(LIBNAME_GENERALXML)
 
 
 SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/event/*.java) \
- $(wildcard $(SRCDIR)/com/syrus/AMFICOM/eventv2/*.java)
+$(wildcard $(SRCDIR)/com/syrus/AMFICOM/eventv2/*.java) \
+$(wildcard $(SRCDIR)/com/syrus/AMFICOM/general/*.java)
 
 $(LIBNAME): .mach
 	$(JAR) -cf $@ \
 		-C $(CLASSDIR) com/syrus/AMFICOM/event \
-		-C $(CLASSDIR) com/syrus/AMFICOM/eventv2
+		-C $(CLASSDIR) com/syrus/AMFICOM/eventv2 \
+		-C $(CLASSDIR) com/syrus/AMFICOM/general
 
 .mach: .corba $(CLASSDIR) $(CLASSDIR)/com/syrus/AMFICOM/eventv2
 	$(JAVAC) $(JAVACFLAGS) \
@@ -100,6 +102,7 @@ pmd:
 		-classpath "$(APPCLASSPATH):$(JUNIT_HOME)/junit.jar" \
 		-group "$(MODULE_NAME)" "com.syrus.AMFICOM.event:com.syrus.AMFICOM.eventv2" \
 		-group "$(MODULE_NAME)-IDL" "com.syrus.AMFICOM.event.corba*:com.syrus.AMFICOM.eventv2.corba*" \
-		-subpackages "com.syrus.AMFICOM.event:com.syrus.AMFICOM.eventv2" \
-		2>&1 | grep -vE '(XMLInputStream|com\.syrus\.AMFICOM\.[a-z0-9]+\.corba\..*@serial)'
+		-group "general" "com.syrus.AMFICOM.general" \
+		-subpackages "com.syrus.AMFICOM.event:com.syrus.AMFICOM.eventv2:com.syrus.AMFICOM.general" \
+		2>&1 | grep -vE '(XMLInputStream|com\.syrus\.AMFICOM\.([a-z0-9]+\.corba|general)\..*@serial)'
 	touch $@
