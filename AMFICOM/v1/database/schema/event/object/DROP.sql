@@ -1,9 +1,12 @@
--- $Id: DROP.sql,v 1.5 2006/03/23 16:12:24 bass Exp $
+-- $Id: DROP.sql,v 1.6 2006/06/26 12:44:39 bass Exp $
 
+-- 06. LineMismatchEvent
 PROMPT 06. Dropping table LineMismatchEvent...;
+DROP TABLE ChangeLogRecord;
 DROP TABLE LineMismatchEvent;
 DROP SEQUENCE LineMismatchEvent_Seq;
 
+-- 05. ReflectogramMismatchEvent
 PROMPT 05. Dropping table ReflectogramMismatchEvent...;
 DROP TABLE ReflectogramMismatchEvent;
 DROP SEQUENCE ReflectogramMismatchEvent_Seq;

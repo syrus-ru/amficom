@@ -1,4 +1,4 @@
--- $Id: linemismatchevent.sql,v 1.5 2006/06/20 13:16:06 bass Exp $
+-- $Id: linemismatchevent.sql,v 1.6 2006/06/26 12:44:39 bass Exp $
 
 CREATE TABLE LineMismatchEvent (
 	id NUMBER(19) NOT NULL,
@@ -18,9 +18,9 @@ CREATE TABLE LineMismatchEvent (
 	mismatch_physical_distance BINARY_DOUBLE NOT NULL,
 	plain_text_message VARCHAR2(4000 char),
 	rich_text_message VARCHAR2(4000 char),
-	reflectogram_mismatch_event_id NUMBER(19) NOT NULL,
+	reflectogram_mismatch_event_id NOT NULL,
 	alarm_status NUMBER(2),
-	parent_line_mismatch_event_id NUMBER(19),
+	parent_line_mismatch_event_id,
 --
 	CONSTRAINT lm_event_pk PRIMARY KEY(id),
 --
@@ -48,6 +48,43 @@ CREATE TABLE LineMismatchEvent (
 		AND parent_line_mismatch_event_id IS NULL))
 );
 
-COMMENT ON TABLE LineMismatchEvent IS '$Id: linemismatchevent.sql,v 1.5 2006/06/20 13:16:06 bass Exp $';
+COMMENT ON TABLE LineMismatchEvent IS '$Id: linemismatchevent.sql,v 1.6 2006/06/26 12:44:39 bass Exp $';
+
+CREATE INDEX lm_event_pln_txt_msg_idx ON LineMismatchEvent(plain_text_message)
+	INDEXTYPE IS ctxsys.context
+	ONLINE
+	PARAMETERS('POPULATE SYNC(ON COMMIT) TRANSACTIONAL');
+
+CREATE INDEX lm_event_rch_txt_msg_idx ON LineMismatchEvent(rich_text_message)
+	INDEXTYPE IS ctxsys.context
+	ONLINE
+	PARAMETERS('POPULATE SYNC(ON COMMIT) TRANSACTIONAL');
+
+CREATE TABLE ChangeLogRecord (
+	parent_line_mismatch_event_id NOT NULL,
+	modified TIMESTAMP NOT NULL,
+	modifier_id NOT NULL,
+	key VARCHAR2(32 char) NOT NULL,
+	old_value VARCHAR2(4000 char),
+	new_value VARCHAR2(4000 char),
+--
+	CONSTRAINT chnglgrcrd_pk PRIMARY KEY(parent_line_mismatch_event_id, modified, key),
+	CONSTRAINT chnglgrcrd_parent_lm_event_fk FOREIGN KEY(parent_line_mismatch_event_id)
+		REFERENCES LineMismatchEvent(id) ON DELETE CASCADE,
+	CONSTRAINT chnglgrcrd_modifier_fk FOREIGN KEY(modifier_id)
+		REFERENCES SystemUser(id) ON DELETE CASCADE,
+	CONSTRAINT chnglgrcrd_value_chk CHECK
+		(old_value <> new_value)
+);
+
+CREATE INDEX chnglgrcrd_old_value_idx ON ChangeLogRecord(old_value)
+	INDEXTYPE IS ctxsys.context
+	ONLINE
+	PARAMETERS('POPULATE SYNC(ON COMMIT) TRANSACTIONAL');
+
+CREATE INDEX chnglgrcrd_new_value_idx ON ChangeLogRecord(new_value)
+	INDEXTYPE IS ctxsys.context
+	ONLINE
+	PARAMETERS('POPULATE SYNC(ON COMMIT) TRANSACTIONAL');
 
 CREATE SEQUENCE LineMismatchEvent_Seq ORDER;
