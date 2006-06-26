@@ -1,5 +1,5 @@
 /*-
- * $Id: EventHierarchyTestCase.java,v 1.5 2006/06/20 12:13:35 bass Exp $
+ * $Id: EventHierarchyTestCase.java,v 1.6 2006/06/26 17:22:06 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,7 +44,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2006/06/20 12:13:35 $
+ * @version $Revision: 1.6 $, $Date: 2006/06/26 17:22:06 $
  * @module event
  */
 public final class EventHierarchyTestCase extends TestCase {
@@ -147,7 +147,7 @@ public final class EventHierarchyTestCase extends TestCase {
 	public static void oneTimeSetUp() {
 		final String logDir = System.getProperty("java.io.tmpdir") + File.separatorChar
 				+ ".amficom-" + System.getProperty("user.name");
-		System.setProperty("amficom.logging.LogDebugLevel", "1");
+		System.setProperty("amficom.logging.LogDebugLevel", "2");
 		System.setProperty("amficom.logging.EchoDebug", Boolean.toString(true));
 		System.setProperty("amficom.logging.LogPath", logDir);
 		System.setProperty("amficom.logging.AllowLevelOutput", Boolean.toString(false));
