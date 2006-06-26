@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectDatabase.java,v 1.211 2006/06/06 11:24:03 arseniy Exp $
+ * $Id: StorableObjectDatabase.java,v 1.212 2006/06/26 17:24:45 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,6 +8,8 @@
 
 package com.syrus.AMFICOM.general;
 
+import static com.syrus.AMFICOM.general.DatabaseStorableObjectCondition.FALSE_CONDITION;
+import static com.syrus.AMFICOM.general.DatabaseStorableObjectCondition.TRUE_CONDITION;
 import static com.syrus.AMFICOM.general.ErrorMessages.ILLEGAL_ENTITY_CODE;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_EMPTY_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
@@ -42,12 +44,19 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
+
 /**
- * @version $Revision: 1.211 $, $Date: 2006/06/06 11:24:03 $
+ * Драйвер для хранения в базе данных объектов {@link StorableObject}.
+ * <p>
+ * Для каждой реализации {@link StorableObject} необходимо написать свою
+ * реализацию данного абстрактного класса.
+ * <p>
+ * Предпочтительный уровень отладочных сообщений: 9
+ * 
+ * @version $Revision: 1.212 $, $Date: 2006/06/26 17:24:45 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
- * Предпочтительный уровень отладочных сообщений: 9
  */
 
 public abstract class StorableObjectDatabase<T extends StorableObject> {
@@ -69,7 +78,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 	public static final String GREAT_THAN_OR_EQUALS = " >= ";
 	public static final String LESS_THAN_OR_EQUALS = " <= ";
 	public static final String SQL_LIKE = " LIKE ";
-	
+
 	public static final String SQL_AND = " AND ";
 	public static final String SQL_ASC = " ASC ";
 	public static final String SQL_COUNT = " COUNT(*) ";
@@ -80,7 +89,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 	public static final String SQL_FUNCTION_MAX = " MAX ";
 	public static final String SQL_FUNCTION_UPPER = " UPPER ";
 	public static final String SQL_FUNCTION_EMPTY_BLOB = " EMPTY_BLOB() ";
-	
+
 	public static final String SQL_IN = " IN ";
 	public static final String SQL_NOT_IN = " NOT IN ";
 	public static final String SQL_INSERT_INTO = " INSERT INTO ";
@@ -95,7 +104,9 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 	public static final String SQL_WHERE = " WHERE ";
 	public static final String SQL_IS = " IS ";
 
-	protected enum ExecuteMode {MODE_INSERT, MODE_UPDATE}
+	protected enum ExecuteMode {
+		MODE_INSERT, MODE_UPDATE
+	}
 
 	public static final int SIZE_CODENAME_COLUMN = 32;
 	public static final int SIZE_NAME_COLUMN = 64;
@@ -111,16 +122,55 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 	private String retrieveQuery;
 
 
-	// //////////////////// common /////////////////////////
+	// /////////////////////////////////////// Common ///////////////////////////////////////////
 
+	/**
+	 * Получить код сущности.
+	 */
 	protected abstract short getEntityCode();
 
+	/**
+	 * Получить имя сущности.
+	 * 
+	 * @return Имя сущности.
+	 */
 	protected final String getEntityName() {
 		return ObjectEntities.codeToString(this.getEntityCode());
 	}
 
+	/**
+	 * Получить перечисление через запятую столбцов таблицы, свойственных только
+	 * для данной сущности. Столбцы, присущие всем объектам
+	 * {@link StorableObject} (а именно -
+	 * {@link StorableObjectWrapper#COLUMN_ID},
+	 * {@link StorableObjectWrapper#COLUMN_CREATED},
+	 * {@link StorableObjectWrapper#COLUMN_MODIFIED},
+	 * {@link StorableObjectWrapper#COLUMN_CREATOR_ID},
+	 * {@link StorableObjectWrapper#COLUMN_MODIFIER_ID},
+	 * {@link StorableObjectWrapper#COLUMN_VERSION}) в этом списке не
+	 * присутствуют.
+	 * 
+	 * @see #getColumns(com.syrus.AMFICOM.general.StorableObjectDatabase.ExecuteMode).
+	 */
 	protected abstract String getColumnsTmpl();
 
+	/**
+	 * Получить перечисление через запятую столбцов таблицы.
+	 * 
+	 * @param mode
+	 *        Если {@link ExecuteMode#MODE_INSERT}, то в списке присутствуют
+	 *        все столбцы, включая столбец идентификатора
+	 *        {@link StorableObjectWrapper#COLUMN_ID}.
+	 *        <p>
+	 *        Если {@link ExecuteMode#MODE_UPDATE}, то в списке не присутствует
+	 *        столбец идентификатора {@link StorableObjectWrapper#COLUMN_ID},
+	 *        т. к. он должен быть указан в SQL-предложении после служебного
+	 *        слова WHERE.
+	 * @return Перечисление через запятую столбцов таблицы.
+	 * @see #retrieveQuery(String)
+	 * @see #insertEntities(Set)
+	 * @see #updateEntities(Set)
+	 */
 	protected final String getColumns(final ExecuteMode mode) {
 		if (columns == null) {
 			columns = COLUMN_CREATED + COMMA
@@ -140,12 +190,42 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 		}
 	}
 
+	/**
+	 * Получить вторую часть SQL-предложения для использования с
+	 * {@link PreparedStatement}. В этой части содержатся вопросительные знаки,
+	 * разделённые запятыми, по знаку на каждый столбец.
+	 * 
+	 * @see #insertEntities(Set)
+	 */
 	protected final String getInsertMultipleSQLValues() {
 		return QUESTION + COMMA + this.getUpdateMultipleSQLValues();
 	}
 
+	/**
+	 * Получить вторую часть SQL-предложения для использования с
+	 * {@link PreparedStatement} для столбцов таблицы, свойственных только для
+	 * данной сущности. Столбцы, присущие всем объектам {@link StorableObject}
+	 * (а именно - {@link StorableObjectWrapper#COLUMN_ID},
+	 * {@link StorableObjectWrapper#COLUMN_CREATED},
+	 * {@link StorableObjectWrapper#COLUMN_MODIFIED},
+	 * {@link StorableObjectWrapper#COLUMN_CREATOR_ID},
+	 * {@link StorableObjectWrapper#COLUMN_MODIFIER_ID},
+	 * {@link StorableObjectWrapper#COLUMN_VERSION}) в этом списке не
+	 * присутствуют.
+	 * 
+	 * @see #getUpdateMultipleSQLValues().
+	 */
 	protected abstract String getUpdateMultipleSQLValuesTmpl();
 
+	/**
+	 * Получить вторую часть SQL-предложения для использования с
+	 * {@link PreparedStatement}. В этой части содержатся вопросительные знаки,
+	 * разделённые запятыми, по знаку на каждый столбец. Столбец
+	 * {@link StorableObjectWrapper#COLUMN_ID} в этом перечислении отсутствует.
+	 * 
+	 * @see #updateEntities(Set)
+	 * @see #getInsertMultipleSQLValues()
+	 */
 	protected final String getUpdateMultipleSQLValues() {
 		if (updateMultipleSQLValues == null) {
 			updateMultipleSQLValues = QUESTION + COMMA
@@ -157,18 +237,44 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 		return updateMultipleSQLValues + this.getUpdateMultipleSQLValuesTmpl();
 	}
 
+	/**
+	 * Получить вторую часть SQL-предложения для использования с
+	 * {@link Statement} для столбцов таблицы, свойственных только для данной
+	 * сущности. Столбцы, присущие всем объектам {@link StorableObject} (а
+	 * именно - {@link StorableObjectWrapper#COLUMN_ID},
+	 * {@link StorableObjectWrapper#COLUMN_CREATED},
+	 * {@link StorableObjectWrapper#COLUMN_MODIFIED},
+	 * {@link StorableObjectWrapper#COLUMN_CREATOR_ID},
+	 * {@link StorableObjectWrapper#COLUMN_MODIFIER_ID},
+	 * {@link StorableObjectWrapper#COLUMN_VERSION}) в этом списке не
+	 * присутствуют.
+	 * 
+	 * @see #getUpdateSingleSQLValues(StorableObject,
+	 *      com.syrus.AMFICOM.general.StorableObjectDatabase.ExecuteMode).
+	 */
 	protected abstract String getUpdateSingleSQLValuesTmpl(T storableObject) throws IllegalDataException;
 
 	/**
-	 * This method is not used any longer.
-	 *
+	 * Получить вторую часть SQL-предложения для использования с
+	 * {@link Statement}. В этой части содержатся значения полей, перечисленные
+	 * через запятую.
+	 * <p>
+	 * Этот метод сейчас уже нигде не используется, но ещё может быть полезен.
+	 * 
 	 * @param storableObject
 	 * @param mode
+	 *        Если {@link ExecuteMode#MODE_INSERT}, то в списке присутствуют
+	 *        значения для всех столбцов, включая столбец идентификатора
+	 *        {@link StorableObjectWrapper#COLUMN_ID}.
+	 *        <p>
+	 *        Если {@link ExecuteMode#MODE_UPDATE}, то в списке не присутствует
+	 *        значение столбца идентификатора
+	 *        {@link StorableObjectWrapper#COLUMN_ID}, т. к. он должен быть
+	 *        указан в SQL-предложении после служебного слова WHERE.
 	 * @throws IllegalDataException
 	 */
-	protected final String getUpdateSingleSQLValues(final T storableObject, final ExecuteMode mode)
-			throws IllegalDataException {
-		String modeString;
+	protected final String getUpdateSingleSQLValues(final T storableObject, final ExecuteMode mode) throws IllegalDataException {
+		final String modeString;
 		switch (mode) {
 			case MODE_INSERT:
 				modeString = DatabaseIdentifier.toSQLString(storableObject.getId()) + COMMA;
@@ -177,11 +283,11 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 				modeString = "";
 				break;
 			default:
-				final String msg = this.getEntityName() + "Database.getUpdateSingleSQLValues | Unknown mode: " + mode;
-				throw new IllegalDataException(msg);
+				throw new IllegalDataException(("Unknown mode: " + mode));
 
 		}
-		return modeString + DatabaseDate.toUpdateSubString(storableObject.getCreated()) + COMMA
+		return modeString
+				+ DatabaseDate.toUpdateSubString(storableObject.getCreated()) + COMMA
 				+ DatabaseDate.toUpdateSubString(storableObject.getModified()) + COMMA
 				+ DatabaseIdentifier.toSQLString(storableObject.getCreatorId()) + COMMA
 				+ DatabaseIdentifier.toSQLString(storableObject.getModifierId()) + COMMA
@@ -189,15 +295,25 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 				+ this.getUpdateSingleSQLValuesTmpl(storableObject);
 	}
 
+	/**
+	 * Этот метод строит запрос SQL для условия, выраженного строкой
+	 * {@code condition}. По этому запросу достаются все поля из таблицы для
+	 * строк, удовлетворяющих заданному условию.
+	 * 
+	 * @param condition
+	 *        Строка условия, которая в SQL-предложении ставится после
+	 *        служебного слова WHERE. Если {@code null}, то строится запрос,
+	 *        возвращающий все строки таблицы.
+	 * @return Строка запроса SQL с условием {@code condition}.
+	 * @see #retrieveByCondition(String)
+	 */
 	protected String retrieveQuery(final String condition) {
-		StringBuffer buffer;
+		final StringBuffer buffer;
 		if (this.retrieveQuery == null) {
 			buffer = new StringBuffer(SQL_SELECT);
 			String cols = this.getColumns(ExecuteMode.MODE_INSERT);
-			cols = cols.replaceFirst(COLUMN_CREATED,
-					DatabaseDate.toQuerySubString(COLUMN_CREATED));
-			cols = cols.replaceFirst(COLUMN_MODIFIED,
-					DatabaseDate.toQuerySubString(COLUMN_MODIFIED));
+			cols = cols.replaceFirst(COLUMN_CREATED, DatabaseDate.toQuerySubString(COLUMN_CREATED));
+			cols = cols.replaceFirst(COLUMN_MODIFIED, DatabaseDate.toQuerySubString(COLUMN_MODIFIED));
 			buffer.append(cols);
 			buffer.append(SQL_FROM);
 			buffer.append(this.getEntityName());
@@ -214,10 +330,59 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 		return buffer.toString();
 	}
 
+	/**
+	 * Метод заполняет поля приготовленного запроса {@code preparedStatement}
+	 * значениями полей объекта {@code storableObject}. Заполнение происходит
+	 * только для полей {@code storableObject}, присущих данной реализации
+	 * {@link StorableObject}. Поля , присущие всем объектам
+	 * {@link StorableObject} (а именно -
+	 * {@link StorableObjectWrapper#COLUMN_ID},
+	 * {@link StorableObjectWrapper#COLUMN_CREATED},
+	 * {@link StorableObjectWrapper#COLUMN_MODIFIED},
+	 * {@link StorableObjectWrapper#COLUMN_CREATOR_ID},
+	 * {@link StorableObjectWrapper#COLUMN_MODIFIER_ID},
+	 * {@link StorableObjectWrapper#COLUMN_VERSION}) не заполняются.
+	 * 
+	 * @param storableObject
+	 *        Объект, вставляемый в БД, либо обновляемый в ней.
+	 * @param preparedStatement
+	 *        Приготовленный запрос вставки или обновления.
+	 * @param startParameterNumber
+	 *        Номер последнего проставленного поля в запросе
+	 *        {@code preparedStatement} перед началом работы метода.
+	 * @return Номер последнего проставленного поля в запросе
+	 *         {@code preparedStatement} после окончания работы метода.
+	 * @throws IllegalDataException
+	 * @throws SQLException
+	 * @see #setEntityForPreparedStatement(StorableObject, PreparedStatement,
+	 *      com.syrus.AMFICOM.general.StorableObjectDatabase.ExecuteMode).
+	 */
 	protected abstract int setEntityForPreparedStatementTmpl(T storableObject,
 			PreparedStatement preparedStatement,
 			int startParameterNumber) throws IllegalDataException, SQLException;
 
+	/**
+	 * Метод заполняет поля приготовленного запроса {@code preparedStatement}
+	 * значениями полей объекта {@code storableObject}.
+	 * 
+	 * @param storableObject
+	 *        Объект, вставляемый в БД, либо обновляемый в ней.
+	 * @param preparedStatement
+	 *        Приготовленный запрос вставки или обновления.
+	 * @param mode
+	 *        Если {@link ExecuteMode#MODE_INSERT}, то заполняются все столбцы,
+	 *        включая столбец идентификатора
+	 *        {@link StorableObjectWrapper#COLUMN_ID}.
+	 *        <p>
+	 *        Если {@link ExecuteMode#MODE_UPDATE}, то столбец идентификатора
+	 *        {@link StorableObjectWrapper#COLUMN_ID} не заполняется, т. к. он
+	 *        должен быть указан в SQL-предложении после служебного слова WHERE.
+	 * @return Номер текущего параметра в запросе {@code preparedStatement}.
+	 * @throws IllegalDataException
+	 * @throws SQLException
+	 * @see #insertEntities(Set)
+	 * @see #updateEntities(Set)
+	 */
 	protected final int setEntityForPreparedStatement(final T storableObject,
 			final PreparedStatement preparedStatement,
 			final ExecuteMode mode) throws IllegalDataException, SQLException {
@@ -229,7 +394,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 			case MODE_UPDATE:
 				break;
 			default:
-				throw new IllegalDataException(this.getEntityName() + "Database.setEntityForPreparedStatement | Unknown mode " + mode);
+				throw new IllegalDataException("Unknown mode: " + mode);
 		}
 		preparedStatement.setTimestamp(++i, new Timestamp(storableObject.getCreated().getTime()));
 		preparedStatement.setTimestamp(++i, new Timestamp(storableObject.getModified().getTime()));
@@ -240,22 +405,42 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 	}
 
 	/**
-	 * If <code>storableObject</code> is <code>null</code> creates new
-	 * StorableObject Else - fills it fields from <code>resultSet</code>
+	 * Если {@code storableObject == null}, то создаётся новый объект с полями,
+	 * проставленными из {@code resultSet}. Иначе - все поля объекта
+	 * {@code storableObject} заполняются значениями из {@code resultSet}.
 	 * 
 	 * @param storableObject
+	 *        Объект, заполняемый значениями из БД.
 	 * @param resultSet
-	 * @return Storable Object with filled fields
+	 *        Выборка из БД для объекта {@code storableObject}
+	 * @return Объект с полями, заполненными значениями из выборки
+	 *         {@code resultSet}.
 	 * @throws IllegalDataException
 	 * @throws RetrieveObjectException
 	 * @throws SQLException
+	 * @see {@link #retrieveByCondition(String)}
 	 */
 	protected abstract T updateEntityFromResultSet(T storableObject, ResultSet resultSet)
-			throws IllegalDataException, RetrieveObjectException, SQLException;
+			throws IllegalDataException,
+				RetrieveObjectException,
+				SQLException;
 
 
-	////////////////////////////////////////////// Retrieve Objects /////////////////////////////////////////////
+	// //////////////////////////////////////////// Retrieve Objects /////////////////////////////////////////////
 
+	/**
+	 * Достать объекты по данному условию.
+	 * <p>
+	 * Этот метод можно переопределять в подклассах, если требуется
+	 * нестандартное заполнение полей объекта (например доставание из БД
+	 * связанных идентификаторов).
+	 * 
+	 * @param conditionQuery
+	 *        Строка условия.
+	 * @return Набор объектов, удовлетворяющих данному условию.
+	 * @throws RetrieveObjectException
+	 * @throws IllegalDataException
+	 */
 	protected Set<T> retrieveByCondition(final String conditionQuery) throws RetrieveObjectException, IllegalDataException {
 		final Set<T> storableObjects = new HashSet<T>();
 
@@ -303,13 +488,34 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 		return storableObjects;
 	}
 
+	/**
+	 * Достать объекты по данному условию.
+	 * 
+	 * @param condition
+	 * @return Набор объектов, удовлетворяющих данному условию.
+	 * @throws RetrieveObjectException
+	 * @throws IllegalDataException
+	 */
 	public final Set<T> retrieveByCondition(final StorableObjectCondition condition)
-			throws RetrieveObjectException, IllegalDataException {
+			throws RetrieveObjectException,
+				IllegalDataException {
 		return this.retrieveByCondition(this.getConditionQuery(condition));
 	}
 
+	/**
+	 * Достать объекты по данному условию, идентификаторы которых не принадлежат
+	 * набору {@code ids}.
+	 * 
+	 * @param ids
+	 * @param condition
+	 * @return Набор объектов, удовлетворяющих данному условию, за исключением
+	 *         {@code ids}.
+	 * @throws RetrieveObjectException
+	 * @throws IllegalDataException
+	 */
 	public final Set<T> retrieveButIdsByCondition(final Set<Identifier> ids, final StorableObjectCondition condition)
-			throws RetrieveObjectException, IllegalDataException {
+			throws RetrieveObjectException,
+				IllegalDataException {
 		assert StorableObject.hasSingleTypeEntities(ids) : OBJECTS_NOT_OF_THE_SAME_ENTITY;
 
 		final StringBuffer stringBuffer = idsEnumerationString(ids, COLUMN_ID, false);
@@ -324,8 +530,20 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 		return this.retrieveByCondition(stringBuffer.toString());
 	}
 
+	/**
+	 * Достать объекты по данному условию, идентификаторы которых принадлежат
+	 * набору {@code ids}.
+	 * 
+	 * @param ids
+	 * @param condition
+	 * @return Набор объектов, удовлетворяющих данному условию, принадлежащих
+	 *         набору {@code ids}.
+	 * @throws RetrieveObjectException
+	 * @throws IllegalDataException
+	 */
 	public final Set<T> retrieveByIdsByCondition(final Set<Identifier> ids, final StorableObjectCondition condition)
-			throws RetrieveObjectException, IllegalDataException {
+			throws RetrieveObjectException,
+				IllegalDataException {
 		assert StorableObject.hasSingleTypeEntities(ids) : OBJECTS_NOT_OF_THE_SAME_ENTITY;
 
 		final StringBuffer stringBuffer = idsEnumerationString(ids, COLUMN_ID, true);
@@ -340,6 +558,15 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 		return this.retrieveByCondition(stringBuffer.toString());
 	}
 
+	/**
+	 * Достать объект с данным идентификатором.
+	 * 
+	 * @param id
+	 * @return Объект с данным идентификатором.
+	 * @throws RetrieveObjectException
+	 * @throws ObjectNotFoundException
+	 *         Если не найден.
+	 */
 	public final T retrieveForId(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		assert id != null : NON_NULL_EXPECTED;
 		assert id.getMajor() == this.getEntityCode() : ILLEGAL_ENTITY_CODE;
@@ -356,6 +583,12 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 		}
 	}
 
+	/**
+	 * Достать все объекты.
+	 * 
+	 * @return Набор всех объектов, хранящихся в БД.
+	 * @throws RetrieveObjectException
+	 */
 	public final Set<T> retrieveAll() throws RetrieveObjectException {
 		try {
 			return this.retrieveByCondition((String) null);
@@ -365,7 +598,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 	}
 
 
-	////////////////////////////////////////// Retrieve Identifiers /////////////////////////////////////////////
+	// //////////////////////////////////////// Retrieve Identifiers /////////////////////////////////////////////
 
 	public final Set<Identifier> retrieveIdentifiersByCondition(final String conditionQuery) throws RetrieveObjectException {
 		final Set<Identifier> identifiers = new HashSet<Identifier>();
@@ -416,15 +649,17 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 				Log.errorMessage(sqle1);
 			}
 		}
-		
+
 		return identifiers;
 	}
 
-	public final Set<Identifier> retrieveIdentifiersByCondition(final StorableObjectCondition condition) throws RetrieveObjectException {
+	public final Set<Identifier> retrieveIdentifiersByCondition(final StorableObjectCondition condition)
+			throws RetrieveObjectException {
 		return this.retrieveIdentifiersByCondition(this.getConditionQuery(condition));
 	}
 
-	public final Set<Identifier> retrieveIdentifiersButIdsByCondition(final Set<Identifier> ids, final StorableObjectCondition condition) throws RetrieveObjectException {
+	public final Set<Identifier> retrieveIdentifiersButIdsByCondition(final Set<Identifier> ids,
+			final StorableObjectCondition condition) throws RetrieveObjectException {
 		assert StorableObject.hasSingleTypeEntities(ids) : OBJECTS_NOT_OF_THE_SAME_ENTITY;
 
 		final StringBuffer stringBuffer = idsEnumerationString(ids, COLUMN_ID, false);
@@ -439,7 +674,8 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 		return this.retrieveIdentifiersByCondition(stringBuffer.toString());
 	}
 
-	public final Set<Identifier> retrieveIdentifiersByIdsByCondition(final Set<Identifier> ids, final StorableObjectCondition condition) throws RetrieveObjectException {
+	public final Set<Identifier> retrieveIdentifiersByIdsByCondition(final Set<Identifier> ids,
+			final StorableObjectCondition condition) throws RetrieveObjectException {
 		assert StorableObject.hasSingleTypeEntities(ids) : OBJECTS_NOT_OF_THE_SAME_ENTITY;
 
 		final StringBuffer stringBuffer = idsEnumerationString(ids, COLUMN_ID, true);
@@ -455,23 +691,30 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 	}
 
 
-	////////////////////////////////////////// Retrieve linked objects /////////////////////////////////////////////
+	// //////////////////////////////////////// Retrieve linked objects /////////////////////////////////////////////
 
 	/**
-	 * Map&lt;StorableObject, List&lt;Identifier&gt;&gt;
-	 *
+	 * Достать идентификаторы объектов, связанных через промежуточную таблицу
+	 * {@code tableName} с объектами из набора {@code identifiables}.
+	 * <p>
+	 * Этот метод может быть использован в наследниках данного класса, в
+	 * переопределении метода {@link #retrieveByCondition(String)}, для
+	 * восстановления полей-связанных идентификаторов каждого объекта из набора
+	 * {@code identifiables}.
+	 * 
 	 * @param identifiables
-	 *            List&lt;StorableObject&gt;
 	 * @param tableName
 	 * @param idColumnName
 	 * @param linkedIdColumnName
+	 * @return Карту вида <{@link Identifier} идентификатор_объекта,
+	 *         {@link Set}<{@link Identifier}>
+	 *         набор_идентификаторов_связанных_объектов>.
 	 * @throws RetrieveObjectException
 	 */
 	protected final Map<Identifier, Set<Identifier>> retrieveLinkedEntityIds(final Set<? extends Identifiable> identifiables,
 			final String tableName,
 			final String idColumnName,
-			final String linkedIdColumnName)
-			throws RetrieveObjectException {
+			final String linkedIdColumnName) throws RetrieveObjectException {
 		if (identifiables == null || identifiables.isEmpty()) {
 			return Collections.emptyMap();
 		}
@@ -534,6 +777,15 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 	}
 
 	/**
+	 * Достать перечислимые объекты, связанные через промежуточную таблицу
+	 * {@code tableName} с объектами {@code identifiables}.
+	 * <p>
+	 * Этот метод может быть использован в наследниках данного класса, в
+	 * переопределении метода {@link #retrieveByCondition(String)}, для
+	 * восстановления полей-перечислимых объектов каждого объекта из набора
+	 * {@code identifiables}.
+	 * <p>
+	 * В настоящее время нигде не используется, но может быть полезен.
 	 * 
 	 * @param <E>
 	 * @param identifiables
@@ -541,15 +793,15 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 	 * @param tableName
 	 * @param idColumnName
 	 * @param linkedCodeColumnName
-	 * @return Map of Identifiers and Enum sets 
+	 * @return Карту вида <{@link Identifier} идентификатор_объекта,
+	 *         {@link EnumSet}<E> набор_связанных_перечислимых_объектов>.
 	 * @throws RetrieveObjectException
 	 */
 	protected final <E extends Enum<E>> Map<Identifier, EnumSet<E>> retrieveLinkedEnums(final Set<? extends Identifiable> identifiables,
 			final Class<E> enumClass,
 			final String tableName,
 			final String idColumnName,
-			final String linkedCodeColumnName)
-			throws RetrieveObjectException {
+			final String linkedCodeColumnName) throws RetrieveObjectException {
 		if (identifiables == null || identifiables.isEmpty()) {
 			return Collections.emptyMap();
 		}
@@ -615,6 +867,14 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 		}
 	}
 
+	/**
+	 * Проверить, существует ли объект с данным идентификатором в базе данных.
+	 * 
+	 * @param id
+	 *        Идентификатор объекта.
+	 * @return {@code true}, если существует.
+	 * @throws RetrieveObjectException
+	 */
 	public final boolean isPresentInDatabase(final Identifier id) throws RetrieveObjectException {
 		final String aliasCount = "count";
 		final String tableName = this.getEntityName();
@@ -633,12 +893,10 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 			final int count = resultSet.getInt(aliasCount);
 			assert count <= 1 : ONLY_ONE_EXPECTED;
 			return count > 0;
-		}
-		catch (SQLException sqle) {
+		} catch (SQLException sqle) {
 			final String mesg = "Cannot check presence -- " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
-		}
-		finally {
+		} finally {
 			try {
 				try {
 					if (statement != null) {
@@ -664,12 +922,23 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 		}
 	}
 
-	public static boolean isObjectPresentInDatabase(final Identifier id) throws RetrieveObjectException, IllegalObjectEntityException {
+	/**
+	 * Статический вариант метода {@link #isPresentInDatabase(Identifier)}.
+	 * 
+	 * @param id
+	 * @return {@code true}, если существует.
+	 * @throws RetrieveObjectException
+	 * @throws IllegalObjectEntityException
+	 */
+	public static boolean isObjectPresentInDatabase(final Identifier id)
+			throws RetrieveObjectException,
+				IllegalObjectEntityException {
 		final short entityCode = id.getMajor();
 		assert ObjectEntities.isEntityCodeValid(entityCode) : ILLEGAL_ENTITY_CODE;
 		final StorableObjectDatabase<?> storableObjectDatabase = DatabaseContext.getDatabase(entityCode);
 		if (storableObjectDatabase == null) {
-			throw new IllegalObjectEntityException("Cannot find database for code " + entityCode, IllegalObjectEntityException.UNKNOWN_ENTITY_CODE);
+			throw new IllegalObjectEntityException("Cannot find database for code " + entityCode,
+					IllegalObjectEntityException.UNKNOWN_ENTITY_CODE);
 		}
 		return storableObjectDatabase.isPresentInDatabase(id);
 	}
@@ -686,7 +955,8 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 	 * @throws RetrieveObjectException
 	 *         Ошибка при выборке из БД.
 	 */
-	final Map<Identifier, StorableObjectVersion> retrieveVersions(final Set<Identifier> ids) throws RetrieveObjectException {
+	public final Map<Identifier, StorableObjectVersion> retrieveVersions(final Set<Identifier> ids)
+			throws RetrieveObjectException {
 		assert StorableObject.hasSingleTypeEntities(ids) : OBJECTS_NOT_OF_THE_SAME_ENTITY;
 		final String tableName = this.getEntityName();
 
@@ -713,12 +983,10 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 				final long version = resultSet.getLong(COLUMN_VERSION);
 				versionsMap.put(id, StorableObjectVersion.valueOf(version));
 			}
-		}
-		catch (SQLException sqle) {
+		} catch (SQLException sqle) {
 			final String mesg = "Cannot check presence -- " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
-		}
-		finally {
+		} finally {
 			try {
 				try {
 					if (statement != null) {
@@ -750,13 +1018,31 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 		return versionsMap;
 	}
 
+	/**
+	 * Вставить в БД объекты {@code storableObjects}.
+	 * <p>
+	 * Этот метод можно переопределить в наследниках для реализации более
+	 * сложного поведения, чем просто вставление всех полей каждого объекта в
+	 * таблицу (как это делает {@link #insertEntities(Set)}). Например, может
+	 * возникнуть необходимость вставить в промежуточные таблицы-связки
+	 * связанные идентификаторы.
+	 * 
+	 * @param storableObjects
+	 * @throws IllegalDataException
+	 * @throws CreateObjectException
+	 */
 	protected void insert(final Set<T> storableObjects) throws IllegalDataException, CreateObjectException {
 		this.insertEntities(storableObjects);
 	}
 
-	private void insertEntities(final Set<T> storableObjects)
-			throws IllegalDataException,
-				CreateObjectException {
+	/**
+	 * Вставить в БД объекты {@code storableObjects}.
+	 * 
+	 * @param storableObjects
+	 * @throws IllegalDataException
+	 * @throws CreateObjectException
+	 */
+	private void insertEntities(final Set<T> storableObjects) throws IllegalDataException, CreateObjectException {
 		assert storableObjects != null : NON_NULL_EXPECTED;
 		assert !storableObjects.isEmpty() : NON_EMPTY_EXPECTED;
 		assert StorableObject.getEntityCodeOfIdentifiables(storableObjects) == this.getEntityCode() : ILLEGAL_ENTITY_CODE;
@@ -811,9 +1097,19 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 	}
 
 	/**
+	 * Вставить в БД связанные идентификаторы.
+	 * 
 	 * @param idLinkedObjectIdsMap
-	 *            map of &lt;&lt;Identifier&gt; collectorId ,
-	 *            List&lt;Identifier&gt; physicalLinkIds&gt;
+	 *        Карта, где по ключу хранится идентификатор объекта, а по величине -
+	 *        набор идентификаторов связанных с ним объектов.
+	 * @param tableName
+	 *        Проммежуточная таблица-связка.
+	 * @param idColumnName
+	 *        Столбец в таблице {@code tableName}, где хранятся идентификаторы
+	 *        объектов.
+	 * @param linkedIdColumnName
+	 *        Столбец в таблице {@code tableName}, где хранятся идентификаторы
+	 *        связанных объектов.
 	 * @throws CreateObjectException
 	 */
 	protected final void insertLinkedEntityIds(final Map<Identifier, Set<Identifier>> idLinkedObjectIdsMap,
@@ -881,6 +1177,14 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 	}
 
 	/**
+	 * Вставить в БД связанные перечислимые объекты.
+	 * <p>
+	 * Этот метод может быть использован в наследниках данного класса, в
+	 * переопределении метода {@link #insert(Set)}, для вставки в БД
+	 * полей-перечислимых объектов каждого объекта из набора
+	 * {@code identifiables}.
+	 * <p>
+	 * В настоящее время нигде не используется, но может быть полезен.
 	 * 
 	 * @param <E>
 	 * @param idLinkedCodeMap
@@ -952,14 +1256,23 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 		}
 	}
 
+
 	// //////////////////// update /////////////////////////
 
 	/**
+	 * Сохранить объекты {@code storableObjects}.
+	 * <p>
+	 * Если объект из набора {@code storableObjects} не ещё существует в БД, то
+	 * для него вызывается {@link #insert(Set)}. Если же он уже сохранён в БД,
+	 * то для него вызывается {@link #update(Set)}.
+	 * 
 	 * @param storableObjects
 	 * @throws RetrieveObjectException
-	 * @throws IllegalDataException
 	 * @throws CreateObjectException
-	 * @throws UpdateObjectException 
+	 * @throws IllegalDataException
+	 * @throws UpdateObjectException
+	 * @see #insert(Set)
+	 * @see #update(Set)
 	 */
 	public final void save(final Set<T> storableObjects)
 			throws RetrieveObjectException,
@@ -991,10 +1304,28 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 		}
 	}
 
+	/**
+	 * Обновить в БД объекты {@code storableObjects}.
+	 * <p>
+	 * Этот метод можно переопределить в наследниках для реализации более
+	 * сложного поведения, чем просто вставление всех полей каждого объекта в
+	 * таблицу (как это делает {@link #updateEntities(Set)}). Например, может
+	 * возникнуть необходимость обновить в промежуточных таблицах-связках
+	 * связанные идентификаторы.
+	 * 
+	 * @param storableObjects
+	 * @throws UpdateObjectException
+	 */
 	protected void update(final Set<T> storableObjects) throws UpdateObjectException {
 		this.updateEntities(storableObjects);
 	}
 
+	/**
+	 * Обновить в БД объекты {@code storableObjects}.
+	 * 
+	 * @param storableObjects
+	 * @throws UpdateObjectException
+	 */
 	private void updateEntities(final Set<T> storableObjects) throws UpdateObjectException {
 		assert storableObjects != null : NON_NULL_EXPECTED;
 		assert !storableObjects.isEmpty() : NON_EMPTY_EXPECTED;
@@ -1050,8 +1381,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 				preparedStatement.executeUpdate();
 			}
 			connection.commit();
-		}
-		catch (SQLException sqle) {
+		} catch (SQLException sqle) {
 			try {
 				if (connection != null) {
 					connection.rollback();
@@ -1061,8 +1391,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 			}
 			final String mesg = "Cannot update " + this.getEntityName() + " '" + id + "' -- " + sqle.getMessage();
 			throw new UpdateObjectException(mesg, sqle);
-		}
-		finally {
+		} finally {
 			try {
 				try {
 					if (preparedStatement != null) {
@@ -1082,14 +1411,25 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 	}
 
 	/**
-	 * If a linked id exists in idLinkedMap but not exists in DB - insert it to
-	 * DB If a linked id exists in DB but not exists in idLinkedMap - delete it
-	 * from DB
-	 *
+	 * Обновить в БД связанные идентификаторы.
+	 * <p>
+	 * Если связанный идентификатор существует в карте
+	 * {@code idLinkedObjectIdsMap}, но не существует в БД - этот идентификатор
+	 * вставляется в таблицу-связку в БД. Если связанный идентификатор
+	 * существует в таблице-связке в БД, но не существует в
+	 * {@code idLinkedObjectIdsMap} - он удаляется из таблицы-связки.
+	 * 
 	 * @param idLinkedIdMap
+	 *        Карта, где по ключу хранится идентификатор объекта, а по величине -
+	 *        набор идентификаторов связанных с ним объектов.
 	 * @param tableName
+	 *        Проммежуточная таблица-связка.
 	 * @param idColumnName
+	 *        Столбец в таблице {@code tableName}, где хранятся идентификаторы
+	 *        объектов.
 	 * @param linkedIdColumnName
+	 *        Столбец в таблице {@code tableName}, где хранятся идентификаторы
+	 *        связанных объектов.
 	 * @throws UpdateObjectException
 	 */
 	protected final void updateLinkedEntityIds(final Map<Identifier, Set<Identifier>> idLinkedIdMap,
@@ -1160,6 +1500,14 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 	}
 
 	/**
+	 * Обновить в БД связанные перечислимые объекты.
+	 * <p>
+	 * Этот метод может быть использован в наследниках данного класса, в
+	 * переопределении метода {@link #update(Set)}, для обновления в БД
+	 * полей-перечислимых объектов каждого объекта из набора
+	 * {@code identifiables}.
+	 * <p>
+	 * В настоящее время нигде не используется, но может быть полезен.
 	 * 
 	 * @param <E>
 	 * @param idLinkedCodeMap
@@ -1180,7 +1528,11 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 
 		Map<Identifier, EnumSet<E>> dbIdLinkedCodeMap = null;
 		try {
-			dbIdLinkedCodeMap = this.retrieveLinkedEnums(idLinkedCodeMap.keySet(), enumClass, tableName, idColumnName, linkedCodeColumnName);
+			dbIdLinkedCodeMap = this.retrieveLinkedEnums(idLinkedCodeMap.keySet(),
+					enumClass,
+					tableName,
+					idColumnName,
+					linkedCodeColumnName);
 		} catch (RetrieveObjectException roe) {
 			throw new UpdateObjectException(roe);
 		}
@@ -1192,7 +1544,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 			final EnumSet<E> dbCodes = dbIdLinkedCodeMap.get(id);
 			if (dbCodes != null) {
 
-				//Prepare map for insertion
+				// Prepare map for insertion
 				for (final E code : codes) {
 					if (!dbCodes.contains(code)) {
 						EnumSet<E> altCodes = insertCodesMap.get(id);
@@ -1204,8 +1556,8 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 					}
 				}
 
-				//Prepare map for delete
-				for (final E code :dbCodes) {
+				// Prepare map for delete
+				for (final E code : dbCodes) {
 					if (!codes.contains(code)) {
 						EnumSet<E> altCodes = deleteCodesMap.get(id);
 						if (altCodes == null) {
@@ -1239,6 +1591,17 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 
 	// ////////////////////refresh /////////////////////////
 
+	/**
+	 * Получить набор идентификаторов объектов, версии которых старее, чем
+	 * версии тех же объектов в БД.
+	 * 
+	 * @param versionsMap
+	 *        Карта, где по ключу - идентификатор объекта, по величине - его
+	 *        версия.
+	 * @return Набор идентификаторов объектов, устаревших по сравнению с БД.
+	 * @throws RetrieveObjectException
+	 * @see {@link StorableObjectVersion#isOlder(StorableObjectVersion)}.
+	 */
 	public final Set<Identifier> getOldVersionIds(final Map<Identifier, StorableObjectVersion> versionsMap)
 			throws RetrieveObjectException {
 		final Set<Identifier> ids = versionsMap.keySet();
@@ -1257,6 +1620,14 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 
 	// //////////////////// delete /////////////////////////
 
+	/**
+	 * Удалить объекты {@code identifiables} из БД.
+	 * <p>
+	 * Этот метод можно переопределить в подклассах, если, например, нужно
+	 * удалить связаные объекты.
+	 * 
+	 * @param identifiables
+	 */
 	public void delete(Set<? extends Identifiable> identifiables) {
 		if ((identifiables == null) || (identifiables.isEmpty())) {
 			return;
@@ -1296,6 +1667,14 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 		}
 	}
 
+	/**
+	 * Удалить связанные идентификаторы.
+	 * 
+	 * @param idLinkedObjectIdsMap
+	 * @param tableName
+	 * @param idColumnName
+	 * @param linkedIdColumnName
+	 */
 	protected final void deleteLinkedEntityIds(final Map<Identifier, Set<Identifier>> idLinkedObjectIdsMap,
 			final String tableName,
 			final String idColumnName,
@@ -1354,6 +1733,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 	}
 
 	/**
+	 * Удалить связанные перечисляемые объекты.
 	 * 
 	 * @param <E>
 	 * @param idLinkedCodeMap
@@ -1421,19 +1801,25 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 	// //////////////////// misc /////////////////////////
 
 	/**
-	 * <p>If <code>inList</code> is <code>true</code> returns a string like
+	 * <p>
+	 * If <code>inList</code> is <code>true</code> returns a string like
 	 * "idColumn IN ('id1', 'id2',... , 'idN') OR idColumn IN ('id3', 'id4',... ,
 	 * 'idM') ..." If <code>inList</code> is <code>false</code> returns a
 	 * string like "idColumn NOT IN ('id1', 'id2',... , 'idN') AND idColumn NOT
-	 * IN ('id3', 'id4',... , 'idM') ..."</p>
-	 * 
-	 * <p>If {@code identifiables} contain
+	 * IN ('id3', 'id4',... , 'idM') ..."
+	 * </p>
+	 * <p>
+	 * If {@code identifiables} contain
 	 * {@link Identifier#VOID_IDENTIFIER VOID_IDENTIFIER}, it is handled
-	 * correctly, e. g.:<pre>
-	 * idColumn IN ('id1', 'id2', ..., 'isN') OR idColumn IS NULL
-	 * idColumn NOT IN ('id1', 'id2', ..., 'isN') AND idColumn IS NOT NULL
-	 * </pre></p>
-	 *
+	 * correctly, e. g.:
+	 * 
+	 * <pre>
+	 *  idColumn IN ('id1', 'id2', ..., 'isN') OR idColumn IS NULL
+	 *  idColumn NOT IN ('id1', 'id2', ..., 'isN') AND idColumn IS NOT NULL
+	 * </pre>
+	 * 
+	 * </p>
+	 * 
 	 * @param identifiables
 	 * @param idColumn
 	 * @param inList
@@ -1465,9 +1851,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 			if (containsVoidIdentifier) {
 				return voidSql;
 			}
-			return new StringBuffer(inList
-					? DatabaseStorableObjectCondition.FALSE_CONDITION
-					: DatabaseStorableObjectCondition.TRUE_CONDITION);
+			return new StringBuffer(inList ? FALSE_CONDITION : TRUE_CONDITION);
 		}
 
 		final StringBuffer sql = new StringBuffer((containsVoidIdentifier ? OPEN_BRACKET : ""));
@@ -1513,6 +1897,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 
 	/**
 	 * Supports only non-null codes
+	 * 
 	 * @param enums
 	 * @param codeColumn
 	 * @param inList
@@ -1554,7 +1939,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 
 		final short conditionCode = databaseStorableObjectCondition.getEntityCode().shortValue();
 		assert (this.checkEntity(conditionCode)) : "Incompatible condition ("
-					+ ObjectEntities.codeToString(conditionCode) + ") and database (" + this.getEntityName() + ") classes";
+				+ ObjectEntities.codeToString(conditionCode) + ") and database (" + this.getEntityName() + ") classes";
 
 		String conditionQuery;
 		try {
@@ -1565,10 +1950,10 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 		}
 		return conditionQuery;
 	}
-	
+
 	private boolean checkEntity(final short conditionCode) {
 		final String enityName = this.getEntityName().replaceAll("\"", "");
-		return (ObjectEntities.stringToCode(enityName) == conditionCode);		
+		return (ObjectEntities.stringToCode(enityName) == conditionCode);
 	}
 
 	private DatabaseStorableObjectCondition reflectDatabaseCondition(final StorableObjectCondition condition) {
@@ -1578,9 +1963,9 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 		final String dbClassName = className.substring(0, lastPoint + 1) + "Database" + className.substring(lastPoint + 1);
 		try {
 			final Class<?> clazz = Class.forName(dbClassName);
-			final Constructor<?> constructor = clazz.getDeclaredConstructor(new Class[] {condition.getClass()});
+			final Constructor<?> constructor = clazz.getDeclaredConstructor(new Class[] { condition.getClass() });
 			constructor.setAccessible(true);
-			databaseStorableObjectCondition = (DatabaseStorableObjectCondition) constructor.newInstance(new Object[] {condition});
+			databaseStorableObjectCondition = (DatabaseStorableObjectCondition) constructor.newInstance(new Object[] { condition });
 		} catch (ClassNotFoundException e) {
 			Log.errorMessage(e);
 		} catch (SecurityException e) {
