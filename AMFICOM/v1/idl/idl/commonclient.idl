@@ -1,0 +1,45 @@
+/*-
+ * $Id: commonclient.idl,v 1.8.2.1 2006/06/26 12:26:36 arseniy Exp $
+ *
+ * Copyright ¿ 2004 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
+ 
+#ifndef COMMONCLIENT_IDL
+#define	COMMONCLIENT_IDL
+
+#include "event.idl"
+
+#ifndef MY_COMPILER_IS_NOT_BRAINDEAD
+module com {
+module syrus {
+module AMFICOM {
+#else // MY_COMPILER_IS_NOT_BRAINDEAD
+#pragma prefix "AMFICOM.syrus.com"
+#endif // MY_COMPILER_IS_NOT_BRAINDEAD
+
+module general {
+	module corba {
+ 
+
+///////////////////////// Client interface //////////////////////////
+
+		/**
+		 * Interface for all clients.
+		 *
+		 * \u002a\u002f@SuppressWarnings("all")/*
+		 */
+		interface CORBAClient : Verifiable, CommonUser, eventv2::corba::EventReceiver {
+		};
+	};
+};
+
+
+#ifndef MY_COMPILER_IS_NOT_BRAINDEAD
+};
+};
+};
+#endif // MY_COMPILER_IS_NOT_BRAINDEAD
+
+#endif // COMMONCLIENT_IDL
