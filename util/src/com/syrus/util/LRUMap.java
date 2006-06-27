@@ -1,5 +1,5 @@
 /*-
- * $Id: LRUMap.java,v 1.54 2006/06/05 15:24:21 arseniy Exp $
+ * $Id: LRUMap.java,v 1.55 2006/06/27 09:53:24 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,7 +25,7 @@ import java.util.Set;
 
 
 /**
- * @version $Revision: 1.54 $, $Date: 2006/06/05 15:24:21 $
+ * @version $Revision: 1.55 $, $Date: 2006/06/27 09:53:24 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module util
@@ -192,6 +192,7 @@ public final class LRUMap<K, V extends LRUMap.Retainable> implements Map<K, V>, 
 		if (this.keySet == null) {
 			this.keySet = new AbstractSet<K>() {
 
+				@SuppressWarnings("synthetic-access")
 				@Override
 				public Iterator<K> iterator() {
 					assert LRUMap.this.index.size() == LRUMap.this.data.size() : ERRMESSG_DIFF_SIZES
@@ -201,6 +202,7 @@ public final class LRUMap<K, V extends LRUMap.Retainable> implements Map<K, V>, 
 					return new KeyLRUMapIterator();
 				}
 
+				@SuppressWarnings("synthetic-access")
 				@Override
 				public boolean contains(final Object object) {
 					assert LRUMap.this.index.size() == LRUMap.this.data.size() : ERRMESSG_DIFF_SIZES
@@ -210,6 +212,7 @@ public final class LRUMap<K, V extends LRUMap.Retainable> implements Map<K, V>, 
 					return LRUMap.this.containsKey(object);
 				}
 
+				@SuppressWarnings("synthetic-access")
 				@Override
 				public boolean remove(final Object object) {
 					assert LRUMap.this.index.size() == LRUMap.this.data.size() : ERRMESSG_DIFF_SIZES
@@ -219,6 +222,7 @@ public final class LRUMap<K, V extends LRUMap.Retainable> implements Map<K, V>, 
 					return LRUMap.this.remove(object) != null;
 				}
 
+				@SuppressWarnings("synthetic-access")
 				@Override
 				public int size() {
 					assert LRUMap.this.index.size() == LRUMap.this.data.size() : ERRMESSG_DIFF_SIZES
@@ -228,6 +232,7 @@ public final class LRUMap<K, V extends LRUMap.Retainable> implements Map<K, V>, 
 					return LRUMap.this.size();
 				}
 
+				@SuppressWarnings("synthetic-access")
 				@Override
 				public void clear() {
 					assert LRUMap.this.index.size() == LRUMap.this.data.size() : ERRMESSG_DIFF_SIZES
@@ -249,6 +254,7 @@ public final class LRUMap<K, V extends LRUMap.Retainable> implements Map<K, V>, 
 		if (this.values == null) {
 			this.values = new AbstractCollection<V>() {
 
+				@SuppressWarnings("synthetic-access")
 				@Override
 				public Iterator<V> iterator() {
 					assert LRUMap.this.index.size() == LRUMap.this.data.size() : ERRMESSG_DIFF_SIZES
@@ -258,6 +264,7 @@ public final class LRUMap<K, V extends LRUMap.Retainable> implements Map<K, V>, 
 					return new ValueLRUMapIterator();
 				}
 
+				@SuppressWarnings("synthetic-access")
 				@Override
 				public boolean contains(final Object object) {
 					assert LRUMap.this.index.size() == LRUMap.this.data.size() : ERRMESSG_DIFF_SIZES
@@ -272,6 +279,7 @@ public final class LRUMap<K, V extends LRUMap.Retainable> implements Map<K, V>, 
 					return false;
 				}
 
+				@SuppressWarnings("synthetic-access")
 				@Override
 				public boolean remove(final Object object) {
 					assert LRUMap.this.index.size() == LRUMap.this.data.size() : ERRMESSG_DIFF_SIZES
@@ -290,6 +298,7 @@ public final class LRUMap<K, V extends LRUMap.Retainable> implements Map<K, V>, 
 					return false;
 				}
 
+				@SuppressWarnings("synthetic-access")
 				@Override
 				public int size() {
 					assert LRUMap.this.index.size() == LRUMap.this.data.size() : ERRMESSG_DIFF_SIZES
@@ -299,6 +308,7 @@ public final class LRUMap<K, V extends LRUMap.Retainable> implements Map<K, V>, 
 					return LRUMap.this.size();
 				}
 
+				@SuppressWarnings("synthetic-access")
 				@Override
 				public void clear() {
 					assert LRUMap.this.index.size() == LRUMap.this.data.size() : ERRMESSG_DIFF_SIZES
@@ -320,6 +330,7 @@ public final class LRUMap<K, V extends LRUMap.Retainable> implements Map<K, V>, 
 		if (this.entrySet == null) {
 			this.entrySet = new AbstractSet<Map.Entry<K,V>>() {
 
+				@SuppressWarnings("synthetic-access")
 				@Override
 				public Iterator<Map.Entry<K,V>> iterator() {
 					assert LRUMap.this.index.size() == LRUMap.this.data.size() : ERRMESSG_DIFF_SIZES
@@ -329,6 +340,7 @@ public final class LRUMap<K, V extends LRUMap.Retainable> implements Map<K, V>, 
 					return new EntryLRUMapIterator();
 				}
 
+				@SuppressWarnings("synthetic-access")
 				@Override
 				public boolean contains(final Object object) {
 					assert LRUMap.this.index.size() == LRUMap.this.data.size() : ERRMESSG_DIFF_SIZES
@@ -343,6 +355,7 @@ public final class LRUMap<K, V extends LRUMap.Retainable> implements Map<K, V>, 
 					return thisEntry != null && equalsWithNull(thisEntry.getValue(), thatEntry.getValue());
 				}
 
+				@SuppressWarnings("synthetic-access")
 				@Override
 				public boolean remove(final Object object) {
 					assert LRUMap.this.index.size() == LRUMap.this.data.size() : ERRMESSG_DIFF_SIZES
@@ -361,6 +374,7 @@ public final class LRUMap<K, V extends LRUMap.Retainable> implements Map<K, V>, 
 					return false;
 				}
 
+				@SuppressWarnings("synthetic-access")
 				@Override
 				public int size() {
 					assert LRUMap.this.index.size() == LRUMap.this.data.size() : ERRMESSG_DIFF_SIZES
@@ -370,6 +384,7 @@ public final class LRUMap<K, V extends LRUMap.Retainable> implements Map<K, V>, 
 					return LRUMap.this.size();
 				}
 
+				@SuppressWarnings("synthetic-access")
 				@Override
 				public void clear() {
 					assert LRUMap.this.index.size() == LRUMap.this.data.size() : ERRMESSG_DIFF_SIZES
@@ -572,6 +587,7 @@ public final class LRUMap<K, V extends LRUMap.Retainable> implements Map<K, V>, 
 		private Iterator<Entry<K, V>> dataIterator;
 		private Entry<K, V> lastReturned;
 		
+		@SuppressWarnings("synthetic-access")
 		LRUMapIterator() {
 			this.expectedModCount = LRUMap.this.modCount;
 			this.dataIterator = LRUMap.this.data.iterator();
@@ -590,6 +606,7 @@ public final class LRUMap<K, V extends LRUMap.Retainable> implements Map<K, V>, 
 			throw new NoSuchElementException();
 		}
 
+		@SuppressWarnings("synthetic-access")
 		public final void remove() {
 			if (this.lastReturned == null) {
 				throw new IllegalStateException();
@@ -600,6 +617,7 @@ public final class LRUMap<K, V extends LRUMap.Retainable> implements Map<K, V>, 
 			this.lastReturned = null;
 		}
 
+		@SuppressWarnings("synthetic-access")
 		private void checkForComodification() {
 			if (LRUMap.this.modCount != this.expectedModCount) {
 				throw new ConcurrentModificationException();

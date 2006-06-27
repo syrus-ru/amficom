@@ -1,5 +1,5 @@
 /*
- * $Id: ArrayLRUMap.java,v 1.1 2005/12/08 15:28:36 arseniy Exp $
+ * $Id: ArrayLRUMap.java,v 1.2 2006/06/27 09:53:24 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/12/08 15:28:36 $
+ * @version $Revision: 1.2 $, $Date: 2006/06/27 09:53:24 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module util
@@ -54,6 +54,7 @@ public class ArrayLRUMap<K, V> implements Serializable, Iterable<V> {
 	/**
 	 * value iterator
 	 */
+	@SuppressWarnings("synthetic-access")
 	public Iterator<V> iterator() {
 		return new Itr();
 	}
@@ -61,6 +62,7 @@ public class ArrayLRUMap<K, V> implements Serializable, Iterable<V> {
 	/**
 	 * key iterator
 	 */
+	@SuppressWarnings("synthetic-access")
 	public Iterator<K> keyIterator() {
 		return new KeyIterator();
 	}
@@ -344,6 +346,7 @@ public class ArrayLRUMap<K, V> implements Serializable, Iterable<V> {
 		}
 	}
 
+	@SuppressWarnings("synthetic-access")
 	private class Itr extends AbstractIterator implements Iterator<V> {
 		public V next() {
 			this.checkForComodification();
@@ -361,6 +364,7 @@ public class ArrayLRUMap<K, V> implements Serializable, Iterable<V> {
 		}
 	}
 
+	@SuppressWarnings("synthetic-access")
 	private class KeyIterator extends AbstractIterator implements Iterator<K> {
 		public K next() {
 			this.checkForComodification();
