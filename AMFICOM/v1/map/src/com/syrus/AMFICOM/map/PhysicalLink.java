@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLink.java,v 1.157 2006/06/23 13:38:06 stas Exp $
+ * $Id: PhysicalLink.java,v 1.158 2006/06/27 18:15:32 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -78,8 +78,8 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * Предуствновленными являются  два типа -
  * тоннель (<code>{@link PhysicalLinkType#DEFAULT_TUNNEL}</code>)
  * и коллектор (<code>{@link PhysicalLinkType#DEFAULT_COLLECTOR}</code>).
- * @author $Author: stas $
- * @version $Revision: 1.157 $, $Date: 2006/06/23 13:38:06 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.158 $, $Date: 2006/06/27 18:15:32 $
  * @module map
  */
 public class PhysicalLink extends StorableObject
@@ -1002,7 +1002,7 @@ public class PhysicalLink extends StorableObject
 	
 			SortedSet<PipeBlock> pipeBlocks = new TreeSet<PipeBlock>();
 			if(xmlPhysicalLink.isSetPipeBlocks()) {
-				for (final XmlPipeBlock xmlPipeBlock : xmlPhysicalLink.getPipeBlocks().getPipeBlockArray()) {
+				for (final XmlPipeBlock xmlPipeBlock : xmlPhysicalLink.getPipeBlocks().getPipeBlockList()) {
 					pipeBlocks.add(PipeBlock.createInstance(this.creatorId, importType, xmlPipeBlock));
 				}
 			}

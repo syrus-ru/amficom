@@ -1,5 +1,5 @@
 /*-
- * $Id: Collector.java,v 1.111 2006/03/22 16:47:15 arseniy Exp $
+ * $Id: Collector.java,v 1.112 2006/06/27 18:15:32 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -57,7 +57,7 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * в него линий. Линии не обязаны быть связными.
  *
  * @author $Author: arseniy $
- * @version $Revision: 1.111 $, $Date: 2006/03/22 16:47:15 $
+ * @version $Revision: 1.112 $, $Date: 2006/06/27 18:15:32 $
  * @module map
  */
 public final class Collector extends StorableObject
@@ -411,7 +411,7 @@ public final class Collector extends StorableObject
 			}
 	
 			if (xmlCollector.isSetPhysicalLinkIds()) {
-				for (final XmlIdentifier physicalLinkId : xmlCollector.getPhysicalLinkIds().getIdArray()) {
+				for (final XmlIdentifier physicalLinkId : xmlCollector.getPhysicalLinkIds().getIdList()) {
 					this.addPhysicalLinkId(Identifier.fromXmlTransferable(physicalLinkId, importType, MODE_THROW_IF_ABSENT));
 				}
 			}

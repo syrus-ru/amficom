@@ -1,5 +1,5 @@
 /*-
- * $Id: MapLibrary.java,v 1.48 2006/06/06 11:33:48 arseniy Exp $
+ * $Id: MapLibrary.java,v 1.49 2006/06/27 18:15:32 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -63,7 +63,7 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
 
 
 /**
- * @version $Revision: 1.48 $, $Date: 2006/06/06 11:33:48 $
+ * @version $Revision: 1.49 $, $Date: 2006/06/27 18:15:32 $
  * @author $Author: arseniy $
  * @module map
  */
@@ -382,13 +382,13 @@ public final class MapLibrary extends StorableObject
 			}
 	
 			if (xmlMapLibrary.isSetPhysicalLinkTypes()) {
-				for (final XmlPhysicalLinkType xmlPhysicalLinkType : xmlMapLibrary.getPhysicalLinkTypes().getPhysicalLinkTypeArray()) {
+				for (final XmlPhysicalLinkType xmlPhysicalLinkType : xmlMapLibrary.getPhysicalLinkTypes().getPhysicalLinkTypeList()) {
 					this.addChild(PhysicalLinkType.createInstance(this.creatorId, importType, xmlPhysicalLinkType));
 				}
 			}
 	
 			if (xmlMapLibrary.isSetSiteNodeTypes()) {
-				for (final XmlSiteNodeType xmlSiteNodeType : xmlMapLibrary.getSiteNodeTypes().getSiteNodeTypeArray()) {
+				for (final XmlSiteNodeType xmlSiteNodeType : xmlMapLibrary.getSiteNodeTypes().getSiteNodeTypeList()) {
 					this.addChild(SiteNodeType.createInstance(this.creatorId, importType, xmlSiteNodeType));
 				}
 			}

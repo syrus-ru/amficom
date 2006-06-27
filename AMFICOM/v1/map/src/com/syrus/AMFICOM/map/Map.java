@@ -1,5 +1,5 @@
 /*-
- * $Id: Map.java,v 1.133 2006/06/23 13:36:42 stas Exp $
+ * $Id: Map.java,v 1.134 2006/06/27 18:15:32 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -68,8 +68,8 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * узлов (сетевых и топологических), линий (состоящих из фрагментов), меток на
  * линиях, коллекторов (объединяющих в себе линии).
  *
- * @author $Author: stas $
- * @version $Revision: 1.133 $, $Date: 2006/06/23 13:36:42 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.134 $, $Date: 2006/06/27 18:15:32 $
  * @module map
  */
 public final class Map extends DomainMember
@@ -1243,7 +1243,7 @@ public final class Map extends DomainMember
 	
 			final XmlMapLibraryEntrySeq mapLibraryEntries = xmlMap.getMapLibraryEntries();
 			if (mapLibraryEntries != null) {
-				for (final String xmlMapLibraryEntry : mapLibraryEntries.getMapLibraryEntryArray()) {
+				for (final String xmlMapLibraryEntry : mapLibraryEntries.getMapLibraryEntryList()) {
 					final StorableObjectCondition pTypeCondition = new TypicalCondition(xmlMapLibraryEntry,
 							OperationSort.OPERATION_EQUALS,
 							MAPLIBRARY_CODE,
@@ -1258,31 +1258,31 @@ public final class Map extends DomainMember
 			}
 	
 			if(xmlMap.isSetTopologicalNodes()) {
-				for (final XmlTopologicalNode xmlTopologicalNode : xmlMap.getTopologicalNodes().getTopologicalNodeArray()) {
+				for (final XmlTopologicalNode xmlTopologicalNode : xmlMap.getTopologicalNodes().getTopologicalNodeList()) {
 					this.addNode(TopologicalNode.createInstance(this.creatorId, importType, xmlTopologicalNode));
 				}
 			}
 	
 			if(xmlMap.isSetSiteNodes()) {
-				for (final XmlSiteNode xmlSiteNode : xmlMap.getSiteNodes().getSiteNodeArray()) {
+				for (final XmlSiteNode xmlSiteNode : xmlMap.getSiteNodes().getSiteNodeList()) {
 					this.addNode(SiteNode.createInstance(this.creatorId, importType, xmlSiteNode));
 				}
 			}
 	
 			if(xmlMap.isSetPhysicalLinks()) {
-				for (final XmlPhysicalLink xmlPhysicalLink : xmlMap.getPhysicalLinks().getPhysicalLinkArray()) {
+				for (final XmlPhysicalLink xmlPhysicalLink : xmlMap.getPhysicalLinks().getPhysicalLinkList()) {
 					this.addPhysicalLink(PhysicalLink.createInstance(this.creatorId, importType, xmlPhysicalLink));
 				}
 			}
 	
 			if(xmlMap.isSetNodeLinks()) {
-				for (final XmlNodeLink xmlNodeLink : xmlMap.getNodeLinks().getNodeLinkArray()) {
+				for (final XmlNodeLink xmlNodeLink : xmlMap.getNodeLinks().getNodeLinkList()) {
 					this.addNodeLink(NodeLink.createInstance(this.creatorId, importType, xmlNodeLink));
 				}
 			}
 	
 			if(xmlMap.isSetCollectors()) {
-				for (final XmlCollector xmlCollector : xmlMap.getCollectors().getCollectorArray()) {
+				for (final XmlCollector xmlCollector : xmlMap.getCollectors().getCollectorList()) {
 					this.addCollector(Collector.createInstance(this.creatorId, importType, xmlCollector));
 				}
 			}
