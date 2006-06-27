@@ -1,0 +1,1 @@
+@@./dictionary/DELETE.sql

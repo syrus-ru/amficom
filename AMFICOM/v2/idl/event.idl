@@ -1,0 +1,41 @@
+#ifndef _EVENT_IDL_
+#define	_EVENT_IDL_
+
+#include <general.idl>
+
+module com {
+module syrus {
+module AMFICOM {
+module event {
+module corba {
+
+/////////////////////// Event ////////////////////////
+
+	enum EventStatus {
+		EVENT_STATUS_GENERATED,
+		EVENT_STATUS_PROCESSED
+	};
+
+/////////////////////// Alarm ////////////////////////
+
+	enum AlarmStatus {
+		ALARM_STATUS_GENERATED,
+		ALARM_STATUS_ASSIGNED,
+		ALARM_STATUS_FIXED,
+		ALARM_STATUS_DELETED
+	};
+
+	enum AlarmLevel {
+		ALARM_LEVEL_NONE,
+		ALARM_LEVEL_SOFT,
+		ALARM_LEVEL_HARD
+	};
+
+};
+};
+};
+};
+};
+
+#endif
+

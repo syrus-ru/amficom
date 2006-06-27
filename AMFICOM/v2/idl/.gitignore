@@ -1,0 +1,9 @@
+corba
+mach
+*.jar
+*.jpr*
+*.jpx*
+*.trc
+*.tar
+*.gz
+classes

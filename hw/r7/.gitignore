@@ -1,0 +1,13 @@
+*.a
+*.so
+*.o
+*.swp
+*.tar
+*.gz
+*.dsp
+*.dsw
+*.opt
+*.plg
+Debug
+Release
+pp

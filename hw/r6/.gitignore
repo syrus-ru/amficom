@@ -1,0 +1,12 @@
+.r6
+.stub
+*.jar
+*.jpr*
+*.jpx*
+*.trc
+*.tar
+*.gz
+*.swp
+*.log
+classes
+logs
