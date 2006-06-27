@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableThreadDatabase.java,v 1.18 2005/12/02 11:24:17 bass Exp $
+ * $Id: SchemeCableThreadDatabase.java,v 1.19 2006/06/27 18:22:21 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,8 +18,8 @@ import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_MODIFIED;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_MODIFIER_ID;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_NAME;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_VERSION;
-import static com.syrus.AMFICOM.scheme.SchemeCableThreadWrapper.COLUMN_LINK_TYPE_ID;
 import static com.syrus.AMFICOM.scheme.SchemeCableThreadWrapper.COLUMN_LINK_ID;
+import static com.syrus.AMFICOM.scheme.SchemeCableThreadWrapper.COLUMN_LINK_TYPE_ID;
 import static com.syrus.AMFICOM.scheme.SchemeCableThreadWrapper.COLUMN_PARENT_SCHEME_CABLE_LINK_ID;
 import static com.syrus.AMFICOM.scheme.SchemeCableThreadWrapper.COLUMN_SOURCE_SCHEME_PORT_ID;
 import static com.syrus.AMFICOM.scheme.SchemeCableThreadWrapper.COLUMN_TARGET_SCHEME_PORT_ID;
@@ -38,8 +38,8 @@ import com.syrus.util.database.DatabaseString;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.18 $, $Date: 2005/12/02 11:24:17 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.19 $, $Date: 2006/06/27 18:22:21 $
  * @module scheme
  */
 public final class SchemeCableThreadDatabase extends StorableObjectDatabase<SchemeCableThread> {

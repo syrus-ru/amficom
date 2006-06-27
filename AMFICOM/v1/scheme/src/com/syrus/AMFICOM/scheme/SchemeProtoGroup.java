@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoGroup.java,v 1.102 2006/06/27 18:21:24 arseniy Exp $
+ * $Id: SchemeProtoGroup.java,v 1.103 2006/06/27 18:22:21 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -48,7 +48,6 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.XmlComplementorRegistry;
-import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.AMFICOM.resource.BitmapImageResource;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeProtoGroup;
@@ -67,7 +66,7 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * #01 in hierarchy.
  *
  * @author $Author: arseniy $
- * @version $Revision: 1.102 $, $Date: 2006/06/27 18:21:24 $
+ * @version $Revision: 1.103 $, $Date: 2006/06/27 18:22:21 $
  * @module scheme
  */
 public final class SchemeProtoGroup extends StorableObject

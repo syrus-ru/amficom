@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElementDatabase.java,v 1.20 2005/12/02 11:24:16 bass Exp $
+ * $Id: SchemeProtoElementDatabase.java,v 1.21 2006/06/27 18:22:21 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,10 +18,10 @@ import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_MODIFIED;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_MODIFIER_ID;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_NAME;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_VERSION;
-import static com.syrus.AMFICOM.scheme.SchemeProtoElementWrapper.COLUMN_PROTO_EQUIPMENT_ID;
 import static com.syrus.AMFICOM.scheme.SchemeProtoElementWrapper.COLUMN_LABEL;
 import static com.syrus.AMFICOM.scheme.SchemeProtoElementWrapper.COLUMN_PARENT_SCHEME_PROTO_ELEMENT_ID;
 import static com.syrus.AMFICOM.scheme.SchemeProtoElementWrapper.COLUMN_PARENT_SCHEME_PROTO_GROUP_ID;
+import static com.syrus.AMFICOM.scheme.SchemeProtoElementWrapper.COLUMN_PROTO_EQUIPMENT_ID;
 import static com.syrus.AMFICOM.scheme.SchemeProtoElementWrapper.COLUMN_SCHEME_CELL_ID;
 import static com.syrus.AMFICOM.scheme.SchemeProtoElementWrapper.COLUMN_SYMBOL_ID;
 import static com.syrus.AMFICOM.scheme.SchemeProtoElementWrapper.COLUMN_UGO_CELL_ID;
@@ -41,8 +41,8 @@ import com.syrus.util.database.DatabaseString;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.20 $, $Date: 2005/12/02 11:24:16 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.21 $, $Date: 2006/06/27 18:22:21 $
  * @module scheme
  */
 public final class SchemeProtoElementDatabase extends StorableObjectDatabase<SchemeProtoElement> {
