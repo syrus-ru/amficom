@@ -1,5 +1,5 @@
 /*
- * $Id: ServerWrapper.java,v 1.18.4.1 2006/06/09 15:59:59 arseniy Exp $
+ * $Id: ServerWrapper.java,v 1.18.4.2 2006/06/27 15:35:55 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,12 +18,24 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.18.4.1 $, $Date: 2006/06/09 15:59:59 $
+ * @version $Revision: 1.18.4.2 $, $Date: 2006/06/27 15:35:55 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module administration
  */
 public final class ServerWrapper extends StorableObjectWrapper<Server> {
+	public static final String KEY_LOGIN_SERVER_SERVICE_NAME = "LoginServerServiceName";
+	public static final String KEY_EVENT_SERVER_SERVICE_NAME = "EventServerServiceName";
+	public static final String KEY_IDENTIFIER_GENERATOR_SERVER_SERVICE_NAME = "IdentifierGeneratorServerServiceName";
+	public static final String KEY_MAP_SERVER_SERVICE_NAME = "MapServerServiceName";
+	public static final String KEY_STORABLE_OBJECT_SERVER_SERVICE_NAME = "StorableObjectServerServiceName";
+
+	public static final String LOGIN_SERVER_SERVICE_NAME = "LoginServer";
+	public static final String EVENT_SERVER_SERVICE_NAME = "EventServer";
+	public static final String IDENTIFIER_GENERATOR_SERVER_SERVICE_NAME = "IdentifierGeneratorServer";
+	public static final String MAP_SERVER_SERVICE_NAME = "MapServer";
+	public static final String STORABLE_OBJECT_SERVER_SERVICE_NAME = "StorableObjectServer";
+
 	public static final String COLUMN_HOSTNAME = "hostname";
 	public static final String COLUMN_SYSTEM_USER_ID = "system_user_id";
 
