@@ -52,14 +52,8 @@ AMFICOM_v1	&tools\
 		&scheduler \
 		&mcm_interface \
 		&mcm \
-		&mserver_interface \
-		&mserver \
-		&cmserver_interface \
-		&cmserver \
-		&mscharserver_interface \
-		&mscharserver \
-		&leserver_interface \
-		&leserver \
+		&systemserver_interface \
+		&systemserver \
 		&mapview \
 		&mapviewclient \
 		&database \
@@ -158,27 +152,29 @@ scheduler		AMFICOM/v1/scheduler
 scheduler_v1		AMFICOM/v1/scheduler
 #M	mcm_interface
 mcm_interface		AMFICOM/v1/mcm_interface
+#M	systemserver	System Server
+systemserver		AMFICOM/v1/systemserver
 #M	mcm		Measurement Control Module
 mcm			AMFICOM/v1/mcm
 mcm_v1			AMFICOM/v1/mcm
-#M	mserver_interface
+#M	mserver_interface (deprecated)
 mserver_interface	AMFICOM/v1/mserver_interface
-#M	mserver		Measurement Server
+#M	mserver		Measurement Server (deprecated)
 mserver			AMFICOM/v1/mserver
 mserver_v1		AMFICOM/v1/mserver
-#M	cmserver_interface
+#M	cmserver_interface (deprecated)
 cmserver_interface	AMFICOM/v1/cmserver_interface
-#M	cmserver	Client Measurement Server
+#M	cmserver	Client Measurement Server (deprecated)
 cmserver		AMFICOM/v1/cmserver
 cmserver_v1		AMFICOM/v1/cmserver
-#M	mscharserver_interface
+#M	mscharserver_interface (deprecated)
 mscharserver_interface	AMFICOM/v1/mscharserver_interface
-#M	mscharserver	Map, Scheme and Resource Server
+#M	mscharserver	Map, Scheme and Resource Server (deprecated)
 mscharserver		AMFICOM/v1/mshserver
 mshserver_v1		AMFICOM/v1/mshserver
-#M	leserver_interface
+#M	leserver_interface (deprecated)
 leserver_interface	AMFICOM/v1/leserver_interface
-#M	leserver	Login/event server
+#M	leserver	Login/event server (deprecated)
 leserver		AMFICOM/v1/leserver
 leserver_v1		AMFICOM/v1/leserver
 #M	mapview		Map View Module
