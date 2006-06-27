@@ -1,5 +1,5 @@
 /*
- * $Id: SQLCommonTest.java,v 1.4 2005/12/09 14:50:16 arseniy Exp $
+ * $Id: SQLCommonTest.java,v 1.4.2.1 2006/06/27 17:30:45 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ public class SQLCommonTest extends CommonTest {
 
 	@Override
 	void oneTimeTearDown() {
-		DatabaseConnection.closeConnection();
+		//DatabaseConnection.closeConnection();
 		super.oneTimeTearDown();
 	}
 
@@ -50,7 +50,7 @@ public class SQLCommonTest extends CommonTest {
 	}
 
 	private static final void initIdentifierPool() {
-		IdentifierPool.init(new DatabaseIdentifierGeneratorServer(), 1);
+		IdentifierPool.init(new DatabaseIdentifierFactory(), 1);
 	}
 
 }
