@@ -1,5 +1,5 @@
 /*
- * $Id: IdentifierPool.java,v 1.40.2.1 2006/06/07 08:28:34 arseniy Exp $
+ * $Id: IdentifierPool.java,v 1.40.2.2 2006/06/27 15:34:00 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,18 +13,17 @@ import gnu.trove.TShortObjectHashMap;
 import gnu.trove.TShortObjectIterator;
 
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
-import com.syrus.AMFICOM.general.corba.IdentifierGeneratorServer;
-import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.util.Fifo;
 import com.syrus.util.FifoSaver;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.40.2.1 $, $Date: 2006/06/07 08:28:34 $
+ * @version $Revision: 1.40.2.2 $, $Date: 2006/06/27 15:34:00 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -35,11 +34,11 @@ public final class IdentifierPool {
 	private static final double MIN_FILL_FACTOR = 0.2;
 	private static final long MAX_TIME_WAIT = 3 * 60 * 1000; /* Maximim time to wait while identifiers are loading*/
 
-	static IGSConnectionManager igsConnectionMananger;
+	private static IdentifierFactory identifierFactory;
 	private static int capacity;
 
 	private static ExecutorService executorService;
-	protected static CORBAActionProcessor corbaActionProcessor;
+	private static CORBAActionProcessor corbaActionProcessor;
 	
 	/**
 	 * Карта очередей идентификаторов. Ключ - код сущности. величина - очередь
@@ -50,38 +49,38 @@ public final class IdentifierPool {
 	/**
 	 * Набор кодов сущностей, для которых уже запущен поток подгрузки.
 	 */
-	static TShortHashSet fillingFifoCodes;
+	private static TShortHashSet fillingFifoCodes;
 
 	private IdentifierPool() {
 		// empty private construcor
 	}
 
 
-	public static void init(final IGSConnectionManager igsConnectionMananger1) {
-		init(igsConnectionMananger1, DEFAULT_CAPACITY, getDefaultCORBAActionProcessor());
+	public static void init(final IdentifierFactory identifierFactory1) {
+		init(identifierFactory1, DEFAULT_CAPACITY, getDefaultCORBAActionProcessor());
 	}
 
 	/**
-	 * @param igsConnectionMananger1
+	 * @param identifierFactory1
 	 * @param corbaActionProcessor1
 	 *        Если <code>null</code>, то используется
 	 *        {@link #getDefaultCORBAActionProcessor() обработчик по умолчанию}.
 	 */
-	public static void init(final IGSConnectionManager igsConnectionMananger1, final CORBAActionProcessor corbaActionProcessor1) {
-		init(igsConnectionMananger1, DEFAULT_CAPACITY,
+	public static void init(final IdentifierFactory identifierFactory1, final CORBAActionProcessor corbaActionProcessor1) {
+		init(identifierFactory1, DEFAULT_CAPACITY,
 				corbaActionProcessor1 == null
 						? getDefaultCORBAActionProcessor()
 						: corbaActionProcessor1);
 	}
 
-	public static void init(final IGSConnectionManager igsConnectionMananger1, final int capacity1) {
-		init(igsConnectionMananger1, capacity1, getDefaultCORBAActionProcessor());
+	public static void init(final IdentifierFactory identifierFactory1, final int capacity1) {
+		init(identifierFactory1, capacity1, getDefaultCORBAActionProcessor());
 	}
 
-	public static void init(final IGSConnectionManager igsConnectionMananger1,
+	public static void init(final IdentifierFactory identifierFactory1,
 			final int capacity1,
 			final CORBAActionProcessor corbaActionProcessor1) {
-		igsConnectionMananger = igsConnectionMananger1;
+		identifierFactory = identifierFactory1;
 		capacity = (capacity1 <= MAX_CAPACITY) ? capacity1 : MAX_CAPACITY;
 		executorService = Executors.newCachedThreadPool();
 		corbaActionProcessor = corbaActionProcessor1;
@@ -179,38 +178,37 @@ public final class IdentifierPool {
 			this.entityCode = entityCode;
 		}
 
+		@SuppressWarnings("synthetic-access")
 		public void run() {
 			final CORBAAction corbaAction = new CORBAAction() {
+				@SuppressWarnings("synthetic-access")
 				public void perform() {
-					final IdentifierGeneratorServer identifierGeneratorServer;
-					try {
-						identifierGeneratorServer = igsConnectionMananger.getIGSReference();
-					} catch (CommunicationException ce) {
-						Log.errorMessage(ce);
-						try {
-							Thread.sleep(500);
-						} catch (InterruptedException ie) {
-							Log.errorMessage(ie);
-						}
-						return;
-					}
-
 					int numberToLoad;
 					synchronized (IdentifierLoader.this.fifo) {
 						numberToLoad = IdentifierLoader.this.fifo.capacity() - IdentifierLoader.this.fifo.size();
 					}
 					while (numberToLoad > 0) {
-						final IdlIdentifier[] idlIdentifiers;
+						final Set<Identifier> ids;
 						try {
-							idlIdentifiers = identifierGeneratorServer.getGeneratedIdentifierRange(IdentifierLoader.this.entityCode, numberToLoad);
-						} catch (AMFICOMRemoteException are) {
-							Log.errorMessage(are.message);
+							ids = identifierFactory.getGeneratedIdentifierRange(IdentifierLoader.this.entityCode, numberToLoad);
+						} catch (CommunicationException ce) {
+							Log.errorMessage(ce);
+							try {
+								Thread.sleep(500);
+							} catch (InterruptedException ie) {
+								Log.errorMessage(ie);
+							}
+							break;
+						} catch (IdentifierGenerationException ige) {
+							Log.errorMessage(ige);
+							break;
+						} catch (IllegalObjectEntityException ioee) {
+							Log.errorMessage(ioee);
 							break;
 						}
 
 						synchronized (IdentifierLoader.this.fifo) {
-							for (int i = 0; i < idlIdentifiers.length; i++) {
-								final Identifier id = Identifier.valueOf(idlIdentifiers[i]);
+							for (final Identifier id : ids) {
 								IdentifierLoader.this.fifo.push(id);
 							}
 							IdentifierLoader.this.fifo.notifyAll();
