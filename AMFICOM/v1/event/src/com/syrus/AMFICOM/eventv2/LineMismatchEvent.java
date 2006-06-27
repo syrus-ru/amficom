@@ -1,5 +1,5 @@
 /*-
- * $Id: LineMismatchEvent.java,v 1.30 2006/06/27 19:01:47 bass Exp $
+ * $Id: LineMismatchEvent.java,v 1.31 2006/06/27 19:48:01 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,7 +40,7 @@ import com.syrus.util.transport.idl.IdlTransferableObjectExt;
  * 
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.30 $, $Date: 2006/06/27 19:01:47 $
+ * @version $Revision: 1.31 $, $Date: 2006/06/27 19:48:01 $
  * @module event
  */
 public interface LineMismatchEvent
@@ -329,13 +329,15 @@ public interface LineMismatchEvent
 	SortedSet<ChangeLogRecord> getChangeLog();
 
 	/**
-	 * Those alarm statii that aren&apos;t present in the
+	 * <p>Those alarm statii that aren&apos;t present in the
 	 * <em>Consultronics&nbsp;NQMS</em> Alarm Model, have &laquo;{@code
-	 * XTRA_}&raquo; prefix.
+	 * XTRA_}&raquo; prefix.</p>
+	 *
+	 * <p>Noone should ever override {@code AlarmStatus.toString()}.</p>
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.30 $, $Date: 2006/06/27 19:01:47 $
+	 * @version $Revision: 1.31 $, $Date: 2006/06/27 19:48:01 $
 	 * @module event
 	 */
 	enum AlarmStatus implements IdlTransferableObject<IdlAlarmStatus> {
@@ -669,7 +671,7 @@ public interface LineMismatchEvent
 		 *
 		 * @author Andrew ``Bass'' Shcheglov
 		 * @author $Author: bass $
-		 * @version $Revision: 1.30 $, $Date: 2006/06/27 19:01:47 $
+		 * @version $Revision: 1.31 $, $Date: 2006/06/27 19:48:01 $
 		 * @see AllowedSuccessors
 		 * @module event
 		 */
@@ -682,7 +684,7 @@ public interface LineMismatchEvent
 		/**
 		 * @author Andrew ``Bass'' Shcheglov
 		 * @author $Author: bass $
-		 * @version $Revision: 1.30 $, $Date: 2006/06/27 19:01:47 $
+		 * @version $Revision: 1.31 $, $Date: 2006/06/27 19:48:01 $
 		 * @see AllowedPredecessors
 		 * @module event
 		 */
@@ -697,7 +699,7 @@ public interface LineMismatchEvent
 		 *
 		 * @author Andrew ``Bass'' Shcheglov
 		 * @author $Author: bass $
-		 * @version $Revision: 1.30 $, $Date: 2006/06/27 19:01:47 $
+		 * @version $Revision: 1.31 $, $Date: 2006/06/27 19:48:01 $
 		 * @module event
 		 */
 		static final class Proxy
@@ -772,7 +774,7 @@ public interface LineMismatchEvent
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.30 $, $Date: 2006/06/27 19:01:47 $
+	 * @version $Revision: 1.31 $, $Date: 2006/06/27 19:48:01 $
 	 * @module event
 	 */
 	interface ChangeLogRecord extends Comparable<ChangeLogRecord> {
