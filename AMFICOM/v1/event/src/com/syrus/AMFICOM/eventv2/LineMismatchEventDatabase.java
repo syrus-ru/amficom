@@ -1,5 +1,5 @@
 /*-
- * $Id: LineMismatchEventDatabase.java,v 1.8 2006/06/26 17:23:13 bass Exp $
+ * $Id: LineMismatchEventDatabase.java,v 1.9 2006/06/27 18:57:12 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,7 +44,7 @@ import com.syrus.util.database.DatabaseString;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.8 $, $Date: 2006/06/26 17:23:13 $
+ * @version $Revision: 1.9 $, $Date: 2006/06/27 18:57:12 $
  * @module event
  */
 public final class LineMismatchEventDatabase
@@ -70,7 +70,7 @@ public final class LineMismatchEventDatabase
 	 */
 	@Override
 	protected String getExpectedVersion() {
-		return "1.6";
+		return "1.7";
 	}
 
 	/**
