@@ -1,5 +1,5 @@
 /*-
- * $Id: administration.idl,v 1.27.2.1 2006/06/09 15:56:34 arseniy Exp $
+ * $Id: administration.idl,v 1.27.2.2 2006/06/27 15:26:03 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -67,7 +67,7 @@ module administration {
 			enum SystemUserSort {
 				USER_SORT_SYSADMIN,
 				USER_SORT_REGULAR,
-				USER_SORT_SERVERPROCESS,
+				USER_SORT_SERVER,
 				USER_SORT_MCM
 			};
 
@@ -196,29 +196,6 @@ module administration {
 					in general::corba::WString64 hostname,
 					in general::corba::IdlIdentifier systemUserId,
 					in general::corba::IdlIdentifier serverId);
-		};
-
-
-//////////////////////////////// ServerProcess ////////////////////////////
-
-		/*\u002a\u002f@SuppressWarnings("all")/**/
-		/*\u002a\u002f@Deprecated/**/
-		valuetype IdlServerProcess : general::corba::IdlStorableObject {
-			public general::corba::WString32 codename;
-			public general::corba::IdlIdentifier serverId;
-			public general::corba::IdlIdentifier userId;
-			public general::corba::WString256 description;
-
-			factory init(in general::corba::IdlIdentifier id,
-					in long long created,
-					in long long modified,
-					in general::corba::IdlIdentifier creatorId,
-					in general::corba::IdlIdentifier modifierId,
-					in long long version,
-					in general::corba::WString32 codename,
-					in general::corba::IdlIdentifier serverId,
-					in general::corba::IdlIdentifier userId,
-					in general::corba::WString256 description);
 		};
 
 	};
