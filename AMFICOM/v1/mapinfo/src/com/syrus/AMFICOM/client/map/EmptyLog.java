@@ -1,5 +1,5 @@
 /*
- * $Id: EmptyLog.java,v 1.4 2005/08/11 17:11:16 arseniy Exp $
+ * $Id: EmptyLog.java,v 1.4.2.1 2006/06/27 17:08:17 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,9 +11,11 @@ import org.apache.commons.logging.Log;
 
 /**
  * @author $Author: arseniy $
- * @version $Revision: 1.4 $, $Date: 2005/08/11 17:11:16 $
+ * @version $Revision: 1.4.2.1 $, $Date: 2006/06/27 17:08:17 $
  * @module mapinfo
+ * @deprecated Похоже, нигде не используется.
  */
+@Deprecated
 public class EmptyLog implements Log {
 
 	public EmptyLog(final String instanceName) {
