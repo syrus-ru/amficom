@@ -1,5 +1,5 @@
 /*-
- * $Id: LineMismatchEvent.java,v 1.29 2006/06/16 14:51:46 bass Exp $
+ * $Id: LineMismatchEvent.java,v 1.30 2006/06/27 19:01:47 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,6 +17,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 import java.lang.reflect.Field;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.EnumSet;
 import java.util.Set;
 import java.util.SortedSet;
@@ -39,7 +40,7 @@ import com.syrus.util.transport.idl.IdlTransferableObjectExt;
  * 
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.29 $, $Date: 2006/06/16 14:51:46 $
+ * @version $Revision: 1.30 $, $Date: 2006/06/27 19:01:47 $
  * @module event
  */
 public interface LineMismatchEvent
@@ -325,6 +326,8 @@ public interface LineMismatchEvent
 	SortedSet<LineMismatchEvent> getChildLineMismatchEvents()
 	throws ApplicationException;
 
+	SortedSet<ChangeLogRecord> getChangeLog();
+
 	/**
 	 * Those alarm statii that aren&apos;t present in the
 	 * <em>Consultronics&nbsp;NQMS</em> Alarm Model, have &laquo;{@code
@@ -332,7 +335,7 @@ public interface LineMismatchEvent
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.29 $, $Date: 2006/06/16 14:51:46 $
+	 * @version $Revision: 1.30 $, $Date: 2006/06/27 19:01:47 $
 	 * @module event
 	 */
 	enum AlarmStatus implements IdlTransferableObject<IdlAlarmStatus> {
@@ -666,7 +669,7 @@ public interface LineMismatchEvent
 		 *
 		 * @author Andrew ``Bass'' Shcheglov
 		 * @author $Author: bass $
-		 * @version $Revision: 1.29 $, $Date: 2006/06/16 14:51:46 $
+		 * @version $Revision: 1.30 $, $Date: 2006/06/27 19:01:47 $
 		 * @see AllowedSuccessors
 		 * @module event
 		 */
@@ -679,7 +682,7 @@ public interface LineMismatchEvent
 		/**
 		 * @author Andrew ``Bass'' Shcheglov
 		 * @author $Author: bass $
-		 * @version $Revision: 1.29 $, $Date: 2006/06/16 14:51:46 $
+		 * @version $Revision: 1.30 $, $Date: 2006/06/27 19:01:47 $
 		 * @see AllowedPredecessors
 		 * @module event
 		 */
@@ -694,7 +697,7 @@ public interface LineMismatchEvent
 		 *
 		 * @author Andrew ``Bass'' Shcheglov
 		 * @author $Author: bass $
-		 * @version $Revision: 1.29 $, $Date: 2006/06/16 14:51:46 $
+		 * @version $Revision: 1.30 $, $Date: 2006/06/27 19:01:47 $
 		 * @module event
 		 */
 		static final class Proxy
@@ -741,5 +744,56 @@ public interface LineMismatchEvent
 				this.value = valueOf(alarmStatus);
 			}
 		}
+	}
+
+	/**
+	 * <p>Holds information about a change in a key&apos;s value.</p>
+	 *
+	 * <p>Currently, this interface is tied to {@code LineMismatchEvent}
+	 * for two reasons:
+	 *
+	 * <ol><li>{@code ChangeLogRecord} table explicitly references {@code
+	 * LineMismatchEvent} table via {@code parent_line_mismatch_event_id}.
+	 * Once this foreign key is disabled (and implementation adapted
+	 * accordingly), this interface can be used to log changes of
+	 * <em>any</em> object that has a {@link com.syrus.util.Wrapper
+	 * wrapper};</li>
+	 * 
+	 * <li>{@code ChangeLogRecord} table doesn&apos;t hold any information
+	 * about the actual type of wrapper to be used, so implementations must
+	 * hard-code it.</li></ol></p>
+	 *
+	 * <p>Finally, {@code ChangeLogRecord} has one more drawback:
+	 * there&apos;s no way to know who initiated the change since
+	 * there&apos;s no {@code getModifierId()} method.</p>
+	 *
+	 * <p>Instances of classes implementing this interface are expected to
+	 * be immutable.</p>
+	 *
+	 * @author Andrew ``Bass'' Shcheglov
+	 * @author $Author: bass $
+	 * @version $Revision: 1.30 $, $Date: 2006/06/27 19:01:47 $
+	 * @module event
+	 */
+	interface ChangeLogRecord extends Comparable<ChangeLogRecord> {
+		Date getModified();
+
+		/**
+		 * Returns a key whose value changed.
+		 *
+		 * @return a key whose value changed.
+		 * @see com.syrus.util.Wrapper#getKeys()
+		 */
+		String getKey();
+
+		/**
+		 * @see com.syrus.util.Wrapper#getValue(Object, String)
+		 */
+		Object getOldValue();
+
+		/**
+		 * @see com.syrus.util.Wrapper#getValue(Object, String)
+		 */
+		Object getNewValue();
 	}
 }

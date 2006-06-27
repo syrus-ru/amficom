@@ -1,20 +1,25 @@
 /*-
- * $Id: DefaultLineMismatchEvent.java,v 1.21 2006/06/21 10:57:12 bass Exp $
+ * $Id: DefaultLineMismatchEvent.java,v 1.22 2006/06/27 19:01:47 bass Exp $
  *
- * Copyright ¿ 2004-2005 Syrus Systems.
+ * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.eventv2;
 
+import static com.syrus.AMFICOM.eventv2.LineMismatchEventWrapper.COLUMN_ALARM_STATUS;
+import static com.syrus.AMFICOM.eventv2.LineMismatchEventWrapper.COLUMN_PARENT_LINE_MISMATCH_EVENT_ID;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.ObjectEntities.LINEMISMATCHEVENT_CODE;
 import static com.syrus.AMFICOM.general.StorableObjectVersion.ILLEGAL_VERSION;
 import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 
+import java.io.Serializable;
+import java.util.Collections;
 import java.util.Date;
 import java.util.SortedSet;
+import java.util.TreeSet;
 
 import org.omg.CORBA.ORB;
 
@@ -35,7 +40,7 @@ import com.syrus.util.transport.idl.IdlConversionException;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.21 $, $Date: 2006/06/21 10:57:12 $
+ * @version $Revision: 1.22 $, $Date: 2006/06/27 19:01:47 $
  * @module event
  */
 public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
@@ -95,6 +100,11 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 	 * @serial include
 	 */
 	private Identifier parentLineMismatchEventId;
+
+	/**
+	 * @serial include
+	 */
+	private final SortedSet<ChangeLogRecord> changeLog = new TreeSet<ChangeLogRecord>();
 
 	/**
 	 * Ctor used solely by database driver.
@@ -385,8 +395,11 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 		if (!parentLineMismatchEventIdVoid) {
 			this.getParentLineMismatchEvent().setAlarmStatus(alarmStatus);
 		} else if (oldAlarmStatus.isAllowedPredecessorOf(alarmStatus)) {
+			this.changeLog.add(new ChangeLogRecordImpl(
+					COLUMN_ALARM_STATUS,
+					oldAlarmStatus,
+					alarmStatus));
 			this.alarmStatus.setValue(alarmStatus);
-			this.markAsChanged();
 		} else {
 			throw new IllegalArgumentException(oldAlarmStatus
 					+ " is not an allowed predecessor of "
@@ -503,13 +516,15 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 		/*-
 		 * Fourth, actually perform the action we've been asked for.
 		 */
+		this.changeLog.add(new ChangeLogRecordImpl(
+				COLUMN_PARENT_LINE_MISMATCH_EVENT_ID,
+				this.parentLineMismatchEventId,
+				newParentLineMismatchEventId));
 		this.parentLineMismatchEventId = newParentLineMismatchEventId;
 		this.alarmStatus.setValue(null);
 		/**
 		 * @todo If our new parent event is closed, reopen it.
-		 * @todo Update parent event's history (marking it changed as well).
 		 */
-		this.markAsChanged();
 	}
 
 	/**
@@ -522,6 +537,13 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 				"alarmStatus = " + alarmStatus + "; "
 				+ "parentLineMismatchEventId = " + this.parentLineMismatchEventId;
 		return this.parentLineMismatchEventId;
+	}
+
+	/**
+	 * @see LineMismatchEvent#getChangeLog()
+	 */
+	public SortedSet<ChangeLogRecord> getChangeLog() {
+		return Collections.unmodifiableSortedSet(this.changeLog);
 	}
 
 	/**
@@ -556,5 +578,73 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 				this.getReflectogramMismatchEventId().getIdlTransferable(orb),
 				this.alarmStatus.getIdlTransferable(orb),
 				this.getParentLineMismatchEventId().getIdlTransferable(orb));
+	}
+
+	/**
+	 * Immutable.
+	 *
+	 * @author Andrew ``Bass'' Shcheglov
+	 * @author $Author: bass $
+	 * @version $Revision: 1.22 $, $Date: 2006/06/27 19:01:47 $
+	 * @module event
+	 */
+	private class ChangeLogRecordImpl implements ChangeLogRecord, Serializable {
+		private static final long serialVersionUID = -772564340276801643L;
+
+		@SuppressWarnings("hiding")
+		private final Date modified;
+
+		private final String key;
+
+		private final Object oldValue;
+
+		private final Object newValue;
+
+		@SuppressWarnings("synthetic-access")
+		ChangeLogRecordImpl(final String key,
+				final Object oldValue,
+				final Object newValue) {
+			this.modified = new Date();
+			this.key = key;
+			this.oldValue = oldValue;
+			this.newValue = newValue;
+
+			DefaultLineMismatchEvent.this.markAsChanged();
+		}
+
+		/**
+		 * @see ChangeLogRecord#getModified()
+		 */
+		public Date getModified() {
+			return (Date) this.modified.clone();
+		}
+
+		/**
+		 * @see ChangeLogRecord#getKey()
+		 */
+		public String getKey() {
+			return this.key;
+		}
+
+		/**
+		 * @see ChangeLogRecord#getOldValue()
+		 */
+		public Object getOldValue() {
+			return this.oldValue;
+		}
+
+		/**
+		 * @see ChangeLogRecord#getNewValue()
+		 */
+		public Object getNewValue() {
+			return this.newValue;
+		}
+
+		/**
+		 * @see Comparable#compareTo(Object)
+		 */
+		public int compareTo(final ChangeLogRecord that) {
+			return this.getModified().compareTo(that.getModified());
+		}
 	}
 }
