@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseCommonTest.java,v 1.16.2.2 2006/03/13 08:38:22 arseniy Exp $
+ * $Id: DatabaseCommonTest.java,v 1.16.2.3 2006/06/27 17:29:10 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -44,7 +44,6 @@ import com.syrus.AMFICOM.administration.MCMDatabase;
 import com.syrus.AMFICOM.administration.PermissionAttributesDatabase;
 import com.syrus.AMFICOM.administration.RoleDatabase;
 import com.syrus.AMFICOM.administration.ServerDatabase;
-import com.syrus.AMFICOM.administration.ServerProcessDatabase;
 import com.syrus.AMFICOM.administration.SystemUserDatabase;
 import com.syrus.AMFICOM.administration.SystemUserWrapper;
 import com.syrus.AMFICOM.configuration.CableLinkTypeDatabase;
@@ -103,7 +102,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.16.2.2 $, $Date: 2006/03/13 08:38:22 $
+ * @version $Revision: 1.16.2.3 $, $Date: 2006/06/27 17:29:10 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -132,7 +131,6 @@ public class DatabaseCommonTest extends SQLCommonTest {
 		DatabaseContext.registerDatabase(new DomainDatabase());
 		DatabaseContext.registerDatabase(new ServerDatabase());
 		DatabaseContext.registerDatabase(new MCMDatabase());
-		DatabaseContext.registerDatabase(new ServerProcessDatabase());
 		DatabaseContext.registerDatabase(new PermissionAttributesDatabase());
 		DatabaseContext.registerDatabase(new RoleDatabase());
 		DatabaseContext.registerDatabase(new DeliveryAttributesDatabase());
