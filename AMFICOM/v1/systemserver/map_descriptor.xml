@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mapdescriptor>
+	<map>
+		<name>Moscow City</name>
+		<mdf>../../data/mapinfo/cbmsk.mdf</mdf>
+	</map>
+	<map>
+		<name>Moscow Region</name>
+		<mdf>../../data/mapinfo/cbreg.mdf</mdf>
+	</map>
+</mapdescriptor>
