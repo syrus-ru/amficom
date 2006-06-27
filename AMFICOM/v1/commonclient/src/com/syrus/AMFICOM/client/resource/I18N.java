@@ -1,5 +1,5 @@
 /*-
-* $Id: I18N.java,v 1.7 2005/10/31 12:30:02 bass Exp $
+* $Id: I18N.java,v 1.7.4.1 2006/06/27 15:41:23 arseniy Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -13,14 +13,14 @@ import javax.swing.UIManager;
 
 /**
  * Internationalization
- * @version $Revision: 1.7 $, $Date: 2005/10/31 12:30:02 $
- * @author $Author: bass $
+ * @version $Revision: 1.7.4.1 $, $Date: 2006/06/27 15:41:23 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module commonclient
  */
 public final class I18N {
 
-	public static final String	RESOURCE_BUNDLE_KEY	= "ResourceBundle";
+	public static final String RESOURCE_BUNDLE_KEY = "ResourceBundle";
 	
 	/**
 	 * Register resource bundle
