@@ -40,7 +40,7 @@ public class PathElementsFrame extends AnalysisFrame {
 		SchemePath path = null;
 		try {
 			Log.debugMessage("Start create PathElements panel", Level.FINEST);
-			MonitoredElement me = StorableObjectPool.getStorableObject(new Identifier(pf.getBS().monitoredElementId), true);
+			final MonitoredElement me = StorableObjectPool.getStorableObject(Identifier.valueOf(pf.getBS().monitoredElementId), true);
 			Log.debugMessage("Found MonitoredElement " + me.getName() + " ("+ me.getId() + ")", Level.FINEST);
 			if (me.getKind().equals(IdlMonitoredElementKind.MONITOREDELEMENT_KIND_TRANSMISSION_PATH)) {
 				LinkedIdsCondition condition = new LinkedIdsCondition(me.getMeasurementPortId(), ObjectEntities.PATHELEMENT_CODE);
