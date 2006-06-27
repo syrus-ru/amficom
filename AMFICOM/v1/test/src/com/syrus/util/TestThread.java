@@ -1,5 +1,5 @@
 /*-
- * $Id: TestThread.java,v 1.1.2.1 2006/06/06 15:48:03 arseniy Exp $
+ * $Id: TestThread.java,v 1.1.2.2 2006/06/27 17:31:51 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,7 +12,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.SynchronousQueue;
 
 import junit.framework.Test;
@@ -22,7 +21,7 @@ import com.syrus.AMFICOM.general.DatabaseCommonTest;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.1.2.1 $, $Date: 2006/06/06 15:48:03 $
+ * @version $Revision: 1.1.2.2 $, $Date: 2006/06/27 17:31:51 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module test
