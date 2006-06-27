@@ -1,11 +1,11 @@
 /*-
- * $Id: SetupConstraintCharateristic.java,v 1.1.2.1 2006/04/18 17:33:08 arseniy Exp $
+ * $Id: SetupConstraintCharateristic.java,v 1.1.2.4 2006/06/27 17:30:26 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
-package com.syrus.AMFICOM.general;
+package com.syrus.AMFICOM.reflectometry;
 
 import static com.syrus.AMFICOM.general.CharacteristicTypeSort.OPTICAL;
 import static com.syrus.AMFICOM.general.DataType.INTEGER;
@@ -28,6 +28,7 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CORBACommonTest;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CharacteristicType;
 import com.syrus.AMFICOM.general.CompoundCondition;
@@ -39,7 +40,7 @@ import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.measurement.MeasurementPortType;
 
 /**
- * @version $Revision: 1.1.2.1 $, $Date: 2006/04/18 17:33:08 $
+ * @version $Revision: 1.1.2.4 $, $Date: 2006/06/27 17:30:26 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module test
