@@ -1,4 +1,4 @@
--- $Id: linemismatchevent.sql,v 1.6 2006/06/26 12:44:39 bass Exp $
+-- $Id: linemismatchevent.sql,v 1.7 2006/06/27 18:28:44 bass Exp $
 
 CREATE TABLE LineMismatchEvent (
 	id NUMBER(19) NOT NULL,
@@ -48,7 +48,7 @@ CREATE TABLE LineMismatchEvent (
 		AND parent_line_mismatch_event_id IS NULL))
 );
 
-COMMENT ON TABLE LineMismatchEvent IS '$Id: linemismatchevent.sql,v 1.6 2006/06/26 12:44:39 bass Exp $';
+COMMENT ON TABLE LineMismatchEvent IS '$Id: linemismatchevent.sql,v 1.7 2006/06/27 18:28:44 bass Exp $';
 
 CREATE INDEX lm_event_pln_txt_msg_idx ON LineMismatchEvent(plain_text_message)
 	INDEXTYPE IS ctxsys.context
@@ -63,7 +63,6 @@ CREATE INDEX lm_event_rch_txt_msg_idx ON LineMismatchEvent(rich_text_message)
 CREATE TABLE ChangeLogRecord (
 	parent_line_mismatch_event_id NOT NULL,
 	modified TIMESTAMP NOT NULL,
-	modifier_id NOT NULL,
 	key VARCHAR2(32 char) NOT NULL,
 	old_value VARCHAR2(4000 char),
 	new_value VARCHAR2(4000 char),
@@ -71,8 +70,6 @@ CREATE TABLE ChangeLogRecord (
 	CONSTRAINT chnglgrcrd_pk PRIMARY KEY(parent_line_mismatch_event_id, modified, key),
 	CONSTRAINT chnglgrcrd_parent_lm_event_fk FOREIGN KEY(parent_line_mismatch_event_id)
 		REFERENCES LineMismatchEvent(id) ON DELETE CASCADE,
-	CONSTRAINT chnglgrcrd_modifier_fk FOREIGN KEY(modifier_id)
-		REFERENCES SystemUser(id) ON DELETE CASCADE,
 	CONSTRAINT chnglgrcrd_value_chk CHECK
 		(old_value <> new_value)
 );
