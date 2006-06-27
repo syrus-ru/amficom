@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseTestContext.java,v 1.4.2.2 2006/04/04 10:11:45 arseniy Exp $
+ * $Id: DatabaseTestContext.java,v 1.4.2.3 2006/06/27 17:30:03 arseniy Exp $
  * 
  * Copyright ¿ 2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,7 +44,6 @@ import com.syrus.AMFICOM.administration.MCMDatabase;
 import com.syrus.AMFICOM.administration.PermissionAttributesDatabase;
 import com.syrus.AMFICOM.administration.RoleDatabase;
 import com.syrus.AMFICOM.administration.ServerDatabase;
-import com.syrus.AMFICOM.administration.ServerProcessDatabase;
 import com.syrus.AMFICOM.administration.SystemUserDatabase;
 import com.syrus.AMFICOM.configuration.CableLinkTypeDatabase;
 import com.syrus.AMFICOM.configuration.CableThreadDatabase;
@@ -104,7 +103,7 @@ import com.syrus.util.database.DatabaseConnection;
 
 /**
  * @author $Author: arseniy $
- * @version $Revision: 1.4.2.2 $, $Date: 2006/04/04 10:11:45 $
+ * @version $Revision: 1.4.2.3 $, $Date: 2006/06/27 17:30:03 $
  * @module
  */
 public class DatabaseTestContext implements TestContext {
@@ -128,6 +127,7 @@ public class DatabaseTestContext implements TestContext {
 
 	// invoke this one time only
 	private static void initDatabaseContext() {
+		DatabaseContext.registerDatabase(new ParameterTypeDatabase());
 		DatabaseContext.registerDatabase(new CharacteristicTypeDatabase());
 		DatabaseContext.registerDatabase(new CharacteristicDatabase());
 
@@ -135,7 +135,6 @@ public class DatabaseTestContext implements TestContext {
 		DatabaseContext.registerDatabase(new DomainDatabase());
 		DatabaseContext.registerDatabase(new ServerDatabase());
 		DatabaseContext.registerDatabase(new MCMDatabase());
-		DatabaseContext.registerDatabase(new ServerProcessDatabase());
 		DatabaseContext.registerDatabase(new PermissionAttributesDatabase());
 		DatabaseContext.registerDatabase(new RoleDatabase());
 		DatabaseContext.registerDatabase(new DeliveryAttributesDatabase());
@@ -240,7 +239,7 @@ public class DatabaseTestContext implements TestContext {
 	}
 
 	private static final void initIdentifierPool() {
-		IdentifierPool.init(new DatabaseIdentifierGeneratorServer(), 1);
+		IdentifierPool.init(new DatabaseIdentifierFactory(), 1);
 	}
 
 	public void setUp() {
@@ -251,6 +250,6 @@ public class DatabaseTestContext implements TestContext {
 	}
 
 	public void tearDown() {
-		DatabaseConnection.closeConnection();
+		//DatabaseConnection.closeConnection();
 	}
 }
