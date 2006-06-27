@@ -1,5 +1,5 @@
 /*
- * $Id: MapInfoCorbaConnection.java,v 1.7 2006/02/17 12:47:16 arseniy Exp $
+ * $Id: MapInfoCorbaConnection.java,v 1.8 2006/06/27 13:48:16 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,15 +15,13 @@ import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.MapImageLoader;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.LoginManager;
-import com.syrus.AMFICOM.general.MscharClientServantManager;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
-import com.syrus.AMFICOM.general.corba.CommonServer;
 import com.syrus.AMFICOM.map.corba.IdlMapDescriptor;
 import com.syrus.AMFICOM.mscharserver.corba.MscharServer;
 import com.syrus.AMFICOM.mscharserver.corba.MscharServerHelper;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2006/02/17 12:47:16 $
+ * @version $Revision: 1.8 $, $Date: 2006/06/27 13:48:16 $
  * @author $Author: arseniy $
  * @module mapinfo
  */

@@ -1,5 +1,5 @@
 /*
- * $Id: MapImagePanel.java,v 1.21 2006/06/22 11:47:14 stas Exp $
+ * $Id: MapImagePanel.java,v 1.22 2006/06/27 13:48:16 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,7 +16,6 @@ import java.awt.event.ComponentListener;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.logging.Level;
 
 import javax.swing.JPanel;
 
@@ -27,8 +26,8 @@ import com.syrus.AMFICOM.client.map.ui.MapFrame;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2006/06/22 11:47:14 $
- * @author $Author: stas $
+ * @version $Revision: 1.22 $, $Date: 2006/06/27 13:48:16 $
+ * @author $Author: arseniy $
  * @module mapinfo
  */
 public class MapImagePanel extends JPanel {

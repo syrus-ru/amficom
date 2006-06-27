@@ -1,14 +1,11 @@
 /*-
- * $Id: MapInfoCorbaImageLoader.java,v 1.18 2006/06/22 11:47:14 stas Exp $
+ * $Id: MapInfoCorbaImageLoader.java,v 1.19 2006/06/27 13:48:16 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
 package com.syrus.AMFICOM.client.map.mapinfo;
-
-import static com.syrus.io.FileLoader.BUFF_SIZE;
-import static com.syrus.io.FileLoader.NULL_STUB;
 
 import java.awt.Image;
 import java.awt.geom.Rectangle2D.Double;
@@ -52,8 +49,8 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2006/06/22 11:47:14 $
- * @author $Author: stas $
+ * @version $Revision: 1.19 $, $Date: 2006/06/27 13:48:16 $
+ * @author $Author: arseniy $
  * @module mapinfo
  */
 
