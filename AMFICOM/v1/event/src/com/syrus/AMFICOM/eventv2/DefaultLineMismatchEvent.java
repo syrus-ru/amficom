@@ -1,5 +1,5 @@
 /*-
- * $Id: DefaultLineMismatchEvent.java,v 1.22 2006/06/27 19:01:47 bass Exp $
+ * $Id: DefaultLineMismatchEvent.java,v 1.23 2006/06/27 19:08:14 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,7 +40,7 @@ import com.syrus.util.transport.idl.IdlConversionException;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.22 $, $Date: 2006/06/27 19:01:47 $
+ * @version $Revision: 1.23 $, $Date: 2006/06/27 19:08:14 $
  * @module event
  */
 public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
@@ -585,7 +585,7 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.22 $, $Date: 2006/06/27 19:01:47 $
+	 * @version $Revision: 1.23 $, $Date: 2006/06/27 19:08:14 $
 	 * @module event
 	 */
 	private class ChangeLogRecordImpl implements ChangeLogRecord, Serializable {
@@ -613,28 +613,28 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 		}
 
 		/**
-		 * @see ChangeLogRecord#getModified()
+		 * @see LineMismatchEvent.ChangeLogRecord#getModified()
 		 */
 		public Date getModified() {
 			return (Date) this.modified.clone();
 		}
 
 		/**
-		 * @see ChangeLogRecord#getKey()
+		 * @see LineMismatchEvent.ChangeLogRecord#getKey()
 		 */
 		public String getKey() {
 			return this.key;
 		}
 
 		/**
-		 * @see ChangeLogRecord#getOldValue()
+		 * @see LineMismatchEvent.ChangeLogRecord#getOldValue()
 		 */
 		public Object getOldValue() {
 			return this.oldValue;
 		}
 
 		/**
-		 * @see ChangeLogRecord#getNewValue()
+		 * @see LineMismatchEvent.ChangeLogRecord#getNewValue()
 		 */
 		public Object getNewValue() {
 			return this.newValue;
