@@ -1,5 +1,5 @@
 /*-
- * $Id: systemserver.idl,v 1.1.2.1 2006/06/09 15:55:11 arseniy Exp $
+ * $Id: systemserver.idl,v 1.1.2.2 2006/06/27 15:24:18 arseniy Exp $
  *
  * Copyright © 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,6 @@
 #ifndef SYSTEMSERVER_IDL
 #define SYSTEMSERVER_IDL
 
-#include "general.idl"
 #include "administration.idl"
 #include "event.idl"
 #include "map.idl"
@@ -23,166 +22,181 @@ module AMFICOM {
 #endif // MY_COMPILER_IS_NOT_BRAINDEAD
 
 module systemserver {
-module corba {
+	module corba {
+
+		/**
+		 * Над-интерфейс для всх подтверждаемых корбовых служб. */
+		/*\u002a\u002f@SuppressWarnings("all")/**/
+		interface Verifiable {
+			void verify(in octet i);
+		};
+
+		/**
+		 * Корбовая служба для пользователей системы. */
+		/*\u002a\u002f@SuppressWarnings("all")/**/
+		interface CORBASystemUser : Verifiable, eventv2::corba::EventReceiver {
+			general::corba::WString64 getHostName();
+		};
+
+		/**
+		 * Служба управления пользовательскими сессиями.
+		 **/
+		/*\u002a\u002f@SuppressWarnings("all")/**/
+		interface LoginServer : Verifiable {
+
+			administration::corba::IdlDomainSeq transmitAvailableDomains()
+					raises (general::corba::AMFICOMRemoteException);
+
+			void login(
+				in general::corba::WString32 login,
+				in general::corba::WString32 password,
+				in general::corba::IdlIdentifier domainId,
+				in CORBASystemUser corbaSystemUser,
+				out security::corba::IdlSessionKey sessionKey,
+				out general::corba::IdlIdentifier userId)
+					raises (general::corba::AMFICOMRemoteException);
+
+			void logout(
+				in security::corba::IdlSessionKey sessionKey)
+					raises (general::corba::AMFICOMRemoteException);
+
+			void validateLogin(
+				in security::corba::IdlSessionKey sessionKey,
+				out long long loginValidationPeriod)
+					raises (general::corba::AMFICOMRemoteException);
+
+			void setPassword(
+				in security::corba::IdlSessionKey sessionKey,
+				in general::corba::IdlIdentifier userId,
+				in general::corba::WString32 password)
+					raises (general::corba::AMFICOMRemoteException);
+		};
 
 
-	/**
-	 * Служба управления пользовательскими сессиями.
-	 **/
-	/*\u002a\u002f@SuppressWarnings("all")/**/
-	interface LoginServer : general::corba::Verifiable {
+		/**
+		 * Служба получения событий.
+		 **/
+		/*\u002a\u002f@SuppressWarnings("all")/**/
+		interface EventServer : Verifiable {
 
-		administration::corba::IdlDomainSeq transmitAvailableDomains()
-				raises (general::corba::AMFICOMRemoteException);
-
-		void login(
-			in general::corba::WString32 login,
-			in general::corba::WString32 password,
-			in general::corba::IdlIdentifier domainId,
-			in general::corba::CommonUser commonUser,
-			out security::corba::IdlSessionKey sessionKey,
-			out general::corba::IdlIdentifier userId)
-				raises (general::corba::AMFICOMRemoteException);
-
-		void logout(
-			in security::corba::IdlSessionKey sessionKey)
-				raises (general::corba::AMFICOMRemoteException);
-
-		void validateLogin(
-			in security::corba::IdlSessionKey sessionKey,
-			out long long loginValidationPeriod)
-				raises (general::corba::AMFICOMRemoteException);
-
-		void setPassword(
-			in security::corba::IdlSessionKey sessionKey,
-			in general::corba::IdlIdentifier userId,
-			in general::corba::WString32 password)
-				raises (general::corba::AMFICOMRemoteException);
-	};
+			void receiveEvents(
+				in eventv2::corba::IdlEventSeq events);
+		};
 
 
-	/**
-	 * Служба получения событий.
-	 **/
-	/*\u002a\u002f@SuppressWarnings("all")/**/
-	interface EventServer : general::corba::Verifiable {
-
-		void receiveEvents(
-			in eventv2::corba::IdlEventSeq events);
-	};
-
-
-	/**
-	 * Служба создания уникальных идентификаторов.
-	 **/
-	/*\u002a\u002f@SuppressWarnings("all")/**/
-	interface IdentifierGeneratorServer : general::corba::Verifiable {
+		/**
+		 * Служба создания уникальных идентификаторов.
+		 **/
+		/*\u002a\u002f@SuppressWarnings("all")/**/
+		interface IdentifierGeneratorServer : Verifiable {
 
 			general::corba::IdlIdentifier getGeneratedIdentifier(
-				in unsigned short entity)
+				in unsigned short entity,
+				in security::corba::IdlSessionKey idlSessionKey)
 					raises (general::corba::AMFICOMRemoteException);
 
 			general::corba::IdlIdentifierSeq getGeneratedIdentifierRange(
 				in unsigned short entity,
-				in unsigned long size)
+				in unsigned long size,
+				in security::corba::IdlSessionKey idlSessionKey)
 					raises (general::corba::AMFICOMRemoteException);
-	};
-
-
-	/**
-	 * Служба картографических данных.
-	 **/
-	/*\u002a\u002f@SuppressWarnings("all")/**/
-	interface MapServer : general::corba::Verifiable {
-
-		/*-************************************************************
-		 * MapInfo -- поиск и передача изображений.                   *
-		 **************************************************************/
-		map::corba::IdlRenderedImage transmitTopologicalImage(
-			in security::corba::IdlSessionKey idlSessionKey,
-			in map::corba::IdlTopologicalImageQuery topologicalImageQuery)
-				raises (general::corba::AMFICOMRemoteException);
-
-		void stopRenderTopologicalImage(
-			in security::corba::IdlSessionKey idlSessionKey)
-				raises (general::corba::AMFICOMRemoteException);
-
-		map::corba::IdlMapFeatureSeq findFeature(
-			in wstring searchName,
-			in security::corba::IdlSessionKey idlSessionKey)
-				raises (general::corba::AMFICOMRemoteException);
-
-		/*-************************************************************
-		 * Mapinfo -- передача файлов карт.                           *
-		 **************************************************************/
- 		map::corba::IdlMapDescriptorSeq getMapDescriptors(
- 			in security::corba::IdlSessionKey IdlSessionKey)
- 				raises (general::corba::AMFICOMRemoteException);
-
- 		map::corba::IdlLayerDescriptorSeq getLayerDescriptors(
- 			in map::corba::IdlMapDescriptor IdlMapDescriptor,
- 			in security::corba::IdlSessionKey IdlSessionKey)
- 				raises (general::corba::AMFICOMRemoteException);
-
-		::CORBA::OctetSeq loadFile(
- 			in wstring pathName,
- 			in long long offset,
- 			in security::corba::IdlSessionKey IdlSessionKey)
- 				raises (general::corba::AMFICOMRemoteException);
-	};
-
-
-	/**
-	 * Пара (идентификатор_объекта, версия_объекта).
-	 * См. StorableObjectServer#transmitRemoteVersions().
-	 **/
-	struct IdVersion {
-		general::corba::IdlIdentifier id;
-		long long version;
-	};
-	typedef sequence<IdVersion> IdVersionSeq;
-
-	/**
-	 * Служба управления хранимыми объектами.
-	 **/
-	/*\u002a\u002f@SuppressWarnings("all")/**/
-	interface StorableObjectServer : general::corba::Verifiable {
-
-		general::corba::IdlStorableObjectSeq transmitStorableObjects(
-			in general::corba::IdlIdentifierSeq ids,
-			in security::corba::IdlSessionKey sessionKey)
-				raises (general::corba::AMFICOMRemoteException);
-
-		general::corba::IdlStorableObjectSeq transmitStorableObjectsButIdsByCondition(
-			in general::corba::IdlIdentifierSeq ids,
-			in general::corba::IdlStorableObjectCondition condition,
-			in security::corba::IdlSessionKey sessionKey)
-				raises (general::corba::AMFICOMRemoteException);
-
-		general::corba::IdlIdentifierSeq transmitIdentifiersButIdsByCondition(
-			in general::corba::IdlIdentifierSeq ids,
-			in general::corba::IdlStorableObjectCondition condition,
-			in security::corba::IdlSessionKey sessionKey)
-				raises (general::corba::AMFICOMRemoteException);
-
-		IdVersionSeq transmitRemoteVersions(
-			in general::corba::IdlIdentifierSeq ids,
-			in security::corba::IdlSessionKey sessionKey)
-				raises (general::corba::AMFICOMRemoteException);
-
-		void receiveStorableObjects(
-			in general::corba::IdlStorableObjectSeq storableObjects,
-			in security::corba::IdlSessionKey sessionKey)
-				raises (general::corba::AMFICOMRemoteException);
-
-		void delete(
-			in general::corba::IdlIdentifierSeq ids,
-			in security::corba::IdlSessionKey sessionKey)
-				raises (general::corba::AMFICOMRemoteException);
 		};
 
 
-};
+		/**
+		 * Служба картографических данных.
+		 **/
+		/*\u002a\u002f@SuppressWarnings("all")/**/
+		interface MapServer : Verifiable {
+
+			/*-************************************************************
+			 * MapInfo -- поиск и передача изображений.                   *
+			 **************************************************************/
+			map::corba::IdlRenderedImage transmitTopologicalImage(
+				in map::corba::IdlTopologicalImageQuery topologicalImageQuery,
+				in security::corba::IdlSessionKey idlSessionKey)
+					raises (general::corba::AMFICOMRemoteException);
+
+			void stopRenderTopologicalImage(
+				in security::corba::IdlSessionKey idlSessionKey)
+					raises (general::corba::AMFICOMRemoteException);
+
+			map::corba::IdlMapFeatureSeq findFeature(
+				in wstring searchName,
+				in security::corba::IdlSessionKey idlSessionKey)
+					raises (general::corba::AMFICOMRemoteException);
+
+			/*-************************************************************
+			 * Mapinfo -- передача файлов карт.                           *
+			 **************************************************************/
+	 		map::corba::IdlMapDescriptorSeq getMapDescriptors(
+ 				in security::corba::IdlSessionKey IdlSessionKey)
+ 					raises (general::corba::AMFICOMRemoteException);
+
+	 		map::corba::IdlLayerDescriptorSeq getLayerDescriptors(
+ 				in map::corba::IdlMapDescriptor IdlMapDescriptor,
+ 				in security::corba::IdlSessionKey IdlSessionKey)
+ 					raises (general::corba::AMFICOMRemoteException);
+
+			::CORBA::OctetSeq loadFile(
+ 				in wstring pathName,
+ 				in long long offset,
+ 				in security::corba::IdlSessionKey IdlSessionKey)
+ 					raises (general::corba::AMFICOMRemoteException);
+		};
+
+
+		/**
+		 * Пара (идентификатор_объекта, версия_объекта).
+		 * См. StorableObjectServer#transmitRemoteVersions().
+		 **/
+		struct IdVersion {
+			general::corba::IdlIdentifier id;
+			long long version;
+		};
+		typedef sequence<IdVersion> IdVersionSeq;
+
+		/**
+		 * Служба управления хранимыми объектами.
+		 **/
+		/*\u002a\u002f@SuppressWarnings("all")/**/
+		interface StorableObjectServer : Verifiable {
+
+			general::corba::IdlStorableObjectSeq transmitStorableObjects(
+				in general::corba::IdlIdentifierSeq ids,
+				in security::corba::IdlSessionKey sessionKey)
+					raises (general::corba::AMFICOMRemoteException);
+
+			general::corba::IdlStorableObjectSeq transmitStorableObjectsButIdsByCondition(
+				in general::corba::IdlIdentifierSeq ids,
+				in general::corba::IdlStorableObjectCondition condition,
+				in security::corba::IdlSessionKey sessionKey)
+					raises (general::corba::AMFICOMRemoteException);
+
+			general::corba::IdlIdentifierSeq transmitIdentifiersButIdsByCondition(
+				in general::corba::IdlIdentifierSeq ids,
+				in general::corba::IdlStorableObjectCondition condition,
+				in security::corba::IdlSessionKey sessionKey)
+					raises (general::corba::AMFICOMRemoteException);
+
+			IdVersionSeq transmitRemoteVersions(
+				in general::corba::IdlIdentifierSeq ids,
+				in security::corba::IdlSessionKey sessionKey)
+					raises (general::corba::AMFICOMRemoteException);
+
+			void receiveStorableObjects(
+				in general::corba::IdlStorableObjectSeq storableObjects,
+				in security::corba::IdlSessionKey sessionKey)
+					raises (general::corba::AMFICOMRemoteException);
+
+			void delete(
+				in general::corba::IdlIdentifierSeq ids,
+				in security::corba::IdlSessionKey sessionKey)
+					raises (general::corba::AMFICOMRemoteException);
+			};
+
+
+	};
 };
 
 #ifndef MY_COMPILER_IS_NOT_BRAINDEAD
