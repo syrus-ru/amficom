@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoGroup.java,v 1.101 2006/06/06 11:31:15 arseniy Exp $
+ * $Id: SchemeProtoGroup.java,v 1.102 2006/06/27 18:21:24 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -67,7 +67,7 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * #01 in hierarchy.
  *
  * @author $Author: arseniy $
- * @version $Revision: 1.101 $, $Date: 2006/06/06 11:31:15 $
+ * @version $Revision: 1.102 $, $Date: 2006/06/27 18:21:24 $
  * @module scheme
  */
 public final class SchemeProtoGroup extends StorableObject
@@ -600,12 +600,12 @@ public final class SchemeProtoGroup extends StorableObject
 					? Identifier.fromXmlTransferable(schemeProtoGroup.getParentSchemeProtoGroupId(), importType, MODE_THROW_IF_ABSENT)
 					: VOID_IDENTIFIER;
 			if (schemeProtoGroup.isSetSchemeProtoGroups()) {
-				for (final XmlSchemeProtoGroup schemeProtoGroup2 : schemeProtoGroup.getSchemeProtoGroups().getSchemeProtoGroupArray()) {
+				for (final XmlSchemeProtoGroup schemeProtoGroup2 : schemeProtoGroup.getSchemeProtoGroups().getSchemeProtoGroupList()) {
 					createInstance(super.creatorId, schemeProtoGroup2);
 				}
 			}
 			if (schemeProtoGroup.isSetSchemeProtoElements()) {
-				for (final XmlSchemeProtoElement schemeProtoElement : schemeProtoGroup.getSchemeProtoElements().getSchemeProtoElementArray()) {
+				for (final XmlSchemeProtoElement schemeProtoElement : schemeProtoGroup.getSchemeProtoElements().getSchemeProtoElementList()) {
 					SchemeProtoElement.createInstance(super.creatorId, schemeProtoElement, importType);
 				}
 			}

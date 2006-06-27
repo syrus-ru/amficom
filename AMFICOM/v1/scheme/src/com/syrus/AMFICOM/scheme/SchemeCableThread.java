@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableThread.java,v 1.121 2006/06/06 11:31:15 arseniy Exp $
+ * $Id: SchemeCableThread.java,v 1.122 2006/06/27 18:21:24 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -78,7 +78,7 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * #14 in hierarchy.
  *
  * @author $Author: arseniy $
- * @version $Revision: 1.121 $, $Date: 2006/06/06 11:31:15 $
+ * @version $Revision: 1.122 $, $Date: 2006/06/27 18:21:24 $
  * @module scheme
  */
 public final class SchemeCableThread
@@ -902,7 +902,7 @@ public final class SchemeCableThread
 					: VOID_IDENTIFIER;
 			this.parentSchemeCableLinkId = Identifier.fromXmlTransferable(schemeCableThread.getParentSchemeCableLinkId(), importType, MODE_THROW_IF_ABSENT);
 			if (schemeCableThread.isSetCharacteristics()) {
-				for (final XmlCharacteristic characteristic : schemeCableThread.getCharacteristics().getCharacteristicArray()) {
+				for (final XmlCharacteristic characteristic : schemeCableThread.getCharacteristics().getCharacteristicList()) {
 					Characteristic.createInstance(super.creatorId, characteristic, importType);
 				}
 			}

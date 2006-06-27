@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDevice.java,v 1.127 2006/06/21 14:01:07 bass Exp $
+ * $Id: SchemeDevice.java,v 1.128 2006/06/27 18:21:23 arseniy Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -78,8 +78,8 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
 /**
  * #09 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.127 $, $Date: 2006/06/21 14:01:07 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.128 $, $Date: 2006/06/27 18:21:23 $
  * @module scheme
  */
 public final class SchemeDevice
@@ -834,17 +834,17 @@ public final class SchemeDevice
 			}
 	
 			if (schemeDevice.isSetCharacteristics()) {
-				for (final XmlCharacteristic characteristic : schemeDevice.getCharacteristics().getCharacteristicArray()) {
+				for (final XmlCharacteristic characteristic : schemeDevice.getCharacteristics().getCharacteristicList()) {
 					Characteristic.createInstance(super.creatorId, characteristic, importType);
 				}
 			}
 			if (schemeDevice.isSetSchemePorts()) {
-				for (final XmlSchemePort schemePort : schemeDevice.getSchemePorts().getSchemePortArray()) {
+				for (final XmlSchemePort schemePort : schemeDevice.getSchemePorts().getSchemePortList()) {
 					SchemePort.createInstance(super.creatorId, schemePort, importType);
 				}
 			}
 			if (schemeDevice.isSetSchemeCablePorts()) {
-				for (final XmlSchemeCablePort schemeCablePort : schemeDevice.getSchemeCablePorts().getSchemeCablePortArray()) {
+				for (final XmlSchemeCablePort schemeCablePort : schemeDevice.getSchemeCablePorts().getSchemeCablePortList()) {
 					SchemeCablePort.createInstance(super.creatorId, schemeCablePort, importType);
 				}
 			}

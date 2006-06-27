@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElement.java,v 1.140 2006/06/21 14:13:04 bass Exp $
+ * $Id: SchemeProtoElement.java,v 1.141 2006/06/27 18:21:23 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -84,8 +84,8 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
 /**
  * #02 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.140 $, $Date: 2006/06/21 14:13:04 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.141 $, $Date: 2006/06/27 18:21:23 $
  * @module scheme
  */
 public final class SchemeProtoElement
@@ -1264,22 +1264,22 @@ public final class SchemeProtoElement
 						+ XML_BEAN_NOT_COMPLETE);
 			}
 			if (schemeProtoElement.isSetCharacteristics()) {
-				for (final XmlCharacteristic characteristic : schemeProtoElement.getCharacteristics().getCharacteristicArray()) {
+				for (final XmlCharacteristic characteristic : schemeProtoElement.getCharacteristics().getCharacteristicList()) {
 					Characteristic.createInstance(super.creatorId, characteristic, importType);
 				}
 			}
 			if (schemeProtoElement.isSetSchemeProtoElements()) {
-				for (final XmlSchemeProtoElement schemeProtoElement2 : schemeProtoElement.getSchemeProtoElements().getSchemeProtoElementArray()) {
+				for (final XmlSchemeProtoElement schemeProtoElement2 : schemeProtoElement.getSchemeProtoElements().getSchemeProtoElementList()) {
 					createInstance(super.creatorId, schemeProtoElement2, importType);
 				}
 			}
 			if (schemeProtoElement.isSetSchemeDevices()) {
-				for (final XmlSchemeDevice schemeDevice : schemeProtoElement.getSchemeDevices().getSchemeDeviceArray()) {
+				for (final XmlSchemeDevice schemeDevice : schemeProtoElement.getSchemeDevices().getSchemeDeviceList()) {
 					SchemeDevice.createInstance(super.creatorId, schemeDevice, importType);
 				}
 			}
 			if (schemeProtoElement.isSetSchemeLinks()) {
-				for (final XmlSchemeLink schemeLink : schemeProtoElement.getSchemeLinks().getSchemeLinkArray()) {
+				for (final XmlSchemeLink schemeLink : schemeProtoElement.getSchemeLinks().getSchemeLinkList()) {
 					SchemeLink.createInstance(super.creatorId, schemeLink, importType);
 				}
 			}

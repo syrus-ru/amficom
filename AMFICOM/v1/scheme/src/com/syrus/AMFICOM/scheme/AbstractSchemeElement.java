@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemeElement.java,v 1.85 2006/06/06 11:31:15 arseniy Exp $
+ * $Id: AbstractSchemeElement.java,v 1.86 2006/06/27 18:21:23 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -46,7 +46,7 @@ import com.syrus.util.transport.xml.XmlConversionException;
  * {@link AbstractSchemeElement}instead.
  *
  * @author $Author: arseniy $
- * @version $Revision: 1.85 $, $Date: 2006/06/06 11:31:15 $
+ * @version $Revision: 1.86 $, $Date: 2006/06/27 18:21:23 $
  * @module scheme
  */
 public abstract class AbstractSchemeElement
@@ -252,7 +252,7 @@ public abstract class AbstractSchemeElement
 				? abstractSchemeElement.getDescription()
 				: "";
 		if (abstractSchemeElement.isSetCharacteristics()) {
-			for (final XmlCharacteristic characteristic : abstractSchemeElement.getCharacteristics().getCharacteristicArray()) {
+			for (final XmlCharacteristic characteristic : abstractSchemeElement.getCharacteristics().getCharacteristicList()) {
 				Characteristic.createInstance(super.creatorId, characteristic, importType);
 			}
 		}

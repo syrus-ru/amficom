@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.164 2006/06/21 14:07:25 bass Exp $
+ * $Id: SchemeElement.java,v 1.165 2006/06/27 18:21:23 arseniy Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -97,8 +97,8 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
 /**
  * #04 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.164 $, $Date: 2006/06/21 14:07:25 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.165 $, $Date: 2006/06/27 18:21:23 $
  * @module scheme
  */
 public final class SchemeElement extends AbstractSchemeElement
@@ -1620,22 +1620,22 @@ public final class SchemeElement extends AbstractSchemeElement
 			}
 	
 			if (schemeElement.isSetSchemeDevices()) {
-				for (final XmlSchemeDevice schemeDevice : schemeElement.getSchemeDevices().getSchemeDeviceArray()) {
+				for (final XmlSchemeDevice schemeDevice : schemeElement.getSchemeDevices().getSchemeDeviceList()) {
 					SchemeDevice.createInstance(super.creatorId, schemeDevice, importType);
 				}
 			}
 			if (schemeElement.isSetSchemes()) {
-				for (final XmlScheme scheme : schemeElement.getSchemes().getSchemeArray()) {
+				for (final XmlScheme scheme : schemeElement.getSchemes().getSchemeList()) {
 					Scheme.createInstance(super.creatorId, scheme);
 				}
 			}
 			if (schemeElement.isSetSchemeElements()) {
-				for (final XmlSchemeElement schemeElement2 : schemeElement.getSchemeElements().getSchemeElementArray()) {
+				for (final XmlSchemeElement schemeElement2 : schemeElement.getSchemeElements().getSchemeElementList()) {
 					createInstance(super.creatorId, schemeElement2, importType);
 				}
 			}
 			if (schemeElement.isSetSchemeLinks()) {
-				for (final XmlSchemeLink schemeLink : schemeElement.getSchemeLinks().getSchemeLinkArray()) {
+				for (final XmlSchemeLink schemeLink : schemeElement.getSchemeLinks().getSchemeLinkList()) {
 					SchemeLink.createInstance(super.creatorId, schemeLink, importType);
 				}
 			}

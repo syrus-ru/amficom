@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.133 2006/06/06 11:31:15 arseniy Exp $
+ * $Id: Scheme.java,v 1.134 2006/06/27 18:21:23 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -88,7 +88,7 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * #03 in hierarchy.
  *
  * @author $Author: arseniy $
- * @version $Revision: 1.133 $, $Date: 2006/06/06 11:31:15 $
+ * @version $Revision: 1.134 $, $Date: 2006/06/27 18:21:23 $
  * @module scheme
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
@@ -1209,27 +1209,27 @@ public final class Scheme extends AbstractCloneableDomainMember
 					? Identifier.fromXmlTransferable(scheme.getParentSchemeElementId(), importType, MODE_THROW_IF_ABSENT)
 					: VOID_IDENTIFIER;
 			if (scheme.isSetSchemeElements()) {
-				for (final XmlSchemeElement schemeElement : scheme.getSchemeElements().getSchemeElementArray()) {
+				for (final XmlSchemeElement schemeElement : scheme.getSchemeElements().getSchemeElementList()) {
 					SchemeElement.createInstance(super.creatorId, schemeElement, importType);
 				}
 			}
 			if (scheme.isSetSchemeLinks()) {
-				for (final XmlSchemeLink schemeLink : scheme.getSchemeLinks().getSchemeLinkArray()) {
+				for (final XmlSchemeLink schemeLink : scheme.getSchemeLinks().getSchemeLinkList()) {
 					SchemeLink.createInstance(super.creatorId, schemeLink, importType);
 				}
 			}
 			if (scheme.isSetSchemeCableLinks()) {
-				for (final XmlSchemeCableLink schemeCableLink : scheme.getSchemeCableLinks().getSchemeCableLinkArray()) {
+				for (final XmlSchemeCableLink schemeCableLink : scheme.getSchemeCableLinks().getSchemeCableLinkList()) {
 					SchemeCableLink.createInstance(super.creatorId, schemeCableLink, importType);
 				}
 			}
 			if (scheme.isSetSchemeOptimizeInfos()) {
-				for (final XmlSchemeOptimizeInfo schemeOptimizeInfo : scheme.getSchemeOptimizeInfos().getSchemeOptimizeInfoArray()) {
+				for (final XmlSchemeOptimizeInfo schemeOptimizeInfo : scheme.getSchemeOptimizeInfos().getSchemeOptimizeInfoList()) {
 					// empty so far
 				}
 			}
 			if (scheme.isSetSchemeMonitoringSolutions()) {
-				for (final XmlSchemeMonitoringSolution schemeMonitoringSolution : scheme.getSchemeMonitoringSolutions().getSchemeMonitoringSolutionArray()) {
+				for (final XmlSchemeMonitoringSolution schemeMonitoringSolution : scheme.getSchemeMonitoringSolutions().getSchemeMonitoringSolutionList()) {
 					// empty so far
 				}
 			}

@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemePort.java,v 1.98 2006/06/06 11:31:15 arseniy Exp $
+ * $Id: AbstractSchemePort.java,v 1.99 2006/06/27 18:21:24 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -58,7 +58,7 @@ import com.syrus.util.transport.xml.XmlConversionException;
 
 /**
  * @author $Author: arseniy $
- * @version $Revision: 1.98 $, $Date: 2006/06/06 11:31:15 $
+ * @version $Revision: 1.99 $, $Date: 2006/06/27 18:21:24 $
  * @module scheme
  */
 public abstract class AbstractSchemePort
@@ -565,7 +565,7 @@ public abstract class AbstractSchemePort
 				: VOID_IDENTIFIER;
 		this.parentSchemeDeviceId = Identifier.fromXmlTransferable(abstractSchemePort.getParentSchemeDeviceId(), importType, MODE_THROW_IF_ABSENT);
 		if (abstractSchemePort.isSetCharacteristics()) {
-			for (final XmlCharacteristic characteristic : abstractSchemePort.getCharacteristics().getCharacteristicArray()) {
+			for (final XmlCharacteristic characteristic : abstractSchemePort.getCharacteristics().getCharacteristicList()) {
 				Characteristic.createInstance(super.creatorId, characteristic, importType);
 			}
 		}

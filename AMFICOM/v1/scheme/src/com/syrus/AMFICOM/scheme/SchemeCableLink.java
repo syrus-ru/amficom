@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLink.java,v 1.131 2006/06/02 17:23:20 bass Exp $
+ * $Id: SchemeCableLink.java,v 1.132 2006/06/27 18:21:23 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -90,8 +90,8 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
 /**
  * #13 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.131 $, $Date: 2006/06/02 17:23:20 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.132 $, $Date: 2006/06/27 18:21:23 $
  * @module scheme
  */
 public final class SchemeCableLink extends AbstractSchemeLink
@@ -767,12 +767,12 @@ public final class SchemeCableLink extends AbstractSchemeLink
 					: VOID_IDENTIFIER;
 			super.parentSchemeId = Identifier.fromXmlTransferable(schemeCableLink.getParentSchemeId(), importType, MODE_THROW_IF_ABSENT);
 			if (schemeCableLink.isSetSchemeCableThreads()) {
-				for (final XmlSchemeCableThread schemeCableThread : schemeCableLink.getSchemeCableThreads().getSchemeCableThreadArray()) {
+				for (final XmlSchemeCableThread schemeCableThread : schemeCableLink.getSchemeCableThreads().getSchemeCableThreadList()) {
 					SchemeCableThread.createInstance(super.creatorId, schemeCableThread, importType);
 				}
 			}
 			if (schemeCableLink.isSetCableChannelingItems()) {
-				for (final XmlCableChannelingItem cableChannelingItem : schemeCableLink.getCableChannelingItems().getCableChannelingItemArray()) {
+				for (final XmlCableChannelingItem cableChannelingItem : schemeCableLink.getCableChannelingItems().getCableChannelingItemList()) {
 					CableChannelingItem.createInstance(super.creatorId, cableChannelingItem, importType);
 				}
 			}
