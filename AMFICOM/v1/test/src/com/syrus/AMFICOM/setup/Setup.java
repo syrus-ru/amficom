@@ -1,5 +1,5 @@
 /*
- * $Id: Setup.java,v 1.1.2.7 2006/03/01 15:49:02 arseniy Exp $
+ * $Id: Setup.java,v 1.1.2.8 2006/06/27 17:33:28 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,7 +15,6 @@ import com.syrus.AMFICOM.administration.SetupCreateSysUser;
 import com.syrus.AMFICOM.administration.SetupDomain;
 import com.syrus.AMFICOM.administration.SetupMCM;
 import com.syrus.AMFICOM.administration.SetupServer;
-import com.syrus.AMFICOM.administration.SetupServerProcess;
 import com.syrus.AMFICOM.administration.SetupSystemUser;
 import com.syrus.AMFICOM.administration.SetupSystemUserPasswords;
 import com.syrus.AMFICOM.general.DatabaseCommonTest;
@@ -24,7 +23,7 @@ import com.syrus.AMFICOM.general.SetupDataType;
 import com.syrus.AMFICOM.general.SetupMeasurementUnit;
 
 /**
- * @version $Revision: 1.1.2.7 $, $Date: 2006/03/01 15:49:02 $
+ * @version $Revision: 1.1.2.8 $, $Date: 2006/06/27 17:33:28 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -49,11 +48,12 @@ public final class Setup extends TestCase {
 
 		//-Create root domain and server
 		databaseCommonTest.addTest(new SetupDomain("testCreate"));
-		databaseCommonTest.addTest(new SetupServer("testCreate"));
 
-		//-Create users for server processes and processes themselves.
+		//-Create users for server processes.
 		databaseCommonTest.addTest(new SetupSystemUser("testCreate"));
-		databaseCommonTest.addTest(new SetupServerProcess("testCreate"));
+
+		//-Create server and MCMs
+		databaseCommonTest.addTest(new SetupServer("testCreate"));
 		databaseCommonTest.addTest(new SetupMCM("testCreate"));
 
 		//-Set passwords for base system users.
