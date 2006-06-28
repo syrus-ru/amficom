@@ -1,3 +1,11 @@
+/*
+ * $Id: CreateAnalysisReportCommand.java,v 1.13 2006/06/28 10:11:17 arseniy Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ
+ */
+
 package com.syrus.AMFICOM.Client.General.Command.Analysis;
 
 import java.util.HashMap;
@@ -10,6 +18,12 @@ import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.report.CreateReportDialog;
 
+
+/**
+ * @version $Revision: 1.13 $, $Date: 2006/06/28 10:11:17 $
+ * @author $Author: arseniy $
+ * @module analysis
+ */
 public class CreateAnalysisReportCommand extends AbstractCommand {
 	public static final String TABLE = "table";
 	public static final String PANEL = "panel";
