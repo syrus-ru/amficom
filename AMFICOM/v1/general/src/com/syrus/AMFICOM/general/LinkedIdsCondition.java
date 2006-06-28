@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsCondition.java,v 1.65 2006/04/19 13:22:17 bass Exp $
+ * $Id: LinkedIdsCondition.java,v 1.66 2006/06/28 10:38:25 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -65,8 +65,8 @@ import com.syrus.util.Log;
  * {@link #isNeedMore(Set)}and {@link #setEntityCode(Short)}.</li>
  * </ul>
  *
- * @author $Author: bass $
- * @version $Revision: 1.65 $, $Date: 2006/04/19 13:22:17 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.66 $, $Date: 2006/06/28 10:38:25 $
  * @module general
  */
 public class LinkedIdsCondition implements StorableObjectCondition {
@@ -372,16 +372,19 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 	}
 
 	protected IllegalObjectEntityException newExceptionEntityIllegal() {
-		return new IllegalObjectEntityException("Unsupported entity '"
-				+ ObjectEntities.codeToString(this.entityCode) + "'/" + this.entityCode
-				+ "; linked entity '"+ ObjectEntities.codeToString(this.linkedEntityCode) + "'/" + this.linkedEntityCode,
+		return new IllegalObjectEntityException(ENTITY_CODE_NOT_REGISTERED
+				+ ObjectEntities.asString(this.entityCode) + "; linked entity" + ObjectEntities.asString(this.linkedEntityCode),
 				IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
 	}
 
 	protected IllegalObjectEntityException newExceptionLinkedEntityIllegal() {
-		return new IllegalObjectEntityException("Unsupported linked entity '"
-				+ ObjectEntities.codeToString(this.linkedEntityCode) + "'/" + this.linkedEntityCode
-				+ " for entity '" + ObjectEntities.codeToString(this.entityCode) + "'/" + this.entityCode,
+		return new IllegalObjectEntityException(LINKED_ENTITY_CODE_NOT_REGISTERED
+				+ ObjectEntities.asString(this.linkedEntityCode) + "for entity" + ObjectEntities.asString(this.entityCode),
+				IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
+	}
+
+	protected IllegalObjectEntityException newExceptionEntityCodeToSetIsIllegal(final Short entityCode1) {
+		return new IllegalObjectEntityException(ENTITY_CODE_NOT_REGISTERED + ObjectEntities.asString(entityCode1),
 				IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
 	}
 
