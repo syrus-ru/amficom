@@ -31,6 +31,7 @@ $LIB/resource.jar:\
 $LIB/map.jar:\
 $LIB/scheme.jar:\
 $LIB/filter.jar:\
+$LIB/reflectometry.jar:\
 $LIB/csbridge.jar:\
 $LIB/commonclient.jar:\
 $LIB/filterclient.jar:\
