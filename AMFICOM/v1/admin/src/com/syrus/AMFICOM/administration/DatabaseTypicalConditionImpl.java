@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseTypicalConditionImpl.java,v 1.19.6.1 2006/06/27 15:35:02 arseniy Exp $
+ * $Id: DatabaseTypicalConditionImpl.java,v 1.19 2005/11/11 09:15:18 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,6 +11,7 @@ package com.syrus.AMFICOM.administration;
 import static com.syrus.AMFICOM.general.ObjectEntities.DOMAIN_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PERMATTR_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.ROLE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SERVERPROCESS_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SYSTEMUSER_CODE;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CODENAME;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_NAME;
@@ -22,7 +23,7 @@ import com.syrus.AMFICOM.general.TypicalCondition;
 
 
 /**
- * @version $Revision: 1.19.6.1 $, $Date: 2006/06/27 15:35:02 $
+ * @version $Revision: 1.19 $, $Date: 2005/11/11 09:15:18 $
  * @author $Author: arseniy $
  * @module administration
  */
@@ -60,6 +61,8 @@ final class DatabaseTypicalConditionImpl extends AbstractDatabaseTypicalConditio
 					|| key == SystemUserWrapper.COLUMN_SORT;
 		case DOMAIN_CODE:
 			return key == COLUMN_NAME;
+		case SERVERPROCESS_CODE:
+			return key == COLUMN_CODENAME;
 		case PERMATTR_CODE:
 			return key == PermissionAttributesWrapper.COLUMN_MODULE;
 		case ROLE_CODE:

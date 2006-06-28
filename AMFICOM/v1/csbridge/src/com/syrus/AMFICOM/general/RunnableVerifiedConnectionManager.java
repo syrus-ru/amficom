@@ -1,5 +1,5 @@
 /*
- * $Id: RunnableVerifiedConnectionManager.java,v 1.12.2.1 2006/06/27 15:54:53 arseniy Exp $
+ * $Id: RunnableVerifiedConnectionManager.java,v 1.12 2006/06/09 15:54:24 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,11 +12,11 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import com.syrus.AMFICOM.systemserver.corba.Verifiable;
+import com.syrus.AMFICOM.general.corba.Verifiable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.12.2.1 $, $Date: 2006/06/27 15:54:53 $
+ * @version $Revision: 1.12 $, $Date: 2006/06/09 15:54:24 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge

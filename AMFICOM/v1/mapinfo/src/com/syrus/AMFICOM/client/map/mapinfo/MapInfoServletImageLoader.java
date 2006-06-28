@@ -1,5 +1,5 @@
 /**
- * $Id: MapInfoServletImageLoader.java,v 1.9.2.1 2006/06/27 17:07:40 arseniy Exp $
+ * $Id: MapInfoServletImageLoader.java,v 1.9 2006/06/22 11:47:14 stas Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -27,6 +27,7 @@ import java.util.logging.Level;
 
 import com.syrus.AMFICOM.client.map.MapConnection;
 import com.syrus.AMFICOM.client.map.MapConnectionException;
+import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.MapImageLoader;
 import com.syrus.AMFICOM.client.map.MapPropertiesManager;
 import com.syrus.AMFICOM.client.map.ServletCommandNames;
@@ -157,6 +158,8 @@ public class MapInfoServletImageLoader implements MapImageLoader {
 			throw new MapConnectionException(e);
 		} catch (IOException e) {
 			throw new MapConnectionException(e);
+		} catch (MapDataException e) {
+			throw new MapConnectionException(e);
 		}
 	}
 
@@ -168,7 +171,7 @@ public class MapInfoServletImageLoader implements MapImageLoader {
 	 *        Запрос
 	 * @return Строка параметров для HTTP запроса к серверу топографии
 	 */
-	private String createRenderCommandString(final TopologicalImageQuery query) {
+	private String createRenderCommandString(final TopologicalImageQuery query) throws MapDataException {
 		String result = "";
 		result += "?" + ServletCommandNames.USER_ID + "=" + LoginManager.getSessionKey().hashCode();
 

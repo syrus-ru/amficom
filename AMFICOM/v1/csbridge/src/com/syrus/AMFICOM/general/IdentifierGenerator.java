@@ -1,5 +1,5 @@
 /*
- * $Id: IdentifierGenerator.java,v 1.15.2.1 2006/06/27 15:50:15 arseniy Exp $
+ * $Id: IdentifierGenerator.java,v 1.15 2005/10/31 12:29:53 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,19 +8,18 @@
 
 package com.syrus.AMFICOM.general;
 
+import java.util.List;
+import java.util.LinkedList;
 import java.sql.Connection;
+import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.HashSet;
-import java.util.Set;
-
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.15.2.1 $, $Date: 2006/06/27 15:50:15 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.15 $, $Date: 2005/10/31 12:29:53 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
  */
@@ -31,7 +30,7 @@ public class IdentifierGenerator {
 		assert false;
 	}
 	
-	public static synchronized Identifier generateIdentifier(final short entityCode)
+	protected static synchronized Identifier generateIdentifier(final short entityCode)
 			throws IllegalObjectEntityException,
 				IdentifierGenerationException {
 		final short major = generateMajor(entityCode);
@@ -39,16 +38,16 @@ public class IdentifierGenerator {
 		return new Identifier(major, minor);
 	}
 
-	public static synchronized Set<Identifier> generateIdentifierRange(final short entityCode, final int rangeSize)
+	protected static synchronized Identifier[] generateIdentifierRange(final short entityCode, final int rangeSize)
 			throws IllegalObjectEntityException,
 				IdentifierGenerationException {
-		final Set<Identifier> ids = new HashSet<Identifier>();
+		final List<Identifier> list = new LinkedList<Identifier>();
 		final short major = generateMajor(entityCode);
 		for (int i = 0; i < rangeSize; i++) {
 			final long minor = generateMinor(entityCode);
-			ids.add(new Identifier(major, minor));
+			list.add(new Identifier(major, minor));
 		}
-		return ids;
+		return list.toArray(new Identifier[list.size()]);
 	}
 
 	private static short generateMajor(final short entityCode) throws IllegalObjectEntityException {

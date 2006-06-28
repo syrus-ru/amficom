@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.87.2.1 2006/06/27 15:27:35 arseniy Exp $
+# $Id: Makefile,v 1.87 2006/05/31 16:18:37 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -100,8 +100,7 @@ cleancorba: idlclean
 .PHONY: idlclean
 idlclean:
 	cd $(SRCDIR)/com/syrus/AMFICOM/$(MODULE_NAME)/corba && \
-		$(RM) -r $(shell cat <$(SRCDIR)/com/syrus/AMFICOM/$(MODULE_NAME)/corba/.cvsignore | grep .java) && \
-		$(RM) -r $(shell cat <$(SRCDIR)/com/syrus/AMFICOM/$(MODULE_NAME)/corba/.cvsignore | grep Package)
+		$(RM) -r $(shell cat <$(SRCDIR)/com/syrus/AMFICOM/$(MODULE_NAME)/corba/.cvsignore | grep .java)
 	cd $(SRCDIR)/com/syrus/AMFICOM/security/corba && \
 		$(RM) -r $(shell cat <$(SRCDIR)/com/syrus/AMFICOM/security/corba/.cvsignore | grep .java)
 	$(RM) .idl

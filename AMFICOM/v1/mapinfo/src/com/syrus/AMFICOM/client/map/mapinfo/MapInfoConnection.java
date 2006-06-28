@@ -1,5 +1,5 @@
 /*
- * $Id: MapInfoConnection.java,v 1.17.2.1 2006/06/27 17:08:02 arseniy Exp $
+ * $Id: MapInfoConnection.java,v 1.17 2006/06/22 11:47:14 stas Exp $
  *
  * Copyright ї 2004 Syrus Systems.
  * оБХЮОП-ФЕИОЙЮЕУЛЙК ГЕОФТ.
@@ -25,20 +25,22 @@ import com.syrus.AMFICOM.client.map.SpatialLayer;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.17.2.1 $, $Date: 2006/06/27 17:08:02 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.17 $, $Date: 2006/06/22 11:47:14 $
+ * @author $Author: stas $
  * @module mapinfo
  */
 public abstract class MapInfoConnection extends MapConnection {
 	protected String dataBasePath = "";
+
 	protected String dataBaseView = "";
+
 	protected String mapperServletURL = "";
+
 	protected MapJ localMapJ = null;
 
 	/**
-	 * Список слоёв. Подгружается один раз при инциализации модуля. Следует
-	 * обновлять при изменении файла проекта во время работы (это опция пока
-	 * нереализована)
+	 * Список слоёв. Подгружается один раз при инциализации модуля.
+	 * Следует обновлять при изменении файла проекта во время работы (это опция пока нереализована)
 	 */
 	private List<SpatialLayer> layersList = null;
 

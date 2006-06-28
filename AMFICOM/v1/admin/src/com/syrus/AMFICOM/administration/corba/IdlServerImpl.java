@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlServerImpl.java,v 1.8.4.1 2006/06/09 16:00:14 arseniy Exp $
+ * $Id: IdlServerImpl.java,v 1.8 2006/03/14 10:47:59 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,12 +18,12 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.8.4.1 $, $Date: 2006/06/09 16:00:14 $
+ * @author $Author: bass $
+ * @version $Revision: 1.8 $, $Date: 2006/03/14 10:47:59 $
  * @module administration
  */
 final class IdlServerImpl extends IdlServer {
-	private static final long serialVersionUID = 935943680623660434L;
+	private static final long serialVersionUID = 63271138682861364L;
 
 	IdlServerImpl() {
 		// empty
@@ -38,8 +38,7 @@ final class IdlServerImpl extends IdlServer {
 			final IdlIdentifier domainId,
 			final String name,
 			final String description,
-			final String hostname,
-			final IdlIdentifier systemUserId) {
+			final String hostname) {
 		this.id = id;
 		this.created = created;
 		this.modified = modified;
@@ -50,7 +49,6 @@ final class IdlServerImpl extends IdlServer {
 		this.name = name;
 		this.description = description;
 		this.hostname = hostname;
-		this.systemUserId = systemUserId;
 	}
 
 	/**

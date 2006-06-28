@@ -1,5 +1,5 @@
 /*-
-* $Id: CORBAServer.java,v 1.27.2.1 2006/06/27 15:52:49 arseniy Exp $
+* $Id: CORBAServer.java,v 1.27 2005/11/28 12:21:52 arseniy Exp $
 *
 * Copyright ¿ 2004-2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -43,7 +43,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.27.2.1 $, $Date: 2006/06/27 15:52:49 $
+ * @version $Revision: 1.27 $, $Date: 2005/11/28 12:21:52 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
@@ -53,11 +53,11 @@ public class CORBAServer {
 	public static final String DEFAULT_ORB_INITIAL_HOST = "127.0.0.1";
 	public static final int DEFAULT_ORB_INITIAL_PORT = 1050;
 
-	private ORB orb;
+	ORB orb;
 	private POA poa;
-
-	private String rootContextNameString;
-
+	
+	private String	rootContextNameString;
+	
 	private NamingContextExt namingContext;
 
 	/*	Names of bound servants. Need for unbound all servants on shutdown*/
@@ -73,7 +73,7 @@ public class CORBAServer {
 
 		@Override
 		public int hashCode() {
-			return System.identityHashCode(this.hook);
+	    return System.identityHashCode(this.hook);
 		}
 
 		@Override
@@ -119,7 +119,7 @@ public class CORBAServer {
 	}
 
 	private void initPOA() throws UserException {
-		final POA rootPoa;
+		POA rootPoa;
 		try {
 			rootPoa = POAHelper.narrow(this.orb.resolve_initial_references("RootPOA"));
 		} catch (org.omg.CORBA.ORBPackage.InvalidName in) {
@@ -170,7 +170,6 @@ public class CORBAServer {
 
 	private void runORB() {
 		final Thread thread = new Thread("ORB") {
-			@SuppressWarnings("synthetic-access")
 			@Override
 			public void run() {
 				CORBAServer.this.orb.run();
@@ -280,19 +279,19 @@ public class CORBAServer {
 
 	/* TODO Maybe return set of CORBA references instead of strings */
 	public String[] getSubContextReferences(final String subContextName) throws CommunicationException {
-		final org.omg.CORBA.Object subContextRef;
+		org.omg.CORBA.Object subContextRef = null;
 		try {
 			subContextRef = this.namingContext.resolve_str(subContextName);
 		} catch (UserException ue) {
 			throw new CommunicationException("Cannot resolve subcontext '" + subContextName + "' -- " + ue.getMessage(), ue);
 		}
 
-		final NamingContextExt subContext;
+		NamingContextExt subContext = null;
 		try {
 			subContext = NamingContextExtHelper.narrow(subContextRef);
 		} catch (Exception e) {
-			throw new CommunicationException("Cannot narrow reference '"
-					+ subContextName + "' to naming context -- " + e.getMessage(), e);
+			throw new CommunicationException("Cannot narrow reference '" + subContextName + "' to naming context -- " + e.getMessage(),
+					e);
 		}
 
 		final BindingListHolder bindingListHolder = new BindingListHolder();
@@ -323,7 +322,7 @@ public class CORBAServer {
 					this.hooks = new HashSet<WrappedHook>(1);
 					this.hooks.add(new WrappedHook(hook));
 				} else {
-					final WrappedHook wrappedHook = new WrappedHook(hook);
+					WrappedHook wrappedHook = new WrappedHook(hook);
 					if (!this.hooks.contains(wrappedHook)) {
 						this.hooks.add(wrappedHook);
 					} else {
@@ -345,7 +344,7 @@ public class CORBAServer {
 
 		if (this.running) {
 			if (hook != null) {
-				final boolean ret = this.hooks.remove(new WrappedHook(hook));
+				boolean ret = this.hooks.remove(new WrappedHook(hook));
 				if (ret && this.hooks.isEmpty()) {
 					this.hooks = null;
 				}

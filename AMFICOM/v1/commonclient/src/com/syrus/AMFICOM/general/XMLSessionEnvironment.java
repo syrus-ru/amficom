@@ -1,5 +1,5 @@
 /*
- * $Id: XMLSessionEnvironment.java,v 1.12.4.1 2006/06/27 15:44:02 arseniy Exp $
+ * $Id: XMLSessionEnvironment.java,v 1.12 2005/12/02 15:21:00 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,7 +22,7 @@ import com.syrus.util.ApplicationProperties;
 
 
 /**
- * @version $Revision: 1.12.4.1 $, $Date: 2006/06/27 15:44:02 $
+ * @version $Revision: 1.12 $, $Date: 2005/12/02 15:21:00 $
  * @author $Author: arseniy $
  * @module commonclient
  */
@@ -40,7 +40,7 @@ public final class XMLSessionEnvironment {
 
 		this.registedXMLHandlers();
 		
-		IdentifierPool.init(new XMLIdentifierFactory(poolContext.getObjectLoader()));
+		IdentifierPool.init(new XMLIdentifierGeneratorServer(poolContext.getObjectLoader()));
 	}
 
 	

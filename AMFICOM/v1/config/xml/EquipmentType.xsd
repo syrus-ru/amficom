@@ -1,0 +1,42 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<xsd:schema 
+	xmlns:xsd = "http://www.w3.org/2001/XMLSchema"
+	xmlns:general = "http://syrus.com/AMFICOM/general/xml"
+	xmlns:configuration = "http://syrus.com/AMFICOM/configuration/xml"
+	targetNamespace = "http://syrus.com/AMFICOM/configuration/xml"
+	elementFormDefault = "qualified">
+
+	<xsd:annotation>
+		<xsd:documentation xml:lang = "en">
+			$Id: EquipmentType.xsd,v 1.10 2006/04/19 13:22:15 bass Exp $
+
+			Copyright © 2004-2005 Syrus Systems.
+			Dept. of Science &amp; Technology.
+			Project: AMFICOM.
+		</xsd:documentation>
+	</xsd:annotation>
+
+	<xsd:import
+		namespace = "http://syrus.com/AMFICOM/general/xml"
+		schemaLocation = "../../general/xml/StorableObjectType.xsd"/>
+
+	<xsd:element name = "equipmentTypes" type = "configuration:XmlEquipmentTypeSeq">
+		<xsd:key name = "equipmentTypeId">
+			<xsd:selector xpath = "configuration:equipmentTypes/configuration:equipmentType"/>
+			<xsd:field xpath = "id"/>
+		</xsd:key>
+	</xsd:element>
+
+	<xsd:complexType name = "XmlEquipmentType" final = "#all">
+		<xsd:complexContent>
+			<xsd:extension base = "general:XmlStorableObjectType">
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<xsd:complexType name = "XmlEquipmentTypeSeq" final = "#all">
+		<xsd:sequence>
+			<xsd:element name = "equipmentType" type = "configuration:XmlEquipmentType" minOccurs = "0" maxOccurs = "unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
+</xsd:schema>

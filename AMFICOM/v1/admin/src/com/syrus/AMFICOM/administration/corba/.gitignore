@@ -7,6 +7,7 @@ IdlDomain.java
 IdlDomainMember.java
 IdlMCM.java
 IdlServer.java
+IdlServerProcess.java
 IdlSystemUser.java
 IdlPermissionAttributes.java
 IdlRole.java

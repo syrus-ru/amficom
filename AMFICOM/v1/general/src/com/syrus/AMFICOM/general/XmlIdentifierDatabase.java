@@ -1,5 +1,5 @@
 /*-
- * $Id: XmlIdentifierDatabase.java,v 1.20.2.1 2006/06/27 18:08:30 arseniy Exp $
+ * $Id: XmlIdentifierDatabase.java,v 1.20 2006/04/19 13:22:17 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -46,8 +46,8 @@ import com.syrus.util.database.DatabaseString;
 
 /**
  * @author max
- * @author $Author: arseniy $
- * @version $Revision: 1.20.2.1 $, $Date: 2006/06/27 18:08:30 $
+ * @author $Author: bass $
+ * @version $Revision: 1.20 $, $Date: 2006/04/19 13:22:17 $
  * @module general
  */
 final class XmlIdentifierDatabase {
@@ -75,6 +75,12 @@ final class XmlIdentifierDatabase {
 
 	static {
 		establishDatabaseConnection();
+		Runtime.getRuntime().addShutdownHook(new Thread("XmlIdentifierDatabase -- shutdown hook") {
+			@Override
+			public void run() {
+				shutdown();
+			}
+		});
 	}
 
 	private static void establishDatabaseConnection() {
@@ -90,6 +96,10 @@ final class XmlIdentifierDatabase {
 		}
 	}
 
+	static void shutdown() {
+		DatabaseConnection.closeConnection();
+	}
+	
 	private static String getColumnsTmpl() {
 		if (columns == null) {
 			columns = COLUMN_ID + COMMA

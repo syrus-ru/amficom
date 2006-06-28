@@ -1,5 +1,5 @@
 /*-
- * $Id: PopupNotificationEventReceiver.java,v 1.1.2.1 2006/06/26 10:16:20 arseniy Exp $
+ * $Id: PopupNotificationEventReceiver.java,v 1.1 2006/03/01 20:46:53 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,15 +25,15 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 
+import com.syrus.AMFICOM.client.event.EventReceiver;
 import com.syrus.AMFICOM.client.resource.I18N;
-import com.syrus.AMFICOM.event.EventReceiver;
 import com.syrus.AMFICOM.eventv2.Event;
 import com.syrus.AMFICOM.eventv2.PopupNotificationEvent;
 
 
 /**
- * @version $Revision: 1.1.2.1 $, $Date: 2006/06/26 10:16:20 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.1 $, $Date: 2006/03/01 20:46:53 $
+ * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module commonclient
  */

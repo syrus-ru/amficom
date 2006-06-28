@@ -1,5 +1,5 @@
 /*-
- * $Id: VerifiedConnectionManager.java,v 1.23.2.1 2006/06/27 15:54:53 arseniy Exp $
+ * $Id: VerifiedConnectionManager.java,v 1.23 2006/02/13 11:39:37 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,12 +22,12 @@ import java.util.Set;
 
 import org.omg.CORBA.SystemException;
 
-import com.syrus.AMFICOM.systemserver.corba.Verifiable;
-import com.syrus.AMFICOM.systemserver.corba.VerifiableHelper;
+import com.syrus.AMFICOM.general.corba.Verifiable;
+import com.syrus.AMFICOM.general.corba.VerifiableHelper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.23.2.1 $, $Date: 2006/06/27 15:54:53 $
+ * @version $Revision: 1.23 $, $Date: 2006/02/13 11:39:37 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge

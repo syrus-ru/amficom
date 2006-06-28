@@ -1,5 +1,5 @@
 /*
- * $Id: MapInfoCorbaConnection.java,v 1.8.2.1 2006/06/27 17:07:13 arseniy Exp $
+ * $Id: MapInfoCorbaConnection.java,v 1.8 2006/06/27 13:48:16 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,60 +13,65 @@ import java.util.List;
 import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.MapImageLoader;
-import com.syrus.AMFICOM.general.ClientServantManager;
-import com.syrus.AMFICOM.general.ClientSessionEnvironment;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.LoginManager;
-import com.syrus.AMFICOM.general.MapClientServantManager;
-import com.syrus.AMFICOM.general.MapServerConnectionManager;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.map.corba.IdlMapDescriptor;
-import com.syrus.AMFICOM.systemserver.corba.MapServer;
+import com.syrus.AMFICOM.mscharserver.corba.MscharServer;
+import com.syrus.AMFICOM.mscharserver.corba.MscharServerHelper;
 
 /**
- * @version $Revision: 1.8.2.1 $, $Date: 2006/06/27 17:07:13 $
+ * @version $Revision: 1.8 $, $Date: 2006/06/27 13:48:16 $
  * @author $Author: arseniy $
  * @module mapinfo
  */
 public class MapInfoCorbaConnection extends MapInfoConnection {
-	private MapServerConnectionManager mapServerConnectionManager;
+	private MscharServer mscharServer;
 
 	@Override
 	public boolean connect() throws MapConnectionException {
 		final boolean flag = super.connect();
 		if (flag) {
-			final ClientServantManager clientServantManager = ClientSessionEnvironment.getInstance().getConnectionManager();
-			if (!(clientServantManager instanceof MapClientServantManager)) {
-				throw new IllegalStateException("Must establish Map session");
+			try {
+				final MscharClientServantManager mscharClientServantManager = MscharClientServantManager.create();
+				final CommonServer commonServer = mscharClientServantManager.getServerReference();
+				this.mscharServer = MscharServerHelper.narrow(commonServer);
+			} catch (CommunicationException e) {
+				throw new MapConnectionException("MapInfoCorbaConnection - failed initializing MscharClientServantManager.", e);
 			}
-			this.mapServerConnectionManager = (MapServerConnectionManager) clientServantManager;
 		}
 		return flag;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.syrus.AMFICOM.client.map.MapConnection#createImageLoader()
+	 */
 	@Override
 	public MapImageLoader createImageLoader() throws MapConnectionException {
 		return new MapInfoCorbaImageLoader(this);
 	}
 
-	public MapServerConnectionManager getMapServerConnectionManager() {
-		return this.mapServerConnectionManager;
+	public MscharServer getMscharServer() {
+		return this.mscharServer;
 	}
-
+	
+	/* (non-Javadoc)
+	 * @see com.syrus.AMFICOM.Client.Map.MapConnection#getAvailableViews()
+	 */
 	@Override
 	public List<String> getAvailableViews() throws MapDataException {
+		final List<String> listToReturn = new ArrayList<String>();
 		try {
-			final List<String> mapDescriptors = new ArrayList<String>();
-			final MapServer mapServer = this.mapServerConnectionManager.getMapServerReference();
-			final IdlMapDescriptor[] idlMapDescriptors = mapServer.getMapDescriptors(LoginManager.getSessionKey().getIdlTransferable());
-			for (int i = 0; i < idlMapDescriptors.length; i++){
-				mapDescriptors.add(idlMapDescriptors[i].name);
+			IdlMapDescriptor[] mapDescriptors = this.mscharServer.getMapDescriptors(LoginManager.getSessionKey().getIdlTransferable());
+			for (int i = 0; i < mapDescriptors.length; i++){
+				listToReturn.add(mapDescriptors[i].name);
 			}
-			return mapDescriptors;
-		} catch (CommunicationException ce) {
-			throw new MapDataException("Failed getting map descriptors list", ce);
-		} catch (AMFICOMRemoteException are) {
-			throw new MapDataException("Failed getting map descriptors list -- " + are.message);
+		} catch (AMFICOMRemoteException e) {
+			throw new MapDataException("Failed getting map descriptors list");
 		}
+
+		return listToReturn;
 	}
 }

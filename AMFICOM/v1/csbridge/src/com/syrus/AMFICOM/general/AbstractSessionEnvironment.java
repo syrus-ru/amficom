@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSessionEnvironment.java,v 1.9.2.1 2006/06/27 15:59:37 arseniy Exp $
+ * $Id: AbstractSessionEnvironment.java,v 1.9 2006/06/08 16:40:52 arseniy Exp $
  *
  * Copyright © 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,12 +19,12 @@ import java.util.Date;
 import org.omg.CORBA.LongHolder;
 
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
-import com.syrus.AMFICOM.systemserver.corba.CORBASystemUser;
+import com.syrus.AMFICOM.general.corba.CommonUser;
 import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.9.2.1 $, $Date: 2006/06/27 15:59:37 $
+ * @version $Revision: 1.9 $, $Date: 2006/06/08 16:40:52 $
  * @author Tashoyan Arseniy Feliksovich
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: arseniy $
@@ -52,7 +52,7 @@ public abstract class AbstractSessionEnvironment<T extends BaseConnectionManager
 	 * подтверждающий запрос не сервер. Нужен только для случая, когда связь с
 	 * сервером временно недоступна; если связь есть, то сервер сам говорит,
 	 * через какое время нужно слать запрос (см.
-	 * {@link com.syrus.AMFICOM.systemserver.corba.LoginServerOperations#validateLogin(com.syrus.AMFICOM.security.corba.IdlSessionKey, LongHolder)}).
+	 * {@link com.syrus.AMFICOM.leserver.corba.LoginServerOperations#validateLogin(com.syrus.AMFICOM.security.corba.IdlSessionKey, LongHolder)}).
 	 */
 	private static final long LOGIN_VALIDATION_PERIOD_COMM_ERROR = 5 * 60 * 1000;
 
@@ -99,14 +99,15 @@ public abstract class AbstractSessionEnvironment<T extends BaseConnectionManager
 	 * @param poolContext
 	 * @param commonUser
 	 * @param loginRestorer
-	 * @see IdentifierPool#init(IdentifierFactory, CORBAActionProcessor)
-	 * @see #AbstractSessionEnvironment(BaseConnectionManager, PoolContext, CORBASystemUser, LoginRestorer, CORBAActionProcessor)
+	 * @see IdentifierPool#init(IGSConnectionManager, CORBAActionProcessor)
+	 * @see #AbstractSessionEnvironment(BaseConnectionManager, PoolContext,
+	 *      CommonUser, LoginRestorer, CORBAActionProcessor)
 	 */
 	public AbstractSessionEnvironment(final T connectionManager,
 			final PoolContext poolContext,
-			final CORBASystemUser corbaSystemUser,
+			final CommonUser commonUser,
 			final LoginRestorer loginRestorer) {
-		this(connectionManager, poolContext, corbaSystemUser, loginRestorer, null);
+		this(connectionManager, poolContext, commonUser, loginRestorer, null);
 	}
 
 	/**
@@ -135,14 +136,14 @@ public abstract class AbstractSessionEnvironment<T extends BaseConnectionManager
 	 * @param commonUser
 	 * @param loginRestorer
 	 * @param identifierPoolCORBAActionProcessor
-	 * @see IdentifierPool#init(IdentifierFactory, CORBAActionProcessor)
+	 * @see IdentifierPool#init(IGSConnectionManager, CORBAActionProcessor)
 	 * @see #login(String, String, Identifier)
 	 * @see #logout()
 	 * @see CORBAServer#addShutdownHook(Thread)
 	 */
 	public AbstractSessionEnvironment(final T connectionManager,
 			final PoolContext poolContext,
-			final CORBASystemUser corbaSystemUser,
+			final CommonUser commonUser,
 			final LoginRestorer loginRestorer,
 			final CORBAActionProcessor identifierPoolCORBAActionProcessor) {
 		this.connectionManager = connectionManager;
@@ -151,11 +152,11 @@ public abstract class AbstractSessionEnvironment<T extends BaseConnectionManager
 		this.poolContext = poolContext;
 		this.poolContext.init();
 
-		LoginManager.init(new CORBALoginPerformer(this.connectionManager, corbaSystemUser), loginRestorer);
+		LoginManager.init(new CORBALoginPerformer(this.connectionManager, commonUser), loginRestorer);
 		this.loginValidator = new LoginValidator();
 		this.loginValidator.start();
 
-		IdentifierPool.init(new CORBAIdentifierFactory(this.connectionManager), identifierPoolCORBAActionProcessor);
+		IdentifierPool.init(this.connectionManager, identifierPoolCORBAActionProcessor);
 
 		final CORBAServer corbaServer = this.connectionManager.getCORBAServer();
 		corbaServer.addShutdownHook(new Thread("LoginValidatorShutdown") {
@@ -179,6 +180,10 @@ public abstract class AbstractSessionEnvironment<T extends BaseConnectionManager
 	public final T getConnectionManager() {
 		return this.connectionManager;
 	}
+
+	// public final PoolContext getPoolContext() {
+	// return this.poolContext;
+	// }
 
 	public final synchronized Date getSessionEstablishDate() {
 		return this.isSessionEstablished() ? (Date) this.sessionEstablishDate.clone() : null;
@@ -362,7 +367,7 @@ public abstract class AbstractSessionEnvironment<T extends BaseConnectionManager
 	 * {@link AbstractSessionEnvironment#login(String, String, Identifier) вошёл в систему}.
 	 * В течение всего времени, пока пользовательская сессия открыта, он
 	 * периодически запрашивает сервер вызовом
-	 * {@link com.syrus.AMFICOM.systemserver.corba.LoginServerOperations#validateLogin(com.syrus.AMFICOM.security.corba.IdlSessionKey, LongHolder)},
+	 * {@link com.syrus.AMFICOM.leserver.corba.LoginServerOperations#validateLogin(com.syrus.AMFICOM.security.corba.IdlSessionKey, LongHolder)},
 	 * тем самым не позволяя серверу отключить сессию данного пользователя.
 	 * Когда пользователь закрывает сессию
 	 * {@link AbstractSessionEnvironment#logout()}, этот поток засыпает в

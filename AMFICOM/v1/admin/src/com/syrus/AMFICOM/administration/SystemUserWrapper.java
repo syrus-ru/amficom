@@ -1,5 +1,5 @@
 /*
- * $Id: SystemUserWrapper.java,v 1.19.4.1 2006/06/27 15:37:05 arseniy Exp $
+ * $Id: SystemUserWrapper.java,v 1.19 2006/04/10 16:56:18 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,31 +20,44 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.19.4.1 $, $Date: 2006/06/27 15:37:05 $
+ * @version $Revision: 1.19 $, $Date: 2006/04/10 16:56:18 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module administration
  */
 public final class SystemUserWrapper extends StorableObjectWrapper<SystemUser> {
 	public static final String SYS_LOGIN = "sys";
-	public static final String SYSTEMSERVER_LOGIN = "systemserver";
+	public static final String LOGINPROCESSOR_LOGIN = "loginprocessor";
+	public static final String EVENTPROCESSOR_LOGIN = "eventprocessor";
+	public static final String MSERVER_LOGIN = "mserver";
+	public static final String CMSERVER_LOGIN = "cmserver";
+	public static final String MSCHARSERVER_LOGIN = "mscharserver";
 	public static final String MCM_LOGIN = "mcm";
+	
+	
 
+	// table :: users
+	// description VARCHAR2(256),
+	// login VARCHAR2(32) NOT NULL,
 	public static final String COLUMN_LOGIN = "login";
+	// name VARCHAR2(64) not NULL,
+	// sort NUMBER(2, 0) NOT NULL,
 	public static final String COLUMN_SORT = "sort";
-
+	
 	public static final String LINK_COLUMN_ROLE_IDS = "role_ids";
-
+	
 	private static SystemUserWrapper instance;
 
 	private List<String> keys;
 
 	private SystemUserWrapper() {
-		this.keys = Collections.unmodifiableList(Arrays.asList(new String[] { COLUMN_DESCRIPTION,
-				COLUMN_LOGIN,
-				COLUMN_NAME,
-				COLUMN_SORT,
-				LINK_COLUMN_ROLE_IDS }));
+		this.keys = Collections.unmodifiableList(
+			Arrays.asList(
+				new String[] { COLUMN_DESCRIPTION, 
+						COLUMN_LOGIN, 
+						COLUMN_NAME, 
+						COLUMN_SORT, 
+						LINK_COLUMN_ROLE_IDS}));
 	}
 
 	public static SystemUserWrapper getInstance() {

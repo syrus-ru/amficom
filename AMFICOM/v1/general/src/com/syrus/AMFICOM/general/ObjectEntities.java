@@ -1,5 +1,5 @@
 /*-
- * $Id: ObjectEntities.java,v 1.96.2.9 2006/06/27 15:29:44 arseniy Exp $
+ * $Id: ObjectEntities.java,v 1.96.2.8 2006/06/20 10:22:43 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import gnu.trove.TShortObjectHashMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.96.2.9 $, $Date: 2006/06/27 15:29:44 $
+ * @version $Revision: 1.96.2.8 $, $Date: 2006/06/20 10:22:43 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -41,6 +41,7 @@ public final class ObjectEntities {
 	public static final String DOMAIN = "Domain";
 	public static final String SERVER = "Server";
 	public static final String MCM = "MCM";
+	public static final String SERVERPROCESS = "ServerProcess";
 	public static final String PERMATTR = "PermissionAttributes";
 	public static final String ROLE = "Role";
 
@@ -220,6 +221,7 @@ public final class ObjectEntities {
 	public static final short DOMAIN_CODE = 0x0102;
 	public static final short SERVER_CODE = 0x0103;
 	public static final short MCM_CODE = 0x0104;
+	public static final short SERVERPROCESS_CODE = 0x0105;
 	public static final short PERMATTR_CODE = 0x0106;
 	public static final short ROLE_CODE = 0x0107;
 
@@ -432,6 +434,7 @@ public final class ObjectEntities {
 		registerEntity(DOMAIN_CODE, DOMAIN);
 		registerEntity(SERVER_CODE, SERVER);
 		registerEntity(MCM_CODE, MCM);
+		registerEntity(SERVERPROCESS_CODE, SERVERPROCESS);
 		registerEntity(PERMATTR_CODE, PERMATTR);
 		registerEntity(ROLE_CODE, ROLE);
 
@@ -548,14 +551,5 @@ public final class ObjectEntities {
 		assert !(isEntityCodeValid && !NAME_CODE_MAP.containsValue(entityCode)) : "CODE_NAME_MAP contains key " + entityCode
 				+ ", but NAME_CODE_MAP do not contain value " + entityCode;
 		return CODE_NAME_MAP.containsKey(entityCode);
-	}
-
-	public static String asString(final Short entityCode) {
-		return asString(entityCode.shortValue());
-	}
-
-	public static String asString(final short entityCode) {
-		assert isEntityCodeValid(entityCode) : ILLEGAL_ENTITY_CODE;
-		return " '" + codeToString(entityCode) + "'/" + Short.toString(entityCode) + " ";
 	}
 }

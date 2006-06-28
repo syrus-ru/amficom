@@ -1,5 +1,5 @@
 /*
- * $Id: Server.java,v 1.68.2.1 2006/06/09 15:58:25 arseniy Exp $
+ * $Id: Server.java,v 1.68 2006/06/06 11:31:15 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,7 +12,6 @@ import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
 import static com.syrus.AMFICOM.general.ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
 import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.SYSTEMUSER_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SERVER_CODE;
 import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 
@@ -39,19 +38,20 @@ import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.68.2.1 $, $Date: 2006/06/09 15:58:25 $
+ * @version $Revision: 1.68 $, $Date: 2006/06/06 11:31:15 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module administration
  */
 
-public final class Server extends DomainMember implements Characterizable, Namable, IdlTransferableObjectExt<IdlServer> {
-	private static final long serialVersionUID = -4761084062477488502L;
+public final class Server extends DomainMember
+		implements Characterizable, Namable,
+		IdlTransferableObjectExt<IdlServer> {
+	private static final long serialVersionUID = -3878400556551848924L;
 
 	private String name;
 	private String description;
 	private String hostname;
-	private Identifier systemUserId;
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
@@ -73,8 +73,7 @@ public final class Server extends DomainMember implements Characterizable, Namab
 			final Identifier domainId,
 			final String name,
 			final String description,
-			final String hostname,
-			final Identifier systemUserId) {
+			final String hostname) {
 		super(id,
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
@@ -85,24 +84,21 @@ public final class Server extends DomainMember implements Characterizable, Namab
 		this.name = name;
 		this.description = description;
 		this.hostname = hostname;
-		this.systemUserId = systemUserId;
 	}
 
 	/**
-	 * <p>
-	 * <b>Clients must never explicitly call this method.</b>
-	 * </p>
+	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public synchronized void fromIdlTransferable(final IdlServer idlServer) throws IdlConversionException {
-		super.fromIdlTransferable(idlServer, Identifier.valueOf(idlServer.domainId));
-		this.name = idlServer.name;
-		this.description = idlServer.description;
-		this.hostname = idlServer.hostname;
-		this.systemUserId = Identifier.valueOf(idlServer.systemUserId);
-
+	public synchronized void fromIdlTransferable(final IdlServer st)
+	throws IdlConversionException {
+		super.fromIdlTransferable(st, Identifier.valueOf(st.domainId));
+		this.name = st.name;
+		this.description = st.description;
+		this.hostname = st.hostname;
+		
 		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}
-
+	
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
@@ -120,8 +116,7 @@ public final class Server extends DomainMember implements Characterizable, Namab
 				super.domainId.getIdlTransferable(),
 				this.name,
 				this.description,
-				this.hostname,
-				this.systemUserId.getIdlTransferable());
+				this.hostname);
 	}
 
 	/**
@@ -134,21 +129,19 @@ public final class Server extends DomainMember implements Characterizable, Namab
 		return super.isValid()
 				&& this.name != null && this.name.length() != 0
 				&& this.description != null
-				&& this.hostname != null
-				&& this.systemUserId != null && this.systemUserId.getMajor() == SYSTEMUSER_CODE;
+				&& this.hostname != null;
 	}
 
 	public String getName() {
 		return this.name;
 	}
 
-	public void setName(final String name) {
-		this.name = name;
-		super.markAsChanged();
-	}
-
 	public String getDescription() {
 		return this.description;
+	}
+
+	public String getHostName() {
+		return this.hostname;
 	}
 
 	public void setDescription(final String description) {
@@ -156,25 +149,11 @@ public final class Server extends DomainMember implements Characterizable, Namab
 		super.markAsChanged();
 	}
 
-	public String getHostName() {
-		return this.hostname;
-	}
-
-	public void setHostName(final String hostname) {
-		this.hostname = hostname;
-		super.markAsChanged();
-	}
-
-	public Identifier getSystemUserId() {
-		return this.systemUserId;
-	}
-
 	public static Server createInstance(final Identifier creatorId,
 			final Identifier domainId,
 			final String name,
 			final String description,
-			final String hostname,
-			final Identifier systemUserId) throws CreateObjectException {
+			final String hostname) throws CreateObjectException {
 		try {
 			final Server server = new Server(IdentifierPool.getGeneratedIdentifier(SERVER_CODE),
 						creatorId,
@@ -182,8 +161,7 @@ public final class Server extends DomainMember implements Characterizable, Namab
 						domainId,
 						name,
 						description,
-						hostname,
-						systemUserId);
+						hostname);
 
 			assert server.isValid() : OBJECT_STATE_ILLEGAL;
 
@@ -207,8 +185,7 @@ public final class Server extends DomainMember implements Characterizable, Namab
 			final Identifier domainId,
 			final String name,
 			final String description,
-			final String hostname,
-			final Identifier systemUserId) {
+			final String hostname) {
 		super.setAttributes(created,
 					modified,
 					creatorId,
@@ -218,7 +195,6 @@ public final class Server extends DomainMember implements Characterizable, Namab
 		this.name = name;
 		this.description = description;
 		this.hostname = hostname;
-		this.systemUserId = systemUserId;
 	}
 
 	/**
@@ -227,6 +203,16 @@ public final class Server extends DomainMember implements Characterizable, Namab
 	@Override
 	protected Set<Identifiable> getDependenciesTmpl() {
 		return Collections.emptySet();
+	}
+
+	public void setHostName(final String hostname) {
+		this.hostname = hostname;
+		super.markAsChanged();
+	}
+
+	public void setName(final String name) {
+		this.name = name;
+		super.markAsChanged();
 	}
 
 	/**
@@ -256,10 +242,11 @@ public final class Server extends DomainMember implements Characterizable, Namab
 	 * @param characteristic
 	 * @param usePool
 	 * @throws ApplicationException
-	 * @see com.syrus.AMFICOM.general.Characterizable#addCharacteristic(com.syrus.AMFICOM.general.Characteristic,
-	 *      boolean)
+	 * @see com.syrus.AMFICOM.general.Characterizable#addCharacteristic(com.syrus.AMFICOM.general.Characteristic, boolean)
 	 */
-	public void addCharacteristic(final Characteristic characteristic, final boolean usePool) throws ApplicationException {
+	public void addCharacteristic(final Characteristic characteristic,
+			final boolean usePool)
+	throws ApplicationException {
 		assert characteristic != null : NON_NULL_EXPECTED;
 		characteristic.setParentCharacterizable(this, usePool);
 	}
@@ -268,10 +255,12 @@ public final class Server extends DomainMember implements Characterizable, Namab
 	 * @param characteristic
 	 * @param usePool
 	 * @throws ApplicationException
-	 * @see com.syrus.AMFICOM.general.Characterizable#removeCharacteristic(com.syrus.AMFICOM.general.Characteristic,
-	 *      boolean)
+	 * @see com.syrus.AMFICOM.general.Characterizable#removeCharacteristic(com.syrus.AMFICOM.general.Characteristic, boolean)
 	 */
-	public void removeCharacteristic(final Characteristic characteristic, final boolean usePool) throws ApplicationException {
+	public void removeCharacteristic(
+			final Characteristic characteristic,
+			final boolean usePool)
+	throws ApplicationException {
 		assert characteristic != null : NON_NULL_EXPECTED;
 		assert characteristic.getParentCharacterizableId().equals(this) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
 		characteristic.setParentCharacterizable(this, usePool);
@@ -282,7 +271,8 @@ public final class Server extends DomainMember implements Characterizable, Namab
 	 * @throws ApplicationException
 	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristics(boolean)
 	 */
-	public Set<Characteristic> getCharacteristics(boolean usePool) throws ApplicationException {
+	public Set<Characteristic> getCharacteristics(boolean usePool)
+	throws ApplicationException {
 		return Collections.unmodifiableSet(this.getCharacteristics0(usePool));
 	}
 
@@ -290,7 +280,8 @@ public final class Server extends DomainMember implements Characterizable, Namab
 	 * @param usePool
 	 * @throws ApplicationException
 	 */
-	Set<Characteristic> getCharacteristics0(final boolean usePool) throws ApplicationException {
+	Set<Characteristic> getCharacteristics0(final boolean usePool)
+	throws ApplicationException {
 		return this.getCharacteristicContainerWrappee().getContainees(usePool);
 	}
 
@@ -300,7 +291,9 @@ public final class Server extends DomainMember implements Characterizable, Namab
 	 * @throws ApplicationException
 	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(Set, boolean)
 	 */
-	public void setCharacteristics(final Set<Characteristic> characteristics, final boolean usePool) throws ApplicationException {
+	public void setCharacteristics(final Set<Characteristic> characteristics,
+			final boolean usePool)
+	throws ApplicationException {
 		assert characteristics != null : NON_NULL_EXPECTED;
 
 		final Set<Characteristic> oldCharacteristics = this.getCharacteristics0(usePool);

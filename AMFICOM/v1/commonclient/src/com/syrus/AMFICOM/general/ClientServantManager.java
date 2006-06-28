@@ -1,20 +1,11 @@
 /*
- * $Id: ClientServantManager.java,v 1.21.2.1 2006/06/27 15:45:26 arseniy Exp $
+ * $Id: ClientServantManager.java,v 1.21 2006/04/14 11:17:56 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
  */
 package com.syrus.AMFICOM.general;
-
-import static com.syrus.AMFICOM.administration.ServerWrapper.EVENT_SERVER_SERVICE_NAME;
-import static com.syrus.AMFICOM.administration.ServerWrapper.IDENTIFIER_GENERATOR_SERVER_SERVICE_NAME;
-import static com.syrus.AMFICOM.administration.ServerWrapper.KEY_EVENT_SERVER_SERVICE_NAME;
-import static com.syrus.AMFICOM.administration.ServerWrapper.KEY_IDENTIFIER_GENERATOR_SERVER_SERVICE_NAME;
-import static com.syrus.AMFICOM.administration.ServerWrapper.KEY_LOGIN_SERVER_SERVICE_NAME;
-import static com.syrus.AMFICOM.administration.ServerWrapper.KEY_STORABLE_OBJECT_SERVER_SERVICE_NAME;
-import static com.syrus.AMFICOM.administration.ServerWrapper.LOGIN_SERVER_SERVICE_NAME;
-import static com.syrus.AMFICOM.administration.ServerWrapper.STORABLE_OBJECT_SERVER_SERVICE_NAME;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,49 +14,50 @@ import javax.swing.JOptionPane;
 
 import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client.resource.I18N;
-import com.syrus.AMFICOM.systemserver.corba.EventServer;
-import com.syrus.AMFICOM.systemserver.corba.EventServerHelper;
-import com.syrus.AMFICOM.systemserver.corba.IdentifierGeneratorServer;
-import com.syrus.AMFICOM.systemserver.corba.IdentifierGeneratorServerHelper;
-import com.syrus.AMFICOM.systemserver.corba.LoginServer;
-import com.syrus.AMFICOM.systemserver.corba.LoginServerHelper;
-import com.syrus.AMFICOM.systemserver.corba.StorableObjectServer;
-import com.syrus.AMFICOM.systemserver.corba.StorableObjectServerHelper;
-import com.syrus.util.ApplicationProperties;
+import com.syrus.AMFICOM.general.corba.CommonServer;
+import com.syrus.AMFICOM.general.corba.CommonServerHelper;
+import com.syrus.AMFICOM.general.corba.IdentifierGeneratorServer;
+import com.syrus.AMFICOM.general.corba.IdentifierGeneratorServerHelper;
+import com.syrus.AMFICOM.leserver.corba.EventServer;
+import com.syrus.AMFICOM.leserver.corba.EventServerHelper;
+import com.syrus.AMFICOM.leserver.corba.LoginServer;
+import com.syrus.AMFICOM.leserver.corba.LoginServerHelper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.21.2.1 $, $Date: 2006/06/27 15:45:26 $
+ * @version $Revision: 1.21 $, $Date: 2006/04/14 11:17:56 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module commonclient
  */
-public class ClientServantManager extends VerifiedConnectionManager
-		implements BaseConnectionManager, StorableObjectServerConnectionManager {
+public abstract class ClientServantManager extends VerifiedConnectionManager implements BaseConnectionManager, ServerConnectionManager {
 	static final String KEY_SERVER_HOST_NAME = "ServerHostName";
 	static final String SERVER_HOST_NAME = "localhost";
 
-	private final String loginServerServantName;
-	private final String eventServerServantName;
-	private final String identifierGeneratorServerServantName;
-	private final String storableObjectServerServantName;
+	private String loginServerServantName;
+	private String eventServerServantName;
 
+	/**
+	 * Currently, can hold the name of CMServer and MscharServer servants.
+	 */
+	private String commonServerServantName;
 	private Map<String, Boolean> connectionLostMap;
 
+	/**
+	 * @param corbaServer
+	 * @param loginServerServantName
+	 * @param eventServerServantName
+	 * @param commonServerServantName
+	 */
 	public ClientServantManager(final CORBAServer corbaServer,
 			final String loginServerServantName,
 			final String eventServerServantName,
-			final String identifierGeneratorServerServantName,
-			final String storableObjectServerServantName) {
-		super(corbaServer, new String[] { loginServerServantName,
-				eventServerServantName,
-				identifierGeneratorServerServantName,
-				storableObjectServerServantName });
+			final String commonServerServantName) {
+		super(corbaServer, new String[] {loginServerServantName, eventServerServantName, commonServerServantName});
 
 		this.loginServerServantName = loginServerServantName;
 		this.eventServerServantName = eventServerServantName;
-		this.identifierGeneratorServerServantName = identifierGeneratorServerServantName;
-		this.storableObjectServerServantName = storableObjectServerServantName;
+		this.commonServerServantName = commonServerServantName;
 
 		this.connectionLostMap = new HashMap<String, Boolean>();
 	}
@@ -78,12 +70,12 @@ public class ClientServantManager extends VerifiedConnectionManager
 		return EventServerHelper.narrow(this.getVerifiableReference(this.eventServerServantName));
 	}
 
-	public final IdentifierGeneratorServer getIdentifierGeneratorServerReference() throws CommunicationException {
-		return IdentifierGeneratorServerHelper.narrow(this.getVerifiableReference(this.identifierGeneratorServerServantName));
+	public final IdentifierGeneratorServer getIGSReference() throws CommunicationException {
+		return IdentifierGeneratorServerHelper.narrow(this.getVerifiableReference(this.commonServerServantName));
 	}
 
-	public final StorableObjectServer getStorableObjectServerReference() throws CommunicationException {
-		return StorableObjectServerHelper.narrow(this.getVerifiableReference(this.storableObjectServerServantName));
+	public final CommonServer getServerReference() throws CommunicationException {
+		return CommonServerHelper.narrow(this.getVerifiableReference(this.commonServerServantName));
 	}
 
 	@Override
@@ -117,27 +109,5 @@ public class ClientServantManager extends VerifiedConnectionManager
 			this.connectionLostMap.put(servantName, Boolean.valueOf(false));
 		}
 
-	}
-
-	public static ClientServantManager create() throws CommunicationException {
-		final String serverHostName = ApplicationProperties.getString(KEY_SERVER_HOST_NAME, SERVER_HOST_NAME);
-		final String contextName = ContextNameFactory.generateContextName(serverHostName);
-		final CORBAServer corbaServer = new CORBAServer(contextName);
-
-		final String loginServerServantName = ApplicationProperties.getString(KEY_LOGIN_SERVER_SERVICE_NAME,
-				LOGIN_SERVER_SERVICE_NAME);
-		final String eventServerServantName = ApplicationProperties.getString(KEY_EVENT_SERVER_SERVICE_NAME,
-				EVENT_SERVER_SERVICE_NAME);
-		final String identifierGeneratorServerServantName = ApplicationProperties.getString(KEY_IDENTIFIER_GENERATOR_SERVER_SERVICE_NAME,
-				IDENTIFIER_GENERATOR_SERVER_SERVICE_NAME);
-		final String storableObjectServerServantName = ApplicationProperties.getString(KEY_STORABLE_OBJECT_SERVER_SERVICE_NAME,
-				STORABLE_OBJECT_SERVER_SERVICE_NAME);
-
-		final ClientServantManager clientServantManager = new ClientServantManager(corbaServer,
-				loginServerServantName,
-				eventServerServantName,
-				identifierGeneratorServerServantName,
-				storableObjectServerServantName);
-		return clientServantManager;
 	}
 }

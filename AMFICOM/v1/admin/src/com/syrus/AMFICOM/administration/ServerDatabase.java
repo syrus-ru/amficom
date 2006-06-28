@@ -1,5 +1,5 @@
 /*
- * $Id: ServerDatabase.java,v 1.37.4.1 2006/06/09 15:59:59 arseniy Exp $
+ * $Id: ServerDatabase.java,v 1.37 2006/02/28 15:19:58 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,19 +8,7 @@
 
 package com.syrus.AMFICOM.administration;
 
-import static com.syrus.AMFICOM.administration.DomainMember.COLUMN_DOMAIN_ID;
-import static com.syrus.AMFICOM.administration.ServerWrapper.COLUMN_HOSTNAME;
-import static com.syrus.AMFICOM.administration.ServerWrapper.COLUMN_SYSTEM_USER_ID;
 import static com.syrus.AMFICOM.general.ObjectEntities.SERVER_CODE;
-import static com.syrus.AMFICOM.general.StorableObjectVersion.ILLEGAL_VERSION;
-import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CREATED;
-import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CREATOR_ID;
-import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_DESCRIPTION;
-import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_ID;
-import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_MODIFIED;
-import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_MODIFIER_ID;
-import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_NAME;
-import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_VERSION;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -30,11 +18,12 @@ import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.37.4.1 $, $Date: 2006/06/09 15:59:59 $
+ * @version $Revision: 1.37 $, $Date: 2006/02/28 15:19:58 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module administration
@@ -54,11 +43,10 @@ public final class ServerDatabase extends StorableObjectDatabase<Server> {
 	@Override
 	protected String getColumnsTmpl() {		
 		if (columns == null) {
-			columns = COLUMN_DOMAIN_ID + COMMA
-					+ COLUMN_NAME + COMMA
-					+ COLUMN_DESCRIPTION + COMMA
-					+ COLUMN_HOSTNAME + COMMA
-					+ COLUMN_SYSTEM_USER_ID;
+			columns = DomainMember.COLUMN_DOMAIN_ID + COMMA
+					+ StorableObjectWrapper.COLUMN_NAME + COMMA
+					+ StorableObjectWrapper.COLUMN_DESCRIPTION + COMMA
+					+ ServerWrapper.COLUMN_HOSTNAME;
 		}
 		return columns;
 	}	
@@ -67,7 +55,6 @@ public final class ServerDatabase extends StorableObjectDatabase<Server> {
 	protected String getUpdateMultipleSQLValuesTmpl() {
 		if (updateMultipleSQLValues == null) {
 			updateMultipleSQLValues = QUESTION + COMMA
-				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION;		
@@ -80,33 +67,23 @@ public final class ServerDatabase extends StorableObjectDatabase<Server> {
 		return DatabaseIdentifier.toSQLString(storableObject.getDomainId()) + COMMA
 			+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
 			+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
-			+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getHostName(), SIZE_HOSTNAME_COLUMN) + APOSTROPHE + COMMA
-			+ DatabaseIdentifier.toSQLString(storableObject.getSystemUserId());
+			+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getHostName(), SIZE_HOSTNAME_COLUMN) + APOSTROPHE;
 	}
 
 	@Override
 	protected Server updateEntityFromResultSet(final Server storableObject, final ResultSet resultSet)
 			throws IllegalDataException, SQLException {
-		final Server server = (storableObject == null)
-				? new Server(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID),
-						null,
-						ILLEGAL_VERSION,
-						null,
-						null,
-						null,
-						null,
-						null)
-					: storableObject;
-		server.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
-				DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
-				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
-				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
-				StorableObjectVersion.valueOf(resultSet.getLong(COLUMN_VERSION)),
-				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_DOMAIN_ID),
-				DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME)),
-				DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)),
-				DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_HOSTNAME)),
-				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_SYSTEM_USER_ID));
+		final Server server = (storableObject == null) ? new Server(DatabaseIdentifier.getIdentifier(resultSet,
+				StorableObjectWrapper.COLUMN_ID), null, StorableObjectVersion.ILLEGAL_VERSION, null, null, null, null) : storableObject;
+		server.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
+				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
+				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
+				StorableObjectVersion.valueOf(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
+				DatabaseIdentifier.getIdentifier(resultSet, DomainMember.COLUMN_DOMAIN_ID),
+				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
+				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)),
+				DatabaseString.fromQuerySubString(resultSet.getString(ServerWrapper.COLUMN_HOSTNAME)));
 		return server;
 	}
 
@@ -118,7 +95,6 @@ public final class ServerDatabase extends StorableObjectDatabase<Server> {
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getName(), SIZE_NAME_COLUMN);
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN);
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getHostName(), SIZE_HOSTNAME_COLUMN);
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getSystemUserId());
 		return startParameterNumber;
 	}
 

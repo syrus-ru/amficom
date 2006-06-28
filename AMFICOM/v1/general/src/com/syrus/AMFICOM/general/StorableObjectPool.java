@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.222.2.1 2006/06/27 15:29:00 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.222 2006/06/08 10:40:00 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -42,7 +42,7 @@ import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.222.2.1 $, $Date: 2006/06/27 15:29:00 $
+ * @version $Revision: 1.222 $, $Date: 2006/06/08 10:40:00 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -276,8 +276,8 @@ public final class StorableObjectPool {
 		assert ObjectEntities.isEntityCodeValid(entityCode) : ILLEGAL_ENTITY_CODE + ": " + entityCode;
 		final LRUMap<Identifier, StorableObject> objectPool = new LRUMap<Identifier, StorableObject>(objectPoolCapacity, objectTimeToLive);
 		objectPoolMap.put(entityCode, objectPool);
-		Log.debugMessage("Pool for" + ObjectEntities.asString(entityCode) + "of capacity " + objectPoolCapacity + " added",
-				Log.DEBUGLEVEL08);
+		Log.debugMessage("Pool for '" + ObjectEntities.codeToString(entityCode)
+				+ "'/" + entityCode + " of capacity " + objectPoolCapacity + " added", Log.DEBUGLEVEL08);
 	}
 
 
@@ -328,7 +328,8 @@ public final class StorableObjectPool {
 			return storableObject;
 		}
 
-		Log.errorMessage(ENTITY_POOL_NOT_REGISTERED + ":" + ObjectEntities.asString(entityCode));
+		Log.errorMessage(ENTITY_POOL_NOT_REGISTERED + ": '"
+				+ ObjectEntities.codeToString(entityCode) + "'/" + entityCode);
 		return null;
 	}
 
@@ -352,7 +353,8 @@ public final class StorableObjectPool {
 
 		final LRUMap<Identifier, T> objectPool = getLRUMap(entityCode);
 		if (objectPool == null) {
-			Log.errorMessage(ENTITY_POOL_NOT_REGISTERED + ":" + ObjectEntities.asString(entityCode));
+			Log.errorMessage(ENTITY_POOL_NOT_REGISTERED + ": '"
+					+ ObjectEntities.codeToString(entityCode) + "'/" + entityCode);
 			return Collections.emptySet();
 		}
 
@@ -465,7 +467,8 @@ public final class StorableObjectPool {
 
 		final LRUMap<Identifier, T> objectPool = getLRUMap(entityCode);
 		if (objectPool == null) {
-			Log.errorMessage(ENTITY_POOL_NOT_REGISTERED + ":" + ObjectEntities.asString(entityCode));
+			Log.errorMessage(ENTITY_POOL_NOT_REGISTERED + ": '"
+					+ ObjectEntities.codeToString(entityCode) + "'/" + entityCode);
 			return Collections.emptySet();
 		}
 
@@ -617,7 +620,8 @@ public final class StorableObjectPool {
 
 		final LRUMap<Identifier, StorableObject> objectPool = getLRUMap(entityCode);
 		if (objectPool == null) {
-			Log.errorMessage(ENTITY_POOL_NOT_REGISTERED + ":" + ObjectEntities.asString(entityCode));
+			Log.errorMessage(ENTITY_POOL_NOT_REGISTERED + ": '"
+					+ ObjectEntities.codeToString(entityCode) + "'/" + entityCode);
 			return Collections.emptySet();
 		}
 
@@ -702,8 +706,8 @@ public final class StorableObjectPool {
 
 		final LRUMap<Identifier, StorableObject> objectPool = getLRUMap(entityCode);
 		if (objectPool == null) {
-			throw new IllegalObjectEntityException(ENTITY_POOL_NOT_REGISTERED + ":" + ObjectEntities.asString(entityCode),
-					IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
+			throw new IllegalObjectEntityException(ENTITY_POOL_NOT_REGISTERED + ": '"
+					+ ObjectEntities.codeToString(entityCode) + "'/" + entityCode, IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
 		}
 
 		if (!objectPool.containsKey(id)) {
@@ -773,7 +777,8 @@ public final class StorableObjectPool {
 					}
 				}
 			} else {
-				Log.errorMessage(ENTITY_POOL_NOT_REGISTERED + ":" + ObjectEntities.asString(entityKey));
+				Log.errorMessage(ENTITY_POOL_NOT_REGISTERED + ": '"
+						+ ObjectEntities.codeToString(entityKey) + "'/" + entityKey);
 				continue;
 			}
 		}
@@ -797,7 +802,8 @@ public final class StorableObjectPool {
 				}
 			}
 		} else {
-			Log.errorMessage(ENTITY_POOL_NOT_REGISTERED + ":" + ObjectEntities.asString(entityCode));
+			Log.errorMessage(ENTITY_POOL_NOT_REGISTERED + ": '"
+					+ ObjectEntities.codeToString(entityCode) + "'/" + entityCode);
 		}
 	}
 
@@ -811,7 +817,7 @@ public final class StorableObjectPool {
 			DELETED_IDS_MAP.remove(new Short(entityCode));
 
 			final LRUMap<Identifier, StorableObject> objectPool = getLRUMap(entityCode);
-			assert objectPool != null : NON_NULL_EXPECTED + ", entity:" + ObjectEntities.asString(entityCode);
+			assert objectPool != null : NON_NULL_EXPECTED + ", entity: " + ObjectEntities.codeToString(entityCode);
 			objectPool.clear();
 		}
 	}
@@ -860,7 +866,7 @@ public final class StorableObjectPool {
 		if (objectPool != null) {
 			objectPool.remove(id);
 		} else {
-			Log.errorMessage(ENTITY_POOL_NOT_REGISTERED + ":" + ObjectEntities.asString(entityCode));
+			Log.errorMessage(ENTITY_POOL_NOT_REGISTERED + ": '" + ObjectEntities.codeToString(entityCode) + "'/" + entityCode);
 		}
 	}
 
@@ -895,7 +901,8 @@ public final class StorableObjectPool {
 					objectPool.remove(id);
 				}
 			} else {
-				Log.errorMessage(ENTITY_POOL_NOT_REGISTERED + ":" + ObjectEntities.asString(entityKey));
+				Log.errorMessage(ENTITY_POOL_NOT_REGISTERED + ": '"
+						+ ObjectEntities.codeToString(entityKey) + "'/" + entityKey);
 			}
 		}
 
@@ -1041,7 +1048,8 @@ public final class StorableObjectPool {
 				}
 			}
 		} else {
-			Log.errorMessage(ENTITY_POOL_NOT_REGISTERED + ":" + ObjectEntities.asString(entityCode));
+			Log.errorMessage(ENTITY_POOL_NOT_REGISTERED + ": '"
+					+ ObjectEntities.codeToString(entityCode) + "'/" + entityCode);
 		}
 	}
 
@@ -1117,7 +1125,8 @@ public final class StorableObjectPool {
 			if (objectPool != null) {
 				return objectPool.unmodifiableGet(id);
 			}
-			Log.errorMessage(ENTITY_POOL_NOT_REGISTERED + ":" + ObjectEntities.asString(entityCode));
+			Log.errorMessage(ENTITY_POOL_NOT_REGISTERED + ": '"
+					+ ObjectEntities.codeToString(entityCode) + "'/" + entityCode);
 			return null;
 		} else if (identifiable instanceof StorableObject) {
 			return (StorableObject) identifiable;
@@ -1373,7 +1382,8 @@ public final class StorableObjectPool {
 
 		final LRUMap<Identifier, StorableObject> objectPool = getLRUMap(entityCode);
 		if (objectPool == null) {
-			Log.errorMessage(ENTITY_POOL_NOT_REGISTERED + ":" + ObjectEntities.asString(entityCode));
+			Log.errorMessage(ENTITY_POOL_NOT_REGISTERED + ": '"
+					+ ObjectEntities.codeToString(entityCode) + "'/" + entityCode);
 			return;
 		}
 
@@ -1390,12 +1400,12 @@ public final class StorableObjectPool {
 		}
 
 		if (refreshObjects.isEmpty()) {
-			Log.debugMessage("LRUMap for" + ObjectEntities.asString(entityCode) + "entity has no elements to refresh",
+			Log.debugMessage("LRUMap for '" + ObjectEntities.codeToString(entityCode) + "' entity has no elements to refresh",
 					Log.DEBUGLEVEL08);
 			return;
 		}
 
-		Log.debugMessage("Refreshing pool for" + ObjectEntities.asString(entityCode) + ": " + ids, Log.DEBUGLEVEL08);
+		Log.debugMessage("Refreshing pool for '" + ObjectEntities.codeToString(entityCode) + "'s: " + ids, Log.DEBUGLEVEL08);
 
 		refresh(refreshObjects, entityCode, objectPool);
 	}
@@ -1423,12 +1433,13 @@ public final class StorableObjectPool {
 					}
 				}
 				if (refreshObjects.isEmpty()) {
-					Log.debugMessage("LRUMap for entity" + ObjectEntities.asString(entityCode) + "has no elements to refresh",
+					Log.debugMessage("LRUMap for entity '" + ObjectEntities.codeToString(entityCode) + "' has no elements to refresh",
 							Log.DEBUGLEVEL08);
 					continue;
 				}
 
-				Log.debugMessage("Refreshing pool for entity:" + ObjectEntities.asString(entityCode), Log.DEBUGLEVEL08);
+				Log.debugMessage("Refreshing pool for entity: '" + ObjectEntities.codeToString(entityCode) + "'/" + entityCode,
+						Log.DEBUGLEVEL08);
 
 				refresh(refreshObjects, entityCode, objectPool);				
 			}
@@ -1473,7 +1484,7 @@ public final class StorableObjectPool {
 		}
 
 		if (reloadObjectIds.isEmpty()) {
-			Log.debugMessage("LRUMap for" + ObjectEntities.asString(entityCode) + "entity has no elements to reload",
+			Log.debugMessage("LRUMap for '" + ObjectEntities.codeToString(entityCode) + "' entity has no elements to reload",
 					Log.DEBUGLEVEL08);
 			return;
 		}

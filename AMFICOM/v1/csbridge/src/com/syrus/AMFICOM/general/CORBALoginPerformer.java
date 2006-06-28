@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBALoginPerformer.java,v 1.6.2.1 2006/06/27 15:57:55 arseniy Exp $
+ * $Id: CORBALoginPerformer.java,v 1.6 2006/06/05 13:41:53 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,8 +7,8 @@
  */
 package com.syrus.AMFICOM.general;
 
-import static com.syrus.AMFICOM.general.ErrorMessages.ILLEGAL_ENTITY_CODE;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
+import static com.syrus.AMFICOM.general.ErrorMessages.ILLEGAL_ENTITY_CODE;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.ObjectEntities.DOMAIN_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SYSTEMUSER_CODE;
@@ -21,32 +21,32 @@ import org.omg.CORBA.SystemException;
 import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.administration.corba.IdlDomain;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
+import com.syrus.AMFICOM.general.corba.CommonUser;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlIdentifierHolder;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.IdlErrorCode;
+import com.syrus.AMFICOM.leserver.corba.LoginServer;
 import com.syrus.AMFICOM.security.SessionKey;
 import com.syrus.AMFICOM.security.corba.IdlSessionKeyHolder;
-import com.syrus.AMFICOM.systemserver.corba.CORBASystemUser;
-import com.syrus.AMFICOM.systemserver.corba.LoginServer;
 import com.syrus.util.transport.idl.IdlConversionException;
 
 /**
- * @version $Revision: 1.6.2.1 $, $Date: 2006/06/27 15:57:55 $
+ * @version $Revision: 1.6 $, $Date: 2006/06/05 13:41:53 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
  */
 public final class CORBALoginPerformer implements LoginPerformer {
 	private LoginServerConnectionManager loginServerConnectionManager;
-	private CORBASystemUser corbaSystemUser;
+	private CommonUser commonUser;
 
 	private SessionKey sessionKey;
 	private Identifier userId;
 	private Identifier domainId;
 
-	public CORBALoginPerformer(final LoginServerConnectionManager loginServerConnectionManager, final CORBASystemUser corbaSystemUser) {
+	public CORBALoginPerformer(final LoginServerConnectionManager loginServerConnectionManager, final CommonUser commonUser) {
 		this.loginServerConnectionManager = loginServerConnectionManager;
-		this.corbaSystemUser = corbaSystemUser;
+		this.commonUser = commonUser;
 
 		this.reset();
 		this.domainId = VOID_IDENTIFIER;
@@ -87,7 +87,7 @@ public final class CORBALoginPerformer implements LoginPerformer {
 			loginServer.login(login,
 					password,
 					loginDomainId.getIdlTransferable(),
-					this.corbaSystemUser,
+					this.commonUser,
 					idlSessionKeyHolder,
 					userIdHolder);
 

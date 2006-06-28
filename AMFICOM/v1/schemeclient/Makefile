@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.20.6.1 2006/06/28 09:54:44 arseniy Exp $
+# $Id: Makefile,v 1.20 2006/04/07 13:50:45 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -40,13 +40,18 @@ SOURCES := $(shell find $(SRCDIR) -name '*.java')
 
 $(LIBNAME):	.mach
 	$(CP) \
-		$(wildcard $(SRCDIR)/com/syrus/AMFICOM/Client/General/Lang/*.properties) \
+		$(SRCDIR)/com/syrus/AMFICOM/Client/General/Lang/schematics_ru.properties \
+		$(SRCDIR)/com/syrus/AMFICOM/Client/General/Lang/config_ru.properties \
 		$(CLASSDIR)/com/syrus/AMFICOM/Client/General/Lang/
 	$(CP) \
-		$(wildcard $(SRCDIR)/com/syrus/AMFICOM/resource/*.properties) \
+		$(SRCDIR)/com/syrus/AMFICOM/resource/SchemeMessages.properties \
+		$(SRCDIR)/com/syrus/AMFICOM/resource/SchemeMessages_ru.properties \
+		$(SRCDIR)/com/syrus/AMFICOM/resource/EquipmentTypeCodenames.properties \
+		$(SRCDIR)/com/syrus/AMFICOM/resource/EquipmentTypeCodenames_ru.properties \
 		$(CLASSDIR)/com/syrus/AMFICOM/resource/
 	$(CP) \
-		$(wildcard $(SRCDIR)/com/syrus/AMFICOM/client_/scheme/graph/*.properties) \
+		$(SRCDIR)/com/syrus/AMFICOM/client_/scheme/graph/messages.properties \
+		$(SRCDIR)/com/syrus/AMFICOM/client_/scheme/graph/messages_ru.properties \
 		$(CLASSDIR)/com/syrus/AMFICOM/client_/scheme/graph/
 	$(JAR) -cf $@ \
 		-C $(CLASSDIR) com

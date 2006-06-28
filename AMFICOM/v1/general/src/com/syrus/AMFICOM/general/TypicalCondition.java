@@ -1,5 +1,5 @@
 /*-
- * $Id: TypicalCondition.java,v 1.66.2.1 2006/06/27 15:27:58 arseniy Exp $
+ * $Id: TypicalCondition.java,v 1.66 2006/04/20 12:35:59 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,7 +45,7 @@ import com.syrus.util.EnumUtil;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.66.2.1 $, $Date: 2006/06/27 15:27:58 $
+ * @version $Revision: 1.66 $, $Date: 2006/04/20 12:35:59 $
  * @author $Author: arseniy $
  * @module general
  */
@@ -729,8 +729,8 @@ public class TypicalCondition implements StorableObjectCondition {
 				}
 				break;
 			case _TYPE_STRING:
-				final String v = this.value.toString();
-				final String o = object.toString();
+				String v = this.value.toString();
+				String o = object.toString();
 
 				switch (this.operation) {
 					case _OPERATION_EQUALS:
@@ -758,7 +758,7 @@ public class TypicalCondition implements StorableObjectCondition {
 				}
 				break;
 			case _TYPE_DATE:
-				final Date date = (Date) object;
+				Date date = (Date) object;
 				long t = date.getTime();
 				long t1 = ((Date) this.value).getTime();
 				long t2 = ((Date) this.otherValue).getTime();
