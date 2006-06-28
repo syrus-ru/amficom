@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.4 2006/03/27 11:21:39 bass Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.5 2006/06/28 10:34:12 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,13 +22,15 @@ import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.StorableObject;
 
 /**
- * @version $Revision: 1.4 $
- * @author $Author: bass $
+ * @version $Revision: 1.5 $
+ * @author $Author: arseniy $
  * @module report
  */
 final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 	@SuppressWarnings("unused")
-	private LinkedIdsConditionImpl(final Set<? extends Identifiable> linkedIdentifiables, final Short linkedEntityCode, final Short entityCode) {
+	private LinkedIdsConditionImpl(final Set<? extends Identifiable> linkedIdentifiables,
+			final Short linkedEntityCode,
+			final Short entityCode) {
 		this.linkedIdentifiables = linkedIdentifiables;
 		this.linkedEntityCode = linkedEntityCode.shortValue();
 		this.entityCode = entityCode;
@@ -40,38 +42,38 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 			case ATTACHEDTEXT_CODE:
 				final AttachedTextStorableElement attText = (AttachedTextStorableElement) storableObject;
 				switch (this.linkedEntityCode) {
-				case REPORTTEMPLATE_CODE:
-					return super.conditionTest(attText.getReportTemplateId());
-				default:
-					throw newExceptionLinkedEntityIllegal();
+					case REPORTTEMPLATE_CODE:
+						return super.conditionTest(attText.getReportTemplateId());
+					default:
+						throw super.newExceptionLinkedEntityIllegal();
 				}
 			case REPORTIMAGE_CODE:
 				final ImageStorableElement reportImage = (ImageStorableElement) storableObject;
 				switch (this.linkedEntityCode) {
-				case REPORTTEMPLATE_CODE:
-					return super.conditionTest(reportImage.getReportTemplateId());
-				default:
-					throw newExceptionLinkedEntityIllegal();
+					case REPORTTEMPLATE_CODE:
+						return super.conditionTest(reportImage.getReportTemplateId());
+					default:
+						throw super.newExceptionLinkedEntityIllegal();
 				}
 			case REPORTDATA_CODE:
 				final DataStorableElement reportData = (DataStorableElement) storableObject;
 				switch (this.linkedEntityCode) {
-				case REPORTTEMPLATE_CODE:
-					return super.conditionTest(reportData.getReportTemplateId());
-				default:
-					throw newExceptionLinkedEntityIllegal();
+					case REPORTTEMPLATE_CODE:
+						return super.conditionTest(reportData.getReportTemplateId());
+					default:
+						throw super.newExceptionLinkedEntityIllegal();
 				}
 			case REPORTTABLEDATA_CODE:
 				final TableDataStorableElement reportTableData = (TableDataStorableElement) storableObject;
 				switch (this.linkedEntityCode) {
-				case REPORTTEMPLATE_CODE:
-					return super.conditionTest(reportTableData.getReportTemplateId());
-				default:
-					throw newExceptionLinkedEntityIllegal();
+					case REPORTTEMPLATE_CODE:
+						return super.conditionTest(reportTableData.getReportTemplateId());
+					default:
+						throw super.newExceptionLinkedEntityIllegal();
 				}
 			default:
-				throw newExceptionEntityIllegal();
-		}		
+				throw super.newExceptionEntityIllegal();
+		}
 	}
 
 	@Override

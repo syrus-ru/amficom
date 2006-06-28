@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.17 2006/03/27 11:21:41 bass Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.18 2006/06/28 10:34:12 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,12 +16,11 @@ import java.util.Set;
 
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 
 /**
- * @version $Revision: 1.17 $
- * @author $Author: bass $
+ * @version $Revision: 1.18 $
+ * @author $Author: arseniy $
  * @module mapview
  */
 final class LinkedIdsConditionImpl extends com.syrus.AMFICOM.general.LinkedIdsCondition {
@@ -34,22 +33,20 @@ final class LinkedIdsConditionImpl extends com.syrus.AMFICOM.general.LinkedIdsCo
 
 	@Override
 	public boolean isConditionTrue(final StorableObject storableObject) throws IllegalObjectEntityException {
-		boolean condition = false;
 		switch (this.entityCode.shortValue()) {
 			case MAPVIEW_CODE:
 				final MapView mapView = (MapView) storableObject;
 				switch (super.linkedEntityCode) {
-				case DOMAIN_CODE:
-					return super.conditionTest(mapView.getDomainId());
-				case MAP_CODE:
-					return super.conditionTest(mapView.getMapId());
-				default:
-					throw newExceptionLinkedEntityIllegal();
-				}				
+					case DOMAIN_CODE:
+						return super.conditionTest(mapView.getDomainId());
+					case MAP_CODE:
+						return super.conditionTest(mapView.getMapId());
+					default:
+						throw super.newExceptionLinkedEntityIllegal();
+				}
 			default:
-				newExceptionEntityIllegal();
+				throw super.newExceptionEntityIllegal();
 		}
-		return condition;
 	}
 
 	@Override
@@ -59,8 +56,7 @@ final class LinkedIdsConditionImpl extends com.syrus.AMFICOM.general.LinkedIdsCo
 				this.entityCode = entityCode;
 				break;
 			default:
-				throw new IllegalObjectEntityException("LinkedIdsConditionImpl.setEntityCode | entityCode "
-						+ ObjectEntities.codeToString(entityCode.shortValue()) + " is unknown for this condition", IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
+				throw super.newExceptionEntityCodeToSetIsIllegal(entityCode);
 		}
 	}
 

@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.37 2006/04/19 13:22:15 bass Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.38 2006/06/28 10:34:12 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,8 +13,8 @@ import static com.syrus.AMFICOM.general.ObjectEntities.CABLETHREAD_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.DOMAIN_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.EQUIPMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.EQUIPMENT_TYPE_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.PROTOEQUIPMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PORT_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.PROTOEQUIPMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.TRANSMISSIONPATH_CODE;
 
 import java.util.Set;
@@ -26,14 +26,13 @@ import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.37 $, $Date: 2006/04/19 13:22:15 $
- * @author $Author: bass $
+ * @version $Revision: 1.38 $, $Date: 2006/06/28 10:34:12 $
+ * @author $Author: arseniy $
  * @module config
  */
 final class LinkedIdsConditionImpl extends LinkedIdsCondition {
@@ -74,9 +73,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 						condition = super.conditionTest(cableThreadType.getCableLinkType().getId());
 						break;
 					default:
-						throw new IllegalObjectEntityException(LINKED_ENTITY_CODE_NOT_REGISTERED + this.linkedEntityCode
-								+ ", " + ObjectEntities.codeToString(this.linkedEntityCode),
-								IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
+						throw super.newExceptionLinkedEntityIllegal();
 				}
 				break;
 			case PROTOEQUIPMENT_CODE:
@@ -86,9 +83,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 						condition = super.conditionTest(protoEquipment.getTypeId());
 						break;
 					default:
-						throw new IllegalObjectEntityException(LINKED_ENTITY_CODE_NOT_REGISTERED + this.linkedEntityCode
-								+ ", " + ObjectEntities.codeToString(this.linkedEntityCode),
-								IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
+						throw super.newExceptionLinkedEntityIllegal();
 				}
 				break;
 			case EQUIPMENT_CODE:
@@ -98,9 +93,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 						condition = this.checkDomain(equipment);
 						break;
 					default:
-						throw new IllegalObjectEntityException(LINKED_ENTITY_CODE_NOT_REGISTERED + this.linkedEntityCode
-								+ ", " + ObjectEntities.codeToString(this.linkedEntityCode),
-								IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
+						throw super.newExceptionLinkedEntityIllegal();
 				}
 				break;
 			case TRANSMISSIONPATH_CODE:
@@ -116,9 +109,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 						condition = this.checkDomain(transmissionPath);
 						break;
 					default:
-						throw new IllegalObjectEntityException(LINKED_ENTITY_CODE_NOT_REGISTERED + this.linkedEntityCode
-								+ ", " + ObjectEntities.codeToString(this.linkedEntityCode),
-								IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
+						throw super.newExceptionLinkedEntityIllegal();
 				}
 				break;
 			case PORT_CODE:
@@ -136,15 +127,11 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 						}
 						break;
 					default:
-						throw new IllegalObjectEntityException(LINKED_ENTITY_CODE_NOT_REGISTERED + this.linkedEntityCode
-								+ ", " + ObjectEntities.codeToString(this.linkedEntityCode),
-								IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
+						throw super.newExceptionLinkedEntityIllegal();
 				}
 				break;
 			default:
-				throw new IllegalObjectEntityException(ENTITY_CODE_NOT_REGISTERED + this.entityCode
-						+ ", " + ObjectEntities.codeToString(this.entityCode),
-						IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
+				throw super.newExceptionEntityIllegal();
 		}
 		return condition;
 	}
@@ -159,9 +146,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 				this.entityCode = entityCode;
 				break;
 			default:
-				throw new IllegalObjectEntityException(ENTITY_CODE_NOT_REGISTERED + this.entityCode
-						+ ", " + ObjectEntities.codeToString(this.entityCode),
-						IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
+				throw super.newExceptionEntityCodeToSetIsIllegal(entityCode);
 		}
 	}
 

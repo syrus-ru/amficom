@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.6 2006/03/27 11:21:41 bass Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.7 2006/06/28 10:34:12 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,8 +19,8 @@ import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.StorableObject;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2006/03/27 11:21:41 $
- * @author $Author: bass $
+ * @version $Revision: 1.7 $, $Date: 2006/06/28 10:34:12 $
+ * @author $Author: arseniy $
  * @module resource
  */
 final class LinkedIdsConditionImpl extends LinkedIdsCondition {
@@ -56,11 +56,11 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 						condition = super.conditionTest(layoutItem.getParentId());
 						break;
 					default:
-						throw newExceptionLinkedEntityIllegal();
+						throw super.newExceptionLinkedEntityIllegal();
 				}
 				break;
 			default:
-				throw newExceptionEntityIllegal();
+				throw super.newExceptionEntityIllegal();
 		}
 		return condition;
 	}
@@ -72,7 +72,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 				this.entityCode = LAYOUT_ITEM_SHORT;
 				break;
 			default:
-				throw newExceptionEntityIllegal();
+				throw super.newExceptionEntityCodeToSetIsIllegal(entityCode);
 		}
 	}
 
