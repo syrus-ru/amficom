@@ -1,5 +1,5 @@
 /*-
- * $Id: ObjectEntities.java,v 1.98 2006/04/26 09:20:24 arseniy Exp $
+ * $Id: ObjectEntities.java,v 1.99 2006/06/28 10:50:11 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import gnu.trove.TShortObjectHashMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.98 $, $Date: 2006/04/26 09:20:24 $
+ * @version $Revision: 1.99 $, $Date: 2006/06/28 10:50:11 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -539,5 +539,14 @@ public final class ObjectEntities {
 			Log.debugMessage(iae, SEVERE);
 			return false;
 		}
+	}
+
+	public static String asString(final Short entityCode) {
+		return asString(entityCode.shortValue());
+	}
+
+	public static String asString(final short entityCode) {
+		assert isEntityCodeValid(entityCode) : ILLEGAL_ENTITY_CODE;
+		return " '" + codeToString(entityCode) + "'/" + Short.toString(entityCode) + " ";
 	}
 }
