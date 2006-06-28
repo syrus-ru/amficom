@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.8 2006/03/28 12:23:05 arseniy Exp $
+# $Id: Makefile,v 1.9 2006/06/28 09:42:25 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -30,7 +30,7 @@ SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/client/event/*.java) \
 
 $(LIBNAME):	.mach
 	$(CP) \
-		$(SRCDIR)/com/syrus/AMFICOM/client/resource/map_ru.properties \
+		$(wildcard $(SRCDIR)/com/syrus/AMFICOM/client/resource/*.properties) \
 		$(CLASSDIR)/com/syrus/AMFICOM/client/resource/
 	$(JAR) -cf $@ \
 		-C $(CLASSDIR) com
