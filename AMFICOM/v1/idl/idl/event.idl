@@ -1,5 +1,5 @@
 /*-
- * $Id: event.idl,v 1.65 2006/06/29 08:18:44 bass Exp $
+ * $Id: event.idl,v 1.66 2006/06/29 09:45:49 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,9 @@ module AMFICOM {
 
 module eventv2 {
 	module corba {
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		abstract valuetype IdlEvent {
+			/*\u002a\u002f@SuppressWarnings("all")/**/
 			enum IdlEventType {
 				REFLECTOGRAM_MISMATCH,
 				LINE_MISMATCH,
@@ -34,10 +36,13 @@ module eventv2 {
 
 			eventv2::Event getNativeEvent() raises (general::corba::IdlCreateObjectException);
 		};
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		typedef sequence <IdlEvent> IdlEventSeq;
 
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		valuetype IdlReflectogramMismatchEvent : general::corba::IdlStorableObject, IdlEvent {
 			union IdlMismatchData switch (
+				/*\u002a\u002f@SuppressWarnings("all")/**/
 				enum IdlMismatch {
 					_FALSE,
 					_TRUE}) {
@@ -50,6 +55,7 @@ module eventv2 {
 			private IdlMismatchData mismatchData;
 			private reflectometry::corba::IdlSeverity severity;
 			union IdlAnchorData switch (
+				/*\u002a\u002f@SuppressWarnings("all")/**/
 				enum IdlAnchor {
 					_FALSE,
 					_TRUE}) {
@@ -100,9 +106,11 @@ module eventv2 {
 					in general::corba::IdlIdentifier measurementId);
 		};
 
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		valuetype IdlLineMismatchEvent : general::corba::IdlStorableObject, IdlEvent {
 			private general::corba::IdlIdentifier affectedPathElementId;
 			union IdlSpacialData switch (
+				/*\u002a\u002f@SuppressWarnings("all")/**/
 				enum IdlAffectedPathElementSpacious {
 					_FALSE,
 					_TRUE}) {
@@ -118,6 +126,7 @@ module eventv2 {
 			private general::corba::WString4000 plainTextMessage;
 			private general::corba::WString4000 richTextMessage;
 			private general::corba::IdlIdentifier reflectogramMismatchEventId;
+			/*\u002a\u002f@SuppressWarnings("all")/**/
 			enum IdlAlarmStatus {
 				PENDING,
 				XTRA_ASSIGNED,
@@ -146,6 +155,7 @@ module eventv2 {
 				 */
 				general::corba::WString4000Value newValue;
 			};
+			/*\u002a\u002f@SuppressWarnings("all")/**/
 			typedef sequence<IdlChangeLogRecord> IdlChangeLogRecordSeq;
 			private IdlChangeLogRecordSeq changeLog;
 
@@ -182,7 +192,9 @@ module eventv2 {
 					in IdlChangeLogRecordSeq changeLog);
 		};
 
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		abstract valuetype IdlNotificationEvent : IdlEvent {
+			/*\u002a\u002f@SuppressWarnings("all")/**/
 			enum IdlDeliveryMethod {
 				EMAIL,
 				SMS,
@@ -192,6 +204,7 @@ module eventv2 {
 			IdlDeliveryMethod getDeliveryMethod();
 		};
 
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		valuetype IdlEmailNotificationEvent : general::corba::IdlStorableObject, IdlNotificationEvent {
 			private string email;
 			private wstring subject;
@@ -206,6 +219,7 @@ module eventv2 {
 			factory init(in string email, in wstring subject, in wstring plainTextMessage, in wstring richTextMessage);
 		};
 
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		valuetype IdlSmsNotificationEvent : general::corba::IdlStorableObject, IdlNotificationEvent {
 			private string cellular;
 			private wstring message;
@@ -216,6 +230,7 @@ module eventv2 {
 			factory init(in string cellular, in wstring message);
 		};
 
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		valuetype IdlPopupNotificationEvent : general::corba::IdlStorableObject, IdlNotificationEvent {
 			private general::corba::IdlIdentifier targetUserId;
 			private general::corba::IdlIdentifier lineMismatchEventId;
@@ -227,11 +242,13 @@ module eventv2 {
 					in general::corba::IdlIdentifier lineMismatchEventId);
 		};
 
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		abstract valuetype IdlMeasurementStatusChangedEvent : IdlEvent {
 			long long getCreated();
 			general::corba::IdlIdentifier getMeasurementId();
 		};
 
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		valuetype IdlMeasurementStartedEvent : general::corba::IdlStorableObject, IdlMeasurementStatusChangedEvent {
 			private general::corba::IdlIdentifier measurementId;
 
@@ -239,8 +256,11 @@ module eventv2 {
 					in general::corba::IdlIdentifier measurementId);
 		};
 
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		valuetype IdlMeasurementCompletedEvent : general::corba::IdlStorableObject, IdlMeasurementStatusChangedEvent {
-			union QClause switch (enum QPresence { YES, NO }) {
+			union QClause switch (
+				/*\u002a\u002f@SuppressWarnings("all")/**/
+				enum QPresence { YES, NO }) {
 				case YES:
 					double quality;
 			};
@@ -259,6 +279,7 @@ module eventv2 {
 
 /////////////////// EventReceiver ////////////////////
 
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		interface EventReceiver {
 			void receiveEvent(in IdlEvent event);
 		};
@@ -271,12 +292,14 @@ module event {
 
 /////////////////////// EventType ////////////////////////
 
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		valuetype IdlEventType : general::corba::IdlStorableObject {
 			struct IdlUserAlertKinds {
 				general::corba::IdlIdentifier userId;
 				sequence<eventv2::corba::IdlNotificationEvent::IdlDeliveryMethod> alertKinds;
 			};
 
+			/*\u002a\u002f@SuppressWarnings("all")/**/
 			typedef sequence<IdlUserAlertKinds> IdlUserAlertKindsSeq;
 
 			public general::corba::WString32 codename;
@@ -300,6 +323,7 @@ module event {
 
 /////////////////////// EventSource ////////////////////////
 
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		valuetype IdlEventSource : general::corba::IdlStorableObject {
 			public general::corba::IdlIdentifier sourceEntityId;
 
@@ -315,12 +339,15 @@ module event {
 
 /////////////////////// Event ////////////////////////
 
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		valuetype IdlEvent : general::corba::IdlStorableObject {
+			/*\u002a\u002f@SuppressWarnings("all")/**/
 			typedef struct IdlEventParameter {
 				general::corba::IdlIdentifier id;
 				general::corba::IdlParameterType type;
 				wstring value;
 			} EventParameter;
+			/*\u002a\u002f@SuppressWarnings("all")/**/
 			typedef sequence<EventParameter> EventParameterSeq;
 
 			public general::corba::IdlIdentifier _typeId;
@@ -341,8 +368,10 @@ module event {
 					in general::corba::IdlIdentifierSeq eventSourceIds);
 		};
 
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		typedef sequence<IdlEvent> IdlEventSeq;
 
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		valuetype IdlDeliveryAttributes : general::corba::IdlStorableObject {
 			public reflectometry::corba::IdlSeverity severity;
 			public general::corba::IdlIdentifierSeq roleIds;
