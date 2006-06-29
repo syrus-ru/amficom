@@ -1,5 +1,5 @@
 /*-
- * $Id: general.idl,v 1.119 2006/03/23 15:10:08 bass Exp $
+ * $Id: general.idl,v 1.120 2006/06/29 08:18:07 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,6 +39,32 @@ module general {
 //////////////////// Useful definitions ///////////////////
 
 		typedef string<32> String32;
+		typedef string<64> String64;
+		typedef string<128> String128;
+		typedef string<256> String256;
+		typedef string<4000> String4000;
+
+		/*\u002a\u002f@SuppressWarnings("all")/**/
+		valuetype String32Value String32;
+		/*\u002a\u002f@SuppressWarnings("all")/**/
+		valuetype String64Value String64;
+		/*\u002a\u002f@SuppressWarnings("all")/**/
+		valuetype String128Value String128;
+		/*\u002a\u002f@SuppressWarnings("all")/**/
+		valuetype String256Value String256;
+		/*\u002a\u002f@SuppressWarnings("all")/**/
+		valuetype String4000Value String4000;
+
+		/*\u002a\u002f@SuppressWarnings("all")/**/
+		typedef sequence<String32> String32Seq;
+		/*\u002a\u002f@SuppressWarnings("all")/**/
+		typedef sequence<String64> String64Seq;
+		/*\u002a\u002f@SuppressWarnings("all")/**/
+		typedef sequence<String128> String128Seq;
+		/*\u002a\u002f@SuppressWarnings("all")/**/
+		typedef sequence<String256> String256Seq;
+		/*\u002a\u002f@SuppressWarnings("all")/**/
+		typedef sequence<String4000> String4000Seq;
 
 		typedef wstring<32> WString32;
 		typedef wstring<64> WString64;
@@ -47,9 +73,26 @@ module general {
 		typedef wstring<4000> WString4000;
 
 		/*\u002a\u002f@SuppressWarnings("all")/**/
+		valuetype WString32Value WString32;
+		/*\u002a\u002f@SuppressWarnings("all")/**/
+		valuetype WString64Value WString64;
+		/*\u002a\u002f@SuppressWarnings("all")/**/
+		valuetype WString128Value WString128;
+		/*\u002a\u002f@SuppressWarnings("all")/**/
+		valuetype WString256Value WString256;
+		/*\u002a\u002f@SuppressWarnings("all")/**/
+		valuetype WString4000Value WString4000;
+
+		/*\u002a\u002f@SuppressWarnings("all")/**/
+		typedef sequence<WString32> WString32Seq;
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		typedef sequence<WString64> WString64Seq;
 		/*\u002a\u002f@SuppressWarnings("all")/**/
+		typedef sequence<WString128> WString128Seq;
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		typedef sequence<WString256> WString256Seq;
+		/*\u002a\u002f@SuppressWarnings("all")/**/
+		typedef sequence<WString4000> WString4000Seq;
 
 
 		/*\u002a\u002f@SuppressWarnings("all")/**/
