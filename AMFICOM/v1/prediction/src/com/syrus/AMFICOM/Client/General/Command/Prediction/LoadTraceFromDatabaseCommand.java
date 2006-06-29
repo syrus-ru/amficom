@@ -5,11 +5,12 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ExecutionException;
 
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
-import com.syrus.AMFICOM.Client.Analysis.GUIUtil;
 import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.Analysis.Trace;
 import com.syrus.AMFICOM.Client.Prediction.StatisticsMath.FilteredMTAEPredictionManager;
@@ -23,6 +24,7 @@ import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.resource.I18N;
+import com.syrus.AMFICOM.client.util.SynchronousWorker;
 import com.syrus.AMFICOM.client_.prediction.ui.MSChooserUI;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CompoundCondition;
@@ -56,70 +58,94 @@ public class LoadTraceFromDatabaseCommand extends AbstractCommand {
 			return;
 		}
 
-		Date from = dialog.getFromDate();
-		Date to   = dialog.getToDate();
-		MonitoredElement me = dialog.getMonitoredElement();
-		MeasurementSetup ms = dialog.getMeasurementSetup();
+		final Date from = dialog.getFromDate();
+		final Date to   = dialog.getToDate();
+		final MonitoredElement me = dialog.getMonitoredElement();
+		final MeasurementSetup ms = dialog.getMeasurementSetup();
 
-		// Загружаем выбранные рефлектограммы
-		try {
-			TypicalCondition condition1 = new TypicalCondition(from, to, OperationSort.OPERATION_IN_RANGE, ObjectEntities.MEASUREMENT_CODE, MeasurementWrapper.COLUMN_START_TIME);
-			LinkedIdsCondition mcond  = new LinkedIdsCondition(ms.getId(), ObjectEntities.MEASUREMENT_CODE);
-			Set<Measurement> measurements = StorableObjectPool.getStorableObjectsByCondition(
-					new CompoundCondition(condition1, CompoundConditionSort.AND, mcond), true);
-			if (measurements.isEmpty()) {
-				JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(), 
-						I18N.getString("Message.error.noMeasurementsFound"), 
-						I18N.getString("Message.error"),
-						JOptionPane.ERROR_MESSAGE);
-				return;
-			}
-			
-			// если в шаблоне есть параметры анализа, то используем их для Trace.getTraceWithARIfPossible
-			AnalysisParameters analysisParameters = AnalysisUtil.getCriteriaSetByMeasurementSetup(ms);
-			boolean hasCriteriaSet = true;
-			if (analysisParameters == null) {
-				// в противном случае берем дефолтные - должно быть не null
-				hasCriteriaSet = false;
-				analysisParameters = Heap.getMinuitDefaultParams();
-			}
-
-			Map<String, PredictionMtaeAndDate> pmads = new HashMap<String, PredictionMtaeAndDate>();
-			Set<Trace> traces = new HashSet<Trace>(measurements.size());
-			for (Measurement m : measurements) {
-				final long date = m.getStartTime().getTime();
-				for (Result result1 : m.getResults()) { // XXX: PERFORMANCE: 90% of load-from-cache time is m.getResults() (takes ~ 1 sec)
-					if (result1.getSort().equals(ResultSort.RESULT_SORT_MEASUREMENT)) {
-						try {
-							final Trace trace = Trace.getTraceWithARIfPossible(result1, analysisParameters);
-							pmads.put(trace.getKey(), new PredictionMtaeAndDate(trace.getMTAE(), date));							
-							traces.add(trace);
-						} catch (SimpleApplicationException e) {
-							Log.errorMessage(e);
+		final Map<String, PredictionMtaeAndDate> pmads = new HashMap<String, PredictionMtaeAndDate>();
+		final Set<Trace> traces = new HashSet<Trace>();
+		
+		final SynchronousWorker<Boolean> worker = new SynchronousWorker<Boolean>(null,
+				I18N.getString("Message.Information.please_wait"), 
+				I18N.getString("Message.Information.loading_data"), true) {
+			@Override
+			public Boolean construct() throws Exception {
+				
+				TypicalCondition condition1 = new TypicalCondition(from, to, OperationSort.OPERATION_IN_RANGE, ObjectEntities.MEASUREMENT_CODE, MeasurementWrapper.COLUMN_START_TIME);
+				LinkedIdsCondition mcond  = new LinkedIdsCondition(ms.getId(), ObjectEntities.MEASUREMENT_CODE);
+				Set<Measurement> measurements = StorableObjectPool.getStorableObjectsByCondition(
+						new CompoundCondition(condition1, CompoundConditionSort.AND, mcond), true);
+				if (measurements.isEmpty()) {
+					SwingUtilities.invokeLater(new Runnable() {
+						public void run() {
+							JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(), 
+									I18N.getString("Message.error.noMeasurementsFound"), 
+									I18N.getString("Message.error"),
+									JOptionPane.ERROR_MESSAGE);
+						}
+					});
+					return Boolean.valueOf(false);
+				}
+				
+				// если в шаблоне есть параметры анализа, то используем их для Trace.getTraceWithARIfPossible
+				AnalysisParameters analysisParameters = AnalysisUtil.getCriteriaSetByMeasurementSetup(ms);
+				if (analysisParameters == null) {
+					// в противном случае берем дефолтные - должно быть не null
+					analysisParameters = Heap.getMinuitDefaultParams();
+				}
+				
+				for (Measurement m : measurements) {
+					final long date = m.getStartTime().getTime();
+					for (Result result1 : m.getResults()) { // XXX: PERFORMANCE: 90% of load-from-cache time is m.getResults() (takes ~ 1 sec)
+						if (result1.getSort().equals(ResultSort.RESULT_SORT_MEASUREMENT)) {
+							try {
+								final Trace trace = Trace.getTraceWithARIfPossible(result1, analysisParameters);
+								pmads.put(trace.getKey(), new PredictionMtaeAndDate(trace.getMTAE(), date));							
+								traces.add(trace);
+							} catch (SimpleApplicationException e) {
+								Log.errorMessage(e);
+							}
 						}
 					}
+					traces.remove(null);
 				}
-				traces.remove(null);
+				if (traces.size() < 2) {
+					SwingUtilities.invokeLater(new Runnable() {
+						public void run() {
+							JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(), 
+									I18N.getString("Message.error.infufficientAnalysesFound"), 
+									I18N.getString("Message.error"),
+									JOptionPane.ERROR_MESSAGE);
+						}
+					});
+					return Boolean.valueOf(false);
+				}
+				return Boolean.valueOf(true);
 			}
-			if (traces.size() < 2) {
-				JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(), 
-						I18N.getString("Message.error.infufficientAnalysesFound"), 
-						I18N.getString("Message.error"),
-						JOptionPane.ERROR_MESSAGE);
-				return;
-			}
-			
+		};
+		
+		Boolean result1 = Boolean.valueOf(false);
+		try {
+			result1 = worker.execute();
+		} catch (ExecutionException e) {
+			Log.errorMessage(e);
+		}
+		
+		if (result1.booleanValue() != false) {
 			// Загружаем эталон в Heap как первичную р/г
 			try {
 				// если были критерии анализа в MS, значит есть эталон - грузим его как основную р/г
-				if (hasCriteriaSet) { 
+				if (AnalysisUtil.getCriteriaSetByMeasurementSetup(ms) != null) { 
 					if (!AnalysisUtil.loadEtalonAsEtalonAndAsPrimary(ms)) {
 						return;
 					}
+					
 					for (Trace tr: traces) {
-						if (!Heap.hasSecondaryBSKey(tr.getKey()) && !Heap.getPrimaryTrace().getKey().equals(tr.getKey())) {
+						final String key = tr.getKey();
+						if (!Heap.hasSecondaryBSKey(key)) {
 							Heap.putSecondaryTrace(tr);
-							Heap.setCurrentTrace(tr.getKey());
+							Heap.setCurrentTrace(key);
 						}
 					}
 				} else { // если не было критериев анализа, грузим всю кучу (там выбирается наиболее типичная как основная) 
@@ -137,16 +163,11 @@ public class LoadTraceFromDatabaseCommand extends AbstractCommand {
 					from.getTime(),
 					to.getTime(),
 					me);
-
+			
 			PredictionModel.init(this.aContext);
 			PredictionModel.initPredictionManager(pm);
 			
 			Heap.setCurrentEvent(0);
-		} catch (ApplicationException ex) {
-			GUIUtil.processApplicationException(ex);
-			return;
-		} catch (DataFormatException e) {
-			Log.errorMessage(e);
 		}
 	}
 }
