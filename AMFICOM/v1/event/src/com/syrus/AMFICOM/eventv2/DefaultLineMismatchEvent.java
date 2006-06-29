@@ -1,5 +1,5 @@
 /*-
- * $Id: DefaultLineMismatchEvent.java,v 1.24 2006/06/29 08:18:45 bass Exp $
+ * $Id: DefaultLineMismatchEvent.java,v 1.25 2006/06/29 16:12:39 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,6 +19,7 @@ import static java.util.logging.Level.SEVERE;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.Date;
+import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -43,7 +44,7 @@ import com.syrus.util.transport.idl.IdlConversionException;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.24 $, $Date: 2006/06/29 08:18:45 $
+ * @version $Revision: 1.25 $, $Date: 2006/06/29 16:12:39 $
  * @module event
  */
 public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
@@ -547,6 +548,11 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 		return this.parentLineMismatchEventId;
 	}
 
+	void setChangeLog0(final Set<ChangeLogRecord> changeLog) {
+		this.changeLog.clear();
+		this.changeLog.addAll(changeLog);
+	}
+
 	/**
 	 * @see LineMismatchEvent#getChangeLog()
 	 */
@@ -600,10 +606,10 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.24 $, $Date: 2006/06/29 08:18:45 $
+	 * @version $Revision: 1.25 $, $Date: 2006/06/29 16:12:39 $
 	 * @module event
 	 */
-	private class ChangeLogRecordImpl implements ChangeLogRecord, Serializable {
+	class ChangeLogRecordImpl implements ChangeLogRecord, Serializable {
 		private static final long serialVersionUID = -772564340276801643L;
 
 		@SuppressWarnings("hiding")
@@ -615,6 +621,13 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 
 		private final Object newValue;
 
+		/**
+		 * Ctor to be invoked from modifier methods.
+		 *
+		 * @param key
+		 * @param oldValue
+		 * @param newValue
+		 */
 		@SuppressWarnings("synthetic-access")
 		ChangeLogRecordImpl(final String key,
 				final Object oldValue,
@@ -627,10 +640,34 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 			DefaultLineMismatchEvent.this.markAsChanged();
 		}
 
+		/**
+		 * Ctor invoked by database driver.
+		 *
+		 * @param modified
+		 * @param key
+		 * @param oldValue
+		 * @param newValue
+		 */
+		ChangeLogRecordImpl(final Date modified,
+				final String key,
+				final String oldValue,
+				final String newValue) {
+			this.modified = new Date(modified.getTime());
+			this.oldValue = stringToObject(this.key = key, oldValue);
+			this.newValue = stringToObject(this.key, newValue);
+		}
+
+		/**
+		 * Ctor to be invoked from {@code fromIdlTransferable(...)}
+		 * method of enclosing entity.
+		 *
+		 * @param changeLogRecord
+		 */
 		ChangeLogRecordImpl(final IdlChangeLogRecord changeLogRecord) {
-			this.modified = new Date(changeLogRecord.modified);
-			this.oldValue = stringToObject(this.key = changeLogRecord.key, changeLogRecord.oldValue);
-			this.newValue = stringToObject(this.key, changeLogRecord.newValue);
+			this(new Date(changeLogRecord.modified),
+					changeLogRecord.key,
+					changeLogRecord.oldValue,
+					changeLogRecord.newValue);
 		}
 
 		/**
