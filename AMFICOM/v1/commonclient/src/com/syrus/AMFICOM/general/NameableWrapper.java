@@ -1,5 +1,5 @@
 /*-
-* $Id: NameableWrapper.java,v 1.1 2006/06/20 12:15:24 saa Exp $
+* $Id: NameableWrapper.java,v 1.2 2006/06/29 07:22:06 saa Exp $
 *
 * Copyright (c) 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -11,17 +11,16 @@ package com.syrus.AMFICOM.general;
 import java.util.Collections;
 import java.util.List;
 
-import com.syrus.AMFICOM.general.Namable;
 import com.syrus.util.Wrapper;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2006/06/20 12:15:24 $
+ * @version $Revision: 1.2 $, $Date: 2006/06/29 07:22:06 $
  * @author $Author: saa $
  * @author many authors
  * @module commonclient
  */
-public class NameableWrapper implements Wrapper<Namable> {
+public class NameableWrapper implements Wrapper<Nameable> {
 	public static final String COLUMN_NAME = "name";
 	private static final NameableWrapper instance = new NameableWrapper();
 
@@ -65,7 +64,7 @@ public class NameableWrapper implements Wrapper<Namable> {
 		// nothing
 	}
 
-	public Object getValue(final Namable nameable, final String key) {
+	public Object getValue(final Nameable nameable, final String key) {
 		if (nameable != null && key == COLUMN_NAME) {
 			return nameable.getName();
 		}
@@ -76,7 +75,7 @@ public class NameableWrapper implements Wrapper<Namable> {
 		return false;
 	}
 
-	public void setValue(final Namable nameable,
+	public void setValue(final Nameable nameable,
 			final String key,
 			final Object value) {
 		// not editable!
