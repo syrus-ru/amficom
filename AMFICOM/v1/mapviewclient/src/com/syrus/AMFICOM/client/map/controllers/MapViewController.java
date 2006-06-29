@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapViewController.java,v 1.70 2006/06/29 08:03:53 arseniy Exp $$
+ * $$Id: MapViewController.java,v 1.71 2006/06/29 08:14:23 arseniy Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -49,7 +49,7 @@ import com.syrus.AMFICOM.mapview.MeasurementPath;
 import com.syrus.AMFICOM.mapview.UnboundLink;
 import com.syrus.AMFICOM.mapview.UnboundNode;
 import com.syrus.AMFICOM.measurement.MonitoredElement;
-import com.syrus.AMFICOM.measurement.corba.IdlMonitoredElementPackage.IdlMonitoredElementKind;
+import com.syrus.AMFICOM.measurement.corba.IdlMonitoredElementPackage.MonitoredElementSort;
 import com.syrus.AMFICOM.resource.DoublePoint;
 import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
@@ -61,7 +61,7 @@ import com.syrus.util.Log;
  * Класс используется для управления информацией о канализационной
  * прокладке кабелей и положении узлов и других топологических объектов.
  * 
- * @version $Revision: 1.70 $, $Date: 2006/06/29 08:03:53 $
+ * @version $Revision: 1.71 $, $Date: 2006/06/29 08:14:23 $
  * @author $Author: arseniy $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -287,7 +287,7 @@ public final class MapViewController {
 		MonitoredElement me = StorableObjectPool.getStorableObject(meId, true);
 		if(me == null)
 			return null;
-		if(me.getKind().equals(IdlMonitoredElementKind.MONITOREDELEMENT_KIND_TRANSMISSION_PATH)) {
+		if(me.getSort().equals(MonitoredElementSort.MONITOREDELEMENT_SORT_TRANSMISSION_PATH)) {
 			Set<Identifier> monitoredDomainMemberIds = me.getMonitoredDomainMemberIds();
 			if(monitoredDomainMemberIds.size() == 0)
 				return null;
