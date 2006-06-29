@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapViewController.java,v 1.71 2006/06/29 08:14:23 arseniy Exp $$
+ * $$Id: MapViewController.java,v 1.72 2006/06/29 08:38:46 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,10 +20,9 @@ import java.util.logging.Level;
 import com.syrus.AMFICOM.client.map.LogicalNetLayer;
 import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapDataException;
+import com.syrus.AMFICOM.client.map.MapViewPlaceManager;
 import com.syrus.AMFICOM.client.map.NetMapViewer;
-import com.syrus.AMFICOM.client.map.command.action.PlaceSchemeCableLinkFastCommand;
 import com.syrus.AMFICOM.client.map.command.action.PlaceSchemeElementCommand;
-import com.syrus.AMFICOM.client.map.command.action.PlaceSchemePathFastCommand;
 import com.syrus.AMFICOM.client.map.command.action.RemoveNodeCommandAtomic;
 import com.syrus.AMFICOM.client.map.command.action.UnPlaceSchemeCableLinkCommand;
 import com.syrus.AMFICOM.client.map.command.action.UnPlaceSchemePathCommand;
@@ -61,8 +60,8 @@ import com.syrus.util.Log;
  * Класс используется для управления информацией о канализационной
  * прокладке кабелей и положении узлов и других топологических объектов.
  * 
- * @version $Revision: 1.71 $, $Date: 2006/06/29 08:14:23 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.72 $, $Date: 2006/06/29 08:38:46 $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -80,6 +79,8 @@ public final class MapViewController {
 //	public static final String ELEMENT_CABLEINLET = "cableinlet"; //$NON-NLS-1$
 	public static final String ELEMENT_NODELINK = MapEditorResourceKeys.ENTITY_NODE_LINK;
 
+	private MapViewPlaceManager placeManager;
+	
 	public static String getMapElementReadableType(MapElement mapElement) {
 		if(mapElement instanceof SiteNode) {
 			SiteNode site = (SiteNode )mapElement;
@@ -139,6 +140,8 @@ public final class MapViewController {
 	private MapViewController(NetMapViewer netMapViewer) {
 		this.netMapViewer = netMapViewer;
 		this.logicalNetLayer = this.netMapViewer.getLogicalNetLayer();
+		
+		this.placeManager = new MapViewPlaceManager(netMapViewer);
 
 		this.ctlMap.put(TopologicalNode.class,
 			TopologicalNodeController.createInstance(netMapViewer));
@@ -386,15 +389,22 @@ public final class MapViewController {
 	 * @param scheme схема
 	 */
 	public void scanElements(Scheme scheme) {
-		try {
-			for(Iterator it = scheme.getTopologicalSchemeElementsRecursively(false).iterator(); it.hasNext();) {
-				SchemeElement element = (SchemeElement )it.next();
-				scanElement(element);
-			}
+		 try {
+			this.placeManager.scanElements(scheme.getTopologicalSchemeElementsRecursively(false));
 			scanCables(scheme);
-		} catch(ApplicationException e) {
+		} catch (ApplicationException e) {
 			Log.errorMessage(e);
 		}
+		
+//		try {
+//			for(Iterator it = scheme.getTopologicalSchemeElementsRecursively(false).iterator(); it.hasNext();) {
+//				SchemeElement element = (SchemeElement )it.next();
+//				scanElement(element);
+//			}
+//			scanCables(scheme);
+//		} catch(ApplicationException e) {
+//			Log.errorMessage(e);
+//		}
 	}
 
 	/**
@@ -402,37 +412,37 @@ public final class MapViewController {
 	 * нового непривязанного кабеля ка топологическую схему.
 	 * @param schemeCableLink кабель
 	 */
-	public void scanCable(SchemeCableLink schemeCableLink) {
+//	public void scanCable(SchemeCableLink schemeCableLink) {
 //		long t1 = System.currentTimeMillis();
-		SiteNode cableStartNode = this.mapView.getStartNode(schemeCableLink);
+//		SiteNode cableStartNode = this.mapView.getStartNode(schemeCableLink);
 //		long t2 = System.currentTimeMillis();
-		SiteNode cableEndNode = this.mapView.getEndNode(schemeCableLink);
+//		SiteNode cableEndNode = this.mapView.getEndNode(schemeCableLink);
 //		long t3 = System.currentTimeMillis();
-		CablePath cp = this.mapView.findCablePath(schemeCableLink);
+//		CablePath cp = this.mapView.findCablePath(schemeCableLink);
 //		long t4 = System.currentTimeMillis();
-		if(cp == null) {
-			if(cableStartNode != null && cableEndNode != null) {
-				placeElement(schemeCableLink, cableStartNode, cableEndNode);
-			} else {
-				Log.errorMessage("Can't place schemeCableLink '" + schemeCableLink.getName() 
-						+ "' (" + schemeCableLink + "); cableStartNode is '" + cableStartNode 
-						+ "'; cableEndNode is '" + cableEndNode + "'") ;
-			}
-		}
-		else {
-			if(cableStartNode == null || cableEndNode == null) {
-				unplaceElement(cp);
-			}
-			else {
-				placeElement(schemeCableLink, cableStartNode, cableEndNode);
-			}
-		}
+//		if(cp == null) {
+//			if(cableStartNode != null && cableEndNode != null) {
+//				placeElement(schemeCableLink, cableStartNode, cableEndNode);
+//			} else {
+//				Log.errorMessage("Can't place schemeCableLink '" + schemeCableLink.getName() 
+//						+ "' (" + schemeCableLink + "); cableStartNode is '" + cableStartNode 
+//						+ "'; cableEndNode is '" + cableEndNode + "'") ;
+//			}
+//		}
+//		else {
+//			if(cableStartNode == null || cableEndNode == null) {
+//				unplaceElement(cp);
+//			}
+//			else {
+//				placeElement(schemeCableLink, cableStartNode, cableEndNode);
+//			}
+//		}
 //		long t5 = System.currentTimeMillis();
 //		Log.debugMessage("scanCable :: get start node for scl " + (t2 - t1) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
 //		Log.debugMessage("scanCable :: get end node for scl " + (t3 - t2) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
 //		Log.debugMessage("scanCable :: find cable path " + (t4 - t3) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
 //		Log.debugMessage("scanCable :: placeElement(scl) " + (t5 - t4) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
-	}
+//	}
 	
 	/**
 	 * Сканировать все кабели схемы.
@@ -442,60 +452,69 @@ public final class MapViewController {
 	public void scanCables(Scheme scheme) {
 		try {
 			long t1 = System.currentTimeMillis();
-			Set<SchemeCableLink> topologicalCableLinks = scheme.getTopologicalSchemeCableLinksRecursively(false);
+			this.placeManager.scanCables(scheme.getTopologicalSchemeCableLinksRecursively(false));
 			long t2 = System.currentTimeMillis();
-			for(Iterator it = topologicalCableLinks.iterator(); it.hasNext();) {
-				SchemeCableLink scl = (SchemeCableLink )it.next();
-				scanCable(scl);
-			}
-			long t3 = System.currentTimeMillis();
 			scanPaths(scheme);
-			long t4 = System.currentTimeMillis();
-			Log.debugMessage("scanCables :: SchemeUtils.getTopologicalCableLinks(scheme) " + (t2 - t1) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
-			Log.debugMessage("scanCables :: scanCable(scl) : topologicalCableLinks " + (t3 - t2) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
-			Log.debugMessage("scanCables :: scanPaths(scheme); " + (t4 - t3) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
-		} catch(ApplicationException e) {
+			Log.debugMessage("scanCables :: scanCable(scl) : topologicalCableLinks " + (t2 - t1) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
+		} catch (ApplicationException e) {
 			Log.errorMessage(e);
 		}
+//		try {
+//			long t1 = System.currentTimeMillis();
+//			Set<SchemeCableLink> topologicalCableLinks = scheme.getTopologicalSchemeCableLinksRecursively(false);
+//			long t2 = System.currentTimeMillis();
+//			for(Iterator it = topologicalCableLinks.iterator(); it.hasNext();) {
+//				SchemeCableLink scl = (SchemeCableLink )it.next();
+//				scanCable(scl);
+//			}
+//			long t3 = System.currentTimeMillis();
+//			scanPaths(scheme);
+//			long t4 = System.currentTimeMillis();
+//			Log.debugMessage("scanCables :: SchemeUtils.getTopologicalCableLinks(scheme) " + (t2 - t1) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
+//			Log.debugMessage("scanCables :: scanCable(scl) : topologicalCableLinks " + (t3 - t2) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
+//			Log.debugMessage("scanCables :: scanPaths(scheme); " + (t4 - t3) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
+//		} catch(ApplicationException e) {
+//			Log.errorMessage(e);
+//		}
 	}
 
 	/**
 	 * Сканировать схемный путь на предмет его привязки к тоннелям.
 	 * @param schemePath схемный путь
 	 */
-	public void scanPath(SchemePath schemePath) {
-		try {
+//	public void scanPath(SchemePath schemePath) {
+//		try {
 //			long t1 = System.currentTimeMillis();
-			SiteNode pathStartNode = this.mapView.getStartNode(schemePath);
+//			SiteNode pathStartNode = this.mapView.getStartNode(schemePath);
 //			long t2 = System.currentTimeMillis();
-			SiteNode pathEndNode = this.mapView.getEndNode(schemePath);
+//			SiteNode pathEndNode = this.mapView.getEndNode(schemePath);
 //			long t3 = System.currentTimeMillis();
-			MeasurementPath mp = this.mapView.findMeasurementPath(schemePath);
+//			MeasurementPath mp = this.mapView.findMeasurementPath(schemePath);
 //			long t4 = System.currentTimeMillis();
-			if(mp == null) {
-				if(pathStartNode != null && pathEndNode != null) {
-					placeElement(schemePath, pathStartNode, pathEndNode);
-				}
-			}
-			else {
-				if(pathStartNode == null || pathEndNode == null) {
-					unplaceElement(mp);
-				}
-				else {
-					placeElement(schemePath, pathStartNode, pathEndNode);
-				}
-			}
+//			if(mp == null) {
+//				if(pathStartNode != null && pathEndNode != null) {
+//					placeElement(schemePath, pathStartNode, pathEndNode);
+//				}
+//			}
+//			else {
+//				if(pathStartNode == null || pathEndNode == null) {
+//					unplaceElement(mp);
+//				}
+//				else {
+//					placeElement(schemePath, pathStartNode, pathEndNode);
+//				}
+//			}
 //			long t5 = System.currentTimeMillis();
 //			Log.debugMessage("scanPath :: get start node for sp " + (t2 - t1) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
 //			Log.debugMessage("scanPath :: get end node for sp " + (t3 - t2) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
 //			Log.debugMessage("scanPath :: find measurement path " + (t4 - t3) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
 //			Log.debugMessage("scanPath :: placeElement(sp) " + (t5 - t4) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
-		} catch (Exception e) {
-			Log.errorMessage("Exception while scaning path " + schemePath.getName() 
-					+ " (" + schemePath + ")");
-			Log.errorMessage(e);
-		}
-	}
+//		} catch (Exception e) {
+//			Log.errorMessage("Exception while scaning path " + schemePath.getName() 
+//					+ " (" + schemePath + ")");
+//			Log.errorMessage(e);
+//		}
+//	}
 
 	/**
 	 * Сканировать все схемные пути на схеме.
@@ -505,17 +524,26 @@ public final class MapViewController {
 	public void scanPaths(final Scheme scheme) {
 		try {
 			long t1 = System.currentTimeMillis();
-			Set<SchemePath> topologicalPaths = scheme.getTopologicalSchemePathsRecursively(false);
+			this.placeManager.scanPaths(scheme.getTopologicalSchemePathsRecursively(false));
 			long t2 = System.currentTimeMillis();
-			for (final SchemePath schemePath : topologicalPaths) {
-				this.scanPath(schemePath);
-			}
-			long t3 = System.currentTimeMillis();
-			Log.debugMessage("scanPaths :: scheme.getTopologicalPaths() " + (t2 - t1) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
-			Log.debugMessage("scanPaths :: scanPath(schemePath) : topologicalPaths " + (t3 - t2) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
-		} catch(ApplicationException e) {
+			Log.debugMessage("scanPaths :: scanPath(schemePath) : topologicalPaths " + (t2 - t1) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
+		} catch (ApplicationException e) {
 			Log.errorMessage(e);
 		}
+		
+//		try {
+//			long t1 = System.currentTimeMillis();
+//			Set<SchemePath> topologicalPaths = scheme.getTopologicalSchemePathsRecursively(false);
+//			long t2 = System.currentTimeMillis();
+//			for (final SchemePath schemePath : topologicalPaths) {
+//				this.scanPath(schemePath);
+//			}
+//			long t3 = System.currentTimeMillis();
+//			Log.debugMessage("scanPaths :: scheme.getTopologicalPaths() " + (t2 - t1) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
+//			Log.debugMessage("scanPaths :: scanPath(schemePath) : topologicalPaths " + (t3 - t2) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
+//		} catch(ApplicationException e) {
+//			Log.errorMessage(e);
+//		}
 	}
 
 	/**
@@ -606,16 +634,11 @@ public final class MapViewController {
 	 * Разместить кабель на топологической схеме.
 	 * @param scl кабель
 	 */
-	public void placeElement(SchemeCableLink schemeCableLink, SiteNode startNode, SiteNode endNode) {
+//	public void placeElement(SchemeCableLink schemeCableLink, SiteNode startNode, SiteNode endNode) {
 //		PlaceSchemeCableLinkCommand cmd = new PlaceSchemeCableLinkCommand(schemeCableLink);
 //		cmd.setNetMapViewer(this.netMapViewer);
 //		cmd.execute();
-
-		PlaceSchemeCableLinkFastCommand cmd = new PlaceSchemeCableLinkFastCommand(
-				schemeCableLink, startNode, endNode);
-		cmd.setNetMapViewer(this.netMapViewer);
-		cmd.execute();
-	}
+//	}
 	
 	/**
 	 * Убрать кабель из вида. Подразумевает отавязку от всех тоннелей 
@@ -633,15 +656,11 @@ public final class MapViewController {
 	 * (drag/drop).
 	 * @param sp схемный путь
 	 */
-	public void placeElement(SchemePath sp, SiteNode startNode, SiteNode endNode) {
+//	public void placeElement(SchemePath sp, SiteNode startNode, SiteNode endNode) {
 //		PlaceSchemePathCommand cmd = new PlaceSchemePathCommand(sp);
 //		cmd.setNetMapViewer(this.netMapViewer);
 //		cmd.execute();
-		
-		PlaceSchemePathFastCommand cmd = new PlaceSchemePathFastCommand(sp, startNode, endNode);
-		cmd.setNetMapViewer(this.netMapViewer);
-		cmd.execute();
-	}
+//	}
 
 	/**
 	 * Убрать топологический путь из вида.
