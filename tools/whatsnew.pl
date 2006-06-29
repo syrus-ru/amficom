@@ -44,7 +44,7 @@ die "failed to determine null file" unless $nul;
 
 my $targetOpt = $targetTag eq '' ? '' : "-r $targetTag";
 my @cvsUpOut;
-foreach (`cvs -q -n up $targetOpt`)
+foreach (`cvs -f -q -n up $targetOpt`)
 {
 	chomp;
 	next if m#^[?] #; # such files are likely to be out of interest at all
@@ -78,7 +78,7 @@ foreach (@cvsUpOut)
 
 	my $workingRev = '';
 	my $repositRev = '';
-	open FTMP, "cvs status $ffn 2>$nul |";
+	open FTMP, "cvs -f status $ffn 2>$nul |";
 	while(<FTMP>)
 	{
 		$workingRev = $1 if m/^\s*Working revision\:\s*([\d.]+)/;
@@ -91,7 +91,7 @@ foreach (@cvsUpOut)
 	my $revSpec = $workingRev eq '' ? '' : "-r$workingRev::$repositRev";
 	# print "revSpec = $revSpec\n";
 
-	open FCVSLOG, "cvs log -N $revSpec $ffn |";
+	open FCVSLOG, "cvs -f log -N $revSpec $ffn |";
 
 	while (<FCVSLOG>)
 	{
