@@ -1,5 +1,5 @@
 /*-
- * $Id: event.idl,v 1.64 2006/06/14 12:01:55 bass Exp $
+ * $Id: event.idl,v 1.65 2006/06/29 08:18:44 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -134,6 +134,20 @@ module eventv2 {
 			};
 			private IdlAlarmStatus alarmStatus;
 			private general::corba::IdlIdentifier parentLineMismatchEventId;
+			struct IdlChangeLogRecord {
+				long long modified;
+				general::corba::String32 key;
+				/**
+				 * Nullable.
+				 */
+				general::corba::WString4000Value oldValue;
+				/**
+				 * Nullable.
+				 */
+				general::corba::WString4000Value newValue;
+			};
+			typedef sequence<IdlChangeLogRecord> IdlChangeLogRecordSeq;
+			private IdlChangeLogRecordSeq changeLog;
 
 			general::corba::IdlIdentifier getAffectedPathElementId();
 			boolean isAffectedPathElementSpacious();
@@ -148,6 +162,7 @@ module eventv2 {
 			void setAlarmStatus(in IdlAlarmStatus alarmStatus);
 			general::corba::IdlIdentifier getParentLineMismatchEventId();
 			void setParentLineMismatchEventId(in general::corba::IdlIdentifier parentLineMismatchEventId);
+			IdlChangeLogRecordSeq getChangeLog();
 
 			factory init(in general::corba::IdlIdentifier id,
 					in long long created,
@@ -163,7 +178,8 @@ module eventv2 {
 					in general::corba::WString4000 richTextMessage,
 					in general::corba::IdlIdentifier reflectogramMismatchEventId,
 					in IdlAlarmStatus alarmStatus,
-					in general::corba::IdlIdentifier parentLineMismatchEventId);
+					in general::corba::IdlIdentifier parentLineMismatchEventId,
+					in IdlChangeLogRecordSeq changeLog);
 		};
 
 		abstract valuetype IdlNotificationEvent : IdlEvent {

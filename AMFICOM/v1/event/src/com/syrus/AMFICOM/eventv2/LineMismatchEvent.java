@@ -1,5 +1,5 @@
 /*-
- * $Id: LineMismatchEvent.java,v 1.31 2006/06/27 19:48:01 bass Exp $
+ * $Id: LineMismatchEvent.java,v 1.32 2006/06/29 08:18:45 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,6 +27,7 @@ import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.eventv2.corba.IdlLineMismatchEvent;
 import com.syrus.AMFICOM.eventv2.corba.IdlLineMismatchEventPackage.IdlAlarmStatus;
+import com.syrus.AMFICOM.eventv2.corba.IdlLineMismatchEventPackage.IdlChangeLogRecord;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
@@ -40,7 +41,7 @@ import com.syrus.util.transport.idl.IdlTransferableObjectExt;
  * 
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.31 $, $Date: 2006/06/27 19:48:01 $
+ * @version $Revision: 1.32 $, $Date: 2006/06/29 08:18:45 $
  * @module event
  */
 public interface LineMismatchEvent
@@ -337,7 +338,7 @@ public interface LineMismatchEvent
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.31 $, $Date: 2006/06/27 19:48:01 $
+	 * @version $Revision: 1.32 $, $Date: 2006/06/29 08:18:45 $
 	 * @module event
 	 */
 	enum AlarmStatus implements IdlTransferableObject<IdlAlarmStatus> {
@@ -671,7 +672,7 @@ public interface LineMismatchEvent
 		 *
 		 * @author Andrew ``Bass'' Shcheglov
 		 * @author $Author: bass $
-		 * @version $Revision: 1.31 $, $Date: 2006/06/27 19:48:01 $
+		 * @version $Revision: 1.32 $, $Date: 2006/06/29 08:18:45 $
 		 * @see AllowedSuccessors
 		 * @module event
 		 */
@@ -684,7 +685,7 @@ public interface LineMismatchEvent
 		/**
 		 * @author Andrew ``Bass'' Shcheglov
 		 * @author $Author: bass $
-		 * @version $Revision: 1.31 $, $Date: 2006/06/27 19:48:01 $
+		 * @version $Revision: 1.32 $, $Date: 2006/06/29 08:18:45 $
 		 * @see AllowedPredecessors
 		 * @module event
 		 */
@@ -699,7 +700,7 @@ public interface LineMismatchEvent
 		 *
 		 * @author Andrew ``Bass'' Shcheglov
 		 * @author $Author: bass $
-		 * @version $Revision: 1.31 $, $Date: 2006/06/27 19:48:01 $
+		 * @version $Revision: 1.32 $, $Date: 2006/06/29 08:18:45 $
 		 * @module event
 		 */
 		static final class Proxy
@@ -774,10 +775,11 @@ public interface LineMismatchEvent
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.31 $, $Date: 2006/06/27 19:48:01 $
+	 * @version $Revision: 1.32 $, $Date: 2006/06/29 08:18:45 $
 	 * @module event
 	 */
-	interface ChangeLogRecord extends Comparable<ChangeLogRecord> {
+	interface ChangeLogRecord extends Comparable<ChangeLogRecord>,
+			IdlTransferableObject<IdlChangeLogRecord> {
 		Date getModified();
 
 		/**

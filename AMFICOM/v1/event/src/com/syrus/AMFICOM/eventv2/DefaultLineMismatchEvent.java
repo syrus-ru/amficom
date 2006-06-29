@@ -1,5 +1,5 @@
 /*-
- * $Id: DefaultLineMismatchEvent.java,v 1.23 2006/06/27 19:08:14 bass Exp $
+ * $Id: DefaultLineMismatchEvent.java,v 1.24 2006/06/29 08:18:45 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,6 +14,7 @@ import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.ObjectEntities.LINEMISMATCHEVENT_CODE;
 import static com.syrus.AMFICOM.general.StorableObjectVersion.ILLEGAL_VERSION;
 import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
+import static java.util.logging.Level.SEVERE;
 
 import java.io.Serializable;
 import java.util.Collections;
@@ -25,6 +26,7 @@ import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.eventv2.corba.IdlLineMismatchEvent;
 import com.syrus.AMFICOM.eventv2.corba.IdlLineMismatchEventHelper;
+import com.syrus.AMFICOM.eventv2.corba.IdlLineMismatchEventPackage.IdlChangeLogRecord;
 import com.syrus.AMFICOM.eventv2.corba.IdlLineMismatchEventPackage.IdlSpacialData;
 import com.syrus.AMFICOM.eventv2.corba.IdlLineMismatchEventPackage.IdlSpacialDataPackage.IdlAffectedPathElementSpacious;
 import com.syrus.AMFICOM.eventv2.corba.IdlLineMismatchEventPackage.IdlSpacialDataPackage.IdlPhysicalDistancePair;
@@ -35,12 +37,13 @@ import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
+import com.syrus.util.Log;
 import com.syrus.util.transport.idl.IdlConversionException;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.23 $, $Date: 2006/06/27 19:08:14 $
+ * @version $Revision: 1.24 $, $Date: 2006/06/29 08:18:45 $
  * @module event
  */
 public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
@@ -208,6 +211,11 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 			this.reflectogramMismatchEventId = Identifier.valueOf(lineMismatchEvent.getReflectogramMismatchEventId());
 			this.alarmStatus.fromIdlTransferable(lineMismatchEvent.getAlarmStatus());
 			this.parentLineMismatchEventId = Identifier.valueOf(lineMismatchEvent.getParentLineMismatchEventId());
+
+			this.changeLog.clear();
+			for (final IdlChangeLogRecord changeLogRecord : lineMismatchEvent.getChangeLog()) {
+				this.changeLog.add(new ChangeLogRecordImpl(changeLogRecord));
+			}
 		}
 	}
 
@@ -562,6 +570,12 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 			spacialData._default(IdlAffectedPathElementSpacious._FALSE);
 		}
 
+		final IdlChangeLogRecord idlChangeLog[] = new IdlChangeLogRecord[this.changeLog.size()];
+		int i = 0;
+		for (final ChangeLogRecord changeLogRecord : this.changeLog) {
+			idlChangeLog[i++] = changeLogRecord.getIdlTransferable(orb);
+		}
+
 		return IdlLineMismatchEventHelper.init(orb,
 				this.id.getIdlTransferable(orb),
 				this.created.getTime(),
@@ -577,7 +591,8 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 				this.getRichTextMessage(),
 				this.getReflectogramMismatchEventId().getIdlTransferable(orb),
 				this.alarmStatus.getIdlTransferable(orb),
-				this.getParentLineMismatchEventId().getIdlTransferable(orb));
+				this.getParentLineMismatchEventId().getIdlTransferable(orb),
+				idlChangeLog);
 	}
 
 	/**
@@ -585,7 +600,7 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.23 $, $Date: 2006/06/27 19:08:14 $
+	 * @version $Revision: 1.24 $, $Date: 2006/06/29 08:18:45 $
 	 * @module event
 	 */
 	private class ChangeLogRecordImpl implements ChangeLogRecord, Serializable {
@@ -610,6 +625,12 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 			this.newValue = newValue;
 
 			DefaultLineMismatchEvent.this.markAsChanged();
+		}
+
+		ChangeLogRecordImpl(final IdlChangeLogRecord changeLogRecord) {
+			this.modified = new Date(changeLogRecord.modified);
+			this.oldValue = stringToObject(this.key = changeLogRecord.key, changeLogRecord.oldValue);
+			this.newValue = stringToObject(this.key, changeLogRecord.newValue);
 		}
 
 		/**
@@ -645,6 +666,38 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 		 */
 		public int compareTo(final ChangeLogRecord that) {
 			return this.getModified().compareTo(that.getModified());
+		}
+
+		/**
+		 * @see com.syrus.util.transport.idl.IdlTransferableObject#getIdlTransferable(ORB)
+		 */
+		public IdlChangeLogRecord getIdlTransferable(final ORB orb) {
+			return new IdlChangeLogRecord(
+					ChangeLogRecordImpl.this.getModified().getTime(),
+					ChangeLogRecordImpl.this.getKey(),
+					ChangeLogRecordImpl.this.oldValue == null
+							? null
+							: ChangeLogRecordImpl.this.oldValue.toString(),
+					ChangeLogRecordImpl.this.newValue == null
+							? null
+							: ChangeLogRecordImpl.this.newValue.toString());
+		}
+
+		@SuppressWarnings("hiding")
+		private Object stringToObject(final String key, final String value) {
+			try {
+				if (value == null) {
+					return null;
+				}
+	
+				final Class<?> clazz = LineMismatchEventWrapper.getInstance().getPropertyClass(key);
+				return clazz.getMethod("valueOf", String.class).invoke(clazz, value);
+			} catch (final RuntimeException re) {
+				throw re;
+			} catch (final Exception e) {
+				Log.debugMessage(e, SEVERE);
+				return null;
+			}
 		}
 	}
 }
