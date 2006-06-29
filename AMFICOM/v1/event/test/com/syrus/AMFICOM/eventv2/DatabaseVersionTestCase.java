@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseVersionTestCase.java,v 1.1 2006/06/26 17:23:13 bass Exp $
+ * $Id: DatabaseVersionTestCase.java,v 1.2 2006/06/29 09:46:26 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,7 +28,7 @@ import com.syrus.util.database.DatabaseConnection;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2006/06/26 17:23:13 $
+ * @version $Revision: 1.2 $, $Date: 2006/06/29 09:46:26 $
  * @module event
  */
 public final class DatabaseVersionTestCase extends TestCase {
@@ -82,8 +82,6 @@ public final class DatabaseVersionTestCase extends TestCase {
 			@Override
 			protected void tearDown() {
 				oneTimeTearDown();
-
-				DatabaseConnection.closeConnection();
 			}
 		};
 	}
