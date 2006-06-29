@@ -1,5 +1,5 @@
 /*-
- * $Id: SynchronousWorker.java,v 1.3 2006/06/29 12:24:25 saa Exp $
+ * $Id: SynchronousWorker.java,v 1.4 2006/06/29 13:26:15 saa Exp $
  * 
  * Copyright ¿ 2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,9 +10,11 @@ package com.syrus.AMFICOM.client.util;
 
 import java.awt.Dimension;
 import java.awt.Frame;
+import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.util.concurrent.Executor;
 
+import javax.swing.BorderFactory;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -51,7 +53,7 @@ import com.syrus.AMFICOM.client.model.AbstractMainFrame;
  * 
  * @author saa
  * @author $Author: saa $
- * @version $Revision: 1.3 $, $Date: 2006/06/29 12:24:25 $
+ * @version $Revision: 1.4 $, $Date: 2006/06/29 13:26:15 $
  * @module
  */
 public abstract class SynchronousWorker<T> extends AbstractSynchronousWorker<T>{
@@ -108,6 +110,9 @@ public abstract class SynchronousWorker<T> extends AbstractSynchronousWorker<T>{
 		this.dialog = dlg2;
 		this.area = new JPanel();
 		this.label = new JLabel();
+
+		this.area.setLayout(new GridLayout(1, 2));
+		this.area.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
 
 		updateDialog();
 
