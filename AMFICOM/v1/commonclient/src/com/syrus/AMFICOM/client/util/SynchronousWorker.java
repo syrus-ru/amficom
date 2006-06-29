@@ -1,5 +1,5 @@
 /*-
- * $Id: SynchronousWorker.java,v 1.2 2006/06/29 11:08:17 saa Exp $
+ * $Id: SynchronousWorker.java,v 1.3 2006/06/29 12:24:25 saa Exp $
  * 
  * Copyright © 2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -51,7 +51,7 @@ import com.syrus.AMFICOM.client.model.AbstractMainFrame;
  * 
  * @author saa
  * @author $Author: saa $
- * @version $Revision: 1.2 $, $Date: 2006/06/29 11:08:17 $
+ * @version $Revision: 1.3 $, $Date: 2006/06/29 12:24:25 $
  * @module
  */
 public abstract class SynchronousWorker<T> extends AbstractSynchronousWorker<T>{
@@ -95,9 +95,16 @@ public abstract class SynchronousWorker<T> extends AbstractSynchronousWorker<T>{
 		return AbstractMainFrame.getActiveMainFrame();
 	}
 
+	/**
+	 * Заполняет модальное диалоговое окно текстом и ProgressBar'ом.
+	 * Клиент не должен вызывать этот метод. Этот
+	 * метод вызывается только из {@link AbstractSynchronousWorker}. 
+	 * @param dlg2
+	 * @see com.syrus.AMFICOM.client.util.AbstractSynchronousWorker#prepareDialog(javax.swing.JDialog)
+	 */
 	@Override
 	protected final void prepareDialog(JDialog dlg2) {
-		assert this.dialog != null; // иначе клиент нарушил API
+		assert this.dialog == null; // иначе клиент нарушил API, вызывав этот метод явно
 		this.dialog = dlg2;
 		this.area = new JPanel();
 		this.label = new JLabel();
