@@ -1,5 +1,5 @@
 /*-
- * $$Id: NetMapViewer.java,v 1.76 2006/06/06 13:04:55 stas Exp $$
+ * $$Id: NetMapViewer.java,v 1.77 2006/06/29 08:37:21 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -86,7 +86,7 @@ import com.syrus.util.Log;
  * <br> реализация com.syrus.AMFICOM.client.map.objectfx.OfxNetMapViewer 
  * <br> реализация com.syrus.AMFICOM.client.map.mapinfo.MapInfoNetMapViewer
  * 
- * @version $Revision: 1.76 $, $Date: 2006/06/06 13:04:55 $
+ * @version $Revision: 1.77 $, $Date: 2006/06/29 08:37:21 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -464,29 +464,30 @@ public abstract class NetMapViewer {
 					this.logicalNetLayer.updateZoom();
 					repaint(false);
 				}
-				else if(mapEventType.equals(MapEvent.MAP_ELEMENT_CHANGED)) {
-					Object me = pce.getNewValue();
-					if(me instanceof SchemeElement) {
-						mapViewController.scanElement((SchemeElement )me);
-						mapViewController.scanCables(((SchemeElement )me).getParentScheme());
-					}
-					else if(me instanceof SchemeCableLink) {
-						mapViewController.scanCable((SchemeCableLink )me);
-						mapViewController.scanPaths(((SchemeCableLink )me).getParentScheme());
-					}
-					else if(me instanceof CablePath) {
-						mapViewController.scanCable(((CablePath)me).getSchemeCableLink());
-						mapViewController.scanPaths(((CablePath)me).getSchemeCableLink().getParentScheme());
-					}
-					else if(me instanceof SiteNode) {
-						SiteNode site = (SiteNode)me;
-						SiteNodeController snc = (SiteNodeController)mapViewController.getController(site);
-						snc.updateScaleCoefficient(site);
-					}
-	
-					this.logicalNetLayer.calculateVisualElements();
-					repaint(false);
-				}
+				// this event never sends //commented by Stas
+//				else if(mapEventType.equals(MapEvent.MAP_ELEMENT_CHANGED)) {
+//					Object me = pce.getNewValue();
+//					if(me instanceof SchemeElement) {
+//						mapViewController.scanElement((SchemeElement )me);
+//						mapViewController.scanCables(((SchemeElement )me).getParentScheme());
+//					}
+//					else if(me instanceof SchemeCableLink) {
+//						mapViewController.scanCable((SchemeCableLink )me);
+//						mapViewController.scanPaths(((SchemeCableLink )me).getParentScheme());
+//					}
+//					else if(me instanceof CablePath) {
+//						mapViewController.scanCable(((CablePath)me).getSchemeCableLink());
+//						mapViewController.scanPaths(((CablePath)me).getSchemeCableLink().getParentScheme());
+//					}
+//					else if(me instanceof SiteNode) {
+//						SiteNode site = (SiteNode)me;
+//						SiteNodeController snc = (SiteNodeController)mapViewController.getController(site);
+//						snc.updateScaleCoefficient(site);
+//					}
+//	
+//					this.logicalNetLayer.calculateVisualElements();
+//					repaint(false);
+//				}
 				else if(mapEventType.equals(MapEvent.MAP_VIEW_CHANGED)) {
 					//TODO enable it for top level version control
 //					this.logicalNetLayer.getMapView().markAsChanged();
