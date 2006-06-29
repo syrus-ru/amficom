@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapEditorOpenViewCommand.java,v 1.35 2006/02/15 11:12:43 stas Exp $$
+ * $$Id: MapEditorOpenViewCommand.java,v 1.36 2006/06/29 08:40:18 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,6 +7,8 @@
  */
 
 package com.syrus.AMFICOM.client.map.command.editor;
+
+import java.util.concurrent.ExecutionException;
 
 import javax.swing.JDesktopPane;
 
@@ -23,6 +25,8 @@ import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.model.MapApplicationModelFactory;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
+import com.syrus.AMFICOM.client.util.SynchronousWorker;
+import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.Mark;
 import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.util.Log;
@@ -33,7 +37,7 @@ import com.syrus.util.Log;
  * пользователь выбрал MapContext, открывается окно карты и сопутствующие окна
  * и MapContext передается в окно карты
  * 
- * @version $Revision: 1.35 $, $Date: 2006/02/15 11:12:43 $
+ * @version $Revision: 1.36 $, $Date: 2006/06/29 08:40:18 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -105,7 +109,22 @@ public class MapEditorOpenViewCommand extends AbstractCommand {
 				return;
 			}
 
-			this.mapView.getMap().open();
+			final MapView mapView1 = this.mapView;
+			SynchronousWorker<Map> worker = new SynchronousWorker<Map>(null, 
+					I18N.getString("Message.Information.please_wait"), 
+					I18N.getString("Message.Information.load_mapview"), true) {
+				@Override
+				public Map construct() throws Exception {
+					final Map map = mapView1.getMap();
+					map.open();
+					return map;
+				}
+			};
+			try {
+				worker.execute();
+			} catch (ExecutionException e1) {
+				Log.errorMessage(e1);
+			}
 
 			final MapViewController mapViewController = this.mapFrame.getMapViewer().getLogicalNetLayer().getMapViewController();
 			MarkController controller = null;

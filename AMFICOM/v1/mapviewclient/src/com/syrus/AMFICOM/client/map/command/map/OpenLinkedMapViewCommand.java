@@ -1,5 +1,5 @@
 /*-
- * $Id: OpenLinkedMapViewCommand.java,v 1.3 2006/05/03 11:54:46 stas Exp $
+ * $Id: OpenLinkedMapViewCommand.java,v 1.4 2006/06/29 08:39:53 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,6 +9,7 @@
 package com.syrus.AMFICOM.client.map.command.map;
 
 import java.util.Set;
+import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 
 import javax.swing.JDesktopPane;
@@ -31,6 +32,7 @@ import com.syrus.AMFICOM.client.model.MapApplicationModelFactory;
 import com.syrus.AMFICOM.client.model.MapEditorApplicationModel;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
+import com.syrus.AMFICOM.client.util.SynchronousWorker;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
@@ -84,7 +86,7 @@ public class OpenLinkedMapViewCommand extends AbstractCommand {
 //				return;
 //			}
 			Scheme scheme = StorableObjectPool.getStorableObject(this.schemeId, false);
-			Map map = scheme.getMap();
+			final Map map = scheme.getMap();
 			if (map == null) {
 				Log.debugMessage("No linked maps with scheme " + this.schemeId, Level.WARNING);
 				JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
@@ -101,7 +103,7 @@ public class OpenLinkedMapViewCommand extends AbstractCommand {
 				return;
 			}
 			
-			MapView mapView = mapViews.iterator().next();
+			final MapView mapView = mapViews.iterator().next();
 
 			MapFrame mapFrame = MapDesktopCommand.findMapFrame(this.desktop);
 			if(mapFrame == null) {
@@ -129,8 +131,21 @@ public class OpenLinkedMapViewCommand extends AbstractCommand {
 				return;
 			}
 			
-			mapView.getMap().open();
-			
+			SynchronousWorker<Map> worker = new SynchronousWorker<Map>(null, 
+					I18N.getString("Message.Information.please_wait"), 
+					I18N.getString("Message.Information.load_mapview"), true) {
+				@Override
+				public Map construct() throws Exception {
+					map.open();
+					return map;
+				}
+			};
+			try {
+				worker.execute();
+			} catch (ExecutionException e1) {
+				Log.errorMessage(e1);
+			}
+						
 			final MapViewController mapViewController = mapFrame.getMapViewer().getLogicalNetLayer().getMapViewController();
 			MarkController controller = null;
 			for(Mark mark : mapView.getMap().getMarks()) {

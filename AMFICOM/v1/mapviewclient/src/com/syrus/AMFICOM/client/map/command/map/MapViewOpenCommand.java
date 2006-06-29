@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapViewOpenCommand.java,v 1.40 2006/06/02 17:54:41 bass Exp $$
+ * $$Id: MapViewOpenCommand.java,v 1.41 2006/06/29 08:39:39 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,8 +12,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ExecutionException;
 
 import javax.swing.JDesktopPane;
 
@@ -26,6 +26,7 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
+import com.syrus.AMFICOM.client.util.SynchronousWorker;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
@@ -36,6 +37,7 @@ import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.util.Log;
@@ -43,8 +45,8 @@ import com.syrus.util.Log;
 /**
  * открыть вид
  *  
- * @version $Revision: 1.40 $, $Date: 2006/06/02 17:54:41 $
- * @author $Author: bass $
+ * @version $Revision: 1.41 $, $Date: 2006/06/29 08:39:39 $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -118,8 +120,22 @@ public class MapViewOpenCommand extends AbstractCommand {
 			setResult(Command.RESULT_CANCEL);
 			return;
 		}
-
-		this.mapView.getMap().open();
+		
+		final Map map = this.mapView.getMap();
+		SynchronousWorker<Map> worker = new SynchronousWorker<Map>(null, 
+				I18N.getString("Message.Information.please_wait"), 
+				I18N.getString("Message.Information.load_mapview"), true) {
+			@Override
+			public Map construct() throws Exception {
+				map.open();
+				return map;
+			}
+		};
+		try {
+			worker.execute();
+		} catch (ExecutionException e1) {
+			Log.errorMessage(e1);
+		}
 
 		/*
 		 * The following block is turned off. 
@@ -170,7 +186,7 @@ public class MapViewOpenCommand extends AbstractCommand {
 		 * visible: it has protected access in class StorableObject.
 		 */
 
-		final Map<Short, Set<Identifier>> objectsToLoad = new HashMap<Short, Set<Identifier>>();
+		final java.util.Map<Short, Set<Identifier>> objectsToLoad = new HashMap<Short, Set<Identifier>>();
 
 //		final Set<Identifiable> reverseDependencies = scheme.getReverseDependencies(true);
 		final Set<Identifiable> reverseDependencies = Collections.emptySet();
