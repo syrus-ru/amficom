@@ -44,7 +44,7 @@ die "failed to determine null file" unless $nul;
 
 my $targetOpt = $targetTag eq '' ? '' : "-r $targetTag";
 my @cvsUpOut;
-foreach (`cvs -q -n up -d $targetOpt`)
+foreach (`cvs -q -n up $targetOpt`)
 {
 	chomp;
 	next if m#^[?] #; # such files are likely to be out of interest at all
