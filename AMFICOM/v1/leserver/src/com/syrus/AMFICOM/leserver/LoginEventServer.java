@@ -1,7 +1,7 @@
 /*-
- * $Id: LoginEventServer.java,v 1.40 2006/06/29 09:46:26 bass Exp $
+ * $Id: LoginEventServer.java,v 1.41 2006/06/29 10:05:29 bass Exp $
  *
- * Copyright ¿ 2004-2005 Syrus Systems.
+ * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
@@ -27,7 +27,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.40 $, $Date: 2006/06/29 09:46:26 $
+ * @version $Revision: 1.41 $, $Date: 2006/06/29 10:05:29 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module leserver
@@ -59,8 +59,6 @@ final class LoginEventServer {
 
 	private static String loginProcessCodename;
 	private static String eventProcessCodename;
-
-	private boolean running;
 
 	private LoginEventServer() {
 		// singleton
@@ -147,15 +145,8 @@ final class LoginEventServer {
 		}
 	}
 
-	public void run() {
-		while (this.running) {
-			// TODO Implement
-		}
-	}
-
 	static void shutdown() {
 		final LEServerSessionEnvironment leServerSessionEnvironment = LEServerSessionEnvironment.getInstance();
 		StorableObjectPool.serialize(leServerSessionEnvironment.getPoolContext().getLRUMapSaver());
 	}
-
 }
