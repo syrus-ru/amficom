@@ -1,5 +1,5 @@
 /*-
- * $Id: DeliveryMethod.java,v 1.5 2006/06/10 19:24:05 bass Exp $
+ * $Id: DeliveryMethod.java,v 1.6 2006/06/29 10:20:37 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2006/06/10 19:24:05 $
+ * @version $Revision: 1.6 $, $Date: 2006/06/29 10:20:37 $
  * @module event
  */
 public enum DeliveryMethod {
@@ -61,8 +61,6 @@ public enum DeliveryMethod {
 	 * A mutable holder for immutable enum instances.
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: bass $
-	 * @version $Revision: 1.5 $, $Date: 2006/06/10 19:24:05 $
 	 * @module event
 	 */
 	public static final class Proxy

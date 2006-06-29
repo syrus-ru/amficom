@@ -1,5 +1,5 @@
 /*-
- * $Id: LineMismatchEvent.java,v 1.32 2006/06/29 08:18:45 bass Exp $
+ * $Id: LineMismatchEvent.java,v 1.33 2006/06/29 10:20:37 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,7 +41,7 @@ import com.syrus.util.transport.idl.IdlTransferableObjectExt;
  * 
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.32 $, $Date: 2006/06/29 08:18:45 $
+ * @version $Revision: 1.33 $, $Date: 2006/06/29 10:20:37 $
  * @module event
  */
 public interface LineMismatchEvent
@@ -337,8 +337,6 @@ public interface LineMismatchEvent
 	 * <p>Noone should ever override {@code AlarmStatus.toString()}.</p>
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: bass $
-	 * @version $Revision: 1.32 $, $Date: 2006/06/29 08:18:45 $
 	 * @module event
 	 */
 	enum AlarmStatus implements IdlTransferableObject<IdlAlarmStatus> {
@@ -671,8 +669,6 @@ public interface LineMismatchEvent
 		 * XTRA_CLOSED;</pre>
 		 *
 		 * @author Andrew ``Bass'' Shcheglov
-		 * @author $Author: bass $
-		 * @version $Revision: 1.32 $, $Date: 2006/06/29 08:18:45 $
 		 * @see AllowedSuccessors
 		 * @module event
 		 */
@@ -684,8 +680,6 @@ public interface LineMismatchEvent
 
 		/**
 		 * @author Andrew ``Bass'' Shcheglov
-		 * @author $Author: bass $
-		 * @version $Revision: 1.32 $, $Date: 2006/06/29 08:18:45 $
 		 * @see AllowedPredecessors
 		 * @module event
 		 */
@@ -699,8 +693,6 @@ public interface LineMismatchEvent
 		 * A mutable holder for immutable enum instances.
 		 *
 		 * @author Andrew ``Bass'' Shcheglov
-		 * @author $Author: bass $
-		 * @version $Revision: 1.32 $, $Date: 2006/06/29 08:18:45 $
 		 * @module event
 		 */
 		static final class Proxy
@@ -774,8 +766,6 @@ public interface LineMismatchEvent
 	 * be immutable.</p>
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: bass $
-	 * @version $Revision: 1.32 $, $Date: 2006/06/29 08:18:45 $
 	 * @module event
 	 */
 	interface ChangeLogRecord extends Comparable<ChangeLogRecord>,
