@@ -39,6 +39,7 @@ import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.AMFICOM.measurement.MeasurementWrapper;
 import com.syrus.AMFICOM.measurement.MonitoredElement;
 import com.syrus.AMFICOM.measurement.Result;
+import com.syrus.AMFICOM.measurement.ResultWrapper;
 import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 import com.syrus.io.DataFormatException;
 import com.syrus.util.Log;
@@ -94,22 +95,38 @@ public class LoadTraceFromDatabaseCommand extends AbstractCommand {
 					// в противном случае берем дефолтные - должно быть не null
 					analysisParameters = Heap.getMinuitDefaultParams();
 				}
+
+				final LinkedIdsCondition condition2 = new LinkedIdsCondition(measurements, ObjectEntities.RESULT_CODE);
+//				final TypicalCondition condition3 = new TypicalCondition(ResultSort.RESULT_SORT_MEASUREMENT.value(),
+//						OperationSort.OPERATION_EQUALS, ObjectEntities.RESULT_CODE, ResultWrapper.COLUMN_SORT);
 				
+				Set<Result> results = StorableObjectPool.getStorableObjectsByCondition(
+//						new CompoundCondition(condition2, CompoundConditionSort.AND, condition3)
+						condition2,
+						true);
+				
+				for (Result result1 : results) {
+					if (result1.getSort().value() == ResultSort.RESULT_SORT_MEASUREMENT.value()) {
+						final long date = ((Measurement)result1.getAction()).getStartTime().getTime();
+						final Trace trace = Trace.getTraceWithARIfPossible(result1, analysisParameters);
+						pmads.put(trace.getKey(), new PredictionMtaeAndDate(trace.getMTAE(), date));							
+						traces.add(trace);
+					}
+				}
+				/*
 				for (Measurement m : measurements) {
 					final long date = m.getStartTime().getTime();
 					for (Result result1 : m.getResults()) { // XXX: PERFORMANCE: 90% of load-from-cache time is m.getResults() (takes ~ 1 sec)
 						if (result1.getSort().equals(ResultSort.RESULT_SORT_MEASUREMENT)) {
 							try {
-								final Trace trace = Trace.getTraceWithARIfPossible(result1, analysisParameters);
-								pmads.put(trace.getKey(), new PredictionMtaeAndDate(trace.getMTAE(), date));							
-								traces.add(trace);
+								
 							} catch (SimpleApplicationException e) {
 								Log.errorMessage(e);
 							}
 						}
 					}
 					traces.remove(null);
-				}
+				}*/
 				if (traces.size() < 2) {
 					SwingUtilities.invokeLater(new Runnable() {
 						public void run() {
