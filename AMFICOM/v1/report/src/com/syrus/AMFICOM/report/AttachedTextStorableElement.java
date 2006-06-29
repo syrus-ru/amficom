@@ -191,6 +191,7 @@ public final class AttachedTextStorableElement extends StorableElement
 	@Override
 	protected Set<Identifiable> getDependenciesTmpl() {
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
+		dependencies.add(this.reportTemplateId);
 		dependencies.add(this.horizontalAttacherId);
 		dependencies.add(this.verticalAttacherId);
 		return dependencies;

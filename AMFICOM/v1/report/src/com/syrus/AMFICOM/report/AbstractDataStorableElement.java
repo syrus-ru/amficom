@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractDataStorableElement.java,v 1.4 2006/03/15 14:47:29 bass Exp $
+ * $Id: AbstractDataStorableElement.java,v 1.5 2006/06/29 11:19:48 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,10 @@
 package com.syrus.AMFICOM.report;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.report.corba.IdlAbstractData;
@@ -18,8 +21,8 @@ import com.syrus.AMFICOM.resource.IntPoint;
 
 /**
  * @author max
- * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2006/03/15 14:47:29 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.5 $, $Date: 2006/06/29 11:19:48 $
  * @module report
  */
 public abstract class AbstractDataStorableElement 
@@ -114,4 +117,13 @@ public abstract class AbstractDataStorableElement
 		this.reportObjectId = reportObjectId;
 		super.markAsChanged();
 	}
+
+	@Override
+	protected final Set<Identifiable> getDependenciesTmpl() {
+		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
+		dependencies.add(this.reportTemplateId);
+		dependencies.add(this.reportObjectId);
+		return dependencies;
+	}
+
 }

@@ -6,14 +6,11 @@ import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.ObjectEntities.REPORTDATA_CODE;
 import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 
-import java.util.Collections;
 import java.util.Date;
-import java.util.Set;
 
 import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -140,11 +137,6 @@ public final class DataStorableElement extends AbstractDataStorableElement
 				this.reportTemplateId.getIdlTransferable(),
 				this.reportName,
 				this.modelClassName);
-	}
-
-	@Override
-	protected Set<Identifiable> getDependenciesTmpl() {
-		return Collections.emptySet();
 	}
 
 	@Override

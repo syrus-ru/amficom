@@ -1,5 +1,5 @@
 /*
- * $Id: TableDataStorableElement.java,v 1.22 2006/03/15 14:47:29 bass Exp $
+ * $Id: TableDataStorableElement.java,v 1.23 2006/06/29 11:19:48 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,14 +14,11 @@ import static com.syrus.AMFICOM.general.ObjectEntities.REPORTTABLEDATA_CODE;
 import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 
 import java.awt.Font;
-import java.util.Collections;
 import java.util.Date;
-import java.util.Set;
 
 import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -34,8 +31,8 @@ import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 /**
  * Класс для отображения данных в табличном виде
- * @author $Author: bass $
- * @version $Revision: 1.22 $, $Date: 2006/03/15 14:47:29 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.23 $, $Date: 2006/06/29 11:19:48 $
  * @module report
  */
 public final class TableDataStorableElement extends AbstractDataStorableElement
@@ -107,11 +104,6 @@ public final class TableDataStorableElement extends AbstractDataStorableElement
 	throws IdlConversionException {
 		super.fromIdlTransferable(idlTableData);
 		this.verticalDivisionsCount = idlTableData.verticalDivisionCount;
-	}
-
-	@Override
-	protected Set<Identifiable> getDependenciesTmpl() {
-		return Collections.emptySet();
 	}
 
 	synchronized void setAttributes(Date created, 

@@ -133,6 +133,7 @@ public final class ImageStorableElement extends StorableElement
 	@Override
 	protected Set<Identifiable> getDependenciesTmpl() {
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
+		dependencies.add(this.reportTemplateId);
 		dependencies.add(this.bitmapImageResourceId);
 		return dependencies;
 	}
