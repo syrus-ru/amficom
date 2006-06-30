@@ -25,3 +25,4 @@ images
 logs
 Application.properties
 common.properties
+.refactorings
