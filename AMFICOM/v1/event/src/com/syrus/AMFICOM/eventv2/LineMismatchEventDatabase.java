@@ -1,5 +1,5 @@
 /*-
- * $Id: LineMismatchEventDatabase.java,v 1.10 2006/06/29 16:12:39 bass Exp $
+ * $Id: LineMismatchEventDatabase.java,v 1.11 2006/06/30 12:01:54 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -57,7 +57,7 @@ import com.syrus.util.database.DatabaseString;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.10 $, $Date: 2006/06/29 16:12:39 $
+ * @version $Revision: 1.11 $, $Date: 2006/06/30 12:01:54 $
  * @module event
  */
 public final class LineMismatchEventDatabase
@@ -399,11 +399,19 @@ public final class LineMismatchEventDatabase
 			 * ChangeLogRecordImpl ctor, for this class is not static.
 			 */
 			final Map<Identifier, DefaultLineMismatchEvent> keyMap = new HashMap<Identifier, DefaultLineMismatchEvent>();
+
+			/*-
+			 * We don't want null values in our map, so initially
+			 * fill it with empty ones. 
+			 */
+			final Map<Identifier, Set<ChangeLogRecord>> changeLogs = new HashMap<Identifier, Set<ChangeLogRecord>>();
+
 			for (final DefaultLineMismatchEvent lineMismatchEvent : lineMismatchEvents) {
-				keyMap.put(lineMismatchEvent.getId(), lineMismatchEvent);
+				final Identifier lineMismatchEventId = lineMismatchEvent.getId();
+				keyMap.put(lineMismatchEventId, lineMismatchEvent);
+				changeLogs.put(lineMismatchEventId, Collections.<ChangeLogRecord> emptySet());
 			}
 
-			final Map<Identifier, Set<ChangeLogRecord>> changeLogs = new HashMap<Identifier, Set<ChangeLogRecord>>();
 
 			final String sql = SQL_SELECT
 					+ COLUMN_MODIFIED + COMMA
@@ -425,7 +433,7 @@ public final class LineMismatchEventDatabase
 						rs,
 						COLUMN_PARENT_LINE_MISMATCH_EVENT_ID);
 				Set<ChangeLogRecord> changeLog = changeLogs.get(parentLineMismatchEventId);
-				if (changeLog == null) {
+				if (changeLog == Collections.EMPTY_SET) {
 					changeLog = new HashSet<ChangeLogRecord>();
 					changeLogs.put(parentLineMismatchEventId, changeLog);
 				}
