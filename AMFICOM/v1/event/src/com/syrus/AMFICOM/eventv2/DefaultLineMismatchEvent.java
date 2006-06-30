@@ -1,5 +1,5 @@
 /*-
- * $Id: DefaultLineMismatchEvent.java,v 1.27 2006/06/30 09:36:49 bass Exp $
+ * $Id: DefaultLineMismatchEvent.java,v 1.28 2006/06/30 16:39:13 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,7 +44,7 @@ import com.syrus.util.transport.idl.IdlConversionException;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.27 $, $Date: 2006/06/30 09:36:49 $
+ * @version $Revision: 1.28 $, $Date: 2006/06/30 16:39:13 $
  * @module event
  */
 public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
@@ -601,13 +601,21 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 				idlChangeLog);
 	}
 
+	@SuppressWarnings("hiding")
+	ChangeLogRecord newChangeLogRecord(final Date modified,
+				final String key,
+				final String oldValue,
+				final String newValue) {
+		return new ChangeLogRecordImpl(modified, key, oldValue, newValue);
+	}
+
 	/**
 	 * Immutable.
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @module event
 	 */
-	class ChangeLogRecordImpl implements ChangeLogRecord, Serializable {
+	private class ChangeLogRecordImpl implements ChangeLogRecord, Serializable {
 		private static final long serialVersionUID = -772564340276801643L;
 
 		@SuppressWarnings("hiding")

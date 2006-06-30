@@ -1,5 +1,5 @@
 /*-
- * $Id: LineMismatchEventDatabase.java,v 1.12 2006/06/30 15:06:43 bass Exp $
+ * $Id: LineMismatchEventDatabase.java,v 1.13 2006/06/30 16:39:13 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -57,7 +57,7 @@ import com.syrus.util.database.DatabaseString;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.12 $, $Date: 2006/06/30 15:06:43 $
+ * @version $Revision: 1.13 $, $Date: 2006/06/30 16:39:13 $
  * @module event
  */
 public final class LineMismatchEventDatabase
@@ -444,7 +444,7 @@ public final class LineMismatchEventDatabase
 				 * I don't use DatabaseString here since I need
 				 * pure nulls if there're any, NOT empty strings.
 				 */
-				final ChangeLogRecord changeLogRecord = lineMismatchEvent.new ChangeLogRecordImpl(
+				final ChangeLogRecord changeLogRecord = lineMismatchEvent.newChangeLogRecord(
 						rs.getTimestamp(COLUMN_MODIFIED),
 						rs.getString(COLUMN_KEY),
 						rs.getString(COLUMN_OLD_VALUE),
