@@ -1,5 +1,5 @@
 /*-
- * $Id: Alarm.java,v 1.7 2006/06/16 15:57:47 bass Exp $
+ * $Id: Alarm.java,v 1.8 2006/06/30 15:03:54 bass Exp $
  *
  * Copyright ¿ 2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -60,7 +60,9 @@ public class Alarm {
 			final SortedSet<LineMismatchEvent> lineMismatchEvents = leader.getChildLineMismatchEvents();
 			this.count = lineMismatchEvents.size();
 			
-			LineMismatchEvent last = lineMismatchEvents.last();
+			LineMismatchEvent last = lineMismatchEvents.isEmpty()
+					? leader
+					: lineMismatchEvents.last();
 			ReflectogramMismatchEvent lastrme = last.getReflectogramMismatchEvent();
 			this.endDate = lastrme.getCreated();
 			this.lastMeasurement = StorableObjectPool.getStorableObject(lastrme.getMeasurementId(), true);
