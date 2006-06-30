@@ -1,5 +1,5 @@
 /*-
- * $Id: LineMismatchEvent.java,v 1.33 2006/06/29 10:20:37 bass Exp $
+ * $Id: LineMismatchEvent.java,v 1.34 2006/06/30 08:15:13 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,7 +41,7 @@ import com.syrus.util.transport.idl.IdlTransferableObjectExt;
  * 
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.33 $, $Date: 2006/06/29 10:20:37 $
+ * @version $Revision: 1.34 $, $Date: 2006/06/30 08:15:13 $
  * @module event
  */
 public interface LineMismatchEvent
@@ -764,6 +764,15 @@ public interface LineMismatchEvent
 	 *
 	 * <p>Instances of classes implementing this interface are expected to
 	 * be immutable.</p>
+	 *
+	 * <p>Two instances of {@code ChangeLogRecord} are considered equal if:
+	 *
+	 * <ol><li>they belong to the same {@code LineMismatchEvent};</li>
+	 * <li>they have the same modification time;</li>
+	 * <li>they have the same {@code key} property.</li></ol>
+	 *
+	 * Implementations are expected to take this into account when
+	 * implementing {@code equals()} and {@code compareTo(...)} methods.</p>
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @module event
