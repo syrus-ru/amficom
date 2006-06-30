@@ -1,5 +1,5 @@
 /*-
- * $Id: DefaultLineMismatchEvent.java,v 1.25 2006/06/29 16:12:39 bass Exp $
+ * $Id: DefaultLineMismatchEvent.java,v 1.26 2006/06/30 08:15:50 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,7 +44,7 @@ import com.syrus.util.transport.idl.IdlConversionException;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.25 $, $Date: 2006/06/29 16:12:39 $
+ * @version $Revision: 1.26 $, $Date: 2006/06/30 08:15:50 $
  * @module event
  */
 public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
@@ -606,7 +606,7 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.25 $, $Date: 2006/06/29 16:12:39 $
+	 * @version $Revision: 1.26 $, $Date: 2006/06/30 08:15:50 $
 	 * @module event
 	 */
 	class ChangeLogRecordImpl implements ChangeLogRecord, Serializable {
@@ -653,8 +653,8 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 				final String oldValue,
 				final String newValue) {
 			this.modified = new Date(modified.getTime());
-			this.oldValue = stringToObject(this.key = key, oldValue);
-			this.newValue = stringToObject(this.key, newValue);
+			this.oldValue = ChangeLogRecordImpl.this.stringToObject(this.key = key, oldValue);
+			this.newValue = ChangeLogRecordImpl.this.stringToObject(ChangeLogRecordImpl.this.key, newValue);
 		}
 
 		/**
@@ -674,35 +674,67 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 		 * @see LineMismatchEvent.ChangeLogRecord#getModified()
 		 */
 		public Date getModified() {
-			return (Date) this.modified.clone();
+			return (Date) ChangeLogRecordImpl.this.modified.clone();
 		}
 
 		/**
 		 * @see LineMismatchEvent.ChangeLogRecord#getKey()
 		 */
 		public String getKey() {
-			return this.key;
+			return ChangeLogRecordImpl.this.key;
 		}
 
 		/**
 		 * @see LineMismatchEvent.ChangeLogRecord#getOldValue()
 		 */
 		public Object getOldValue() {
-			return this.oldValue;
+			return ChangeLogRecordImpl.this.oldValue;
 		}
 
 		/**
 		 * @see LineMismatchEvent.ChangeLogRecord#getNewValue()
 		 */
 		public Object getNewValue() {
-			return this.newValue;
+			return ChangeLogRecordImpl.this.newValue;
 		}
 
 		/**
+		 * Compares {@code modified} properties and, if they&apos;re
+		 * equal, compares {@code key} properties.
+		 *
 		 * @see Comparable#compareTo(Object)
 		 */
 		public int compareTo(final ChangeLogRecord that) {
-			return this.getModified().compareTo(that.getModified());
+			final int returnValue = ChangeLogRecordImpl.this.getModified().compareTo(that.getModified());
+			return returnValue == 0
+					? ChangeLogRecordImpl.this.getKey().compareTo(that.getKey())
+					: returnValue;
+		}
+
+		/**
+		 * @see Object#hashCode()
+		 */
+		@Override
+		public int hashCode() {
+			final int prime = 31;
+			int hashCode = 1;
+			hashCode = prime * hashCode + ChangeLogRecordImpl.this.key.hashCode();
+			hashCode = prime * hashCode + ChangeLogRecordImpl.this.modified.hashCode();
+			return hashCode;
+		}
+
+		/**
+		 * @see Object#equals(Object)
+		 */
+		@Override
+		public boolean equals(final Object obj) {
+			if (obj instanceof ChangeLogRecord) {
+				final ChangeLogRecord that = (ChangeLogRecord) obj;
+				return ChangeLogRecordImpl.this == that ||
+						ChangeLogRecordImpl.this.getModified().equals(that.getModified()) &&
+						ChangeLogRecordImpl.this.getKey().equals(that.getKey());
+			}
+			return false;
 		}
 
 		/**
