@@ -1,5 +1,5 @@
 /*-
- * $Id: LineMismatchEventDatabase.java,v 1.11 2006/06/30 12:01:54 bass Exp $
+ * $Id: LineMismatchEventDatabase.java,v 1.12 2006/06/30 15:06:43 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -57,7 +57,7 @@ import com.syrus.util.database.DatabaseString;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.11 $, $Date: 2006/06/30 12:01:54 $
+ * @version $Revision: 1.12 $, $Date: 2006/06/30 15:06:43 $
  * @module event
  */
 public final class LineMismatchEventDatabase
@@ -414,7 +414,8 @@ public final class LineMismatchEventDatabase
 
 
 			final String sql = SQL_SELECT
-					+ COLUMN_MODIFIED + COMMA
+					+ COLUMN_PARENT_LINE_MISMATCH_EVENT_ID + COMMA
+					+ DatabaseDate.toTimestampQuerySubString(COLUMN_MODIFIED) + COMMA
 					+ COLUMN_KEY + COMMA
 					+ COLUMN_OLD_VALUE + COMMA
 					+ COLUMN_NEW_VALUE
@@ -444,7 +445,7 @@ public final class LineMismatchEventDatabase
 				 * pure nulls if there're any, NOT empty strings.
 				 */
 				final ChangeLogRecord changeLogRecord = lineMismatchEvent.new ChangeLogRecordImpl(
-						DatabaseDate.fromQuerySubString(rs, COLUMN_MODIFIED),
+						rs.getTimestamp(COLUMN_MODIFIED),
 						rs.getString(COLUMN_KEY),
 						rs.getString(COLUMN_OLD_VALUE),
 						rs.getString(COLUMN_NEW_VALUE));
