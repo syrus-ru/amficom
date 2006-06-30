@@ -1,5 +1,5 @@
 /*-
- * $Id: DefaultLineMismatchEvent.java,v 1.28 2006/06/30 16:39:13 bass Exp $
+ * $Id: DefaultLineMismatchEvent.java,v 1.29 2006/06/30 17:24:19 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,7 +44,7 @@ import com.syrus.util.transport.idl.IdlConversionException;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.28 $, $Date: 2006/06/30 16:39:13 $
+ * @version $Revision: 1.29 $, $Date: 2006/06/30 17:24:19 $
  * @module event
  */
 public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
@@ -215,7 +215,7 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 
 			this.changeLog.clear();
 			for (final IdlChangeLogRecord changeLogRecord : lineMismatchEvent.getChangeLog()) {
-				this.changeLog.add(new ChangeLogRecordImpl(changeLogRecord));
+				new ChangeLogRecordImpl(changeLogRecord);
 			}
 		}
 	}
@@ -404,10 +404,9 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 		if (!parentLineMismatchEventIdVoid) {
 			this.getParentLineMismatchEvent().setAlarmStatus(alarmStatus);
 		} else if (oldAlarmStatus.isAllowedPredecessorOf(alarmStatus)) {
-			this.changeLog.add(new ChangeLogRecordImpl(
-					COLUMN_ALARM_STATUS,
+			new ChangeLogRecordImpl(COLUMN_ALARM_STATUS,
 					oldAlarmStatus,
-					alarmStatus));
+					alarmStatus);
 			this.alarmStatus.setValue(alarmStatus);
 		} else {
 			throw new IllegalArgumentException(oldAlarmStatus
@@ -525,10 +524,9 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 		/*-
 		 * Fourth, actually perform the action we've been asked for.
 		 */
-		this.changeLog.add(new ChangeLogRecordImpl(
-				COLUMN_PARENT_LINE_MISMATCH_EVENT_ID,
+		new ChangeLogRecordImpl(COLUMN_PARENT_LINE_MISMATCH_EVENT_ID,
 				this.parentLineMismatchEventId,
-				newParentLineMismatchEventId));
+				newParentLineMismatchEventId);
 		this.parentLineMismatchEventId = newParentLineMismatchEventId;
 		this.alarmStatus.setValue(null);
 		/**
@@ -643,6 +641,7 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 			this.oldValue = oldValue;
 			this.newValue = newValue;
 
+			DefaultLineMismatchEvent.this.changeLog.add(ChangeLogRecordImpl.this);
 			DefaultLineMismatchEvent.this.markAsChanged();
 		}
 
@@ -669,11 +668,14 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 		 *
 		 * @param changeLogRecord
 		 */
+		@SuppressWarnings("synthetic-access")
 		ChangeLogRecordImpl(final IdlChangeLogRecord changeLogRecord) {
 			this(new Date(changeLogRecord.modified),
 					changeLogRecord.key,
 					changeLogRecord.oldValue,
 					changeLogRecord.newValue);
+
+			DefaultLineMismatchEvent.this.changeLog.add(ChangeLogRecordImpl.this);
 		}
 
 		/**
