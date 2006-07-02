@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractEventProcessor.java,v 1.6 2006/06/02 13:46:45 arseniy Exp $
+ * $Id: AbstractEventProcessor.java,v 1.7 2006/07/02 19:02:12 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,8 +39,8 @@ import com.syrus.util.transport.idl.IdlConversionException;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.6 $, $Date: 2006/06/02 13:46:45 $
+ * @author $Author: bass $
+ * @version $Revision: 1.7 $, $Date: 2006/07/02 19:02:12 $
  * @module leserver
  */
 abstract class AbstractEventProcessor implements EventProcessor, Runnable {
@@ -82,10 +82,13 @@ abstract class AbstractEventProcessor implements EventProcessor, Runnable {
 					 * subsequent task will NOT run.
 					 */
 					final List<Runnable> unfinishedTasks = executorService.shutdownNow();
-					Log.debugMessage(unfinishedTasks.size()
-							+ " event(s) dropped: adressee "
-							+ sessionKey + " missing.",
-							WARNING);
+					final int droppedCount = unfinishedTasks.size();
+					if (droppedCount != 0) {
+						Log.debugMessage(droppedCount
+								+ " event(s) dropped: adressee "
+								+ sessionKey + " missing.",
+								WARNING);
+					}
 				}
 			}
 		});
