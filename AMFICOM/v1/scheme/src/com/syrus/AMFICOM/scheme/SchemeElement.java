@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.166 2006/07/02 21:18:59 bass Exp $
+ * $Id: SchemeElement.java,v 1.167 2006/07/02 21:53:11 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -98,7 +98,7 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * #04 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.166 $, $Date: 2006/07/02 21:18:59 $
+ * @version $Revision: 1.167 $, $Date: 2006/07/02 21:53:11 $
  * @module scheme
  */
 public final class SchemeElement extends AbstractSchemeElement
@@ -2191,6 +2191,17 @@ public final class SchemeElement extends AbstractSchemeElement
 			schemeCableLinks.addAll(schemeElement.getSchemeCableLinksRecursively(usePool));
 		}
 		return Collections.unmodifiableSet(schemeCableLinks);
+	}
+
+	/**
+	 * @see AbstractSchemeElement#getNearestParentSchemeElement()
+	 */
+	@Override
+	public SchemeElement getNearestParentSchemeElement()
+	throws ApplicationException {
+		return this.getParentSchemeElementId().isVoid()
+				? this.getParentScheme().getParentSchemeElement()
+				: this.getParentSchemeElement();
 	}
 
 	void setEquipmentId(Identifier equipmentId) {

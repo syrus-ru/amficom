@@ -1,7 +1,7 @@
 /*-
- * $Id: SchemeCableLink.java,v 1.132 2006/06/27 18:21:23 arseniy Exp $
+ * $Id: SchemeCableLink.java,v 1.133 2006/07/02 21:53:11 bass Exp $
  *
- * Copyright ¿ 2004-2005 Syrus Systems.
+ * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
@@ -90,8 +90,8 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
 /**
  * #13 in hierarchy.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.132 $, $Date: 2006/06/27 18:21:23 $
+ * @author $Author: bass $
+ * @version $Revision: 1.133 $, $Date: 2006/07/02 21:53:11 $
  * @module scheme
  */
 public final class SchemeCableLink extends AbstractSchemeLink
@@ -1033,7 +1033,16 @@ public final class SchemeCableLink extends AbstractSchemeLink
 
 	/*-********************************************************************
 	 * Non-model members                                                  *
-	 **********************************************************************/	
+	 **********************************************************************/
+
+	/**
+	 * @see AbstractSchemeElement#getNearestParentSchemeElement()
+	 */
+	@Override
+	public SchemeElement getNearestParentSchemeElement()
+	throws ApplicationException {
+		return this.getParentScheme().getParentSchemeElement();
+	}
 
 	/**
 	 * @param cableLinkType

@@ -1,7 +1,7 @@
 /*-
- * $Id: SchemeLink.java,v 1.116 2006/06/21 14:10:54 bass Exp $
+ * $Id: SchemeLink.java,v 1.117 2006/07/02 21:53:11 bass Exp $
  *
- * Copyright ¿ 2004-2005 Syrus Systems.
+ * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
@@ -76,7 +76,7 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * #12 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.116 $, $Date: 2006/06/21 14:10:54 $
+ * @version $Revision: 1.117 $, $Date: 2006/07/02 21:53:11 $
  * @module scheme
  */
 public final class SchemeLink extends AbstractSchemeLink
@@ -1353,6 +1353,19 @@ public final class SchemeLink extends AbstractSchemeLink
 	/*-********************************************************************
 	 * Non-model members.                                                 *
 	 **********************************************************************/
+
+	/**
+	 * @see AbstractSchemeElement#getNearestParentSchemeElement()
+	 */
+	@Override
+	public SchemeElement getNearestParentSchemeElement()
+	throws ApplicationException {
+		return this.getParentSchemeElementId().isVoid()
+				? this.getParentSchemeId().isVoid()
+						? null
+						: this.getParentScheme().getParentSchemeElement()
+				: this.getParentSchemeElement();
+	}
 
 	void setSiteNodeId(Identifier siteNodeId) {
 //		 TODO: introduce additional sanity checks

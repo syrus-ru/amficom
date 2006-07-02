@@ -1,7 +1,7 @@
 /*-
- * $Id: AbstractSchemeElement.java,v 1.87 2006/07/02 21:18:59 bass Exp $
+ * $Id: AbstractSchemeElement.java,v 1.88 2006/07/02 21:53:11 bass Exp $
  *
- * Copyright ¿ 2005 Syrus Systems.
+ * Copyright ¿ 2005-2006 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
@@ -46,7 +46,7 @@ import com.syrus.util.transport.xml.XmlConversionException;
  * {@link AbstractSchemeElement}instead.
  *
  * @author $Author: bass $
- * @version $Revision: 1.87 $, $Date: 2006/07/02 21:18:59 $
+ * @version $Revision: 1.88 $, $Date: 2006/07/02 21:53:11 $
  * @module scheme
  */
 public abstract class AbstractSchemeElement
@@ -410,6 +410,28 @@ public abstract class AbstractSchemeElement
 	/*-********************************************************************
 	 * Non-model members.                                                 *
 	 **********************************************************************/
+
+	/**
+	 * May return {@code null}.
+	 *
+	 * @throws ApplicationException
+	 */
+	public abstract SchemeElement getNearestParentSchemeElement()
+	throws ApplicationException;
+
+	/**
+	 * Unlike {@link #getNearestParentSchemeElement()}, never returns {@code
+	 * null}.
+	 *
+	 * @throws ApplicationException
+	 */
+	public final AbstractSchemeElement getNearestParentSchemeElementOrSelf()
+	throws ApplicationException {
+		final SchemeElement nearestParentSchemeElement = this.getNearestParentSchemeElement();
+		return nearestParentSchemeElement == null
+				? this
+				: nearestParentSchemeElement;
+	}
 
 	/**
 	 * @deprecated
