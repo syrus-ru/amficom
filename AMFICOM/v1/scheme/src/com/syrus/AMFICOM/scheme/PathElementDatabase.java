@@ -1,7 +1,7 @@
 /*-
- * $Id: PathElementDatabase.java,v 1.19 2005/12/02 11:24:16 bass Exp $
+ * $Id: PathElementDatabase.java,v 1.20 2006/07/02 22:36:13 bass Exp $
  *
- * Copyright ¿ 2005 Syrus Systems.
+ * Copyright ¿ 2005-2006 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
@@ -30,7 +30,6 @@ import java.sql.SQLException;
 import java.util.Date;
 
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
-import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.IdlDataPackage.IdlKind;
@@ -39,7 +38,7 @@ import com.syrus.util.database.DatabaseDate;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.19 $, $Date: 2005/12/02 11:24:16 $
+ * @version $Revision: 1.20 $, $Date: 2006/07/02 22:36:13 $
  * @module scheme
  */
 public final class PathElementDatabase extends StorableObjectDatabase<PathElement> {
@@ -81,57 +80,53 @@ public final class PathElementDatabase extends StorableObjectDatabase<PathElemen
 	}
 
 	/**
-	 * @param storableObject
-	 * @throws IllegalDataException
+	 * @param pathElement
 	 */
 	@Override
 	protected String getUpdateSingleSQLValuesTmpl(
-			final PathElement storableObject)
-			throws IllegalDataException {
-		return DatabaseIdentifier.toSQLString(storableObject.getParentSchemePathId()) + COMMA
-				+ storableObject.getSequentialNumber() + COMMA
-				+ storableObject.getKind().value() + COMMA
-				+ DatabaseIdentifier.toSQLString(storableObject.getStartAbstractSchemePortId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(storableObject.getEndAbstractSchemePortId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(storableObject.getSchemeCableThreadId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(storableObject.getSchemeLinkId());
+			final PathElement pathElement) {
+		return DatabaseIdentifier.toSQLString(pathElement.getParentSchemePathId()) + COMMA
+				+ pathElement.getSequentialNumber() + COMMA
+				+ pathElement.getKind().value() + COMMA
+				+ DatabaseIdentifier.toSQLString(pathElement.getStartAbstractSchemePortId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(pathElement.getEndAbstractSchemePortId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(pathElement.getSchemeCableThreadId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(pathElement.getSchemeLinkId());
 	}
 
 	/**
-	 * @param storableObject
+	 * @param pathElement
 	 * @param preparedStatement
 	 * @param startParameterNumber
-	 * @throws IllegalDataException
 	 * @throws SQLException
 	 */
 	@Override
 	protected int setEntityForPreparedStatementTmpl(
-			final PathElement storableObject,
+			final PathElement pathElement,
 			final PreparedStatement preparedStatement,
 			final int startParameterNumber)
-	throws IllegalDataException, SQLException {
+	throws SQLException {
 		int startParameterNumber1 = startParameterNumber;
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber1, storableObject.getParentSchemePathId());
-		preparedStatement.setInt(++startParameterNumber1, storableObject.getSequentialNumber());
-		preparedStatement.setInt(++startParameterNumber1, storableObject.getKind().value());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber1, storableObject.getStartAbstractSchemePortId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber1, storableObject.getEndAbstractSchemePortId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber1, storableObject.getSchemeCableThreadId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber1, storableObject.getSchemeLinkId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber1, pathElement.getParentSchemePathId());
+		preparedStatement.setInt(++startParameterNumber1, pathElement.getSequentialNumber());
+		preparedStatement.setInt(++startParameterNumber1, pathElement.getKind().value());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber1, pathElement.getStartAbstractSchemePortId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber1, pathElement.getEndAbstractSchemePortId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber1, pathElement.getSchemeCableThreadId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber1, pathElement.getSchemeLinkId());
 		return startParameterNumber1;
 	}
 
 	/**
 	 * @param storableObject
 	 * @param resultSet
-	 * @throws IllegalDataException
 	 * @throws SQLException
 	 */
 	@Override
 	protected PathElement updateEntityFromResultSet(
 			final PathElement storableObject,
 			final ResultSet resultSet)
-	throws IllegalDataException, SQLException {
+	throws SQLException {
 		final Date created = new Date();
 		final PathElement pathElement = (storableObject == null)
 				? new PathElement(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID),

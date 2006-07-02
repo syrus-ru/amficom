@@ -1,7 +1,7 @@
 /*-
- * $Id: SchemeOptimizeInfoDatabase.java,v 1.19 2005/12/02 11:24:17 bass Exp $
+ * $Id: SchemeOptimizeInfoDatabase.java,v 1.20 2006/07/02 22:36:13 bass Exp $
  *
- * Copyright ¿ 2005 Syrus Systems.
+ * Copyright ¿ 2005-2006 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
@@ -38,7 +38,6 @@ import java.sql.SQLException;
 import java.util.Date;
 
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
-import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.util.database.DatabaseDate;
@@ -47,7 +46,7 @@ import com.syrus.util.database.DatabaseString;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.19 $, $Date: 2005/12/02 11:24:17 $
+ * @version $Revision: 1.20 $, $Date: 2006/07/02 22:36:13 $
  * @module scheme
  */
 public final class SchemeOptimizeInfoDatabase extends StorableObjectDatabase<SchemeOptimizeInfo> {
@@ -106,71 +105,67 @@ public final class SchemeOptimizeInfoDatabase extends StorableObjectDatabase<Sch
 	}
 
 	/**
-	 * @param storableObject
-	 * @throws IllegalDataException
+	 * @param schemeOptimizeInfo
 	 */
 	@Override
 	protected String getUpdateSingleSQLValuesTmpl(
-			SchemeOptimizeInfo storableObject)
-			throws IllegalDataException {
-		return APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
-				+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
-				+ storableObject.getOptimizationMode() + COMMA
-				+ storableObject.getIterations() + COMMA
-				+ storableObject.getPrice() + COMMA
-				+ storableObject.getWaveLength() + COMMA
-				+ storableObject.getLenMargin() + COMMA
-				+ storableObject.getMutationRate() + COMMA
-				+ storableObject.getMutationDegree() + COMMA
-				+ storableObject.getRtuDeleteProb() + COMMA
-				+ storableObject.getRtuCreateProb() + COMMA
-				+ storableObject.getNodesSpliceProb() + COMMA
-				+ storableObject.getNodesCutProb() + COMMA
-				+ storableObject.getSurvivorRate() + COMMA
-				+ DatabaseIdentifier.toSQLString(storableObject.getParentSchemeId());
+			SchemeOptimizeInfo schemeOptimizeInfo) {
+		return APOSTROPHE + DatabaseString.toQuerySubString(schemeOptimizeInfo.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
+				+ APOSTROPHE + DatabaseString.toQuerySubString(schemeOptimizeInfo.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
+				+ schemeOptimizeInfo.getOptimizationMode() + COMMA
+				+ schemeOptimizeInfo.getIterations() + COMMA
+				+ schemeOptimizeInfo.getPrice() + COMMA
+				+ schemeOptimizeInfo.getWaveLength() + COMMA
+				+ schemeOptimizeInfo.getLenMargin() + COMMA
+				+ schemeOptimizeInfo.getMutationRate() + COMMA
+				+ schemeOptimizeInfo.getMutationDegree() + COMMA
+				+ schemeOptimizeInfo.getRtuDeleteProb() + COMMA
+				+ schemeOptimizeInfo.getRtuCreateProb() + COMMA
+				+ schemeOptimizeInfo.getNodesSpliceProb() + COMMA
+				+ schemeOptimizeInfo.getNodesCutProb() + COMMA
+				+ schemeOptimizeInfo.getSurvivorRate() + COMMA
+				+ DatabaseIdentifier.toSQLString(schemeOptimizeInfo.getParentSchemeId());
 	}
 
 	/**
-	 * @param storableObject
+	 * @param schemeOptimizeInfo
 	 * @param preparedStatement
-	 * @param startParameterNumber
-	 * @throws IllegalDataException
+	 * @param initialStartParameterNumber
 	 * @throws SQLException
 	 */
 	@Override
 	protected int setEntityForPreparedStatementTmpl(
-			SchemeOptimizeInfo storableObject,
-			PreparedStatement preparedStatement,
-			int startParameterNumber) throws IllegalDataException,
-			SQLException {
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getName(), SIZE_NAME_COLUMN);
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN);
-		preparedStatement.setInt(++startParameterNumber, storableObject.getOptimizationMode());
-		preparedStatement.setInt(++startParameterNumber, storableObject.getIterations());
-		preparedStatement.setDouble(++startParameterNumber, storableObject.getPrice());
-		preparedStatement.setDouble(++startParameterNumber, storableObject.getWaveLength());
-		preparedStatement.setDouble(++startParameterNumber, storableObject.getLenMargin());
-		preparedStatement.setDouble(++startParameterNumber, storableObject.getMutationRate());
-		preparedStatement.setDouble(++startParameterNumber, storableObject.getMutationDegree());
-		preparedStatement.setDouble(++startParameterNumber, storableObject.getRtuDeleteProb());
-		preparedStatement.setDouble(++startParameterNumber, storableObject.getRtuCreateProb());
-		preparedStatement.setDouble(++startParameterNumber, storableObject.getNodesSpliceProb());
-		preparedStatement.setDouble(++startParameterNumber, storableObject.getNodesCutProb());
-		preparedStatement.setDouble(++startParameterNumber, storableObject.getSurvivorRate());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getParentSchemeId());
+			final SchemeOptimizeInfo schemeOptimizeInfo,
+			final PreparedStatement preparedStatement,
+			final int initialStartParameterNumber)
+	throws SQLException {
+		int startParameterNumber = initialStartParameterNumber;
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, schemeOptimizeInfo.getName(), SIZE_NAME_COLUMN);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, schemeOptimizeInfo.getDescription(), SIZE_DESCRIPTION_COLUMN);
+		preparedStatement.setInt(++startParameterNumber, schemeOptimizeInfo.getOptimizationMode());
+		preparedStatement.setInt(++startParameterNumber, schemeOptimizeInfo.getIterations());
+		preparedStatement.setDouble(++startParameterNumber, schemeOptimizeInfo.getPrice());
+		preparedStatement.setDouble(++startParameterNumber, schemeOptimizeInfo.getWaveLength());
+		preparedStatement.setDouble(++startParameterNumber, schemeOptimizeInfo.getLenMargin());
+		preparedStatement.setDouble(++startParameterNumber, schemeOptimizeInfo.getMutationRate());
+		preparedStatement.setDouble(++startParameterNumber, schemeOptimizeInfo.getMutationDegree());
+		preparedStatement.setDouble(++startParameterNumber, schemeOptimizeInfo.getRtuDeleteProb());
+		preparedStatement.setDouble(++startParameterNumber, schemeOptimizeInfo.getRtuCreateProb());
+		preparedStatement.setDouble(++startParameterNumber, schemeOptimizeInfo.getNodesSpliceProb());
+		preparedStatement.setDouble(++startParameterNumber, schemeOptimizeInfo.getNodesCutProb());
+		preparedStatement.setDouble(++startParameterNumber, schemeOptimizeInfo.getSurvivorRate());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeOptimizeInfo.getParentSchemeId());
 		return startParameterNumber;
 	}
 
 	/**
 	 * @param storableObject
 	 * @param resultSet
-	 * @throws IllegalDataException
 	 * @throws SQLException
 	 */
 	@Override
 	protected SchemeOptimizeInfo updateEntityFromResultSet(SchemeOptimizeInfo storableObject, ResultSet resultSet)
-			throws IllegalDataException,
-				SQLException {
+	throws SQLException {
 		final Date created = new Date();
 		final SchemeOptimizeInfo schemeOptimizeInfo = (storableObject == null)
 				? new SchemeOptimizeInfo(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID),

@@ -1,7 +1,7 @@
 /*-
- * $Id: SchemeCableThreadDatabase.java,v 1.19 2006/06/27 18:22:21 arseniy Exp $
+ * $Id: SchemeCableThreadDatabase.java,v 1.20 2006/07/02 22:36:13 bass Exp $
  *
- * Copyright ¿ 2005 Syrus Systems.
+ * Copyright ¿ 2005-2006 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
@@ -30,7 +30,6 @@ import java.sql.SQLException;
 import java.util.Date;
 
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
-import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.util.database.DatabaseDate;
@@ -38,8 +37,8 @@ import com.syrus.util.database.DatabaseString;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.19 $, $Date: 2006/06/27 18:22:21 $
+ * @author $Author: bass $
+ * @version $Revision: 1.20 $, $Date: 2006/07/02 22:36:13 $
  * @module scheme
  */
 public final class SchemeCableThreadDatabase extends StorableObjectDatabase<SchemeCableThread> {
@@ -81,55 +80,52 @@ public final class SchemeCableThreadDatabase extends StorableObjectDatabase<Sche
 	}
 
 	/**
-	 * @param storableObject
-	 * @throws IllegalDataException
+	 * @param schemeCableThread
 	 */
 	@Override
 	protected String getUpdateSingleSQLValuesTmpl(
-			SchemeCableThread storableObject)
-			throws IllegalDataException {
-		return APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
-				+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
-				+ DatabaseIdentifier.toSQLString(storableObject.getLinkTypeId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(storableObject.getLinkId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(storableObject.getParentSchemeCableLinkId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(storableObject.getSourceSchemePortId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(storableObject.getTargetSchemePortId());
+			SchemeCableThread schemeCableThread) {
+		return APOSTROPHE + DatabaseString.toQuerySubString(schemeCableThread.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
+				+ APOSTROPHE + DatabaseString.toQuerySubString(schemeCableThread.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
+				+ DatabaseIdentifier.toSQLString(schemeCableThread.getLinkTypeId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(schemeCableThread.getLinkId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(schemeCableThread.getParentSchemeCableLinkId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(schemeCableThread.getSourceSchemePortId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(schemeCableThread.getTargetSchemePortId());
 	}
 
 	/**
-	 * @param storableObject
+	 * @param schemeCableThread
 	 * @param preparedStatement
-	 * @param startParameterNumber
-	 * @throws IllegalDataException
+	 * @param initialStartParameterNumber
 	 * @throws SQLException
 	 */
 	@Override
 	protected int setEntityForPreparedStatementTmpl(
-			SchemeCableThread storableObject,
-			PreparedStatement preparedStatement,
-			int startParameterNumber) throws IllegalDataException,
-			SQLException {
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getName(), SIZE_NAME_COLUMN);
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN);
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getLinkTypeId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getLinkId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getParentSchemeCableLinkId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getSourceSchemePortId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getTargetSchemePortId());
+			final SchemeCableThread schemeCableThread,
+			final PreparedStatement preparedStatement,
+			final int initialStartParameterNumber)
+	throws SQLException {
+		int startParameterNumber = initialStartParameterNumber;
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, schemeCableThread.getName(), SIZE_NAME_COLUMN);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, schemeCableThread.getDescription(), SIZE_DESCRIPTION_COLUMN);
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeCableThread.getLinkTypeId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeCableThread.getLinkId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeCableThread.getParentSchemeCableLinkId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeCableThread.getSourceSchemePortId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeCableThread.getTargetSchemePortId());
 		return startParameterNumber;
 	}
 
 	/**
 	 * @param storableObject
 	 * @param resultSet
-	 * @throws IllegalDataException
 	 * @throws SQLException
 	 */
 	@Override
 	protected SchemeCableThread updateEntityFromResultSet(
 			SchemeCableThread storableObject, ResultSet resultSet)
-			throws IllegalDataException, SQLException {
+	throws SQLException {
 		final Date created = new Date();
 		final SchemeCableThread schemeCableThread = (storableObject == null)
 				? new SchemeCableThread(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID),

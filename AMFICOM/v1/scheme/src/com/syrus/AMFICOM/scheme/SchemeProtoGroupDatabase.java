@@ -1,7 +1,7 @@
 /*-
- * $Id: SchemeProtoGroupDatabase.java,v 1.19 2005/12/02 11:24:16 bass Exp $
+ * $Id: SchemeProtoGroupDatabase.java,v 1.20 2006/07/02 22:36:13 bass Exp $
  *
- * Copyright ¿ 2005 Syrus Systems.
+ * Copyright ¿ 2005-2006 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
@@ -27,7 +27,6 @@ import java.sql.SQLException;
 import java.util.Date;
 
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
-import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.util.database.DatabaseDate;
@@ -36,7 +35,7 @@ import com.syrus.util.database.DatabaseString;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.19 $, $Date: 2005/12/02 11:24:16 $
+ * @version $Revision: 1.20 $, $Date: 2006/07/02 22:36:13 $
  * @module scheme
  */
 public final class SchemeProtoGroupDatabase extends StorableObjectDatabase<SchemeProtoGroup> {
@@ -72,49 +71,46 @@ public final class SchemeProtoGroupDatabase extends StorableObjectDatabase<Schem
 	}
 
 	/**
-	 * @param storableObject
-	 * @throws IllegalDataException
+	 * @param schemeProtoGroup
 	 */
 	@Override
-	protected String getUpdateSingleSQLValuesTmpl(final SchemeProtoGroup storableObject)
-			throws IllegalDataException {
-		return APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
-				+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
-				+ DatabaseIdentifier.toSQLString(storableObject.getSymbolId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(storableObject.getParentSchemeProtoGroupId());
+	protected String getUpdateSingleSQLValuesTmpl(final SchemeProtoGroup schemeProtoGroup) {
+		return APOSTROPHE + DatabaseString.toQuerySubString(schemeProtoGroup.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
+				+ APOSTROPHE + DatabaseString.toQuerySubString(schemeProtoGroup.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
+				+ DatabaseIdentifier.toSQLString(schemeProtoGroup.getSymbolId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(schemeProtoGroup.getParentSchemeProtoGroupId());
 	}
 
 	/**
-	 * @param storableObject
+	 * @param schemeProtoGroup
 	 * @param preparedStatement
-	 * @param startParameterNumber
-	 * @throws IllegalDataException
+	 * @param initialStartParameterNumber
 	 * @throws SQLException
 	 */
 	@Override
 	protected int setEntityForPreparedStatementTmpl(
-			final SchemeProtoGroup storableObject,
+			final SchemeProtoGroup schemeProtoGroup,
 			final PreparedStatement preparedStatement,
-			int startParameterNumber)
-	throws IllegalDataException, SQLException {
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getName(), SIZE_NAME_COLUMN);
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN);
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getSymbolId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getParentSchemeProtoGroupId());
+			final int initialStartParameterNumber)
+	throws SQLException {
+		int startParameterNumber = initialStartParameterNumber;
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, schemeProtoGroup.getName(), SIZE_NAME_COLUMN);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, schemeProtoGroup.getDescription(), SIZE_DESCRIPTION_COLUMN);
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeProtoGroup.getSymbolId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeProtoGroup.getParentSchemeProtoGroupId());
 		return startParameterNumber;
 	}
 
 	/**
 	 * @param storableObject
 	 * @param resultSet
-	 * @throws IllegalDataException
 	 * @throws SQLException
 	 */
 	@Override
 	protected SchemeProtoGroup updateEntityFromResultSet(
 			final SchemeProtoGroup storableObject,
 			final ResultSet resultSet)
-	throws IllegalDataException, SQLException {
+	throws SQLException {
 		final Date created = new Date();
 		final SchemeProtoGroup spg = (storableObject == null)
 				? new SchemeProtoGroup(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID),

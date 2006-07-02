@@ -1,7 +1,7 @@
 /*-
- * $Id: SchemeMonitoringSolutionDatabase.java,v 1.18 2005/12/02 11:24:17 bass Exp $
+ * $Id: SchemeMonitoringSolutionDatabase.java,v 1.19 2006/07/02 22:36:13 bass Exp $
  *
- * Copyright ¿ 2005 Syrus Systems.
+ * Copyright ¿ 2005-2006 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
@@ -29,7 +29,6 @@ import java.sql.SQLException;
 import java.util.Date;
 
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
-import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.util.database.DatabaseDate;
@@ -38,7 +37,7 @@ import com.syrus.util.database.DatabaseString;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.18 $, $Date: 2005/12/02 11:24:17 $
+ * @version $Revision: 1.19 $, $Date: 2006/07/02 22:36:13 $
  * @module scheme
  */
 public final class SchemeMonitoringSolutionDatabase extends StorableObjectDatabase<SchemeMonitoringSolution> {
@@ -78,53 +77,49 @@ public final class SchemeMonitoringSolutionDatabase extends StorableObjectDataba
 	}
 
 	/**
-	 * @param storableObject
-	 * @throws IllegalDataException
+	 * @param schemeMonitoringSolution
 	 */
 	@Override
 	protected String getUpdateSingleSQLValuesTmpl(
-			SchemeMonitoringSolution storableObject)
-			throws IllegalDataException {
-		return APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
-				+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
-				+ storableObject.getPrice() + COMMA
-				+ (storableObject.isActive() ? 1 : 0) + COMMA
-				+ DatabaseIdentifier.toSQLString(storableObject.getParentSchemeId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(storableObject.getParentSchemeOptimizeInfoId());
+			SchemeMonitoringSolution schemeMonitoringSolution) {
+		return APOSTROPHE + DatabaseString.toQuerySubString(schemeMonitoringSolution.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
+				+ APOSTROPHE + DatabaseString.toQuerySubString(schemeMonitoringSolution.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
+				+ schemeMonitoringSolution.getPrice() + COMMA
+				+ (schemeMonitoringSolution.isActive() ? 1 : 0) + COMMA
+				+ DatabaseIdentifier.toSQLString(schemeMonitoringSolution.getParentSchemeId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(schemeMonitoringSolution.getParentSchemeOptimizeInfoId());
 	}
 
 	/**
-	 * @param storableObject
+	 * @param schemeMonitoringSolution
 	 * @param preparedStatement
-	 * @param startParameterNumber
-	 * @throws IllegalDataException
+	 * @param initialStartParameterNumber
 	 * @throws SQLException
 	 */
 	@Override
 	protected int setEntityForPreparedStatementTmpl(
-			SchemeMonitoringSolution storableObject,
-			PreparedStatement preparedStatement,
-			int startParameterNumber) throws IllegalDataException,
-			SQLException {
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getName(), SIZE_NAME_COLUMN);
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN);
-		preparedStatement.setInt(++startParameterNumber, storableObject.getPrice());
-		preparedStatement.setInt(++startParameterNumber, storableObject.isActive() ? 1 : 0);
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getParentSchemeId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getParentSchemeOptimizeInfoId());
+			final SchemeMonitoringSolution schemeMonitoringSolution,
+			final PreparedStatement preparedStatement,
+			final int initialStartParameterNumber)
+	throws SQLException {
+		int startParameterNumber = initialStartParameterNumber;
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, schemeMonitoringSolution.getName(), SIZE_NAME_COLUMN);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, schemeMonitoringSolution.getDescription(), SIZE_DESCRIPTION_COLUMN);
+		preparedStatement.setInt(++startParameterNumber, schemeMonitoringSolution.getPrice());
+		preparedStatement.setInt(++startParameterNumber, schemeMonitoringSolution.isActive() ? 1 : 0);
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeMonitoringSolution.getParentSchemeId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeMonitoringSolution.getParentSchemeOptimizeInfoId());
 		return startParameterNumber;
 	}
 
 	/**
 	 * @param storableObject
 	 * @param resultSet
-	 * @throws IllegalDataException
 	 * @throws SQLException
 	 */
 	@Override
 	protected SchemeMonitoringSolution updateEntityFromResultSet(SchemeMonitoringSolution storableObject, ResultSet resultSet)
-			throws IllegalDataException,
-				SQLException {
+	throws SQLException {
 		final Date created = new Date();
 		final SchemeMonitoringSolution schemeMonitoringSolution = (storableObject == null)
 				? new SchemeMonitoringSolution(DatabaseIdentifier.getIdentifier(resultSet,

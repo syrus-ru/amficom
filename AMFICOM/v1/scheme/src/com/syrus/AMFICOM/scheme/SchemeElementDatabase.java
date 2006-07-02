@@ -1,7 +1,7 @@
 /*-
- * $Id: SchemeElementDatabase.java,v 1.22 2006/06/27 18:22:21 arseniy Exp $
+ * $Id: SchemeElementDatabase.java,v 1.23 2006/07/02 22:36:13 bass Exp $
  *
- * Copyright ¿ 2005 Syrus Systems.
+ * Copyright ¿ 2005-2006 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
@@ -37,7 +37,6 @@ import java.sql.SQLException;
 import java.util.Date;
 
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
-import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeElementPackage.IdlSchemeElementKind;
@@ -46,8 +45,8 @@ import com.syrus.util.database.DatabaseString;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.22 $, $Date: 2006/06/27 18:22:21 $
+ * @author $Author: bass $
+ * @version $Revision: 1.23 $, $Date: 2006/07/02 22:36:13 $
  * @module scheme
  */
 public final class SchemeElementDatabase extends StorableObjectDatabase<SchemeElement> {
@@ -101,67 +100,64 @@ public final class SchemeElementDatabase extends StorableObjectDatabase<SchemeEl
 	}
 
 	/**
-	 * @param storableObject
-	 * @throws IllegalDataException
+	 * @param schemeElement
 	 */
 	@Override
 	protected String getUpdateSingleSQLValuesTmpl(
-			SchemeElement storableObject)
-			throws IllegalDataException {
-		return 	storableObject.getKind() + COMMA
-				+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
-				+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
-				+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getLabel(), SIZE_LABEL_COLUMN) + APOSTROPHE + COMMA
-				+ DatabaseIdentifier.toSQLString(storableObject.getProtoEquipmentId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(storableObject.getEquipmentId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(storableObject.getKisId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(storableObject.getSiteNodeId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(storableObject.getSymbolId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(storableObject.getUgoCellId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(storableObject.getSchemeCellId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(storableObject.getParentSchemeId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(storableObject.getParentSchemeElementId());
+			SchemeElement schemeElement) {
+		return 	schemeElement.getKind() + COMMA
+				+ APOSTROPHE + DatabaseString.toQuerySubString(schemeElement.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
+				+ APOSTROPHE + DatabaseString.toQuerySubString(schemeElement.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
+				+ APOSTROPHE + DatabaseString.toQuerySubString(schemeElement.getLabel(), SIZE_LABEL_COLUMN) + APOSTROPHE + COMMA
+				+ DatabaseIdentifier.toSQLString(schemeElement.getProtoEquipmentId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(schemeElement.getEquipmentId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(schemeElement.getKisId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(schemeElement.getSiteNodeId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(schemeElement.getSymbolId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(schemeElement.getUgoCellId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(schemeElement.getSchemeCellId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(schemeElement.getParentSchemeId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(schemeElement.getParentSchemeElementId());
 	}
 
 	/**
-	 * @param storableObject
+	 * @param schemeElement
 	 * @param preparedStatement
-	 * @param startParameterNumber
-	 * @throws IllegalDataException
+	 * @param initialStartParameterNumber
 	 * @throws SQLException
 	 */
 	@Override
 	protected int setEntityForPreparedStatementTmpl(
-			SchemeElement storableObject,
-			PreparedStatement preparedStatement,
-			int startParameterNumber) throws IllegalDataException,
-			SQLException {
-		preparedStatement.setInt(++startParameterNumber, storableObject.getKind().value());
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getName(), SIZE_NAME_COLUMN);
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN);
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getLabel(), SIZE_LABEL_COLUMN);
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getProtoEquipmentId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getEquipmentId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getKisId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getSiteNodeId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getSymbolId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getUgoCellId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getSchemeCellId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getParentSchemeId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getParentSchemeElementId());
+			final SchemeElement schemeElement,
+			final PreparedStatement preparedStatement,
+			final int initialStartParameterNumber)
+	throws SQLException {
+		int startParameterNumber = initialStartParameterNumber;
+		preparedStatement.setInt(++startParameterNumber, schemeElement.getKind().value());
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, schemeElement.getName(), SIZE_NAME_COLUMN);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, schemeElement.getDescription(), SIZE_DESCRIPTION_COLUMN);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, schemeElement.getLabel(), SIZE_LABEL_COLUMN);
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeElement.getProtoEquipmentId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeElement.getEquipmentId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeElement.getKisId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeElement.getSiteNodeId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeElement.getSymbolId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeElement.getUgoCellId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeElement.getSchemeCellId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeElement.getParentSchemeId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeElement.getParentSchemeElementId());
 		return startParameterNumber;
 	}
 
 	/**
 	 * @param storableObject
 	 * @param resultSet
-	 * @throws IllegalDataException
 	 * @throws SQLException
 	 */
 	@Override
 	protected SchemeElement updateEntityFromResultSet(
 			SchemeElement storableObject, ResultSet resultSet)
-			throws IllegalDataException, SQLException {
+	throws SQLException {
 		final Date created = new Date();
 		SchemeElement schemeElement = (storableObject == null)
 				? schemeElement = new SchemeElement(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID),

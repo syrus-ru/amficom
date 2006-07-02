@@ -1,7 +1,7 @@
 /*-
- * $Id: SchemeDeviceDatabase.java,v 1.17 2005/12/02 11:24:16 bass Exp $
+ * $Id: SchemeDeviceDatabase.java,v 1.18 2006/07/02 22:36:13 bass Exp $
  *
- * Copyright ¿ 2005 Syrus Systems.
+ * Copyright ¿ 2005-2006 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
@@ -27,7 +27,6 @@ import java.sql.SQLException;
 import java.util.Date;
 
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
-import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.util.database.DatabaseDate;
@@ -36,7 +35,7 @@ import com.syrus.util.database.DatabaseString;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.17 $, $Date: 2005/12/02 11:24:16 $
+ * @version $Revision: 1.18 $, $Date: 2006/07/02 22:36:13 $
  * @module scheme
  */
 public final class SchemeDeviceDatabase extends StorableObjectDatabase<SchemeDevice> {
@@ -72,49 +71,46 @@ public final class SchemeDeviceDatabase extends StorableObjectDatabase<SchemeDev
 	}
 
 	/**
-	 * @param storableObject
-	 * @throws IllegalDataException
+	 * @param schemeDevice
 	 */
 	@Override
 	protected String getUpdateSingleSQLValuesTmpl(
-			SchemeDevice storableObject)
-			throws IllegalDataException {
-		return APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
-				+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
-				+ DatabaseIdentifier.toSQLString(storableObject.getParentSchemeProtoElementId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(storableObject.getParentSchemeElementId());
+			SchemeDevice schemeDevice) {
+		return APOSTROPHE + DatabaseString.toQuerySubString(schemeDevice.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
+				+ APOSTROPHE + DatabaseString.toQuerySubString(schemeDevice.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
+				+ DatabaseIdentifier.toSQLString(schemeDevice.getParentSchemeProtoElementId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(schemeDevice.getParentSchemeElementId());
 	}
 
 	/**
-	 * @param storableObject
+	 * @param schemeDevice
 	 * @param preparedStatement
-	 * @param startParameterNumber
-	 * @throws IllegalDataException
+	 * @param initialStartParameterNumber
 	 * @throws SQLException
 	 */
 	@Override
 	protected int setEntityForPreparedStatementTmpl(
-			SchemeDevice storableObject,
-			PreparedStatement preparedStatement,
-			int startParameterNumber) throws IllegalDataException,
-			SQLException {
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getName(), SIZE_NAME_COLUMN);
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN);
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getParentSchemeProtoElementId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getParentSchemeElementId());
+			final SchemeDevice schemeDevice,
+			final PreparedStatement preparedStatement,
+			final int initialStartParameterNumber)
+	throws SQLException {
+		int startParameterNumber = initialStartParameterNumber;
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, schemeDevice.getName(), SIZE_NAME_COLUMN);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, schemeDevice.getDescription(), SIZE_DESCRIPTION_COLUMN);
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeDevice.getParentSchemeProtoElementId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeDevice.getParentSchemeElementId());
 		return startParameterNumber;
 	}
 
 	/**
 	 * @param storableObject
 	 * @param resultSet
-	 * @throws IllegalDataException
 	 * @throws SQLException
 	 */
 	@Override
 	protected SchemeDevice updateEntityFromResultSet(
 			SchemeDevice storableObject, ResultSet resultSet)
-			throws IllegalDataException, SQLException {
+	throws SQLException {
 		final Date created = new Date();
 		final SchemeDevice schemeDevice = (storableObject == null)
 				? new SchemeDevice(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID),

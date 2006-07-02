@@ -1,7 +1,7 @@
 /*-
- * $Id: SchemeCableLinkDatabase.java,v 1.19 2005/12/02 11:24:17 bass Exp $
+ * $Id: SchemeCableLinkDatabase.java,v 1.20 2006/07/02 22:36:13 bass Exp $
  *
- * Copyright ¿ 2005 Syrus Systems.
+ * Copyright ¿ 2005-2006 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
@@ -32,7 +32,6 @@ import java.sql.SQLException;
 import java.util.Date;
 
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
-import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.util.database.DatabaseDate;
@@ -41,7 +40,7 @@ import com.syrus.util.database.DatabaseString;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.19 $, $Date: 2005/12/02 11:24:17 $
+ * @version $Revision: 1.20 $, $Date: 2006/07/02 22:36:13 $
  * @module scheme
  */
 public final class SchemeCableLinkDatabase extends StorableObjectDatabase<SchemeCableLink> {
@@ -87,59 +86,56 @@ public final class SchemeCableLinkDatabase extends StorableObjectDatabase<Scheme
 	}
 
 	/**
-	 * @param storableObject
-	 * @throws IllegalDataException
+	 * @param schemeCableLink
 	 */
 	@Override
 	protected String getUpdateSingleSQLValuesTmpl(
-			SchemeCableLink storableObject)
-			throws IllegalDataException {
-		return APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
-				+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
-				+ storableObject.getPhysicalLength() + COMMA
-				+ storableObject.getOpticalLength() + COMMA
-				+ DatabaseIdentifier.toSQLString(storableObject.getAbstractLinkTypeId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(storableObject.getAbstractLinkId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(storableObject.getSourceAbstractSchemePortId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(storableObject.getTargetAbstractSchemePortId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(storableObject.getParentSchemeId());
+			SchemeCableLink schemeCableLink) {
+		return APOSTROPHE + DatabaseString.toQuerySubString(schemeCableLink.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
+				+ APOSTROPHE + DatabaseString.toQuerySubString(schemeCableLink.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
+				+ schemeCableLink.getPhysicalLength() + COMMA
+				+ schemeCableLink.getOpticalLength() + COMMA
+				+ DatabaseIdentifier.toSQLString(schemeCableLink.getAbstractLinkTypeId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(schemeCableLink.getAbstractLinkId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(schemeCableLink.getSourceAbstractSchemePortId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(schemeCableLink.getTargetAbstractSchemePortId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(schemeCableLink.getParentSchemeId());
 	}
 
 	/**
-	 * @param storableObject
+	 * @param schemeCableLink
 	 * @param preparedStatement
-	 * @param startParameterNumber
-	 * @throws IllegalDataException
+	 * @param initialStartParameterNumber
 	 * @throws SQLException
 	 */
 	@Override
 	protected int setEntityForPreparedStatementTmpl(
-			SchemeCableLink storableObject,
-			PreparedStatement preparedStatement,
-			int startParameterNumber) throws IllegalDataException,
-			SQLException {
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getName(), SIZE_NAME_COLUMN);
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN);
-		preparedStatement.setDouble(++startParameterNumber, storableObject.getPhysicalLength());
-		preparedStatement.setDouble(++startParameterNumber, storableObject.getOpticalLength());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getAbstractLinkTypeId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getAbstractLinkId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getSourceAbstractSchemePortId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getTargetAbstractSchemePortId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getParentSchemeId());
+			final SchemeCableLink schemeCableLink,
+			final PreparedStatement preparedStatement,
+			final int initialStartParameterNumber)
+	throws SQLException {
+		int startParameterNumber = initialStartParameterNumber;
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, schemeCableLink.getName(), SIZE_NAME_COLUMN);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, schemeCableLink.getDescription(), SIZE_DESCRIPTION_COLUMN);
+		preparedStatement.setDouble(++startParameterNumber, schemeCableLink.getPhysicalLength());
+		preparedStatement.setDouble(++startParameterNumber, schemeCableLink.getOpticalLength());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeCableLink.getAbstractLinkTypeId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeCableLink.getAbstractLinkId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeCableLink.getSourceAbstractSchemePortId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeCableLink.getTargetAbstractSchemePortId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeCableLink.getParentSchemeId());
 		return startParameterNumber;
 	}
 
 	/**
 	 * @param storableObject
 	 * @param resultSet
-	 * @throws IllegalDataException
 	 * @throws SQLException
 	 */
 	@Override
 	protected SchemeCableLink updateEntityFromResultSet(
 			SchemeCableLink storableObject, ResultSet resultSet)
-			throws IllegalDataException, SQLException {
+	throws SQLException {
 		final Date created = new Date();
 		final SchemeCableLink schemeCableLink = (storableObject == null)
 				? new SchemeCableLink(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID),

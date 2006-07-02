@@ -1,7 +1,7 @@
 /*-
- * $Id: SchemePathDatabase.java,v 1.20 2005/12/02 11:24:17 bass Exp $
+ * $Id: SchemePathDatabase.java,v 1.21 2006/07/02 22:36:13 bass Exp $
  *
- * Copyright ¿ 2005 Syrus Systems.
+ * Copyright ¿ 2005-2006 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
@@ -27,7 +27,6 @@ import java.sql.SQLException;
 import java.util.Date;
 
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
-import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.util.database.DatabaseDate;
@@ -36,7 +35,7 @@ import com.syrus.util.database.DatabaseString;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.20 $, $Date: 2005/12/02 11:24:17 $
+ * @version $Revision: 1.21 $, $Date: 2006/07/02 22:36:13 $
  * @module scheme
  */
 public final class SchemePathDatabase extends StorableObjectDatabase<SchemePath> {
@@ -72,49 +71,46 @@ public final class SchemePathDatabase extends StorableObjectDatabase<SchemePath>
 	}
 
 	/**
-	 * @param storableObject
-	 * @throws IllegalDataException
+	 * @param schemePath
 	 */
 	@Override
 	protected String getUpdateSingleSQLValuesTmpl(
-			SchemePath storableObject)
-			throws IllegalDataException {
-		return APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
-				+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
-				+ DatabaseIdentifier.toSQLString(storableObject.getTransmissionPathId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(storableObject.getParentSchemeMonitoringSolutionId());
+			SchemePath schemePath) {
+		return APOSTROPHE + DatabaseString.toQuerySubString(schemePath.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
+				+ APOSTROPHE + DatabaseString.toQuerySubString(schemePath.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
+				+ DatabaseIdentifier.toSQLString(schemePath.getTransmissionPathId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(schemePath.getParentSchemeMonitoringSolutionId());
 	}
 
 	/**
-	 * @param storableObject
+	 * @param schemePath
 	 * @param preparedStatement
-	 * @param startParameterNumber
-	 * @throws IllegalDataException
+	 * @param initialStartParameterNumber
 	 * @throws SQLException
 	 */
 	@Override
 	protected int setEntityForPreparedStatementTmpl(
-			SchemePath storableObject,
-			PreparedStatement preparedStatement,
-			int startParameterNumber) throws IllegalDataException,
-			SQLException {
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getName(), SIZE_NAME_COLUMN);
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN);
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getTransmissionPathId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getParentSchemeMonitoringSolutionId());
+			final SchemePath schemePath,
+			final PreparedStatement preparedStatement,
+			final int initialStartParameterNumber)
+	throws SQLException {
+		int startParameterNumber = initialStartParameterNumber;
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, schemePath.getName(), SIZE_NAME_COLUMN);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, schemePath.getDescription(), SIZE_DESCRIPTION_COLUMN);
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemePath.getTransmissionPathId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemePath.getParentSchemeMonitoringSolutionId());
 		return startParameterNumber;
 	}
 
 	/**
 	 * @param storableObject
 	 * @param resultSet
-	 * @throws IllegalDataException
 	 * @throws SQLException
 	 */
 	@Override
 	protected SchemePath updateEntityFromResultSet(
 			SchemePath storableObject, ResultSet resultSet)
-			throws IllegalDataException, SQLException {
+	throws SQLException {
 		final Date created = new Date();
 		final SchemePath schemePath = (storableObject == null)
 				? new SchemePath(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID),

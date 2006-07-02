@@ -1,7 +1,7 @@
 /*-
- * $Id: SchemeLinkDatabase.java,v 1.19 2005/12/02 11:24:16 bass Exp $
+ * $Id: SchemeLinkDatabase.java,v 1.20 2006/07/02 22:36:13 bass Exp $
  *
- * Copyright ¿ 2005 Syrus Systems.
+ * Copyright ¿ 2005-2006 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
@@ -35,7 +35,6 @@ import java.sql.SQLException;
 import java.util.Date;
 
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
-import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.util.database.DatabaseDate;
@@ -44,7 +43,7 @@ import com.syrus.util.database.DatabaseString;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.19 $, $Date: 2005/12/02 11:24:16 $
+ * @version $Revision: 1.20 $, $Date: 2006/07/02 22:36:13 $
  * @module scheme
  */
 public final class SchemeLinkDatabase extends StorableObjectDatabase<SchemeLink> {
@@ -96,65 +95,62 @@ public final class SchemeLinkDatabase extends StorableObjectDatabase<SchemeLink>
 	}
 
 	/**
-	 * @param storableObject
-	 * @throws IllegalDataException
+	 * @param schemeLink
 	 */
 	@Override
 	protected String getUpdateSingleSQLValuesTmpl(
-			SchemeLink storableObject)
-			throws IllegalDataException {
-		return APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
-				+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
-				+ storableObject.getPhysicalLength() + COMMA
-				+ storableObject.getOpticalLength() + COMMA
-				+ DatabaseIdentifier.toSQLString(storableObject.getAbstractLinkTypeId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(storableObject.getAbstractLinkId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(storableObject.getSiteNodeId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(storableObject.getSourceAbstractSchemePortId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(storableObject.getTargetAbstractSchemePortId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(storableObject.getParentSchemeId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(storableObject.getParentSchemeElementId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(storableObject.getParentSchemeProtoElementId());
+			SchemeLink schemeLink) {
+		return APOSTROPHE + DatabaseString.toQuerySubString(schemeLink.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
+				+ APOSTROPHE + DatabaseString.toQuerySubString(schemeLink.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
+				+ schemeLink.getPhysicalLength() + COMMA
+				+ schemeLink.getOpticalLength() + COMMA
+				+ DatabaseIdentifier.toSQLString(schemeLink.getAbstractLinkTypeId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(schemeLink.getAbstractLinkId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(schemeLink.getSiteNodeId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(schemeLink.getSourceAbstractSchemePortId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(schemeLink.getTargetAbstractSchemePortId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(schemeLink.getParentSchemeId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(schemeLink.getParentSchemeElementId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(schemeLink.getParentSchemeProtoElementId());
 	}
 
 	/**
-	 * @param storableObject
+	 * @param schemeLink
 	 * @param preparedStatement
-	 * @param startParameterNumber
-	 * @throws IllegalDataException
+	 * @param initialStartParameterNumber
 	 * @throws SQLException
 	 */
 	@Override
 	protected int setEntityForPreparedStatementTmpl(
-			SchemeLink storableObject,
-			PreparedStatement preparedStatement,
-			int startParameterNumber) throws IllegalDataException,
-			SQLException {
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getName(), SIZE_NAME_COLUMN);
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN);
-		preparedStatement.setDouble(++startParameterNumber, storableObject.getPhysicalLength());
-		preparedStatement.setDouble(++startParameterNumber, storableObject.getOpticalLength());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getAbstractLinkTypeId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getAbstractLinkId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getSiteNodeId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getSourceAbstractSchemePortId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getTargetAbstractSchemePortId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getParentSchemeId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getParentSchemeElementId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getParentSchemeProtoElementId());
+			final SchemeLink schemeLink,
+			final PreparedStatement preparedStatement,
+			final int initialStartParameterNumber)
+	throws SQLException {
+		int startParameterNumber = initialStartParameterNumber;
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, schemeLink.getName(), SIZE_NAME_COLUMN);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, schemeLink.getDescription(), SIZE_DESCRIPTION_COLUMN);
+		preparedStatement.setDouble(++startParameterNumber, schemeLink.getPhysicalLength());
+		preparedStatement.setDouble(++startParameterNumber, schemeLink.getOpticalLength());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeLink.getAbstractLinkTypeId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeLink.getAbstractLinkId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeLink.getSiteNodeId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeLink.getSourceAbstractSchemePortId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeLink.getTargetAbstractSchemePortId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeLink.getParentSchemeId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeLink.getParentSchemeElementId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeLink.getParentSchemeProtoElementId());
 		return startParameterNumber;
 	}
 
 	/**
 	 * @param storableObject
 	 * @param resultSet
-	 * @throws IllegalDataException
 	 * @throws SQLException
 	 */
 	@Override
 	protected SchemeLink updateEntityFromResultSet(
 			SchemeLink storableObject, ResultSet resultSet)
-			throws IllegalDataException, SQLException {
+	throws SQLException {
 		final Date created = new Date();
 		final SchemeLink schemeLink = (storableObject == null)
 				? new SchemeLink(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID),

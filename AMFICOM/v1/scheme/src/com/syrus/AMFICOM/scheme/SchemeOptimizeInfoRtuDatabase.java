@@ -1,7 +1,7 @@
 /*-
- * $Id: SchemeOptimizeInfoRtuDatabase.java,v 1.12 2005/12/02 11:24:17 bass Exp $
+ * $Id: SchemeOptimizeInfoRtuDatabase.java,v 1.13 2006/07/02 22:36:13 bass Exp $
  *
- * Copyright ¿ 2004-2005 Syrus Systems.
+ * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
@@ -27,7 +27,6 @@ import java.sql.SQLException;
 import java.util.Date;
 
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
-import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.util.database.DatabaseDate;
@@ -36,7 +35,7 @@ import com.syrus.util.database.DatabaseString;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.12 $, $Date: 2005/12/02 11:24:17 $
+ * @version $Revision: 1.13 $, $Date: 2006/07/02 22:36:13 $
  * @module scheme
  */
 public final class SchemeOptimizeInfoRtuDatabase extends StorableObjectDatabase<SchemeOptimizeInfoRtu> {
@@ -85,45 +84,42 @@ public final class SchemeOptimizeInfoRtuDatabase extends StorableObjectDatabase<
 	}
 
 	/**
-	 * @param storableObject
-	 * @throws IllegalDataException
+	 * @param schemeOptimizeInfoRtu
 	 * @see com.syrus.AMFICOM.general.StorableObjectDatabase#getUpdateSingleSQLValuesTmpl(com.syrus.AMFICOM.general.StorableObject)
 	 */
 	@Override
 	protected String getUpdateSingleSQLValuesTmpl(
-			final SchemeOptimizeInfoRtu storableObject)
-	throws IllegalDataException {
-		return APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getName()) + APOSTROPHE + COMMA
-				+ storableObject.getPriceUsd() + COMMA
-				+ storableObject.getRangeDb() + COMMA
-				+ DatabaseIdentifier.toSQLString(storableObject.getParentSchemeOptimizeInfoId());
+			final SchemeOptimizeInfoRtu schemeOptimizeInfoRtu) {
+		return APOSTROPHE + DatabaseString.toQuerySubString(schemeOptimizeInfoRtu.getName()) + APOSTROPHE + COMMA
+				+ schemeOptimizeInfoRtu.getPriceUsd() + COMMA
+				+ schemeOptimizeInfoRtu.getRangeDb() + COMMA
+				+ DatabaseIdentifier.toSQLString(schemeOptimizeInfoRtu.getParentSchemeOptimizeInfoId());
 	}
 
 	/**
-	 * @param storableObject
+	 * @param schemeOptimizeInfoRtu
 	 * @param preparedStatement
-	 * @param startParameterNumber
-	 * @throws IllegalDataException
+	 * @param initialStartParameterNumber
 	 * @throws SQLException
 	 * @see com.syrus.AMFICOM.general.StorableObjectDatabase#setEntityForPreparedStatementTmpl(com.syrus.AMFICOM.general.StorableObject, java.sql.PreparedStatement, int)
 	 */
 	@Override
 	protected int setEntityForPreparedStatementTmpl(
-			final SchemeOptimizeInfoRtu storableObject,
+			final SchemeOptimizeInfoRtu schemeOptimizeInfoRtu,
 			final PreparedStatement preparedStatement,
-			int startParameterNumber)
-	throws IllegalDataException, SQLException {
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getName(), SIZE_NAME_COLUMN);
-		preparedStatement.setInt(++startParameterNumber, storableObject.getPriceUsd());
-		preparedStatement.setFloat(++startParameterNumber, storableObject.getRangeDb());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getParentSchemeOptimizeInfoId());
+			final int initialStartParameterNumber)
+	throws SQLException {
+		int startParameterNumber = initialStartParameterNumber;
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, schemeOptimizeInfoRtu.getName(), SIZE_NAME_COLUMN);
+		preparedStatement.setInt(++startParameterNumber, schemeOptimizeInfoRtu.getPriceUsd());
+		preparedStatement.setFloat(++startParameterNumber, schemeOptimizeInfoRtu.getRangeDb());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeOptimizeInfoRtu.getParentSchemeOptimizeInfoId());
 		return startParameterNumber;
 	}
 
 	/**
 	 * @param storableObject
 	 * @param resultSet
-	 * @throws IllegalDataException
 	 * @throws SQLException
 	 * @see com.syrus.AMFICOM.general.StorableObjectDatabase#updateEntityFromResultSet(com.syrus.AMFICOM.general.StorableObject, java.sql.ResultSet)
 	 */
@@ -131,7 +127,7 @@ public final class SchemeOptimizeInfoRtuDatabase extends StorableObjectDatabase<
 	protected SchemeOptimizeInfoRtu updateEntityFromResultSet(
 			final SchemeOptimizeInfoRtu storableObject,
 			final ResultSet resultSet)
-	throws IllegalDataException, SQLException {
+	throws SQLException {
 		final Date created = new Date();
 		final SchemeOptimizeInfoRtu schemeOptimizeInfoRtu = (storableObject == null)
 				? new SchemeOptimizeInfoRtu(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID),

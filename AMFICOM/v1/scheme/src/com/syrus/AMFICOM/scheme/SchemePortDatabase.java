@@ -1,7 +1,7 @@
 /*-
- * $Id: SchemePortDatabase.java,v 1.21 2005/12/02 11:24:16 bass Exp $
+ * $Id: SchemePortDatabase.java,v 1.22 2006/07/02 22:36:13 bass Exp $
  *
- * Copyright ¿ 2005 Syrus Systems.
+ * Copyright ¿ 2005-2006 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
@@ -30,7 +30,6 @@ import java.sql.SQLException;
 import java.util.Date;
 
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
-import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionType;
@@ -40,7 +39,7 @@ import com.syrus.util.database.DatabaseString;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.21 $, $Date: 2005/12/02 11:24:16 $
+ * @version $Revision: 1.22 $, $Date: 2006/07/02 22:36:13 $
  * @module scheme
  */
 public final class SchemePortDatabase extends StorableObjectDatabase<SchemePort> {
@@ -82,55 +81,52 @@ public final class SchemePortDatabase extends StorableObjectDatabase<SchemePort>
 	}
 
 	/**
-	 * @param storableObject
-	 * @throws IllegalDataException
+	 * @param schemePort
 	 */
 	@Override
 	protected String getUpdateSingleSQLValuesTmpl(
-			SchemePort storableObject)
-			throws IllegalDataException {
-		return APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
-				+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
-				+ storableObject.getDirectionType().value() + COMMA
-				+ DatabaseIdentifier.toSQLString(storableObject.getPortTypeId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(storableObject.getPortId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(storableObject.getMeasurementPortId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(storableObject.getParentSchemeDeviceId());
+			SchemePort schemePort) {
+		return APOSTROPHE + DatabaseString.toQuerySubString(schemePort.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
+				+ APOSTROPHE + DatabaseString.toQuerySubString(schemePort.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
+				+ schemePort.getDirectionType().value() + COMMA
+				+ DatabaseIdentifier.toSQLString(schemePort.getPortTypeId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(schemePort.getPortId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(schemePort.getMeasurementPortId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(schemePort.getParentSchemeDeviceId());
 	}
 
 	/**
-	 * @param storableObject
+	 * @param schemePort
 	 * @param preparedStatement
-	 * @param startParameterNumber
-	 * @throws IllegalDataException
+	 * @param initialStartParameterNumber
 	 * @throws SQLException
 	 */
 	@Override
 	protected int setEntityForPreparedStatementTmpl(
-			SchemePort storableObject,
-			PreparedStatement preparedStatement,
-			int startParameterNumber) throws IllegalDataException,
-			SQLException {
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getName(), SIZE_NAME_COLUMN);
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN);
-		preparedStatement.setInt(++startParameterNumber, storableObject.getDirectionType().value());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getPortTypeId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getPortId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getMeasurementPortId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getParentSchemeDeviceId());
+			final SchemePort schemePort,
+			final PreparedStatement preparedStatement,
+			final int initialStartParameterNumber)
+	throws SQLException {
+		int startParameterNumber = initialStartParameterNumber;
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, schemePort.getName(), SIZE_NAME_COLUMN);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, schemePort.getDescription(), SIZE_DESCRIPTION_COLUMN);
+		preparedStatement.setInt(++startParameterNumber, schemePort.getDirectionType().value());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemePort.getPortTypeId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemePort.getPortId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemePort.getMeasurementPortId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemePort.getParentSchemeDeviceId());
 		return startParameterNumber;
 	}
 
 	/**
 	 * @param storableObject
 	 * @param resultSet
-	 * @throws IllegalDataException
 	 * @throws SQLException
 	 */
 	@Override
 	protected SchemePort updateEntityFromResultSet(
 			SchemePort storableObject, ResultSet resultSet)
-			throws IllegalDataException, SQLException {
+	throws SQLException {
 		final Date created = new Date();
 		final SchemePort schemePort = (storableObject == null)
 				? new SchemePort(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID),
