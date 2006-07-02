@@ -1,5 +1,5 @@
 /*-
- * $Id: LineMismatchEventProcessor.java,v 1.30 2006/06/08 19:21:10 bass Exp $
+ * $Id: LineMismatchEventProcessor.java,v 1.31 2006/07/02 19:25:07 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -53,7 +53,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.30 $, $Date: 2006/06/08 19:21:10 $
+ * @version $Revision: 1.31 $, $Date: 2006/07/02 19:25:07 $
  * @module leserver
  */
 final class LineMismatchEventProcessor extends AbstractEventProcessor {
@@ -113,10 +113,14 @@ final class LineMismatchEventProcessor extends AbstractEventProcessor {
 				notificationEvents[i++] = popupNotificationEvent.getIdlTransferable(orb);
 			}
 			for (final String address : addresses) {
+				final String subject = capitalizeFirstChar(
+						severity.getLocalizedName()
+						+ ": "
+						+ reflectogramMismatchEvent.getAlarmType().getLocalizedName());
 				final EmailNotificationEvent emailNotificationEvent =
 							DefaultEmailNotificationEvent.valueOf(
 									address,
-									severity.getLocalizedName(),
+									subject,
 									lineMismatchEvent.getPlainTextMessage(),
 									lineMismatchEvent.getRichTextMessage());
 				notificationEvents[i++] = emailNotificationEvent.getIdlTransferable(orb);
@@ -189,5 +193,11 @@ final class LineMismatchEventProcessor extends AbstractEventProcessor {
 			}
 			return characteristicTypeId;
 		}
+	}
+
+	private static String capitalizeFirstChar(final String s) {
+		return s.length() > 0
+				? Character.toUpperCase(s.charAt(0)) + s.substring(1)
+				: s;
 	}
 }
