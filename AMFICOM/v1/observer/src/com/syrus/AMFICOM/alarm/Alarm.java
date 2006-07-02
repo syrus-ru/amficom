@@ -1,5 +1,5 @@
 /*-
- * $Id: Alarm.java,v 1.8 2006/06/30 15:03:54 bass Exp $
+ * $Id: Alarm.java,v 1.9 2006/07/02 16:19:06 bass Exp $
  *
  * Copyright ¿ 2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -66,7 +66,7 @@ public class Alarm {
 			ReflectogramMismatchEvent lastrme = last.getReflectogramMismatchEvent();
 			this.endDate = lastrme.getCreated();
 			this.lastMeasurement = StorableObjectPool.getStorableObject(lastrme.getMeasurementId(), true);
-			this.lastMessage = last.getRichTextMessage();
+			this.lastMessage = "<html>" + last.getRichTextMessage() + "</html>";
 			
 		} catch (ApplicationException e) {
 			throw new CreateObjectException(e);
@@ -155,6 +155,6 @@ public class Alarm {
 		ReflectogramMismatchEvent lastrme = lineMismatchEvent.getReflectogramMismatchEvent();
 		this.endDate = lastrme.getCreated();
 		this.lastMeasurement = StorableObjectPool.getStorableObject(lastrme.getMeasurementId(), true);
-		this.lastMessage = lineMismatchEvent.getRichTextMessage();
+		this.lastMessage = "<html>" + lineMismatchEvent.getRichTextMessage() + "</html>";
 	}
 }
