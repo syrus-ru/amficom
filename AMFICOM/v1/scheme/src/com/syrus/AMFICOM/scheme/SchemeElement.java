@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.165 2006/06/27 18:21:23 arseniy Exp $
+ * $Id: SchemeElement.java,v 1.166 2006/07/02 21:18:59 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -97,8 +97,8 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
 /**
  * #04 in hierarchy.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.165 $, $Date: 2006/06/27 18:21:23 $
+ * @author $Author: bass $
+ * @version $Revision: 1.166 $, $Date: 2006/07/02 21:18:59 $
  * @module scheme
  */
 public final class SchemeElement extends AbstractSchemeElement
@@ -2191,22 +2191,6 @@ public final class SchemeElement extends AbstractSchemeElement
 			schemeCableLinks.addAll(schemeElement.getSchemeCableLinksRecursively(usePool));
 		}
 		return Collections.unmodifiableSet(schemeCableLinks);
-	}
-
-	public SchemePath getAlarmedPath() {
-		throw new UnsupportedOperationException("Method not implemented");
-	}
-
-	public PathElement getAlarmedPathElement() {
-		throw new UnsupportedOperationException("Method not implemented");
-	}
-
-	public void setAlarmedPath(@SuppressWarnings("unused") final SchemePath alarmedPath) {
-		throw new UnsupportedOperationException("Method not implemented");
-	}
-
-	public void setAlarmedPathElement(@SuppressWarnings("unused") final PathElement alarmedPathElement) {
-		throw new UnsupportedOperationException("Method not implemented");
 	}
 
 	void setEquipmentId(Identifier equipmentId) {

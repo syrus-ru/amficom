@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemeElement.java,v 1.86 2006/06/27 18:21:23 arseniy Exp $
+ * $Id: AbstractSchemeElement.java,v 1.87 2006/07/02 21:18:59 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,8 +45,8 @@ import com.syrus.util.transport.xml.XmlConversionException;
  * generated from IDL files to compile cleanly. Use other implementations of
  * {@link AbstractSchemeElement}instead.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.86 $, $Date: 2006/06/27 18:21:23 $
+ * @author $Author: bass $
+ * @version $Revision: 1.87 $, $Date: 2006/07/02 21:18:59 $
  * @module scheme
  */
 public abstract class AbstractSchemeElement
@@ -412,24 +412,10 @@ public abstract class AbstractSchemeElement
 	 **********************************************************************/
 
 	/**
-	 * Shouldn&apos;t be declared {@code transient} since the GUI often uses
-	 * drag&apos;n&apos;drop.
-	 *
-	 * @todo Check whether this attribute is necessary.
+	 * @deprecated
 	 */
-	private boolean alarmed;
-
-	/**
-	 * Transient attribute
-	 */
+	@Deprecated
 	public final boolean isAlarmed() {
-		return this.alarmed;
-	}
-
-	/**
-	 * Transient attribute
-	 */
-	public final void setAlarmed(final boolean alarmed) {
-		this.alarmed = alarmed;
+		return false;
 	}
 }
