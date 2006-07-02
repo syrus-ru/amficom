@@ -20,6 +20,7 @@ import java.util.logging.Level;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JInternalFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -430,7 +431,7 @@ public class AlarmFrame extends JInternalFrame {
 			Alarm alarm = this.model.getObject(selected);
 			
 			JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(), 
-					alarm.getMessage(), 
+					new JLabel(alarm.getMessage()), 
 					LangModelObserver.getString("Message.information"), 
 					JOptionPane.INFORMATION_MESSAGE);
 		}
