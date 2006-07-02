@@ -1,5 +1,5 @@
 /*-
-* $Id: PopupNotificationCellRenderer.java,v 1.5 2006/06/08 19:21:10 bass Exp $
+* $Id: PopupNotificationCellRenderer.java,v 1.6 2006/07/02 16:18:10 bass Exp $
 *
 * Copyright © 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -28,7 +28,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.5 $, $Date: 2006/06/08 19:21:10 $
+ * @version $Revision: 1.6 $, $Date: 2006/07/02 16:18:10 $
  * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -59,14 +59,14 @@ final class PopupNotificationCellRenderer extends ZebraListCellRenderer {
 		 * NONE in order to differ from all valid messages (since their
 		 * severity can be either SOFT or HARD).
 		 */
-		String plainTextMessage;
+		String richTextMessage;
 		Severity severity;
 		try {
 			final LineMismatchEvent lineMismatchEvent =
 					(LineMismatchEvent) StorableObjectPool.getStorableObject(
 							popupNotificationEvent.getLineMismatchEventId(),
 							true);
-			plainTextMessage = lineMismatchEvent.getPlainTextMessage();
+			richTextMessage = "<html>" + lineMismatchEvent.getRichTextMessage() + "</html>";
 			try {
 				final ReflectogramMismatchEvent reflectogramMismatchEvent = lineMismatchEvent.getReflectogramMismatchEvent();
 				severity = reflectogramMismatchEvent.getSeverity();
@@ -76,15 +76,12 @@ final class PopupNotificationCellRenderer extends ZebraListCellRenderer {
 			}
 		} catch (final ApplicationException ae) {
 			Log.debugMessage(ae, SEVERE);
-			plainTextMessage = ae.getMessage();
+			richTextMessage = CommonUIUtilities.convertToHTMLString(ae.getMessage());
 			severity = Severity.SEVERITY_NONE;
 		}
 		
 		label.setIcon(this.getIcon(severity));
-		/**
-		 * @todo Try LineMismatchEvent#getRichTextMessage() instead
-		 */
-		label.setText(CommonUIUtilities.convertToHTMLString(plainTextMessage));
+		label.setText(richTextMessage);
 		
 		return label;
 	}	
