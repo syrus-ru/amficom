@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoGroup.java,v 1.103 2006/06/27 18:22:21 arseniy Exp $
+ * $Id: SchemeProtoGroup.java,v 1.104 2006/07/02 21:54:38 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -65,8 +65,8 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
 /**
  * #01 in hierarchy.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.103 $, $Date: 2006/06/27 18:22:21 $
+ * @author $Author: bass $
+ * @version $Revision: 1.104 $, $Date: 2006/07/02 21:54:38 $
  * @module scheme
  */
 public final class SchemeProtoGroup extends StorableObject
@@ -562,7 +562,7 @@ public final class SchemeProtoGroup extends StorableObject
 
 	/**
 	 * @param schemeProtoGroup
-	 * @see com.syrus.AMFICOM.general.StorableObject#fromIdlTransferable(IdlStorableObject)
+	 * @see com.syrus.AMFICOM.general.StorableObject#fromIdlTransferable(com.syrus.AMFICOM.general.corba.IdlStorableObject)
 	 */
 	public void fromIdlTransferable(final IdlSchemeProtoGroup schemeProtoGroup)
 	throws IdlConversionException {
