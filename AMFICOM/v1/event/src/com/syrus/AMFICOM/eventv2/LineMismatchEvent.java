@@ -1,5 +1,5 @@
 /*-
- * $Id: LineMismatchEvent.java,v 1.35 2006/07/02 16:11:55 bass Exp $
+ * $Id: LineMismatchEvent.java,v 1.36 2006/07/02 18:45:42 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,6 +31,7 @@ import com.syrus.AMFICOM.eventv2.corba.IdlLineMismatchEventPackage.IdlChangeLogR
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.StringToValueConverter;
 import com.syrus.util.Log;
 import com.syrus.util.transport.idl.IdlTransferableObject;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
@@ -41,7 +42,7 @@ import com.syrus.util.transport.idl.IdlTransferableObjectExt;
  * 
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.35 $, $Date: 2006/07/02 16:11:55 $
+ * @version $Revision: 1.36 $, $Date: 2006/07/02 18:45:42 $
  * @module event
  */
 public interface LineMismatchEvent
@@ -757,10 +758,10 @@ public interface LineMismatchEvent
 	 * accordingly), this interface can be used to log changes of
 	 * <em>any</em> object that has a {@link com.syrus.util.Wrapper
 	 * wrapper};</li>
-	 * 
+	 *
 	 * <li>{@code ChangeLogRecord} table doesn&apos;t hold any information
-	 * about the actual type of wrapper to be used, so implementations must
-	 * hard-code it.</li></ol></p>
+	 * about the actual type of {@link #getStringToValueConverter() wrapper}
+	 * to be used, so implementations must hard-code it.</li></ol></p>
 	 *
 	 * <p>Finally, {@code ChangeLogRecord} has one more drawback:
 	 * there&apos;s no way to know who initiated the change since
@@ -802,5 +803,7 @@ public interface LineMismatchEvent
 		 * @see com.syrus.util.Wrapper#getValue(Object, String)
 		 */
 		Object getNewValue();
+
+		StringToValueConverter getStringToValueConverter();
 	}
 }

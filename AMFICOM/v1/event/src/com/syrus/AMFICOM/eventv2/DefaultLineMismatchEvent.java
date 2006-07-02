@@ -1,5 +1,5 @@
 /*-
- * $Id: DefaultLineMismatchEvent.java,v 1.29 2006/06/30 17:24:19 bass Exp $
+ * $Id: DefaultLineMismatchEvent.java,v 1.30 2006/07/02 18:45:42 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,6 @@ import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.ObjectEntities.LINEMISMATCHEVENT_CODE;
 import static com.syrus.AMFICOM.general.StorableObjectVersion.ILLEGAL_VERSION;
 import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
-import static java.util.logging.Level.SEVERE;
 
 import java.io.Serializable;
 import java.util.Collections;
@@ -37,14 +36,14 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
+import com.syrus.AMFICOM.general.StringToValueConverter;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
-import com.syrus.util.Log;
 import com.syrus.util.transport.idl.IdlConversionException;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.29 $, $Date: 2006/06/30 17:24:19 $
+ * @version $Revision: 1.30 $, $Date: 2006/07/02 18:45:42 $
  * @module event
  */
 public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
@@ -658,8 +657,9 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 				final String oldValue,
 				final String newValue) {
 			this.modified = new Date(modified.getTime());
-			this.oldValue = ChangeLogRecordImpl.this.stringToObject(this.key = key, oldValue);
-			this.newValue = ChangeLogRecordImpl.this.stringToObject(ChangeLogRecordImpl.this.key, newValue);
+			final StringToValueConverter stringToValueConverter = ChangeLogRecordImpl.this.getStringToValueConverter();
+			this.oldValue = stringToValueConverter.stringToValue(this.key = key, oldValue);
+			this.newValue = stringToValueConverter.stringToValue(ChangeLogRecordImpl.this.key, newValue);
 		}
 
 		/**
@@ -748,33 +748,22 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 		/**
 		 * @see com.syrus.util.transport.idl.IdlTransferableObject#getIdlTransferable(ORB)
 		 */
+		@SuppressWarnings("hiding")
 		public IdlChangeLogRecord getIdlTransferable(final ORB orb) {
+			final StringToValueConverter stringToValueConverter = ChangeLogRecordImpl.this.getStringToValueConverter();
+			final String key = ChangeLogRecordImpl.this.getKey();
 			return new IdlChangeLogRecord(
 					ChangeLogRecordImpl.this.getModified().getTime(),
-					ChangeLogRecordImpl.this.getKey(),
-					ChangeLogRecordImpl.this.oldValue == null
-							? null
-							: ChangeLogRecordImpl.this.oldValue.toString(),
-					ChangeLogRecordImpl.this.newValue == null
-							? null
-							: ChangeLogRecordImpl.this.newValue.toString());
+					key,
+					stringToValueConverter.valueToString(key, ChangeLogRecordImpl.this.getOldValue()),
+					stringToValueConverter.valueToString(key, ChangeLogRecordImpl.this.getNewValue()));
 		}
 
-		@SuppressWarnings("hiding")
-		private Object stringToObject(final String key, final String value) {
-			try {
-				if (value == null) {
-					return null;
-				}
-	
-				final Class<?> clazz = LineMismatchEventWrapper.getInstance().getPropertyClass(key);
-				return clazz.getMethod("valueOf", String.class).invoke(clazz, value);
-			} catch (final RuntimeException re) {
-				throw re;
-			} catch (final Exception e) {
-				Log.debugMessage(e, SEVERE);
-				return null;
-			}
+		/**
+		 * @see LineMismatchEvent.ChangeLogRecord#getStringToValueConverter()
+		 */
+		public StringToValueConverter getStringToValueConverter() {
+			return LineMismatchEventWrapper.getInstance();
 		}
 	}
 }

@@ -1,5 +1,5 @@
 /*-
- * $Id: LineMismatchEventWrapper.java,v 1.6 2006/06/16 13:30:35 bass Exp $
+ * $Id: LineMismatchEventWrapper.java,v 1.7 2006/07/02 18:45:42 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,6 +15,7 @@ import java.util.List;
 import com.syrus.AMFICOM.eventv2.LineMismatchEvent.AlarmStatus;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.StringToValueConverter;
 import com.syrus.util.PropertyChangeException;
 import com.syrus.util.PropertyQueryException;
 import com.syrus.util.Wrapper;
@@ -22,11 +23,11 @@ import com.syrus.util.Wrapper;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2006/06/16 13:30:35 $
+ * @version $Revision: 1.7 $, $Date: 2006/07/02 18:45:42 $
  * @module event
  */
 public final class LineMismatchEventWrapper
-		implements Wrapper<LineMismatchEvent> {
+		implements Wrapper<LineMismatchEvent>, StringToValueConverter {
 	public static final String KEY_TYPE = "type";
 	public static final String COLUMN_AFFECTED_PATH_ELEMENT_ID = "affected_path_element_id";
 	public static final String KEY_AFFECTED_PATH_ELEMENT_SPACIOUS = "affected_path_element_spacious";
@@ -228,6 +229,58 @@ public final class LineMismatchEventWrapper
 			}
 		} catch (final ApplicationException ae) {
 			throw new PropertyChangeException(ae);
+		}
+	}
+
+	/**
+	 * Current implementation only works for {@code Identifier}s, {@code
+	 * AlarmStatus}es and {@code String}s.
+	 *
+	 * @see StringToValueConverter#valueToString(String, Object)
+	 */
+	public String valueToString(final String key, final Object value) {
+		if (value == null) {
+			return null;
+		}
+
+		final Class<?> clazz = this.getPropertyClass(key);
+		if (clazz == Identifier.class) {
+			return ((Identifier) value).getIdentifierString();
+		} else if (clazz == AlarmStatus.class) {
+			return ((AlarmStatus) value).name();
+		} else if (clazz == String.class) {
+			return (String) value;
+		} else {
+			return value.toString();
+		}
+	}
+
+	/**
+	 * Current implementation only works for {@code Identifier}s, {@code
+	 * AlarmStatus}es and {@code String}s.
+	 *
+	 * @see StringToValueConverter#stringToValue(String, String)
+	 */
+	public Object stringToValue(final String key, final String stringValue) {
+		if (stringValue == null) {
+			return null;
+		}
+
+		final Class<?> clazz = this.getPropertyClass(key);
+		if (clazz == Identifier.class) {
+			return Identifier.valueOf(stringValue);
+		} else if (clazz == AlarmStatus.class) {
+			return AlarmStatus.valueOf(stringValue);
+		} else if (clazz == String.class) {
+			return stringValue;
+		} else {
+			try {
+				return clazz.getMethod("valueOf", String.class).invoke(clazz, stringValue);
+			} catch (final RuntimeException re) {
+				throw re;
+			} catch (final Exception e) {
+				throw new UnsupportedOperationException(e);
+			}
 		}
 	}
 
