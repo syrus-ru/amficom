@@ -1,5 +1,5 @@
 /*-
- * $Id: DefaultLineMismatchEvent.java,v 1.30 2006/07/02 18:45:42 bass Exp $
+ * $Id: DefaultLineMismatchEvent.java,v 1.31 2006/07/02 20:41:27 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,6 +15,9 @@ import static com.syrus.AMFICOM.general.ObjectEntities.LINEMISMATCHEVENT_CODE;
 import static com.syrus.AMFICOM.general.StorableObjectVersion.ILLEGAL_VERSION;
 import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.Date;
@@ -43,7 +46,7 @@ import com.syrus.util.transport.idl.IdlConversionException;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.30 $, $Date: 2006/07/02 18:45:42 $
+ * @version $Revision: 1.31 $, $Date: 2006/07/02 20:41:27 $
  * @module event
  */
 public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
@@ -620,9 +623,9 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 
 		private final String key;
 
-		private final Object oldValue;
+		private /*final*/ transient Object oldValue;
 
-		private final Object newValue;
+		private /*final*/ transient Object newValue;
 
 		/**
 		 * Ctor to be invoked from modifier methods.
@@ -657,7 +660,8 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 				final String oldValue,
 				final String newValue) {
 			this.modified = new Date(modified.getTime());
-			final StringToValueConverter stringToValueConverter = ChangeLogRecordImpl.this.getStringToValueConverter();
+			final StringToValueConverter stringToValueConverter
+					= ChangeLogRecordImpl.this.getStringToValueConverter();
 			this.oldValue = stringToValueConverter.stringToValue(this.key = key, oldValue);
 			this.newValue = stringToValueConverter.stringToValue(ChangeLogRecordImpl.this.key, newValue);
 		}
@@ -713,9 +717,9 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 		 * @see Comparable#compareTo(Object)
 		 */
 		public int compareTo(final ChangeLogRecord that) {
-			final int returnValue = ChangeLogRecordImpl.this.getModified().compareTo(that.getModified());
+			final int returnValue = ChangeLogRecordImpl.this.modified.compareTo(that.getModified());
 			return returnValue == 0
-					? ChangeLogRecordImpl.this.getKey().compareTo(that.getKey())
+					? ChangeLogRecordImpl.this.key.compareTo(that.getKey())
 					: returnValue;
 		}
 
@@ -739,8 +743,8 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 			if (obj instanceof ChangeLogRecord) {
 				final ChangeLogRecord that = (ChangeLogRecord) obj;
 				return ChangeLogRecordImpl.this == that ||
-						ChangeLogRecordImpl.this.getModified().equals(that.getModified()) &&
-						ChangeLogRecordImpl.this.getKey().equals(that.getKey());
+						ChangeLogRecordImpl.this.modified.equals(that.getModified()) &&
+						ChangeLogRecordImpl.this.key.equals(that.getKey());
 			}
 			return false;
 		}
@@ -748,15 +752,18 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 		/**
 		 * @see com.syrus.util.transport.idl.IdlTransferableObject#getIdlTransferable(ORB)
 		 */
-		@SuppressWarnings("hiding")
 		public IdlChangeLogRecord getIdlTransferable(final ORB orb) {
-			final StringToValueConverter stringToValueConverter = ChangeLogRecordImpl.this.getStringToValueConverter();
-			final String key = ChangeLogRecordImpl.this.getKey();
+			final StringToValueConverter stringToValueConverter
+					= ChangeLogRecordImpl.this.getStringToValueConverter();
 			return new IdlChangeLogRecord(
-					ChangeLogRecordImpl.this.getModified().getTime(),
-					key,
-					stringToValueConverter.valueToString(key, ChangeLogRecordImpl.this.getOldValue()),
-					stringToValueConverter.valueToString(key, ChangeLogRecordImpl.this.getNewValue()));
+					ChangeLogRecordImpl.this.modified.getTime(),
+					ChangeLogRecordImpl.this.key,
+					stringToValueConverter.valueToString(
+							ChangeLogRecordImpl.this.key,
+							ChangeLogRecordImpl.this.oldValue),
+					stringToValueConverter.valueToString(
+							ChangeLogRecordImpl.this.key,
+							ChangeLogRecordImpl.this.newValue));
 		}
 
 		/**
@@ -764,6 +771,45 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 		 */
 		public StringToValueConverter getStringToValueConverter() {
 			return LineMismatchEventWrapper.getInstance();
+		}
+
+		private void readObject(final ObjectInputStream in) throws IOException, ClassNotFoundException {
+			in.defaultReadObject();
+
+			final StringToValueConverter stringToValueConverter
+					= ChangeLogRecordImpl.this.getStringToValueConverter();
+			if (in.readBoolean()) {
+				ChangeLogRecordImpl.this.oldValue = stringToValueConverter.stringToValue(
+						ChangeLogRecordImpl.this.key,
+						in.readUTF());
+			}
+			if (in.readBoolean()) {
+				ChangeLogRecordImpl.this.newValue = stringToValueConverter.stringToValue(
+						ChangeLogRecordImpl.this.key,
+						in.readUTF());
+			}
+		}
+
+		private void writeObject(final ObjectOutputStream out) throws IOException {
+			out.defaultWriteObject();
+
+			final StringToValueConverter stringToValueConverter
+					= ChangeLogRecordImpl.this.getStringToValueConverter();
+			final boolean oldValueNonNull = ChangeLogRecordImpl.this.oldValue != null;
+			final boolean newValueNonNull = ChangeLogRecordImpl.this.newValue != null;
+			
+			out.writeBoolean(oldValueNonNull);
+			if (oldValueNonNull) {
+				out.writeUTF(stringToValueConverter.valueToString(
+						ChangeLogRecordImpl.this.key,
+						ChangeLogRecordImpl.this.oldValue));
+			}
+			out.writeBoolean(newValueNonNull);
+			if (newValueNonNull) {
+				out.writeUTF(stringToValueConverter.valueToString(
+						ChangeLogRecordImpl.this.key,
+						ChangeLogRecordImpl.this.newValue));
+			}
 		}
 	}
 }
