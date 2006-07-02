@@ -1,5 +1,5 @@
 /*-
- * $Id: LineMismatchEvent.java,v 1.34 2006/06/30 08:15:13 bass Exp $
+ * $Id: LineMismatchEvent.java,v 1.35 2006/07/02 16:11:55 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,7 +41,7 @@ import com.syrus.util.transport.idl.IdlTransferableObjectExt;
  * 
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.34 $, $Date: 2006/06/30 08:15:13 $
+ * @version $Revision: 1.35 $, $Date: 2006/07/02 16:11:55 $
  * @module event
  */
 public interface LineMismatchEvent
@@ -141,6 +141,10 @@ public interface LineMismatchEvent
 
 	String getPlainTextMessage();
 
+	/**
+	 * @return HTML message <em>without</em> either leading &lt;html&gt; or
+	 *         trailing &lt;/html&gt;
+	 */
 	String getRichTextMessage();
 
 	/**
