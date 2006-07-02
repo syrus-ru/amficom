@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectogramMismatchEventProcessor.java,v 1.25 2006/06/21 14:59:41 bass Exp $
+ * $Id: ReflectogramMismatchEventProcessor.java,v 1.26 2006/07/02 22:39:37 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -49,7 +49,7 @@ import com.syrus.util.Log;
  * @author Andrew ``Bass'' Shcheglov
  * @author Old Wise Saa
  * @author $Author: bass $
- * @version $Revision: 1.25 $, $Date: 2006/06/21 14:59:41 $
+ * @version $Revision: 1.26 $, $Date: 2006/07/02 22:39:37 $
  * @module leserver
  */
 final class ReflectogramMismatchEventProcessor extends AbstractEventProcessor {
@@ -454,11 +454,11 @@ final class ReflectogramMismatchEventProcessor extends AbstractEventProcessor {
 				return "";
 			}
 
-			final AbstractSchemeElement abstractSchemeElement = pathElement.getAbstractSchemeElement();
-			final String schemeElementName = abstractSchemeElement.getName();
+			final AbstractSchemeElement abstractSchemeElement = pathElement.getAbstractSchemeElement().getNearestParentSchemeElementOrSelf();
+			final String abstractSchemeElementName = abstractSchemeElement.getName();
 			final String schemeName = abstractSchemeElement.getNearestParentScheme().getName();
 			if (pathElement.isSpacious()) {
-				return schemeElementName + SPACE + '(' + schemeName + ')';
+				return abstractSchemeElementName + SPACE + '(' + schemeName + ')';
 			}
 			final SchemeElement schemeElement = (SchemeElement) abstractSchemeElement;
 			final ProtoEquipment protoEquipment = schemeElement.getProtoEquipment();
@@ -467,10 +467,10 @@ final class ReflectogramMismatchEventProcessor extends AbstractEventProcessor {
 						+ schemeElement.getId()
 						+ ", ProtoEquipment is null",
 						WARNING);
-				return schemeElementName + SPACE + '(' + schemeName + ')';
+				return abstractSchemeElementName + SPACE + '(' + schemeName + ')';
 			}
 			final EquipmentType equipmentType = protoEquipment.getType();
-			return equipmentType.getDescription() + ' ' + schemeElementName + SPACE + '(' + schemeName + ')';
+			return equipmentType.getDescription() + ' ' + abstractSchemeElementName + SPACE + '(' + schemeName + ')';
 		} catch (final ApplicationException ae) {
 			Log.debugMessage(ae, SEVERE);
 			return "";
