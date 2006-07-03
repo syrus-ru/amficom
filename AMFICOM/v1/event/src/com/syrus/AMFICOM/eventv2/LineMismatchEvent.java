@@ -1,5 +1,5 @@
 /*-
- * $Id: LineMismatchEvent.java,v 1.36 2006/07/02 18:45:42 bass Exp $
+ * $Id: LineMismatchEvent.java,v 1.37 2006/07/03 15:45:28 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,8 +25,8 @@ import java.util.SortedSet;
 import org.omg.CORBA.BAD_PARAM;
 import org.omg.CORBA.ORB;
 
+import com.syrus.AMFICOM.eventv2.corba.IdlAlarmStatus;
 import com.syrus.AMFICOM.eventv2.corba.IdlLineMismatchEvent;
-import com.syrus.AMFICOM.eventv2.corba.IdlLineMismatchEventPackage.IdlAlarmStatus;
 import com.syrus.AMFICOM.eventv2.corba.IdlLineMismatchEventPackage.IdlChangeLogRecord;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifiable;
@@ -42,7 +42,7 @@ import com.syrus.util.transport.idl.IdlTransferableObjectExt;
  * 
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.36 $, $Date: 2006/07/02 18:45:42 $
+ * @version $Revision: 1.37 $, $Date: 2006/07/03 15:45:28 $
  * @module event
  */
 public interface LineMismatchEvent
@@ -732,7 +732,9 @@ public interface LineMismatchEvent
 			 * @see IdlTransferableObject#getIdlTransferable(ORB)
 			 */
 			public IdlAlarmStatus getIdlTransferable(final ORB orb) {
-				return this.value.getIdlTransferable(orb);
+				return this.value == null
+						? null
+						: this.value.getIdlTransferable(orb);
 			}
 
 			/**
@@ -741,7 +743,9 @@ public interface LineMismatchEvent
 			 * @see IdlTransferableObjectExt#fromIdlTransferable(org.omg.CORBA.portable.IDLEntity)
 			 */
 			public void fromIdlTransferable(final IdlAlarmStatus alarmStatus) {
-				this.value = valueOf(alarmStatus);
+				this.value = alarmStatus == null
+						? null
+						: valueOf(alarmStatus);
 			}
 		}
 	}

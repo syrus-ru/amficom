@@ -1,7 +1,7 @@
 /*-
- * $Id: IdlLineMismatchEventImpl.java,v 1.10 2006/06/29 08:18:45 bass Exp $
+ * $Id: IdlLineMismatchEventImpl.java,v 1.11 2006/07/03 15:45:28 bass Exp $
  *
- * Copyright ¿ 2004-2005 Syrus Systems.
+ * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
@@ -11,7 +11,6 @@ package com.syrus.AMFICOM.eventv2.corba;
 import com.syrus.AMFICOM.eventv2.DefaultLineMismatchEvent;
 import com.syrus.AMFICOM.eventv2.LineMismatchEvent;
 import com.syrus.AMFICOM.eventv2.corba.IdlEventPackage.IdlEventType;
-import com.syrus.AMFICOM.eventv2.corba.IdlLineMismatchEventPackage.IdlAlarmStatus;
 import com.syrus.AMFICOM.eventv2.corba.IdlLineMismatchEventPackage.IdlChangeLogRecord;
 import com.syrus.AMFICOM.eventv2.corba.IdlLineMismatchEventPackage.IdlSpacialData;
 import com.syrus.AMFICOM.eventv2.corba.IdlLineMismatchEventPackage.IdlSpacialDataPackage.IdlAffectedPathElementSpacious;
@@ -22,7 +21,7 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.10 $, $Date: 2006/06/29 08:18:45 $
+ * @version $Revision: 1.11 $, $Date: 2006/07/03 15:45:28 $
  * @module event
  */
 final class IdlLineMismatchEventImpl extends IdlLineMismatchEvent {

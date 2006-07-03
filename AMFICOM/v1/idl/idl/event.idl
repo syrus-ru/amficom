@@ -1,5 +1,5 @@
 /*-
- * $Id: event.idl,v 1.66 2006/06/29 09:45:49 bass Exp $
+ * $Id: event.idl,v 1.67 2006/07/03 15:45:28 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -107,6 +107,25 @@ module eventv2 {
 		};
 
 		/*\u002a\u002f@SuppressWarnings("all")/**/
+		enum IdlAlarmStatus {
+			PENDING,
+			XTRA_ASSIGNED,
+			IGNORED,
+			ACKNOWLEDGED,
+			IN_PROGRESS,
+			XTRA_TT_COMPLETED,
+			XTRA_VTEST_IN_PROGRESS,
+			RESOLVED,
+			ABANDONED,
+			TIMED_OUT,
+			XTRA_VERIFIED,
+			XTRA_CLOSED
+		};
+
+		/*\u002a\u002f@SuppressWarnings("all")/**/
+		valuetype IdlAlarmStatusValue IdlAlarmStatus;
+
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		valuetype IdlLineMismatchEvent : general::corba::IdlStorableObject, IdlEvent {
 			private general::corba::IdlIdentifier affectedPathElementId;
 			union IdlSpacialData switch (
@@ -126,22 +145,10 @@ module eventv2 {
 			private general::corba::WString4000 plainTextMessage;
 			private general::corba::WString4000 richTextMessage;
 			private general::corba::IdlIdentifier reflectogramMismatchEventId;
-			/*\u002a\u002f@SuppressWarnings("all")/**/
-			enum IdlAlarmStatus {
-				PENDING,
-				XTRA_ASSIGNED,
-				IGNORED,
-				ACKNOWLEDGED,
-				IN_PROGRESS,
-				XTRA_TT_COMPLETED,
-				XTRA_VTEST_IN_PROGRESS,
-				RESOLVED,
-				ABANDONED,
-				TIMED_OUT,
-				XTRA_VERIFIED,
-				XTRA_CLOSED
-			};
-			private IdlAlarmStatus alarmStatus;
+			/**
+			 * Nullable.
+			 */
+			private IdlAlarmStatusValue alarmStatus;
 			private general::corba::IdlIdentifier parentLineMismatchEventId;
 			struct IdlChangeLogRecord {
 				long long modified;
@@ -168,8 +175,8 @@ module eventv2 {
 			general::corba::WString4000 getPlainTextMessage();
 			general::corba::WString4000 getRichTextMessage();
 			general::corba::IdlIdentifier getReflectogramMismatchEventId();
-			IdlAlarmStatus getAlarmStatus();
-			void setAlarmStatus(in IdlAlarmStatus alarmStatus);
+			IdlAlarmStatusValue getAlarmStatus();
+			void setAlarmStatus(in IdlAlarmStatusValue alarmStatus);
 			general::corba::IdlIdentifier getParentLineMismatchEventId();
 			void setParentLineMismatchEventId(in general::corba::IdlIdentifier parentLineMismatchEventId);
 			IdlChangeLogRecordSeq getChangeLog();
@@ -187,7 +194,7 @@ module eventv2 {
 					in general::corba::WString4000 plainTextMessage,
 					in general::corba::WString4000 richTextMessage,
 					in general::corba::IdlIdentifier reflectogramMismatchEventId,
-					in IdlAlarmStatus alarmStatus,
+					in IdlAlarmStatusValue alarmStatus,
 					in general::corba::IdlIdentifier parentLineMismatchEventId,
 					in IdlChangeLogRecordSeq changeLog);
 		};
