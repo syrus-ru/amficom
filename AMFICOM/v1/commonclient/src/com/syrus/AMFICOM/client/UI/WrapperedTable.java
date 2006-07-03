@@ -1,5 +1,5 @@
 /*-
-* $Id: WrapperedTable.java,v 1.27 2006/01/13 09:56:45 bob Exp $
+* $Id: WrapperedTable.java,v 1.28 2006/07/03 11:47:58 stas Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -42,8 +42,8 @@ import com.syrus.util.Log;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2006/01/13 09:56:45 $
- * @author $Author: bob $
+ * @version $Revision: 1.28 $, $Date: 2006/07/03 11:47:58 $
+ * @author $Author: stas $
  * @author Vladimir Dolzhenko
  * @module commonclient
  */
@@ -437,6 +437,12 @@ public final class WrapperedTable<T> extends ATable {
 
 			}
 		}
+	}
+	
+	public void sortColumn(int mColIndex, boolean ascending) {
+		this.sortedColumnIndex = mColIndex;
+		WrapperedTableModel<T> model = this.getModel();
+		model.sortRows(mColIndex, ascending);
 	}
 	
 	public void sortColumn(int mColIndex) {
