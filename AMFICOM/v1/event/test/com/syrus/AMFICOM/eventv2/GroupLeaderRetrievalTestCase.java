@@ -1,5 +1,5 @@
 /*-
- * $Id: GroupLeaderRetrievalTestCase.java,v 1.5 2006/07/03 13:03:33 bass Exp $
+ * $Id: GroupLeaderRetrievalTestCase.java,v 1.6 2006/07/03 15:44:58 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,6 +11,7 @@ package com.syrus.AMFICOM.eventv2;
 import static com.syrus.AMFICOM.eventv2.EventHierarchyTestCase.newLineMismatchEvent;
 import static com.syrus.AMFICOM.eventv2.EventHierarchyTestCase.oneTimeSetUp;
 import static com.syrus.AMFICOM.eventv2.EventHierarchyTestCase.oneTimeTearDown;
+import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.ObjectEntities.LINEMISMATCHEVENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.REFLECTOGRAMMISMATCHEVENT_CODE;
 import static java.util.logging.Level.SEVERE;
@@ -42,7 +43,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2006/07/03 13:03:33 $
+ * @version $Revision: 1.6 $, $Date: 2006/07/03 15:44:58 $
  * @module event
  */
 public final class GroupLeaderRetrievalTestCase extends TestCase {
@@ -253,6 +254,17 @@ public final class GroupLeaderRetrievalTestCase extends TestCase {
 		assertTrue(condition7.isConditionTrue((StorableObject) lineMismatchEvent));
 		try {
 			Log.debugMessage(getDatabaseCondition(condition7).getSQLQuery(), SEVERE);
+			assertTrue(true);
+		} catch (final AssertionError ae) {
+			Log.debugMessage(ae.getLocalizedMessage(), SEVERE);
+			fail();
+		}
+
+		final LinkedIdsCondition condition8 = new LinkedIdsCondition(
+				VOID_IDENTIFIER,
+				LINEMISMATCHEVENT_CODE);
+		try {
+			Log.debugMessage(getDatabaseCondition(condition8).getSQLQuery(), SEVERE);
 			assertTrue(true);
 		} catch (final AssertionError ae) {
 			Log.debugMessage(ae.getLocalizedMessage(), SEVERE);
