@@ -1,5 +1,5 @@
 /*-
- * $Id: DefaultLineMismatchEvent.java,v 1.32 2006/07/03 14:12:05 bass Exp $
+ * $Id: DefaultLineMismatchEvent.java,v 1.33 2006/07/03 15:44:12 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -61,7 +61,7 @@ import com.syrus.util.transport.idl.IdlConversionException;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.32 $, $Date: 2006/07/03 14:12:05 $
+ * @version $Revision: 1.33 $, $Date: 2006/07/03 15:44:12 $
  * @module event
  */
 public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
@@ -284,9 +284,12 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 	}
 
 	/**
-	 * This method should be invoked on the event server (where line 
+	 * <p>Creates new event and automatically adds it to the appropriate
+	 * group based on path element, optical distance and severity data.</p>
+	 *
+	 * <p>This method should be invoked on the event server (where line 
 	 * mismatch event generation occurs) for the newly created object gets
-	 * flushed prior to being returned.
+	 * flushed prior to being returned.</p>
 	 *
 	 * @param creatorId
 	 * @param affectedPathElementId
@@ -339,22 +342,26 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 			final double epsilon = reflectogramMismatchEvent.getDeltaX() / 2.0;
 
 
-			final StorableObjectCondition condition1 = new LinkedIdsCondition(
+			final StorableObjectCondition condition0 = new LinkedIdsCondition(
 					reflectogramMismatcheventIds,
 					LINEMISMATCHEVENT_CODE);
-			final StorableObjectCondition condition2 = new LinkedIdsCondition(
+			final StorableObjectCondition condition1 = new LinkedIdsCondition(
 					affectedPathElementId,
 					LINEMISMATCHEVENT_CODE);
-			final StorableObjectCondition condition3 = new TypicalCondition(
+			final StorableObjectCondition condition2 = new TypicalCondition(
 					mismatchOpticalDistance - epsilon,
 					mismatchOpticalDistance + epsilon,
 					OPERATION_IN_RANGE,
 					LINEMISMATCHEVENT_CODE,
 					COLUMN_MISMATCH_OPTICAL_DISTANCE);
+			final StorableObjectCondition condition3 = new LinkedIdsCondition(
+					VOID_IDENTIFIER,
+					LINEMISMATCHEVENT_CODE);
 
 
 			final Set<StorableObjectCondition> conditions
 					= new HashSet<StorableObjectCondition>();
+			conditions.add(condition0);
 			conditions.add(condition1);
 			conditions.add(condition2);
 			conditions.add(condition3);
