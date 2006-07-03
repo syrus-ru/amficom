@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectogramMismatchEventProcessor.java,v 1.26 2006/07/02 22:39:37 bass Exp $
+ * $Id: ReflectogramMismatchEventProcessor.java,v 1.27 2006/07/03 06:26:11 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,6 +38,7 @@ import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.MeasurementPort;
 import com.syrus.AMFICOM.measurement.MonitoredElement;
 import com.syrus.AMFICOM.measurement.Test;
+import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.Severity;
 import com.syrus.AMFICOM.scheme.AbstractSchemeElement;
 import com.syrus.AMFICOM.scheme.PathElement;
 import com.syrus.AMFICOM.scheme.SchemeElement;
@@ -49,7 +50,7 @@ import com.syrus.util.Log;
  * @author Andrew ``Bass'' Shcheglov
  * @author Old Wise Saa
  * @author $Author: bass $
- * @version $Revision: 1.26 $, $Date: 2006/07/02 22:39:37 $
+ * @version $Revision: 1.27 $, $Date: 2006/07/03 06:26:11 $
  * @module leserver
  */
 final class ReflectogramMismatchEventProcessor extends AbstractEventProcessor {
@@ -134,11 +135,12 @@ final class ReflectogramMismatchEventProcessor extends AbstractEventProcessor {
 			final KIS kis = test.getKIS();
 			final MeasurementPort measurementPort = monitoredElement.getMeasurementPort();
 			final Identifier portId = measurementPort.getPortId();
+			final Severity severity = reflectogramMismatchEvent.getSeverity();
 			if (portId.isVoid()) {
-				Log.debugMessage("For MeasurementPort: "
+				reportMisconfiguration(severity,
+						"For MeasurementPort: "
 						+ measurementPort.getId()
-						+ " Port is null",
-						SEVERE);
+						+ " Port is null");
 				return;
 			}
 			final Set<TransmissionPath> transmissionPaths =
@@ -147,11 +149,11 @@ final class ReflectogramMismatchEventProcessor extends AbstractEventProcessor {
 							true);
 			final int transmissionPathsSize = transmissionPaths.size();
 			if (transmissionPathsSize != 1) {
-				Log.debugMessage("For Port: " + portId
+				reportMisconfiguration(severity,
+						"For Port: " + portId
 						+ ", actual TransmissionPath count: "
 						+ transmissionPathsSize
-						+ "; expected: 1",
-						SEVERE);
+						+ "; expected: 1");
 				return;
 			}
 			final Identifier transmissionPathId = transmissionPaths.iterator().next().getId();
@@ -161,12 +163,12 @@ final class ReflectogramMismatchEventProcessor extends AbstractEventProcessor {
 							true);
 			final int schemePathsSize = schemePaths.size();
 			if (schemePathsSize != 1) {
-				Log.debugMessage("For TransmissionPath: "
+				reportMisconfiguration(severity,
+						"For TransmissionPath: "
 						+ transmissionPathId
 						+ ", actual SchemePath count: "
 						+ schemePathsSize
-						+ "; expected: 1",
-						SEVERE);
+						+ "; expected: 1");
 				return;
 			}
 			final SchemePath schemePath = schemePaths.iterator().next();
@@ -182,12 +184,12 @@ final class ReflectogramMismatchEventProcessor extends AbstractEventProcessor {
 			 * is greater than totalOpticalLength, in points.
 			 */
 			if (eventOpticalDistance > totalOpticalLength + epsilon) {
-				Log.debugMessage("For SchemePath: " + schemePathId
+				reportMisconfiguration(severity,
+						"For SchemePath: " + schemePathId
 						+ ", eventOpticalDistance: "
 						+ eventOpticalDistance
 						+ " is greater than totalOpticalLength: "
-						+ totalOpticalLength,
-						SEVERE);
+						+ totalOpticalLength);
 				return;
 			}
 
@@ -227,9 +229,9 @@ final class ReflectogramMismatchEventProcessor extends AbstractEventProcessor {
 				}
 			}
 			if (affectedPathElement == null) {
-				Log.debugMessage("SchemePath: "
-						+ schemePathId + " is empty",
-						SEVERE);
+				reportMisconfiguration(severity,
+						"SchemePath: "
+						+ schemePathId + " is empty");
 				return;
 			}
 
@@ -400,17 +402,6 @@ final class ReflectogramMismatchEventProcessor extends AbstractEventProcessor {
 				+ (reflectogramMismatchEvent.hasMismatch()
 						? MISMATCH_LEVEL + COLON_TAB + reflectogramMismatchEvent.getMinMismatch() + RANGE + reflectogramMismatchEvent.getMaxMismatch() + NEWLINE
 						: "");
-	}
-
-	private static String toRichTextMessage(final String plainTextMessage) {
-		final StringBuilder builder = new StringBuilder();
-		builder.append(plainTextMessage.replaceAll("&", "&amp;").
-				replaceAll("\"", "&quot;").
-				replaceAll("'", "&apos;").
-				replaceAll("<", "&lt;").
-				replaceAll(">", "&gt;").
-				replaceAll("\n", "<br>\n"));			
-		return builder.toString();
 	}
 
 	private static String getLocalizedDistance(final int distance) {
