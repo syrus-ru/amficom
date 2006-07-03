@@ -1,5 +1,5 @@
 /*-
- * $Id: EventHierarchyTestCase.java,v 1.6 2006/06/26 17:22:06 bass Exp $
+ * $Id: EventHierarchyTestCase.java,v 1.7 2006/07/03 14:12:05 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,7 +44,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2006/06/26 17:22:06 $
+ * @version $Revision: 1.7 $, $Date: 2006/07/03 14:12:05 $
  * @module event
  */
 public final class EventHierarchyTestCase extends TestCase {
@@ -228,7 +228,7 @@ public final class EventHierarchyTestCase extends TestCase {
 
 	static LineMismatchEvent newLineMismatchEvent() {
 		try {
-			final LineMismatchEvent lineMismatchEvent = DefaultLineMismatchEvent.newInstance(systemUserId, pathElementId, false, 0, 0, 0, 0, "foo", "<html>foo</html>", newReflectogramMismatchEvent().getId());
+			final LineMismatchEvent lineMismatchEvent = DefaultLineMismatchEvent.newInstance(systemUserId, pathElementId, false, 0, 0, 0, 0, "foo", "<html>foo</html>", newReflectogramMismatchEvent());
 			assertTrue(lineMismatchEvent instanceof StorableObject);
 			/*
 			 * Any new LineMismatchEvent gets saved right after creation.
