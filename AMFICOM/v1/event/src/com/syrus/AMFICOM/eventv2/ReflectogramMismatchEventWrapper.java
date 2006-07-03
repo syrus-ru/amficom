@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectogramMismatchEventWrapper.java,v 1.3 2006/03/30 12:10:05 bass Exp $
+ * $Id: ReflectogramMismatchEventWrapper.java,v 1.4 2006/07/03 07:26:50 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,14 +21,16 @@ import com.syrus.util.Wrapper;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2006/03/30 12:10:05 $
+ * @version $Revision: 1.4 $, $Date: 2006/07/03 07:26:50 $
  * @module event
  */
 public final class ReflectogramMismatchEventWrapper
 		implements Wrapper<ReflectogramMismatchEvent> {
 	public static final String KEY_TYPE = "type";
 	public static final String COLUMN_ALARM_TYPE = "alarm_type";
+	public static final String COLUMN_ALARM_TYPE_INT = "alarm_type_int";
 	public static final String COLUMN_SEVERITY = "severity";
+	public static final String COLUMN_SEVERITY_INT = "severity_int";
 	public static final String COLUMN_COORD = "coord";
 	public static final String COLUMN_END_COORD = "end_coord";
 	public static final String COLUMN_DELTA_X = "delta_x";
@@ -51,7 +53,9 @@ public final class ReflectogramMismatchEventWrapper
 		this.keys = Collections.unmodifiableList(Arrays.asList(
 				KEY_TYPE,
 				COLUMN_ALARM_TYPE,
+				COLUMN_ALARM_TYPE_INT,
 				COLUMN_SEVERITY,
+				COLUMN_SEVERITY_INT,
 				COLUMN_COORD,
 				COLUMN_END_COORD,
 				COLUMN_DELTA_X,
@@ -95,7 +99,9 @@ public final class ReflectogramMismatchEventWrapper
 			return AlarmType.class;
 		} else if (internedKey == COLUMN_SEVERITY) {
 			return Severity.class;
-		} else if (internedKey == COLUMN_COORD
+		} else if (internedKey == COLUMN_ALARM_TYPE_INT
+				|| internedKey == COLUMN_SEVERITY_INT
+				|| internedKey == COLUMN_COORD
 				|| internedKey == COLUMN_END_COORD
 				|| internedKey == COLUMN_ANCHOR1_COORD
 				|| internedKey == COLUMN_ANCHOR2_COORD) {
@@ -151,8 +157,12 @@ public final class ReflectogramMismatchEventWrapper
 			return reflectogramMismatchEvent.getType();
 		} else if (internedKey == COLUMN_ALARM_TYPE) {
 			return reflectogramMismatchEvent.getAlarmType();
+		} else if (internedKey == COLUMN_ALARM_TYPE_INT) {
+			return Integer.valueOf(reflectogramMismatchEvent.getAlarmType().ordinal());
 		} else if (internedKey == COLUMN_SEVERITY) {
 			return reflectogramMismatchEvent.getSeverity();
+		} else if (internedKey == COLUMN_SEVERITY_INT) {
+			return Integer.valueOf(reflectogramMismatchEvent.getSeverity().ordinal());
 		} else if (internedKey == COLUMN_COORD) {
 			return Integer.valueOf(reflectogramMismatchEvent.getCoord());
 		} else if (internedKey == COLUMN_END_COORD) {
