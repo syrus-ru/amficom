@@ -8,8 +8,6 @@
 
 #include "../common/ArrList.h"
 
-#define NEW_SHORT_LINE_EXCLUSION
-
 class Splash;
 //---------------------------------------------------------------------------------------------------------------
 class InitialAnalysis
@@ -63,11 +61,12 @@ private:
 	double  delta_x;
 	double *noise;
 
-    double average_tilt; // средний наклон по всей р/г, дБ/км
+    double average_factor; // характеризует ср. наклона на р/г, не привязан ни к масштабу вейвлета, ни к выбранной норме
 
     ArrList* events; // список всех событий
 
 //Parameters of the analysis (criteria);
+	double minimalThreshold;
 	double minimalWeld;
 	double minimalConnector;
     double minimalEnd;
@@ -110,25 +109,26 @@ private:
 	// выполнение вейвлет-преобразования
 	int getMinScale();
 	void performTransformationOnly(double *y, int begin, int end, double *trans, int freq, double norma); // end: exclusive; @todo: make end inclusive
-	void performTransformationAndCenter(double *y, int begin, int end, double *trans, int freq, double norma, double basetilt);
-	double tiltToBaseline(int scale, double norma1, double tilt);
-	double baselineToTilt(int scale, double norma1, double baseline);
-	void centerWletImageOnly(double* f_wlet, int scale, int begin, int end, double norma1, double basetilt);
+	void performTransformationAndCenter(double *y, int begin, int end, double *trans, int freq, double norma);
+	void centerWletImageOnly(double* f_wlet, int scale, int begin, int end, double norma1);
+
+	// расчет R-параметров splash (в момент его обнаружения, т.к. потом будет потерян вейвлет-образ)
+	void fillSplashRParameters(Splash &spl, double *f_wlet, int wlet_width);
 
 	// ======= ПЕРВЫЙ ЭТАП АНАЛИЗА - ПОДГОТОВКА =======
 	static double calcWletMeanValue(double* fw, int lastPoint, double from, double to, int columns);// вычислить самое популярное значение ф-ции fw
-	void calcAverageTilt(double* fw, int scale, double norma1);
-	void setShiftedThresholds(int scale);// установить границы порогов в соответствии со средним значением вейвлета 
+	void calcAverageFactor(double* fw, int scale, double norma1);
+	void shiftThresholds(int scale);// изменить границы порогов в соответствии со средним значением вейвлета 
 
 	// ======= ВТОРОЙ ЭТАП АНАЛИЗА - ОПРЕДЕЛЕНИЕ ВСПЛЕСКОВ =======
-	void findAllWletSplashes(double* f_wlet, double baseU, double baseL, int wlet_width, ArrList& splashes);
+	void findAllWletSplashes(double* f_wlet, int wlet_width, ArrList& splashes);
 
 	// ======= ТРЕТИЙ ЭТАП АНАЛИЗА - ОБРАБОТКА ВСПЛЕСКОВ =======
 	//void removedMaskedSplashes(ArrList &accSpl);
 	void processMaskedSplashes(ArrList &accSpl);
 
 	// ======= ЧЕТВЕРТЫЙ ЭТАП АНАЛИЗА - ОПРЕДЕЛЕНИЕ СОБЫТИЙ ПО ВСПЛЕСКАМ =======
-    void findEventsBySplashes(ArrList&  splashes, int dzMaxDist);
+    void findEventsBySplashes(double* f_wletTEMP, ArrList&  splashes, int dzMaxDist);
 	int	 processDeadZone(ArrList& splashes, int dzMaxDist);
     int  findConnector(int i, ArrList& splashes, EventParams *&ep);// посмотреть, есть ли что-то похожее на коннектор , если начать с i-го всплеска, и если есть - обработать и создать (не добавляя), изменив значение i и вернув сдвиг; если ничего не нашли, то сдвиг равен 0
     int  processMaskedToNonId(int i, ArrList& splashes);// поиск неид. областей по маскированным областям - проверка до проверки коннекторов
@@ -140,7 +140,7 @@ private:
 
 	// этап 3.2. - уточнение начал и концов
 	void processEventsBeginsEnds(double *f_wletTEMP); // уточняет начала и концы событий
-	void correctSpliceCoords(double *TEMP, int scale0, double tilt, EventParams* splice, int minBegin, int maxEnd);// ф-я ПОРТИТ TEMP
+	void correctSpliceCoords(double *f_wletTMP, int scale0, EventParams* splice, int minBegin, int maxEnd);// ф-я ПОРТИТ вейвлет образ !  (так как использует тот же массив для хранения образа на другом масштабе)
 	void correctConnectorFront(EventParams* connector);
 
 	// ====== ПЯТЫЙ ЭТАП АНАЛИЗА - ОБРАБОТКА СОБЫТИЙ =======
@@ -148,17 +148,8 @@ private:
     void addLinearPartsBetweenEvents();
     void excludeShortLinesBetweenConnectors(double* data, int szc);
     void excludeShortLinesBetweenLossAndConnectors(double* arr, int szc);// удалить небольшие линейные участки , возникающие вследствие неточностей анализа между потерями пред коннекторами
-#ifdef NEW_SHORT_LINE_EXCLUSION
-	void excludeShortLinesBetweenConnectorAndNonidentified(double* arr, int sz);
-	void excludeShortLineAfterDeadzone(double* arr, int sz);
-	void excludeShortLineBeforeEnd(double* arr, int sz);
-#endif
     void trimAllEvents(); // из-за расширения всплесков события могу немного наползать друг на друга, выравниваем их
     void verifyResults();
-
-#ifdef DEBUG_INITIAL_ANALYSIS_STDERR
-	void dumpEventsToStderr();
-#endif
 };
 //====================================================================================================
 class Splash
@@ -176,9 +167,7 @@ class Splash
 	double r_acrit;		// max{(f_wlet[i]-rACrit)/noise[i]} (<0, если rACrit не достигнут)
 	double r_weld;		// max{(f_wlet[i]-minimalWeld)/noise[i]} (<0, если порог не достигнут)
 
-	double base_tilt;	// средний уровень наклона, на фоне которого найден всплеск
-
-	double f_extr;		// экстремальное значение всплеска (относительно некоторого базового уровня, который не обязательно соответствует base_tilt)
+	double f_extr;		// экстремальное значение всплеска
     int sign;  // знак всплеска
 
 	void lowerRFactors(double rMax); // понизить достоверность R-факторов этого всплеска до rMax (при прохождении всплеском фильтра)
@@ -193,7 +182,6 @@ class Splash
     	end_weld 		= -1;
 		begin_conn 		= -1;
     	end_conn 		= -1;
-		base_tilt		= 0;
         f_extr 			= 0;
     	sign 			= 0;
 		scale			= scale1;
