@@ -22,7 +22,7 @@ import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2006/05/18 19:44:36 $
+ * @version $Revision: 1.19 $, $Date: 2006/07/03 09:32:09 $
  * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -114,9 +114,13 @@ public final class CommonUIUtilities {
 	}
 	
 	/**
-	 * convert string into HTML
-	 * @param string input string 
-	 * @return htmled string
+	 * <p>Converts a plain-text string to basic HTML.</p>
+	 *
+	 * <p>Note: the resulting HTML string should NOT contain linebreaks, or
+	 * {@code JOptionPane} will enter plain-text mode and ignore HTML tags.</p>
+	 *
+	 * @param string the string to convert. 
+	 * @return HTML string.
 	 */
 	public static final String convertToHTMLString(final String string) {
 		if (string.startsWith("<html>") || string.startsWith("<HTML>")) {
@@ -127,10 +131,14 @@ public final class CommonUIUtilities {
 		builder.append("<html>");
 		builder.append(string.replaceAll("&", "&amp;").
 				replaceAll("\"", "&quot;").
-				replaceAll("'", "&apos;").
+				/*-
+				 * Neither JLabel nor JOptionPane can handle
+				 * apostrophe.
+				 */
+//				replaceAll("'", "&apos;").
 				replaceAll("<", "&lt;").
 				replaceAll(">", "&gt;").
-				replaceAll("\n", "<br>\n"));			
+				replaceAll("\n", "<br>"));
 		builder.append("</html>");
 		return builder.toString();
 	}
