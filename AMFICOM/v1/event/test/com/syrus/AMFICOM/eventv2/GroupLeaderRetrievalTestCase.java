@@ -1,5 +1,5 @@
 /*-
- * $Id: GroupLeaderRetrievalTestCase.java,v 1.3 2006/06/20 11:29:21 bass Exp $
+ * $Id: GroupLeaderRetrievalTestCase.java,v 1.4 2006/07/03 12:29:40 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,6 +12,7 @@ import static com.syrus.AMFICOM.eventv2.EventHierarchyTestCase.newLineMismatchEv
 import static com.syrus.AMFICOM.eventv2.EventHierarchyTestCase.oneTimeSetUp;
 import static com.syrus.AMFICOM.eventv2.EventHierarchyTestCase.oneTimeTearDown;
 import static com.syrus.AMFICOM.general.ObjectEntities.LINEMISMATCHEVENT_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.REFLECTOGRAMMISMATCHEVENT_CODE;
 import static java.util.logging.Level.SEVERE;
 
 import java.lang.reflect.Constructor;
@@ -27,17 +28,21 @@ import junit.framework.TestSuite;
 import com.syrus.AMFICOM.bugs.Crutch581;
 import com.syrus.AMFICOM.eventv2.LineMismatchEvent.AlarmStatus;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.DatabaseTypicalCondition;
+import com.syrus.AMFICOM.general.DatabaseStorableObjectCondition;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
+import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.AlarmType;
+import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.Severity;
 import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2006/06/20 11:29:21 $
+ * @version $Revision: 1.4 $, $Date: 2006/07/03 12:29:40 $
  * @module event
  */
 public final class GroupLeaderRetrievalTestCase extends TestCase {
@@ -56,6 +61,7 @@ public final class GroupLeaderRetrievalTestCase extends TestCase {
 		testSuite.addTest(new GroupLeaderRetrievalTestCase("testTypicalCondition"));
 		testSuite.addTest(new GroupLeaderRetrievalTestCase("testWholesaleRetrieval"));
 //		testSuite.addTest(new GroupLeaderRetrievalTestCase("testCustomRetrieval"));
+		testSuite.addTest(new GroupLeaderRetrievalTestCase("testOtherConditions"));
 		return new TestSetup(testSuite) {
 			@Override
 			protected void setUp() {
@@ -69,13 +75,13 @@ public final class GroupLeaderRetrievalTestCase extends TestCase {
 		};
 	}
 
-	private static DatabaseTypicalCondition getDatabaseCondition(final TypicalCondition condition)
+	private static DatabaseStorableObjectCondition getDatabaseCondition(final StorableObjectCondition condition)
 	throws Exception {
-		final Class<? extends TypicalCondition> clazz = TypicalCondition.class;
+		final Class<? extends StorableObjectCondition> clazz = condition.getClass();
 		final Class<?> databaseClazz = Class.forName(clazz.getPackage().getName() + ".Database" + clazz.getSimpleName());
-		final Constructor<?> ctor = databaseClazz.getDeclaredConstructor(TypicalCondition.class);
+		final Constructor<?> ctor = databaseClazz.getDeclaredConstructor(clazz);
 		ctor.setAccessible(true);
-		return (DatabaseTypicalCondition) ctor.newInstance(condition);
+		return (DatabaseStorableObjectCondition) ctor.newInstance(condition);
 	}
 
 	public void testTypicalCondition() throws Exception {
@@ -159,5 +165,86 @@ public final class GroupLeaderRetrievalTestCase extends TestCase {
 		assertFalse(rootLineMismatchEvents2.contains(leader1));
 		assertTrue(rootLineMismatchEvents2.contains(leader2));
 		assertFalse(rootLineMismatchEvents2.contains(child));
+	}
+
+	public void testOtherConditions() throws Exception {
+		final LineMismatchEvent lineMismatchEvent = newLineMismatchEvent();
+		final ReflectogramMismatchEvent reflectogramMismatchEvent = lineMismatchEvent.getReflectogramMismatchEvent();
+
+		final Severity severity = reflectogramMismatchEvent.getSeverity();
+		final TypicalCondition condition1 = new TypicalCondition(
+				severity,
+				OperationSort.OPERATION_EQUALS,
+				REFLECTOGRAMMISMATCHEVENT_CODE,
+				ReflectogramMismatchEventWrapper.COLUMN_SEVERITY);
+		final TypicalCondition condition2 = new TypicalCondition(
+				severity.ordinal(),
+				OperationSort.OPERATION_EQUALS,
+				REFLECTOGRAMMISMATCHEVENT_CODE,
+				ReflectogramMismatchEventWrapper.COLUMN_SEVERITY_INT);
+		try {
+			Log.debugMessage(getDatabaseCondition(condition1).getSQLQuery(), SEVERE);
+			assertTrue(true);
+		} catch (final AssertionError ae) {
+			Log.debugMessage(ae.getLocalizedMessage(), SEVERE);
+			fail();
+		}
+		try {
+			Log.debugMessage(getDatabaseCondition(condition2).getSQLQuery(), SEVERE);
+			fail();
+		} catch (final AssertionError ae) {
+			Log.debugMessage(ae.getLocalizedMessage(), SEVERE);
+			assertTrue(true);
+		}
+
+		final AlarmType alarmType = reflectogramMismatchEvent.getAlarmType();
+		final TypicalCondition condition3 = new TypicalCondition(
+				alarmType,
+				OperationSort.OPERATION_EQUALS,
+				REFLECTOGRAMMISMATCHEVENT_CODE,
+				ReflectogramMismatchEventWrapper.COLUMN_ALARM_TYPE);
+		final TypicalCondition condition4 = new TypicalCondition(
+				alarmType.ordinal(),
+				OperationSort.OPERATION_EQUALS,
+				REFLECTOGRAMMISMATCHEVENT_CODE,
+				ReflectogramMismatchEventWrapper.COLUMN_ALARM_TYPE_INT);
+		try {
+			Log.debugMessage(getDatabaseCondition(condition3).getSQLQuery(), SEVERE);
+			assertTrue(true);
+		} catch (final AssertionError ae) {
+			Log.debugMessage(ae.getLocalizedMessage(), SEVERE);
+			fail();
+		}
+		try {
+			Log.debugMessage(getDatabaseCondition(condition4).getSQLQuery(), SEVERE);
+			fail();
+		} catch (final AssertionError ae) {
+			Log.debugMessage(ae.getLocalizedMessage(), SEVERE);
+			assertTrue(true);
+		}
+
+		final TypicalCondition condition5 = new TypicalCondition(.0d, 1.0d,
+				OperationSort.OPERATION_IN_RANGE,
+				LINEMISMATCHEVENT_CODE,
+				LineMismatchEventWrapper.COLUMN_MISMATCH_OPTICAL_DISTANCE);
+		try {
+			Log.debugMessage(getDatabaseCondition(condition5).getSQLQuery(), SEVERE);
+			assertTrue(true);
+		} catch (final AssertionError ae) {
+			Log.debugMessage(ae.getLocalizedMessage(), SEVERE);
+			fail();
+		}
+
+		final LinkedIdsCondition condition6 = new LinkedIdsCondition(
+				lineMismatchEvent.getAffectedPathElementId(),
+				LINEMISMATCHEVENT_CODE);
+		assertTrue(condition6.isConditionTrue((StorableObject) lineMismatchEvent));
+		try {
+			Log.debugMessage(getDatabaseCondition(condition6).getSQLQuery(), SEVERE);
+			assertTrue(true);
+		} catch (final AssertionError ae) {
+			Log.debugMessage(ae.getLocalizedMessage(), SEVERE);
+			fail();
+		}
 	}
 }
