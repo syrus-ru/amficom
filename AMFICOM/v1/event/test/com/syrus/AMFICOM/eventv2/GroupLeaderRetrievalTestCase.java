@@ -1,5 +1,5 @@
 /*-
- * $Id: GroupLeaderRetrievalTestCase.java,v 1.4 2006/07/03 12:29:40 bass Exp $
+ * $Id: GroupLeaderRetrievalTestCase.java,v 1.5 2006/07/03 13:03:33 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -42,7 +42,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2006/07/03 12:29:40 $
+ * @version $Revision: 1.5 $, $Date: 2006/07/03 13:03:33 $
  * @module event
  */
 public final class GroupLeaderRetrievalTestCase extends TestCase {
@@ -241,6 +241,18 @@ public final class GroupLeaderRetrievalTestCase extends TestCase {
 		assertTrue(condition6.isConditionTrue((StorableObject) lineMismatchEvent));
 		try {
 			Log.debugMessage(getDatabaseCondition(condition6).getSQLQuery(), SEVERE);
+			assertTrue(true);
+		} catch (final AssertionError ae) {
+			Log.debugMessage(ae.getLocalizedMessage(), SEVERE);
+			fail();
+		}
+
+		final LinkedIdsCondition condition7 = new LinkedIdsCondition(
+				lineMismatchEvent.getReflectogramMismatchEventId(),
+				LINEMISMATCHEVENT_CODE);
+		assertTrue(condition7.isConditionTrue((StorableObject) lineMismatchEvent));
+		try {
+			Log.debugMessage(getDatabaseCondition(condition7).getSQLQuery(), SEVERE);
 			assertTrue(true);
 		} catch (final AssertionError ae) {
 			Log.debugMessage(ae.getLocalizedMessage(), SEVERE);
