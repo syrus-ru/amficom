@@ -1,5 +1,5 @@
 /*-
- * $Id: SynchronousWorker.java,v 1.4 2006/06/29 13:26:15 saa Exp $
+ * $Id: SynchronousWorker.java,v 1.5 2006/07/04 14:55:48 saa Exp $
  * 
  * Copyright © 2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,6 +22,7 @@ import javax.swing.JProgressBar;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 
+import com.syrus.AMFICOM.client.event.StatusMessageEvent;
 import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 
 
@@ -53,10 +54,20 @@ import com.syrus.AMFICOM.client.model.AbstractMainFrame;
  * 
  * @author saa
  * @author $Author: saa $
- * @version $Revision: 1.4 $, $Date: 2006/06/29 13:26:15 $
+ * @version $Revision: 1.5 $, $Date: 2006/07/04 14:55:48 $
  * @module
  */
 public abstract class SynchronousWorker<T> extends AbstractSynchronousWorker<T>{
+
+	/**
+	 * Прятать ли диалог за пределами экрана?
+	 */
+	private static final boolean HIDE_POPUP = true;
+
+	/**
+	 * Отображать ли информацию в StatusBar'е?
+	 */
+	private static final boolean USE_STATUSBAR = true;
 
 	String title = null;
 	String text = null;
@@ -114,6 +125,11 @@ public abstract class SynchronousWorker<T> extends AbstractSynchronousWorker<T>{
 		this.area.setLayout(new GridLayout(1, 2));
 		this.area.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
 
+		if (USE_STATUSBAR) {
+			AbstractMainFrame.getGlobalDispatcher().firePropertyChange(
+					StatusMessageEvent.beginProgressBarEvent(this, this.text));
+		}
+
 		updateDialog();
 
 		this.label.setVisible(true);
@@ -130,12 +146,27 @@ public abstract class SynchronousWorker<T> extends AbstractSynchronousWorker<T>{
 		this.dialog.setModal(true);
 		this.dialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 		this.dialog.pack();
-		this.dialog.setLocation(-1 - this.dialog.getWidth(), -1 - this.dialog.getHeight());
-		// these two lines are copy-righted from bob's ProcessingDialog
-		final Dimension screenSize =
-			Toolkit.getDefaultToolkit().getScreenSize();
-		this.dialog.setLocation((screenSize.width - this.dialog.getWidth())/2,
-				(screenSize.height - this.dialog.getHeight())/2);
+		if (HIDE_POPUP) {
+			this.dialog.setLocation(-1 - this.dialog.getWidth(), -1 - this.dialog.getHeight());
+		} else {
+			// these two lines are copy-righted from bob's ProcessingDialog
+			final Dimension screenSize =
+				Toolkit.getDefaultToolkit().getScreenSize();
+			this.dialog.setLocation((screenSize.width - this.dialog.getWidth())/2,
+					(screenSize.height - this.dialog.getHeight())/2);
+		}
+	}
+
+	/**
+	 * Метод не должен вызываться клиентом напрямую.
+	 * @see com.syrus.AMFICOM.client.util.AbstractSynchronousWorker#dismissDialog()
+	 */
+	@Override
+	protected final void dismissDialog() {
+		if (USE_STATUSBAR) {
+			AbstractMainFrame.getGlobalDispatcher().firePropertyChange(
+					StatusMessageEvent.endProgressBarEvent(this));
+		}
 	}
 
 	/**
@@ -182,11 +213,20 @@ public abstract class SynchronousWorker<T> extends AbstractSynchronousWorker<T>{
 			this.bar.setIndeterminate(false);
 			this.bar.setValue(percentage);
 		}
+		if (USE_STATUSBAR) {
+			AbstractMainFrame.getGlobalDispatcher().firePropertyChange(
+					StatusMessageEvent.progressBarPercents(this, percentage));
+		}
 	}
 
 	void updateDialog() {
 		if (this.dialog == null) {
 			return; // Диалоговое окно еще не настроено
+		}
+
+		if (USE_STATUSBAR) {
+			AbstractMainFrame.getGlobalDispatcher().firePropertyChange(
+					StatusMessageEvent.progressBarText(this, this.text));
 		}
 
 		// меняем заголовок

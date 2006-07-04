@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSynchronousWorker.java,v 1.1 2006/06/29 11:08:17 saa Exp $
+ * $Id: AbstractSynchronousWorker.java,v 1.2 2006/07/04 14:55:48 saa Exp $
  * 
  * Copyright © 2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -77,7 +77,7 @@ import javax.swing.SwingUtilities;
  * 
  * @author saa
  * @author $Author: saa $
- * @version $Revision: 1.1 $, $Date: 2006/06/29 11:08:17 $
+ * @version $Revision: 1.2 $, $Date: 2006/07/04 14:55:48 $
  * @module
  */
 public abstract class AbstractSynchronousWorker<T> {
@@ -242,7 +242,9 @@ public abstract class AbstractSynchronousWorker<T> {
 		}
 
 		prepareDialog(dlg);
+		dlg.setModal(true);
 		dlg.setVisible(true); // отмена диалога произойдет из рабочего потока
+		dismissDialog();
 		dlg.dispose();
 		if (!this.done) {
 			throw new InternalError();
@@ -290,6 +292,7 @@ public abstract class AbstractSynchronousWorker<T> {
 
 	/**
 	 * Готовит диалоговое окно.
+	 * Метод предназначен для переопределения клиентом.
 	 * Вызывается в потоке AWT-EQ в тот момент,
 	 * когда принято решение о показе диалогового
 	 * окна. Если {@link #construct()} отработал быстро, то этот метод
@@ -298,13 +301,31 @@ public abstract class AbstractSynchronousWorker<T> {
 	 * Реализация не должна вызывать setVisible() - это делает сам
 	 * {@link AbstractSynchronousWorker}.
 	 * <p>
+	 * Настоящая реализация не предпринимает каких-либо действий.
+	 * <p>
 	 * Обращаю внимание, что настраиваемое диалоговое окно,
 	 * ссылка на которое передается этому методу, не должно напрямую
 	 * изменяться из потока, в котором выполняется construct().
 	 * 
 	 * @param dlg2 только что созданное диалоговое окно
 	 */
-	protected abstract void prepareDialog(JDialog dlg2);
+	protected void prepareDialog(@SuppressWarnings("unused") JDialog dlg2) {
+		// empty
+	}
+
+	/**
+	 * Вызывается в потоке AWT-EQ в тот момент, когда
+	 * модальное диалоговое окно скрыто.
+	 * Метод предназначен для переопределения клиентом.
+	 * <p>
+	 * Настоящая реализация не предпринимает каких-либо действий.
+	 * <p>
+	 * Метод может использоваться наследниками для выполнения
+	 * каких-либо дополнительных завершающих действий.
+	 */
+	protected void dismissDialog() {
+		// empty
+	}
 
 	/**
 	 * Переопределите этот метод, чтобы задать задержку в миллисекундах

@@ -1,5 +1,5 @@
 /*-
- * $Id: SynchronousWorkerDemo.java,v 1.1 2006/06/29 11:09:26 saa Exp $
+ * $Id: SynchronousWorkerDemo.java,v 1.2 2006/07/04 14:55:48 saa Exp $
  * 
  * Copyright © 2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import javax.swing.SwingUtilities;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.1 $, $Date: 2006/06/29 11:09:26 $
+ * @version $Revision: 1.2 $, $Date: 2006/07/04 14:55:48 $
  * @module
  */
 public class SynchronousWorkerDemo {
@@ -26,9 +26,28 @@ public class SynchronousWorkerDemo {
 	 * Тест-демонстрация
 	 */
 	public static void main(String[] args) {
-		demo1();
+		testPerformance();
+		demo0();
+		// these demos may depend on statusBar
+//		demo1();
 //		demo2();
-//		testPerformance();
+	}
+
+	private static void demo0() {
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					new AbstractSynchronousWorker<Object>(null) {
+						@Override
+						public Object construct() throws InterruptedException {
+							Thread.sleep(3000);
+							return null;
+						}}.execute();
+				} catch (ExecutionException e) {
+					// @todo Auto-generated catch block
+					e.printStackTrace();
+				}
+			}});
 	}
 
 	private static void demo1() {
