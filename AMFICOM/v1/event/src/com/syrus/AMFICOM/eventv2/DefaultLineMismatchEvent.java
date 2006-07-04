@@ -1,5 +1,5 @@
 /*-
- * $Id: DefaultLineMismatchEvent.java,v 1.33 2006/07/03 15:44:12 bass Exp $
+ * $Id: DefaultLineMismatchEvent.java,v 1.34 2006/07/04 13:21:37 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -61,7 +61,7 @@ import com.syrus.util.transport.idl.IdlConversionException;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.33 $, $Date: 2006/07/03 15:44:12 $
+ * @version $Revision: 1.34 $, $Date: 2006/07/04 13:21:37 $
  * @module event
  */
 public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
@@ -638,9 +638,17 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 				newParentLineMismatchEventId);
 		this.parentLineMismatchEventId = newParentLineMismatchEventId;
 		this.alarmStatus.setValue(null);
-		/**
-		 * @todo If our new parent event is closed, reopen it.
+
+		/*-
+		 * If our new parent event is closed, reopen it.
 		 */
+		if (parentLineMismatchEvent.isClosed()) {
+			try {
+				parentLineMismatchEvent.reopen();
+			} catch (final UnsupportedOperationException uoe) {
+				// do nothing
+			}
+		}
 	}
 
 	/**

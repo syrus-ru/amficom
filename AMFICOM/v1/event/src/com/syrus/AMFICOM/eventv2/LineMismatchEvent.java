@@ -1,5 +1,5 @@
 /*-
- * $Id: LineMismatchEvent.java,v 1.37 2006/07/03 15:45:28 bass Exp $
+ * $Id: LineMismatchEvent.java,v 1.38 2006/07/04 13:21:37 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -42,7 +42,7 @@ import com.syrus.util.transport.idl.IdlTransferableObjectExt;
  * 
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.37 $, $Date: 2006/07/03 15:45:28 $
+ * @version $Revision: 1.38 $, $Date: 2006/07/04 13:21:37 $
  * @module event
  */
 public interface LineMismatchEvent
@@ -335,6 +335,29 @@ public interface LineMismatchEvent
 	SortedSet<ChangeLogRecord> getChangeLog();
 
 	/**
+	 * Returns {@code true} if this incident is closed. It is actual
+	 * implementation who decides what &quot;closed&quot; means, but the
+	 * most common meaning could be an incident whose alarm status was {@link
+	 * AlarmStatus#XTRA_CLOSED}.
+	 *
+	 * @return {@code true} if this incident is closed.
+	 * @throws ApplicationException
+	 */
+	boolean isClosed() throws ApplicationException;
+
+	/**
+	 * Reopens this incident if it is already {@link #isClosed() closed} and
+	 * can be reopened. If it is closed and cannot be reopened, throws an
+	 * {@link UnsupportedOperationException}. If it is not closed, throws an
+	 * {@link IllegalStateException}.
+	 *
+	 * @throws UnsupportedOperationException
+	 * @throws IllegalStateException
+	 * @throws ApplicationException
+	 */
+	void reopen() throws ApplicationException;
+
+	/**
 	 * <p>Those alarm statii that aren&apos;t present in the
 	 * <em>Consultronics&nbsp;NQMS</em> Alarm Model, have &laquo;{@code
 	 * XTRA_}&raquo; prefix.</p>
@@ -502,7 +525,7 @@ public interface LineMismatchEvent
 		 * <p>Next: none.</p>
 		 */
 		@AllowedPredecessors(XTRA_VERIFIED)
-		@AllowedSuccessors({})
+		@AllowedSuccessors(PENDING)
 		XTRA_CLOSED;
 
 		private static final AlarmStatus VALUES[] = values();
