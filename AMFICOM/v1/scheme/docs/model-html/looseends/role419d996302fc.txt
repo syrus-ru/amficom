@@ -1,2 +1,0 @@
-*
-						 * Depending on implementation, may reference either {@link PortType port type} or {@link PortType cable port type}.
