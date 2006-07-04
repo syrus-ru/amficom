@@ -1,5 +1,5 @@
 /*-
- * $Id: SynchronousWorker.java,v 1.5 2006/07/04 14:55:48 saa Exp $
+ * $Id: SynchronousWorker.java,v 1.6 2006/07/04 14:58:02 saa Exp $
  * 
  * Copyright ¿ 2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -54,8 +54,8 @@ import com.syrus.AMFICOM.client.model.AbstractMainFrame;
  * 
  * @author saa
  * @author $Author: saa $
- * @version $Revision: 1.5 $, $Date: 2006/07/04 14:55:48 $
- * @module
+ * @version $Revision: 1.6 $, $Date: 2006/07/04 14:58:02 $
+ * @module 
  */
 public abstract class SynchronousWorker<T> extends AbstractSynchronousWorker<T>{
 
