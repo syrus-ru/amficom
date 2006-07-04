@@ -1,5 +1,5 @@
 /*-
- * $Id: StatusBar.java,v 1.12 2005/10/31 12:30:01 bass Exp $
+ * $Id: StatusBar.java,v 1.13 2006/07/04 14:19:38 saa Exp $
  *
  * Copyright ╘ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,6 +10,8 @@ package com.syrus.AMFICOM.client.UI;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Rectangle;
@@ -19,15 +21,20 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.logging.Level;
 
 import javax.swing.BorderFactory;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
 import javax.swing.UIManager;
 import javax.swing.border.BevelBorder;
+import javax.swing.border.Border;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableColumnModel;
 import javax.swing.table.DefaultTableModel;
@@ -41,8 +48,8 @@ import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/10/31 12:30:01 $
- * @author $Author: bass $
+ * @version $Revision: 1.13 $, $Date: 2006/07/04 14:19:38 $
+ * @author $Author: saa $
  * @author Vladimir Dolzhenko
  * @module commonclient
  */
@@ -50,24 +57,11 @@ public class StatusBar implements PropertyChangeListener {
 
 	public static final String FIELD_PREFIX = "field";
 	public static final String FIELD_DOMAIN = "domain";
-	public static final String FIELD_PROGRESS = "progress";
 	public static final String FIELD_STATUS = "status";
 	public static final String FIELD_SERVER = "server";
 	public static final String FIELD_SESSION = "session";
 	public static final String FIELD_USER = "user";
 	public static final String FIELD_TIME = "time";
-
-	private JPanel panel;
-
-	private DefaultTableColumnModel model;
-	private DefaultTableModel tableModel;
-
-	private Timer timeTimer;
-	// private Timer progressBarTimer;
-
-	private JTable table;
-
-	int number = 5;
 
 	private class TableHeaderCellRenderer extends DefaultTableCellRenderer {
 
@@ -75,12 +69,7 @@ public class StatusBar implements PropertyChangeListener {
 
 		public TableHeaderCellRenderer() {
 			this.setHorizontalAlignment(SwingConstants.CENTER);
-			this.setBorder(BorderFactory.createBevelBorder(
-				BevelBorder.LOWERED,
-				Color.WHITE,
-				Color.WHITE,
-				new Color(142, 142, 142),
-				new Color(99, 99, 99)));
+			this.setBorder(border);
 		}
 
 		@Override
@@ -99,10 +88,7 @@ public class StatusBar implements PropertyChangeListener {
 				}
 			}
 
-			if (value instanceof Date) {
-				final SimpleDateFormat sdf = (SimpleDateFormat) UIManager.get(ResourceKeys.HOURS_MINUTES_SECONDS_DATE_FORMAT);
-				this.setText(sdf.format((Date) value));
-			} else if (value instanceof Component) {
+			if (value instanceof Component) {
 				return (Component) value;
 			} else {
 				this.setText((value == null) ? "" : value.toString());
@@ -112,6 +98,66 @@ public class StatusBar implements PropertyChangeListener {
 		}
 
 	}
+
+	private static class ProgressState {
+		String message;
+		boolean determinate;
+		int percentage;
+		int nextPercents() {
+			if (!this.determinate) {
+				this.percentage = (this.percentage + 2) % 100;
+			}
+			return this.percentage;
+		}
+		ProgressState(String message) {
+			this.message = message;
+			this.determinate = false;
+			this.percentage = 0;
+		}
+	}
+
+	private JPanel panel;
+	private DefaultTableColumnModel model;
+	private DefaultTableModel tableModel;
+	private JTable table;
+
+	final Border border = BorderFactory.createBevelBorder(
+			BevelBorder.LOWERED,
+			Color.WHITE,
+			Color.WHITE,
+			new Color(142, 142, 142),
+			new Color(99, 99, 99));
+
+
+	private Timer timeTimer;
+
+	// ProgressBar control fields
+
+	/**
+	 * Вложенные ProgressBar'ы. Самый новый имеет индекс 0.
+	 */
+	private List<ProgressState> progressStates = new LinkedList<ProgressState>();
+	/**
+	 * Текст, лежащий в виртуальном поле STATUS. Отображается, когда исчезает
+	 * последний ProgressBar.
+	 */
+	private String statusText;
+	/**
+	 * Собственно полоска ProgressBar'а. Она одна, но ее состояние управляется
+	 * текущим ProgressState'ом.
+	 */
+	private JProgressBar progressBar;
+	private JLabel progressLabel;
+	/**
+	 * Панель с ProgressBar'ом. Обновление поля в TableHeader происходит
+	 * повторной установкой этой панели в TableHeader.
+	 */
+	private JPanel progressPanel;
+	/**
+	 * Таймер автоматического обновления ProgressBar'а. Используется только
+	 * в indeterminate режиме.
+	 */
+	private Timer progressBarTimer1;
 
 	public StatusBar() {
 		this.createModels();
@@ -187,6 +233,7 @@ public class StatusBar implements PropertyChangeListener {
 	public void remove(final String fieldId) {
 		assert fieldId != null : ErrorMessages.NON_NULL_EXPECTED;
 
+		// XXX: при удалении поля с ProgressBar'ом надо бы удалить и сам ProgressBar
 		for (int i = 0; i < this.model.getColumnCount(); i++) {
 			final TableColumn column = this.model.getColumn(i);
 			if (fieldId.equals(column.getIdentifier())) {
@@ -197,7 +244,7 @@ public class StatusBar implements PropertyChangeListener {
 
 	}
 
-	public void setValue(final String fieldId, final Object value) {
+	void setValue(final String fieldId, final Object value) {
 		final JTableHeader tableHeader = this.table.getTableHeader();
 		TableColumn column = null;
 		int index;
@@ -210,7 +257,6 @@ public class StatusBar implements PropertyChangeListener {
 		}
 		if (column != null) {
 			column.setHeaderValue(value);
-			// tableHeader.repaint();
 			final Rectangle headerRect = tableHeader.getHeaderRect(index);
 			if (headerRect != null) {
 				final Component componentAt = tableHeader.getComponentAt(headerRect.x, headerRect.y);
@@ -219,11 +265,11 @@ public class StatusBar implements PropertyChangeListener {
 				}
 			}
 		} else {
-			Log.debugMessage("fieldId '" + fieldId + "' not found.", Level.FINEST);
+			Log.debugMessage("StatusBar field not found: " + fieldId, Level.WARNING);
 		}
 	}
 
-	public void setText(final String fieldId, final String text) {
+	private void setText0(final String fieldId, final String text) {
 		this.setValue(fieldId, text);
 	}
 
@@ -231,67 +277,20 @@ public class StatusBar implements PropertyChangeListener {
 		this.table.getColumn(fieldId).setPreferredWidth(width);
 	}
 
-// private void addStatusBarField(final String fieldId) {
-//
-//		JProgressBar progressBar = new JProgressBar();
-//		progressBar.setString(I18N.getString("Common.StatusBar.PleaseWait"));
-//		progressBar.setIndeterminate(true);
-//		progressBar.setStringPainted(true);
-//
-//		final JTableHeader tableHeader = this.table.getTableHeader();
-//		progressBar.setPreferredSize(new Dimension(progressBar.getPreferredSize().width, tableHeader.getHeight()));
-//
-//		this.progressBarTimer = new Timer(UIManager.getInt("ProgressBar.repaintInterval"), new ActionListener() {
-//
-//			public void actionPerformed(ActionEvent e) {
-//				tableHeader.repaint();
-//
-//			}
-//		});
-//		this.progressBarTimer.start();
-//
-//		this.setValue(fieldId, progressBar);
-//	}
-//
-//	private void removeStatusBar(final String fieldId) {
-//		if (this.progressBarTimer != null) {
-//			this.progressBarTimer.stop();
-//			this.progressBarTimer = null;
-//		}
-//
-//		this.remove(fieldId);
-//	}
-
 	private void addTimerField(final String fieldId) {
 
 		if (this.timeTimer == null) {
 			this.timeTimer = new Timer(1000, new ActionListener() {
 
 				public void actionPerformed(final ActionEvent e) {
-					StatusBar.this.setValue(fieldId, new Date());
+					final SimpleDateFormat sdf = (SimpleDateFormat) UIManager.get(ResourceKeys.HOURS_MINUTES_SECONDS_DATE_FORMAT);
+					StatusBar.this.setText(fieldId, sdf.format(new Date()));
 				}
 			});
 
 			this.timeTimer.start();
 		}
 	}
-
-//	private void setProgressBarEnable(boolean enable) {
-//		final String field = FIELD_PROGRESS;
-//		if (enable) {
-//			/* is there status bar ? */
-//			for (int i = 0; i < this.model.getColumnCount(); i++) {
-//				Object identifier = this.model.getColumn(i).getIdentifier();
-//				if (field.equals(identifier)) { return; }
-//			}
-//			/* there is no status bar, add it */
-//			this.add(0, field);
-//			this.addStatusBarField(field);
-//		} else {
-//			this.remove(field);
-//			this.removeStatusBar(field);
-//		}
-//	}
 
 	public void removeDispatcher(final Dispatcher dispatcher) {
 		if (dispatcher != null) {
@@ -300,7 +299,10 @@ public class StatusBar implements PropertyChangeListener {
 			dispatcher.removePropertyChangeListener(StatusMessageEvent.STATUS_SERVER, this);
 			dispatcher.removePropertyChangeListener(StatusMessageEvent.STATUS_SESSION, this);
 			dispatcher.removePropertyChangeListener(StatusMessageEvent.STATUS_DOMAIN, this);
-			dispatcher.removePropertyChangeListener(StatusMessageEvent.STATUS_PROGRESS_BAR, this);
+			dispatcher.removePropertyChangeListener(StatusMessageEvent.STATUS_PROGRESS_BEGIN, this);
+			dispatcher.removePropertyChangeListener(StatusMessageEvent.STATUS_PROGRESS_END, this);
+			dispatcher.removePropertyChangeListener(StatusMessageEvent.STATUS_PROGRESS_PERCENTS, this);
+			dispatcher.removePropertyChangeListener(StatusMessageEvent.STATUS_PROGRESS_TEXT, this);
 		}
 	}
 
@@ -311,7 +313,10 @@ public class StatusBar implements PropertyChangeListener {
 			dispatcher.addPropertyChangeListener(StatusMessageEvent.STATUS_SERVER, this);
 			dispatcher.addPropertyChangeListener(StatusMessageEvent.STATUS_SESSION, this);
 			dispatcher.addPropertyChangeListener(StatusMessageEvent.STATUS_DOMAIN, this);
-			dispatcher.addPropertyChangeListener(StatusMessageEvent.STATUS_PROGRESS_BAR, this);
+			dispatcher.addPropertyChangeListener(StatusMessageEvent.STATUS_PROGRESS_BEGIN, this);
+			dispatcher.addPropertyChangeListener(StatusMessageEvent.STATUS_PROGRESS_END, this);
+			dispatcher.addPropertyChangeListener(StatusMessageEvent.STATUS_PROGRESS_PERCENTS, this);
+			dispatcher.addPropertyChangeListener(StatusMessageEvent.STATUS_PROGRESS_TEXT, this);
 		}
 	}
 
@@ -320,18 +325,161 @@ public class StatusBar implements PropertyChangeListener {
 		if (evt instanceof StatusMessageEvent) {
 			final StatusMessageEvent sme = (StatusMessageEvent) evt;
 			if (propertyName.equals(StatusMessageEvent.STATUS_MESSAGE)) {
-				this.setValue(FIELD_STATUS, sme.getText());
+				this.setStatusText(sme.getText());
 			} else if (propertyName.equals(StatusMessageEvent.STATUS_SESSION)) {
-				this.setValue(FIELD_SESSION, sme.getText());
+				this.setText0(FIELD_SESSION, sme.getText());
 			} else if (propertyName.equals(StatusMessageEvent.STATUS_SERVER)) {
-				this.setValue(FIELD_SERVER, sme.getText());
+				this.setText0(FIELD_SERVER, sme.getText());
 			} else if (propertyName.equals(StatusMessageEvent.STATUS_USER)) {
-				this.setValue(FIELD_USER, sme.getText());
+				this.setText0(FIELD_USER, sme.getText());
 			} else if (propertyName.equals(StatusMessageEvent.STATUS_DOMAIN)) {
-				this.setValue(FIELD_DOMAIN, sme.getText());
-			} else if (propertyName.equals(StatusMessageEvent.STATUS_PROGRESS_BAR)) {
-				// this.setProgressBarEnable(sme.isShowProgressBar());
+				this.setText0(FIELD_DOMAIN, sme.getText());
+			} else if (propertyName.equals(StatusMessageEvent.STATUS_PROGRESS_BEGIN)) {
+				 this.beginProgressBar(sme.getText());
+			} else if (propertyName.equals(StatusMessageEvent.STATUS_PROGRESS_END)) {
+				 this.endProgressBar();
+			} else if (propertyName.equals(StatusMessageEvent.STATUS_PROGRESS_PERCENTS)) {
+				 this.setProgressBarPercents(sme.getInteger());
+			} else if (propertyName.equals(StatusMessageEvent.STATUS_PROGRESS_TEXT)) {
+				 this.setProgressBarText(sme.getText());
 			}
 		}
+	}
+
+	/**
+	 * Устанавливает значение виртуального текстового поля.
+	 * Термин "виртуальный" означает, что некоторые поля
+	 * не обязательно непосредственно отображаются на экране:
+	 * поле статуса может быть закрыто ProgressBar'ом.
+	 * 
+	 * @param fieldId id поля
+	 * @param text текст
+	 */
+	public void setText(final String fieldId, final String text) {
+		if (fieldId.equals(FIELD_STATUS)) {
+			this.setStatusText(text);
+		} else {
+			this.setValue(fieldId, text);
+		}
+	}
+
+	// ProgressBar stuff
+
+	ProgressState getCurrentProgressState() {
+		return this.progressStates.get(this.progressStates.size() - 1);
+	}
+
+	boolean isProgressBarOn() {
+		return !this.progressStates.isEmpty();
+	}
+
+	private void setStatusText(String text) {
+		this.statusText = text;
+		if (!isProgressBarOn()) {
+			this.setText0(FIELD_STATUS, text);
+		}
+	}
+
+	private void beginProgressBar(final String text) {
+		if (!this.isProgressBarOn()) {
+			this.progressBar = new JProgressBar();
+			this.progressPanel = new JPanel();
+			this.progressLabel = new JLabel();
+			this.progressLabel.setFont(this.table.getTableHeader().getFont());
+
+//			this.progressBar.setBorder(BorderFactory.createEmptyBorder());
+			this.progressPanel.setBorder(border);
+			this.progressPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
+
+			this.progressPanel.add(this.progressBar);
+			this.progressPanel.add(progressLabel);
+		}
+		this.progressStates.add(0, new ProgressState(text));
+		updateProgressPanel();
+//		this.progressBar0.setString(text);
+	}
+
+	private void endProgressBar() {
+		if (!this.isProgressBarOn()) {
+			throw new IllegalStateException();
+		}
+		this.progressStates.remove(0);
+		updateProgressPanel();
+		if (!this.isProgressBarOn()) {
+			// remove progress bar
+			this.progressPanel = null;
+			this.progressLabel = null;
+			this.progressBar = null;
+			this.setText0(FIELD_STATUS, this.statusText);
+		}
+	}
+
+	private void setProgressBarPercents(int percents) {
+		if (!this.isProgressBarOn()) {
+			throw new IllegalStateException("No progress bar active");
+		}
+		final ProgressState currentState = getCurrentProgressState();
+		currentState.determinate = true;
+		currentState.percentage = percents;
+		updateProgressPanel();
+	}
+
+	private void setProgressBarText(String text) {
+		if (!this.isProgressBarOn()) {
+			throw new IllegalStateException("No progress bar active");
+		}
+		final ProgressState currentState = getCurrentProgressState();
+		currentState.message = text;
+		updateProgressPanel();
+	}
+
+	private void updateProgressPanel() {
+		// нужен ли таймер в текущем состоянии?
+		boolean needTimer = isProgressBarOn() && !getCurrentProgressState().determinate;
+		if (needTimer && this.progressBarTimer1 == null) {
+			this.progressBarTimer1 = new Timer(100, new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					updateProgressBar();
+				}
+			});
+			this.progressBarTimer1.setRepeats(true);
+			this.progressBarTimer1.start();
+		} else if (!needTimer && this.progressBarTimer1 != null) {
+			this.progressBarTimer1.stop();
+			this.progressBarTimer1 = null;
+		}
+
+		// устанавливаем текст (для progressBar, но не для поля)
+		if (isProgressBarOn()) {
+			final String string = getCurrentProgressState().message;
+//			this.progressBar0.setString(getCurrentProgressState().message);
+			this.progressLabel.setText(string == null ? null : " " + string);
+		}
+
+		// немедленно отображаем изменения
+		updateProgressBar();
+	}
+
+	void updateProgressBar() {
+		if (!isProgressBarOn()) {
+			return;
+		}
+
+		final ProgressState currentState = getCurrentProgressState();
+		final JTableHeader tHeader = this.table.getTableHeader();
+
+		this.progressBar.setValue(currentState.nextPercents());
+		this.progressBar.setStringPainted(currentState.determinate);
+
+		this.progressBar.setFont(tHeader.getFont()); // adjust font
+
+		// размер придется выставить таким, чтобы вписываться в таблицу,
+		// см. проблемы BasicProgressBarUI#getPreferredSize().
+		// XXX: корректируем размер при каждом обновлении
+		this.progressBar.setPreferredSize(new Dimension(
+				this.progressBar.getPreferredSize().width,
+				tHeader.getFontMetrics(tHeader.getFont()).getHeight()));
+
+		setValue(FIELD_STATUS, this.progressPanel);
 	}
 }

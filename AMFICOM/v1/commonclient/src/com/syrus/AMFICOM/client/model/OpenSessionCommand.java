@@ -1,5 +1,5 @@
 /*-
- * $Id: OpenSessionCommand.java,v 1.49 2006/06/06 11:34:03 arseniy Exp $
+ * $Id: OpenSessionCommand.java,v 1.50 2006/07/04 14:19:38 saa Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -54,8 +54,8 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.49 $, $Date: 2006/06/06 11:34:03 $
+ * @author $Author: saa $
+ * @version $Revision: 1.50 $, $Date: 2006/07/04 14:19:38 $
  * @module commonclient
  */
 public class OpenSessionCommand extends AbstractCommand {
@@ -202,7 +202,7 @@ public class OpenSessionCommand extends AbstractCommand {
 		this.dispatcher.firePropertyChange(new StatusMessageEvent(this,
 				StatusMessageEvent.STATUS_MESSAGE,
 				I18N.getString("Common.StatusBar.InitStartupData")));
-		this.dispatcher.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_PROGRESS_BAR, true));
+//		this.dispatcher.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_PROGRESS_BAR, true));
 
 		try {
 			clientSessionEnvironment.login(this.login, this.password, this.domainId);
@@ -258,7 +258,7 @@ public class OpenSessionCommand extends AbstractCommand {
 	}
 
 	private void logginFailed() {
-		this.dispatcher.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_PROGRESS_BAR, false));
+//		this.dispatcher.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_PROGRESS_BAR, false));
 		this.logged = false;
 	}	
 	
