@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapImportCommand.java,v 1.60 2006/04/14 12:04:07 arseniy Exp $$
+ * $$Id: MapImportCommand.java,v 1.61 2006/07/04 14:41:09 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -53,8 +53,8 @@ import com.syrus.util.Log;
  * самого окна карты. При этом в азголовке окна отображается информация о том,
  * что активной карты нет, и карта центрируется по умолчанию
  * 
- * @version $Revision: 1.60 $, $Date: 2006/04/14 12:04:07 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.61 $, $Date: 2006/07/04 14:41:09 $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -108,12 +108,11 @@ public class MapImportCommand extends ImportCommand {
 //			public void run() {
 				try {
 					Map map = null;
-					MapImportCommand.this.aContext.getDispatcher().firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_PROGRESS_BAR, true));
 					if(extension.equals(".xml")) { //$NON-NLS-1$
+						// TODO add load by SyncroniousWorker  
 						map = loadXML(fileName);
 					}
-					MapImportCommand.this.aContext.getDispatcher().firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_PROGRESS_BAR, false));
-		
+	
 					if(map == null)
 						return;
 
