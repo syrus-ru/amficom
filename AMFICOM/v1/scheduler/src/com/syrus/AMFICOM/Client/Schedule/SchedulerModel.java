@@ -1,5 +1,5 @@
 /*-
- * $Id: SchedulerModel.java,v 1.191 2006/06/06 15:37:52 arseniy Exp $
+ * $Id: SchedulerModel.java,v 1.192 2006/07/04 14:32:11 saa Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -73,8 +73,8 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.191 $, $Date: 2006/06/06 15:37:52 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.192 $, $Date: 2006/07/04 14:32:11 $
+ * @author $Author: saa $
  * @author Vladimir Dolzhenko
  * @module scheduler
  */
@@ -464,7 +464,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 				StatusMessageEvent.STATUS_MESSAGE,
 				I18N.getString("Scheduler.StatusMessage.UpdatingTests"))); //$NON-NLS-1$
 
-		this.dispatcher.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_PROGRESS_BAR, true));
+//		this.dispatcher.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_PROGRESS_BAR, true));
 
 		if (this.measurementSetupIdMap != null) {
 			this.measurementSetupIdMap.clear();
@@ -573,8 +573,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 		final long time1 = System.currentTimeMillis();
 		Log.debugMessage("refresh tests in ui:" + (time1-time0),
 			Log.DEBUGLEVEL03);
-		this.dispatcher.firePropertyChange(
-			new StatusMessageEvent(this, StatusMessageEvent.STATUS_PROGRESS_BAR, false));
+//		this.dispatcher.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_PROGRESS_BAR, false));
 	}
 
 	public final Set<Test> getFinishingTests() {

@@ -259,10 +259,10 @@ final class PlanToolBar {
 					public void run() {
 						try {
 							PlanToolBar.this.schedulerModel.unselectTests(PlanToolBar.this);
-							PlanToolBar.this.dispatcher.firePropertyChange(
-								new StatusMessageEvent(PlanToolBar.this, 
-									StatusMessageEvent.STATUS_PROGRESS_BAR, 
-									true));
+//							PlanToolBar.this.dispatcher.firePropertyChange(
+//								new StatusMessageEvent(PlanToolBar.this, 
+//									StatusMessageEvent.STATUS_PROGRESS_BAR, 
+//									true));
 							PlanToolBar.this.schedulerModel.commitChanges();
 							
 							Calendar date = Calendar.getInstance();
@@ -275,10 +275,10 @@ final class PlanToolBar {
 
 							PlanToolBar.this.panel.update(date.getTime(), 
 								PlanToolBar.this.scaleComboBox.getSelectedIndex());
-							PlanToolBar.this.dispatcher.firePropertyChange(
-								new StatusMessageEvent(PlanToolBar.this, 
-									StatusMessageEvent.STATUS_PROGRESS_BAR, 
-									false));
+//							PlanToolBar.this.dispatcher.firePropertyChange(
+//								new StatusMessageEvent(PlanToolBar.this, 
+//									StatusMessageEvent.STATUS_PROGRESS_BAR, 
+//									false));
 							button.setEnabled(true);
 						} catch (final ApplicationException e1) {
 							JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(),
