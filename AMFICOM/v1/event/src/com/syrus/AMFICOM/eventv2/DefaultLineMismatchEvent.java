@@ -1,5 +1,5 @@
 /*-
- * $Id: DefaultLineMismatchEvent.java,v 1.34 2006/07/04 13:21:37 bass Exp $
+ * $Id: DefaultLineMismatchEvent.java,v 1.35 2006/07/05 02:23:17 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -56,12 +56,13 @@ import com.syrus.AMFICOM.general.StringToValueConverter;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
+import com.syrus.util.Math2;
 import com.syrus.util.transport.idl.IdlConversionException;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.34 $, $Date: 2006/07/04 13:21:37 $
+ * @version $Revision: 1.35 $, $Date: 2006/07/05 02:23:17 $
  * @module event
  */
 public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
@@ -148,7 +149,7 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 	 * @param mismatchPhysicalDistance
 	 * @param plainTextMessage
 	 * @param richTextMessage
-	 * @param reflectogramMismatchEventId
+	 * @param reflectogramMismatchEvent
 	 */
 	private DefaultLineMismatchEvent(final Identifier id,
 			final Identifier creatorId,
@@ -160,14 +161,14 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 			final double mismatchPhysicalDistance,
 			final String plainTextMessage,
 			final String richTextMessage,
-			final Identifier reflectogramMismatchEventId) {
+			final ReflectogramMismatchEvent reflectogramMismatchEvent) {
 		super(id, creatorId, new Date(), INITIAL_VERSION);
 
 		this.affectedPathElementId = affectedPathElementId;
 
 		if (!!(this.affectedPathElementSpacious = affectedPathElementSpacious)) {
-			this.physicalDistanceToStart = physicalDistanceToStart;
-			this.physicalDistanceToEnd = physicalDistanceToEnd;
+			this.physicalDistanceToStart = Math2.roundEpsilon(physicalDistanceToStart, reflectogramMismatchEvent.getDeltaX());
+			this.physicalDistanceToEnd = Math2.roundEpsilon(physicalDistanceToEnd, reflectogramMismatchEvent.getDeltaX());
 
 			if (this.physicalDistanceToStart < 0) {
 				throw new IllegalArgumentException(String.valueOf(this.physicalDistanceToStart));
@@ -176,11 +177,11 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 			}
 		}
 
-		this.mismatchOpticalDistance = mismatchOpticalDistance;
-		this.mismatchPhysicalDistance = mismatchPhysicalDistance;
+		this.mismatchOpticalDistance = Math2.roundEpsilon(mismatchOpticalDistance, reflectogramMismatchEvent.getDeltaX());
+		this.mismatchPhysicalDistance = Math2.roundEpsilon(mismatchPhysicalDistance, reflectogramMismatchEvent.getDeltaX());
 		this.plainTextMessage = plainTextMessage;
 		this.richTextMessage = richTextMessage;
-		this.reflectogramMismatchEventId = reflectogramMismatchEventId;
+		this.reflectogramMismatchEventId = reflectogramMismatchEvent.getId();
 		this.alarmStatus = new AlarmStatus.Proxy(AlarmStatus.PENDING);
 		this.parentLineMismatchEventId = VOID_IDENTIFIER;
 	}
@@ -391,7 +392,7 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 					affectedPathElementSpacious, physicalDistanceToStart,
 					physicalDistanceToEnd, mismatchOpticalDistance,
 					mismatchPhysicalDistance, plainTextMessage,
-					richTextMessage, reflectogramMismatchEvent.getId());
+					richTextMessage, reflectogramMismatchEvent);
 			lineMismatchEvent.markAsChanged();
 
 
