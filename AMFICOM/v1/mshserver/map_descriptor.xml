@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mapdescriptor>
+	<map>
+		<name>Moscow City</name>
+		<mdf>../../mapinfo/cb.mdf</mdf>
+	</map>
+	<map>
+		<name>Moscow without buildings</name>
+		<mdf>../../mapinfo/cb_wo_houses/cb.mdf</mdf>
+	</map>
+</mapdescriptor>
